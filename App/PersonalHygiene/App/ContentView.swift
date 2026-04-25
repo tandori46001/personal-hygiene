@@ -27,6 +27,17 @@ private struct MainTabs: View {
     private let notificationService = UserNotificationsService()
     private let medicationService = HealthKitMedicationService()
     private let sleepService = HealthKitSleepService()
+    private let travelTimeService: any TravelTimeService = MKDirectionsTravelTimeService()
+    private let homeStore = HomeLocationStore()
+
+    private func makeCoordinator() -> NotificationCoordinator {
+        NotificationCoordinator(
+            repository: repository,
+            service: notificationService,
+            travelTimeService: travelTimeService,
+            homeLocation: homeStore.location
+        )
+    }
 
     var body: some View {
         TabView {
@@ -79,10 +90,7 @@ private struct MainTabs: View {
             SettingsView(
                 viewModel: SettingsViewModel(
                     service: notificationService,
-                    coordinator: NotificationCoordinator(
-                        repository: repository,
-                        service: notificationService
-                    )
+                    coordinator: makeCoordinator()
                 )
             )
             .tabItem {
@@ -96,10 +104,7 @@ private struct MainTabs: View {
         .task {
             // Best-effort refresh on launch; silently ignore errors here —
             // the user can retry from Settings if anything goes wrong.
-            try? await NotificationCoordinator(
-                repository: repository,
-                service: notificationService
-            ).refreshForToday()
+            try? await makeCoordinator().refreshForToday()
         }
     }
 }

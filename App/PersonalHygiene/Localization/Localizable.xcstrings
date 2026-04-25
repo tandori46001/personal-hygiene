@@ -189,6 +189,35 @@
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Detalles opcionales" } },
       "fr" : { "stringUnit" : { "state" : "translated", "value" : "Détails facultatifs" } } } },
 
+    "blockEditor.section.location" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Location" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Ubicación" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Lieu" } } } },
+    "blockEditor.section.location.footer" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "When set, the alert is moved earlier by the estimated travel time from your home." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Si se rellena, la alerta se adelanta por el tiempo de viaje estimado desde tu casa." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Si renseigné, l'alerte est avancée du temps de trajet estimé depuis votre domicile." } } } },
+    "blockEditor.field.locationName" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Place name" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Nombre del lugar" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Nom du lieu" } } } },
+    "blockEditor.field.locationName.placeholder" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Optional — e.g. Clinic" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Opcional — ej. Clínica" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Facultatif — ex. Clinique" } } } },
+    "blockEditor.field.latitude" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Latitude" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Latitud" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Latitude" } } } },
+    "blockEditor.field.longitude" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Longitude" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Longitud" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Longitude" } } } },
+    "blockEditor.field.location.invalid" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Latitude and longitude must be valid coordinates." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Latitud y longitud deben ser coordenadas válidas." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "La latitude et la longitude doivent être des coordonnées valides." } } } },
+
     "onboarding.welcome.title" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Welcome" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Bienvenido" } },
@@ -353,6 +382,35 @@
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Refresh today's notifications" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Actualizar notificaciones de hoy" } },
       "fr" : { "stringUnit" : { "state" : "translated", "value" : "Actualiser les notifications du jour" } } } },
+
+    "settings.section.home" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Home location" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Ubicación de casa" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Lieu de domicile" } } } },
+    "settings.section.home.footer" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Used to estimate travel time for blocks that have a location." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Se usa para estimar el tiempo de viaje a bloques con ubicación." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Utilisé pour estimer le temps de trajet vers les blocs avec un lieu." } } } },
+    "settings.home.field.name" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Name" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Nombre" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Nom" } } } },
+    "settings.home.field.name.placeholder" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Optional — e.g. Home" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Opcional — ej. Casa" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Facultatif — ex. Domicile" } } } },
+    "settings.home.field.latitude" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Latitude" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Latitud" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Latitude" } } } },
+    "settings.home.field.longitude" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Longitude" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Longitud" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Longitude" } } } },
+    "settings.home.invalid" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Latitude and longitude must be valid coordinates." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Latitud y longitud deben ser coordenadas válidas." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "La latitude et la longitude doivent être des coordonnées valides." } } } },
 
     "tab.medication" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Medication" } },

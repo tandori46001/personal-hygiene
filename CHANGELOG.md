@@ -24,7 +24,8 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 - **Slice 7 (Today):** `TodayView` + `TodayViewModel` — pulls active template for today's `DayType` (weekday/weekend); shows current/next block.
 - **Slice 8 (Onboarding):** first-launch wizard backed by `@AppStorage`; seeds two starter templates (weekday + weekend) with localized block titles.
 - **Slice 9-11 (notifications):** `NotificationFactory` (pure value-type builder), `UserNotificationsService` (UNUserNotificationCenter wrapper), `NotificationCoordinator`. Settings tab with permission flow + manual refresh. Critical Alerts level set on medication blocks.
-- **Slice 12a (travel-time infra):** `BlockLocation` value type + `Block.latitude/longitude/locationName` fields. `TravelTimeService` protocol with `StaticTravelTimeService` (test/preview) and `MKDirectionsTravelTimeService` (production). `NotificationFactory` async variant computes `effectiveLead = staticLead + ⌈travelTime/60⌉` when a block has `location` and an `origin` is configured; falls back to static lead on service errors. `NotificationCoordinator` accepts optional `homeLocation` + `travelTimeService` and routes to the async path. UI for setting block location deferred to slice 12b.
+- **Slice 12a (travel-time infra):** `BlockLocation` value type + `Block.latitude/longitude/locationName` fields. `TravelTimeService` protocol with `StaticTravelTimeService` (test/preview) and `MKDirectionsTravelTimeService` (production). `NotificationFactory` async variant computes `effectiveLead = staticLead + ⌈travelTime/60⌉` when a block has `location` and an `origin` is configured; falls back to static lead on service errors. `NotificationCoordinator` accepts optional `homeLocation` + `travelTimeService` and routes to the async path.
+- **Slice 12b (travel-time UI):** `BlockEditor` gains a Location section (place name + lat/lon) with validation. Settings tab gains a Home location section persisted via `@AppStorage` (`HomeLocationStore`). `ContentView` wires `MKDirectionsTravelTimeService` + the stored home location into every `NotificationCoordinator`. ~12 i18n keys × 3 locales added.
 - **Slice 13-14 (medication infra):** `MedicationService` protocol + `InMemoryMedicationService` (tests/previews) + `HealthKitMedicationService` (placeholder — not bridged into simulator). `Block.medicationConceptIdentifier` field added.
 - **Slice 16 (Critical Alerts):** medication notifications get `interruptionLevel = .critical` (effective when entitlement is granted).
 - **Slice 17 (compliance dashboard):** `MedicationCompliance` arithmetic (pure) + `MedicationComplianceView` showing last 7 days + colour-coded overall adherence.
@@ -36,7 +37,6 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ### Deferred (documented in `ROADMAP.md`)
 - Slice 2 (CloudKit sync) — needs Apple Developer Program ($99/yr).
-- Slice 12b (Travel-time UI: location picker on `BlockEditor` + home-location field in Settings) — domain + service layer landed in slice 12a.
 - Slice 15 (HKObserverQuery sync) — needs real device + HealthKit entitlement.
 - Slice 16 fallback (re-notification on missed dose) — pairs with HKObserverQuery.
 
@@ -44,7 +44,7 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 - `scripts/check-clean.sh` now `mkdir -p build` before invoking `gitleaks --report-path build/gitleaks.json`. Without this, every CI run since `4d62a8c` failed because the Ubuntu runner does not pre-create the build/ directory.
 
 ### Tests
-- 54 unit tests, all green: `BlockTests`×6, `BlockLocationTests`×4, `RoutineTemplateTests`×4, `SwiftDataRoutineRepositoryTests`×4, `BlockEditorViewModelTests`×8, `TodayViewModelTests`×5, `NotificationFactoryTests`×10, `TravelTimeServiceTests`×3, `MedicationComplianceTests`×4, `BedtimeCalculatorTests`×6.
+- 65 unit tests, all green: `BlockTests`×6, `BlockLocationTests`×4, `RoutineTemplateTests`×4, `SwiftDataRoutineRepositoryTests`×4, `BlockEditorViewModelTests`×15, `TodayViewModelTests`×5, `NotificationFactoryTests`×10, `TravelTimeServiceTests`×3, `HomeLocationStoreTests`×4, `MedicationComplianceTests`×4, `BedtimeCalculatorTests`×6.
 
 ### i18n
 - `Localizable.xcstrings`: ~110 keys × 3 locales (EN + ES + FR). Categories (12), day types (4), tab labels (5), common actions (6), per-feature strings.

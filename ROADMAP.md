@@ -60,7 +60,7 @@ Modules: M1 (templates) · M2 (notifications) · M3 (medication) · M4 (sleep).
 | Notifications service + factory + scheduler | ✅ |
 | Notifications arrive 15min before each block (refreshed on launch) | ✅ |
 | Permission flow + Settings tab | ✅ |
-| Travel-time `MKDirections` notifications | ✅ partial — domain + service + scheduler wiring shipped (slice 12a). UI for setting location deferred to slice 12b. |
+| Travel-time `MKDirections` notifications | ✅ — domain + service + scheduler wiring (12a) + UI (12b: BlockEditor location section + Settings home-location). |
 | HealthKit Medications service (compiles; functional only on real device) | ✅ |
 | Block ↔ medication concept link (`Block.medicationConceptIdentifier`) | ✅ |
 | HKObserverQuery sync | 🔒 deferred — needs real device + entitlement |

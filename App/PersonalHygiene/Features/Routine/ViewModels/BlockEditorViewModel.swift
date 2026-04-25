@@ -18,6 +18,10 @@ final class BlockEditorViewModel {
     var notificationLeadMinutes: Int
     var isDeepFocus: Bool
 
+    var locationName: String
+    var latitudeText: String
+    var longitudeText: String
+
     let editingBlockID: UUID?
 
     init() {
@@ -29,6 +33,9 @@ final class BlockEditorViewModel {
         self.notes = ""
         self.notificationLeadMinutes = 15
         self.isDeepFocus = false
+        self.locationName = ""
+        self.latitudeText = ""
+        self.longitudeText = ""
         self.editingBlockID = nil
     }
 
@@ -41,16 +48,52 @@ final class BlockEditorViewModel {
         self.notes = block.notes ?? ""
         self.notificationLeadMinutes = block.notificationLeadMinutes
         self.isDeepFocus = block.isDeepFocus
+        self.locationName = block.locationName ?? ""
+        self.latitudeText = block.latitude.map(Self.formatCoordinate) ?? ""
+        self.longitudeText = block.longitude.map(Self.formatCoordinate) ?? ""
         self.editingBlockID = block.id
     }
 
     var isValid: Bool {
-        !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-            && (0..<24).contains(startHour)
-            && (0..<60).contains(startMinute)
-            && durationMinutes > 0
-            && durationMinutes <= 24 * 60
-            && notificationLeadMinutes >= 0
+        guard
+            !title.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty,
+            (0..<24).contains(startHour),
+            (0..<60).contains(startMinute),
+            durationMinutes > 0,
+            durationMinutes <= 24 * 60,
+            notificationLeadMinutes >= 0
+        else {
+            return false
+        }
+        return isLocationValid
+    }
+
+    /// Location is valid when it's empty (entirely unset) or both lat + lon parse
+    /// to a valid coordinate. Partial / malformed input invalidates the form.
+    var isLocationValid: Bool {
+        let lat = trimmed(latitudeText)
+        let lon = trimmed(longitudeText)
+        if lat.isEmpty && lon.isEmpty { return true }
+        return parsedLocation != nil
+    }
+
+    var parsedLocation: BlockLocation? {
+        let lat = trimmed(latitudeText)
+        let lon = trimmed(longitudeText)
+        guard !lat.isEmpty, !lon.isEmpty else { return nil }
+        guard
+            let latitude = Double(lat.replacingOccurrences(of: ",", with: ".")),
+            let longitude = Double(lon.replacingOccurrences(of: ",", with: "."))
+        else {
+            return nil
+        }
+        let trimmedName = trimmed(locationName)
+        let candidate = BlockLocation(
+            latitude: latitude,
+            longitude: longitude,
+            displayName: trimmedName.isEmpty ? nil : trimmedName
+        )
+        return candidate.isValid ? candidate : nil
     }
 
     var startMinutesFromMidnight: Int {
@@ -68,7 +111,8 @@ final class BlockEditorViewModel {
             durationMinutes: durationMinutes,
             notes: notes.isEmpty ? nil : notes,
             notificationLeadMinutes: notificationLeadMinutes,
-            isDeepFocus: isDeepFocus
+            isDeepFocus: isDeepFocus,
+            location: parsedLocation
         )
     }
 
@@ -81,5 +125,14 @@ final class BlockEditorViewModel {
         block.notes = notes.isEmpty ? nil : notes
         block.notificationLeadMinutes = notificationLeadMinutes
         block.isDeepFocus = isDeepFocus
+        block.location = parsedLocation
+    }
+
+    private func trimmed(_ value: String) -> String {
+        value.trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+
+    private static func formatCoordinate(_ value: Double) -> String {
+        String(format: "%.6f", value)
     }
 }

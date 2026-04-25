@@ -96,4 +96,80 @@ final class BlockEditorViewModelTests: XCTestCase {
         XCTAssertEqual(block.startMinutesFromMidnight, 9 * 60)
         XCTAssertEqual(block.durationMinutes, 45)
     }
+
+    func test_parsedLocation_nilWhenBothEmpty() {
+        let vm = BlockEditorViewModel()
+        vm.title = "x"
+        XCTAssertNil(vm.parsedLocation)
+        XCTAssertTrue(vm.isLocationValid)
+    }
+
+    func test_parsedLocation_returnsCoordinatesWhenValid() {
+        let vm = BlockEditorViewModel()
+        vm.title = "Dentist"
+        vm.locationName = "Clinic"
+        vm.latitudeText = "40.4168"
+        vm.longitudeText = "-3.7038"
+        XCTAssertEqual(vm.parsedLocation?.latitude, 40.4168)
+        XCTAssertEqual(vm.parsedLocation?.longitude, -3.7038)
+        XCTAssertEqual(vm.parsedLocation?.displayName, "Clinic")
+        XCTAssertTrue(vm.isLocationValid)
+    }
+
+    func test_parsedLocation_acceptsCommaDecimal() {
+        let vm = BlockEditorViewModel()
+        vm.title = "x"
+        vm.latitudeText = "40,4168"
+        vm.longitudeText = "-3,7038"
+        XCTAssertNotNil(vm.parsedLocation)
+    }
+
+    func test_isLocationValid_falseWhenPartial() {
+        let vm = BlockEditorViewModel()
+        vm.title = "x"
+        vm.latitudeText = "40.4168"
+        XCTAssertFalse(vm.isLocationValid)
+        XCTAssertFalse(vm.isValid)
+    }
+
+    func test_isLocationValid_falseWhenOutOfRange() {
+        let vm = BlockEditorViewModel()
+        vm.title = "x"
+        vm.latitudeText = "200"
+        vm.longitudeText = "-500"
+        XCTAssertFalse(vm.isLocationValid)
+    }
+
+    func test_snapshot_writesLocationFieldsToBlock() {
+        let vm = BlockEditorViewModel()
+        vm.title = "Dentist"
+        vm.locationName = "Clinic"
+        vm.latitudeText = "40.4168"
+        vm.longitudeText = "-3.7038"
+
+        let block = vm.snapshot()
+        XCTAssertEqual(block.latitude, 40.4168)
+        XCTAssertEqual(block.longitude, -3.7038)
+        XCTAssertEqual(block.locationName, "Clinic")
+    }
+
+    func test_apply_clearsLocationWhenFieldsEmpty() {
+        let block = Block(
+            title: "Dentist",
+            category: .medical,
+            startMinutesFromMidnight: 10 * 60,
+            durationMinutes: 30,
+            location: BlockLocation(latitude: 40.4168, longitude: -3.7038, displayName: "Clinic")
+        )
+        let vm = BlockEditorViewModel(editing: block)
+        vm.latitudeText = ""
+        vm.longitudeText = ""
+        vm.locationName = ""
+
+        vm.apply(to: block)
+        XCTAssertNil(block.location)
+        XCTAssertNil(block.latitude)
+        XCTAssertNil(block.longitude)
+        XCTAssertNil(block.locationName)
+    }
 }

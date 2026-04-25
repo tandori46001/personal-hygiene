@@ -79,6 +79,46 @@ struct BlockEditorView: View {
 
                 Section {
                     TextField(
+                        text: $viewModel.locationName,
+                        prompt: Text("blockEditor.field.locationName.placeholder", bundle: .main)
+                    ) {
+                        Text("blockEditor.field.locationName", bundle: .main)
+                    }
+                    .textInputAutocapitalization(.words)
+
+                    TextField(
+                        text: $viewModel.latitudeText,
+                        prompt: Text(verbatim: "0.000000")
+                    ) {
+                        Text("blockEditor.field.latitude", bundle: .main)
+                    }
+                    .keyboardType(.numbersAndPunctuation)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+
+                    TextField(
+                        text: $viewModel.longitudeText,
+                        prompt: Text(verbatim: "0.000000")
+                    ) {
+                        Text("blockEditor.field.longitude", bundle: .main)
+                    }
+                    .keyboardType(.numbersAndPunctuation)
+                    .textInputAutocapitalization(.never)
+                    .autocorrectionDisabled()
+
+                    if !viewModel.isLocationValid {
+                        Text("blockEditor.field.location.invalid", bundle: .main)
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                    }
+                } header: {
+                    Text("blockEditor.section.location", bundle: .main)
+                } footer: {
+                    Text("blockEditor.section.location.footer", bundle: .main)
+                }
+
+                Section {
+                    TextField(
                         text: $viewModel.notes,
                         prompt: Text("blockEditor.field.notes.placeholder", bundle: .main),
                         axis: .vertical
