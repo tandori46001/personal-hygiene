@@ -299,6 +299,59 @@
     "dayType.custom" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Custom" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Personalizado" } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Personnalisé" } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Personnalisé" } } } },
+
+    "tab.settings" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Ajustes" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réglages" } } } },
+    "settings.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Ajustes" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réglages" } } } },
+    "settings.section.notifications" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Notifications" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Notificaciones" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Notifications" } } } },
+    "settings.section.scheduling" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Scheduling" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Programación" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Planification" } } } },
+    "settings.notifications.status" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Permission" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Permiso" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Autorisation" } } } },
+    "settings.notifications.status.authorized" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Granted" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Concedido" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Accordée" } } } },
+    "settings.notifications.status.provisional" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Provisional" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Provisional" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Provisoire" } } } },
+    "settings.notifications.status.denied" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Denied" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Denegado" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Refusée" } } } },
+    "settings.notifications.status.ephemeral" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Ephemeral" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Efímero" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Éphémère" } } } },
+    "settings.notifications.status.notDetermined" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Not requested" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "No solicitado" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Non demandée" } } } },
+    "settings.notifications.action.request" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Request permission" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Solicitar permiso" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Demander l'autorisation" } } } },
+    "settings.notifications.action.openSettings" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Open Settings" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Abrir Ajustes" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ouvrir Réglages" } } } },
+    "settings.notifications.action.refresh" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Refresh today's notifications" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Actualizar notificaciones de hoy" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Actualiser les notifications du jour" } } } }
   }
 }

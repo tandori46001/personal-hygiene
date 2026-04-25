@@ -24,6 +24,8 @@ struct ContentView: View {
 private struct MainTabs: View {
     let repository: any RoutineRepository
 
+    private let notificationService = UserNotificationsService()
+
     var body: some View {
         TabView {
             TodayView(viewModel: TodayViewModel(repository: repository))
@@ -46,6 +48,31 @@ private struct MainTabs: View {
                     Image(systemName: "calendar")
                 }
             }
+
+            SettingsView(
+                viewModel: SettingsViewModel(
+                    service: notificationService,
+                    coordinator: NotificationCoordinator(
+                        repository: repository,
+                        service: notificationService
+                    )
+                )
+            )
+            .tabItem {
+                Label {
+                    Text("tab.settings", bundle: .main)
+                } icon: {
+                    Image(systemName: "gearshape")
+                }
+            }
+        }
+        .task {
+            // Best-effort refresh on launch; silently ignore errors here —
+            // the user can retry from Settings if anything goes wrong.
+            try? await NotificationCoordinator(
+                repository: repository,
+                service: notificationService
+            ).refreshForToday()
         }
     }
 }
