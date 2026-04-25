@@ -25,6 +25,8 @@ private struct MainTabs: View {
     let repository: any RoutineRepository
 
     private let notificationService = UserNotificationsService()
+    private let medicationService = HealthKitMedicationService()
+    private let sleepService = HealthKitSleepService()
 
     var body: some View {
         TabView {
@@ -46,6 +48,31 @@ private struct MainTabs: View {
                     Text("tab.templates", bundle: .main)
                 } icon: {
                     Image(systemName: "calendar")
+                }
+            }
+
+            MedicationComplianceView(
+                viewModel: MedicationComplianceViewModel(
+                    service: medicationService,
+                    repository: repository
+                )
+            )
+            .tabItem {
+                Label {
+                    Text("tab.medication", bundle: .main)
+                } icon: {
+                    Image(systemName: "pills")
+                }
+            }
+
+            SleepDashboardView(
+                viewModel: SleepDashboardViewModel(service: sleepService)
+            )
+            .tabItem {
+                Label {
+                    Text("tab.sleep", bundle: .main)
+                } icon: {
+                    Image(systemName: "moon")
                 }
             }
 

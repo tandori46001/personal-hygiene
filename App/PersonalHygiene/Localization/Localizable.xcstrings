@@ -352,6 +352,100 @@
     "settings.notifications.action.refresh" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Refresh today's notifications" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Actualizar notificaciones de hoy" } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Actualiser les notifications du jour" } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Actualiser les notifications du jour" } } } },
+
+    "tab.medication" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Medication" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Medicación" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Médicament" } } } },
+    "medication.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Medication" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Medicación" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Médicament" } } } },
+    "medication.unavailable.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Health data unavailable" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Datos de Salud no disponibles" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Données Santé indisponibles" } } } },
+    "medication.unavailable.description" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Medication tracking requires a real device with the Health app. The simulator can't read HealthKit data." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "El seguimiento de medicación requiere un dispositivo real con la app Salud. El simulador no puede leer datos de HealthKit." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Le suivi des médicaments nécessite un appareil réel avec l'app Santé. Le simulateur ne peut pas lire les données HealthKit." } } } },
+    "medication.empty.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "No medication tracked" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Sin seguimiento de medicación" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aucun suivi de médicament" } } } },
+    "medication.empty.description" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Link a medication block to a Health concept to start tracking adherence." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Vincula un bloque de medicación a un concepto de Salud para empezar a registrar el cumplimiento." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Lie un bloc de médicament à un concept Santé pour commencer le suivi." } } } },
+    "medication.overall" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Adherence" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Cumplimiento" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Adhésion" } } } },
+    "medication.section.last7days" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Last 7 days" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Últimos 7 días" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "7 derniers jours" } } } },
+
+    "tab.sleep" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Sleep" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Sueño" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Sommeil" } } } },
+    "sleep.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Sleep" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Sueño" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Sommeil" } } } },
+    "sleep.section.wakeUp" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Wake-up time" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hora de despertar" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Heure de réveil" } } } },
+    "sleep.wakeUp.hour" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Hour" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hora" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Heure" } } } },
+    "sleep.wakeUp.minute" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Minute" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Minuto" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Minute" } } } },
+    "sleep.section.bedtime" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Recommended bedtime" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hora de dormir recomendada" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Heure de coucher recommandée" } } } },
+    "sleep.bedtime.target" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Target bedtime" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hora de dormir objetivo" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Heure de coucher cible" } } } },
+    "sleep.target.note" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Based on a 7h45m sleep target. Adjust the wake-up to recompute." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Basado en 7h45m de sueño. Ajusta el despertar para recalcular." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Basé sur 7h45m de sommeil. Ajuste le réveil pour recalculer." } } } },
+    "sleep.section.lastNight" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Last night" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Última noche" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Nuit dernière" } } } },
+    "sleep.lastNight.actual" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Actual sleep" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Sueño real" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Sommeil réel" } } } },
+    "sleep.lastNight.empty" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "No data yet for last night." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Aún sin datos de anoche." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Pas encore de données pour la nuit dernière." } } } },
+    "sleep.unavailable" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Sleep data requires a real device with the Health app." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Los datos de sueño requieren un dispositivo real con la app Salud." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Les données de sommeil nécessitent un appareil réel avec l'app Santé." } } } },
+    "sleep.section.focus" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Sleep Focus" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Focus de Sueño" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Focus Sommeil" } } } },
+    "sleep.action.openFocus" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Open Focus settings" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Abrir ajustes de Focus" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ouvrir les réglages Focus" } } } },
+    "sleep.action.openFocus.note" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "There's no public API to enable Focus programmatically. Configure your Sleep Focus once in Settings; it'll activate automatically per your schedule." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "No hay API pública para activar Focus de forma programática. Configura tu Focus de Sueño una vez en Ajustes; se activará según tu horario." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Pas d'API publique pour activer Focus par programme. Configure ton Focus Sommeil une fois dans Réglages ; il s'activera selon ton horaire." } } } }
   }
 }

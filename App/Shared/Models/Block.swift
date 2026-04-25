@@ -12,6 +12,10 @@ public final class Block {
     public var notes: String?
     public var notificationLeadMinutes: Int
     public var isDeepFocus: Bool
+    /// Optional HealthKit medication concept identifier. Only set when
+    /// `category == .medication` and the user has linked the block to a
+    /// concept via the editor.
+    public var medicationConceptIdentifier: String?
 
     public var template: RoutineTemplate?
 
@@ -23,7 +27,8 @@ public final class Block {
         durationMinutes: Int,
         notes: String? = nil,
         notificationLeadMinutes: Int = 15,
-        isDeepFocus: Bool = false
+        isDeepFocus: Bool = false,
+        medicationConceptIdentifier: String? = nil
     ) {
         self.id = id
         self.title = title
@@ -33,6 +38,7 @@ public final class Block {
         self.notes = notes
         self.notificationLeadMinutes = notificationLeadMinutes
         self.isDeepFocus = isDeepFocus
+        self.medicationConceptIdentifier = medicationConceptIdentifier
     }
 
     public var endMinutesFromMidnight: Int {

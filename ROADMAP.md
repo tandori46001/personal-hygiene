@@ -51,16 +51,26 @@ Modules: M1 (templates) · M2 (notifications) · M3 (medication) · M4 (sleep).
 | Acceptance | Status |
 |---|---|
 | Domain models for routine (`Block`, `RoutineTemplate`) with tests | ✅ |
-| First UI slice — `RoutineListView` rendering blocks | ✅ |
-| i18n catalog (`Localizable.xcstrings`) with EN+ES+FR | ✅ (1 key) |
-| Routine template created and editable | ⬜ |
-| Persistence (SwiftData) | ✅ |
+| Persistence (SwiftData + Repository pattern) | ✅ |
 | CloudKit sync wiring | 🔒 deferred — needs Apple Developer Program ($99/yr) |
-| Notifications arrive 15min before each block | ⬜ |
-| HealthKit Medications integrated (Critical Alerts or fallback) | ⬜ |
-| Sleep block with auto-bedtime calculation, HealthKit Sleep read | ⬜ |
-| i18n complete — zero untranslated keys | ⬜ |
-| 14 consecutive days of real personal use | ⬜ |
+| Routine template created and editable (BlockEditor + TemplateEditor + List) | ✅ |
+| Today view (active template + current/next block) | ✅ |
+| First-launch onboarding with seeded weekday + weekend templates | ✅ |
+| i18n catalog (`Localizable.xcstrings`) with EN + ES + FR — 80+ keys | ✅ |
+| Notifications service + factory + scheduler | ✅ |
+| Notifications arrive 15min before each block (refreshed on launch) | ✅ |
+| Permission flow + Settings tab | ✅ |
+| Travel-time `MKDirections` notifications | 🔒 deferred — needs `Block.location` |
+| HealthKit Medications service (compiles; functional only on real device) | ✅ |
+| Block ↔ medication concept link (`Block.medicationConceptIdentifier`) | ✅ |
+| HKObserverQuery sync | 🔒 deferred — needs real device + entitlement |
+| Critical Alerts (interruptionLevel = .critical for medication blocks) | ✅ (entitlement still required for full effect) |
+| Critical Alerts fallback (re-notification on missed dose) | 🔒 deferred — pairs with HKObserverQuery |
+| MedicationCompliance dashboard (last 7 days) | ✅ |
+| HealthKit Sleep service (compiles; functional only on real device) | ✅ |
+| Auto-bedtime calculator + Sleep dashboard | ✅ |
+| Sleep Focus deep-link | ✅ (link to Settings; no public API to activate Focus programmatically) |
+| 14 consecutive days of real personal use | ⬜ requires device + paid Apple Developer Program |
 
 ---
 
