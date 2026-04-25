@@ -1,0 +1,32 @@
+# EditorConfig — https://editorconfig.org
+# Top-most EditorConfig file
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 4
+
+# Markdown — preserve trailing whitespace (it's meaningful for line breaks)
+[*.md]
+trim_trailing_whitespace = false
+indent_size = 2
+
+# YAML / JSON — 2-space indent
+[*.{yml,yaml,json}]
+indent_size = 2
+
+# Shell — POSIX-friendly
+[*.sh]
+indent_size = 2
+
+# Swift — Apple convention is 4 spaces
+[*.swift]
+indent_size = 4
+
+# Makefiles use real tabs
+[Makefile]
+indent_style = tab

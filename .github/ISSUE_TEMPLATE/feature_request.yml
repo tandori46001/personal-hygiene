@@ -1,0 +1,60 @@
+name: Feature request
+description: Suggest a new feature or improvement
+title: "[feat]: "
+labels: ["enhancement", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before opening, please check the [PRD](../../blob/main/PRD.md) and [ROADMAP](../../blob/main/ROADMAP.md) — your idea may already be planned.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What user need is unmet today?
+      placeholder: As a [user type], I want to [goal], so that [benefit].
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+
+  - type: dropdown
+    id: phase_fit
+    attributes:
+      label: Which roadmap phase does this fit?
+      options:
+        - "Phase 1 — MVP daily routine"
+        - "Phase 2 — Apple Watch"
+        - "Phase 3 — Secondary modules"
+        - "Phase 5 — Vacation module"
+        - "Phase 7+ — Future"
+        - "Out of scope / unsure"
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Suggested acceptance criteria
+      placeholder: |
+        - [ ] …
+        - [ ] …
+
+  - type: checkboxes
+    id: impact
+    attributes:
+      label: Impact considerations
+      options:
+        - label: This affects the privacy stance (data leaves user's Apple ecosystem)
+        - label: This requires a paid third-party API
+        - label: This requires a new entitlement (HealthKit, Critical Alerts, etc.)
+        - label: This affects all three locales (ES + EN + FR)

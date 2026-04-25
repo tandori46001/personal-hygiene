@@ -1,0 +1,153 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# Cancel in-progress runs on the same ref
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+
+  # ───────────────────────────────────────────────────────────────────
+  # 1. Repo hygiene — runs on every push/PR, no Xcode needed
+  # ───────────────────────────────────────────────────────────────────
+  hygiene:
+    name: Repo hygiene
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # full history for gitleaks
+
+      - name: Install gitleaks
+        run: |
+          curl -sSL https://github.com/gitleaks/gitleaks/releases/latest/download/gitleaks_8.21.2_linux_x64.tar.gz \
+            | sudo tar -xz -C /usr/local/bin gitleaks
+
+      - name: Make scripts executable
+        run: chmod +x scripts/*.sh
+
+      - name: Run check-clean.sh
+        run: ./scripts/check-clean.sh
+
+      - name: Verify required files exist
+        run: |
+          for f in README.md LICENSE CHANGELOG.md CONTRIBUTING.md SECURITY.md \
+                   PRD.md ARCHITECTURE.md ROADMAP.md CLAUDE.md \
+                   LESSONS.md QA_MANUAL.md .gitignore .editorconfig; do
+            if [ ! -f "$f" ]; then
+              echo "::error::missing required file: $f"
+              exit 1
+            fi
+          done
+
+  # ───────────────────────────────────────────────────────────────────
+  # 2. Lint — only runs once Swift sources exist
+  # ───────────────────────────────────────────────────────────────────
+  lint:
+    name: Lint Swift
+    runs-on: macos-latest
+    needs: hygiene
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect Swift sources
+        id: detect
+        run: |
+          count=$(find App Tests -name '*.swift' 2>/dev/null | wc -l | tr -d ' ')
+          echo "swift_count=$count" >> "$GITHUB_OUTPUT"
+          echo "found $count Swift files"
+
+      - name: Install SwiftLint + swift-format
+        if: steps.detect.outputs.swift_count != '0'
+        run: |
+          brew install swiftlint swift-format
+
+      - name: Run lint
+        if: steps.detect.outputs.swift_count != '0'
+        run: |
+          chmod +x scripts/lint.sh
+          ./scripts/lint.sh
+
+      - name: Skip (no Swift yet)
+        if: steps.detect.outputs.swift_count == '0'
+        run: echo "::notice::No Swift sources yet — lint skipped (Phase 0 not complete)"
+
+  # ───────────────────────────────────────────────────────────────────
+  # 3. Build + test — only runs once Xcode project exists
+  # ───────────────────────────────────────────────────────────────────
+  build-test:
+    name: Build + test (iOS)
+    runs-on: macos-latest
+    needs: hygiene
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Detect Xcode project
+        id: detect
+        run: |
+          if [ -d "App/PersonalHygiene.xcodeproj" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Select Xcode
+        if: steps.detect.outputs.exists == 'true'
+        run: sudo xcode-select -s /Applications/Xcode_16.app
+
+      - name: Show Xcode version
+        if: steps.detect.outputs.exists == 'true'
+        run: xcodebuild -version
+
+      - name: Cache derived data
+        if: steps.detect.outputs.exists == 'true'
+        uses: actions/cache@v4
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData
+          key: ${{ runner.os }}-derived-${{ hashFiles('App/**/*.swift', 'App/**/project.pbxproj') }}
+          restore-keys: |
+            ${{ runner.os }}-derived-
+
+      - name: Cache SPM
+        if: steps.detect.outputs.exists == 'true'
+        uses: actions/cache@v4
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData/**/SourcePackages
+          key: ${{ runner.os }}-spm-${{ hashFiles('App/**/Package.resolved') }}
+          restore-keys: |
+            ${{ runner.os }}-spm-
+
+      - name: Install xcbeautify
+        if: steps.detect.outputs.exists == 'true'
+        run: brew install xcbeautify
+
+      - name: Build + test
+        if: steps.detect.outputs.exists == 'true'
+        run: |
+          chmod +x scripts/check-tests.sh
+          ./scripts/check-tests.sh
+
+      - name: Upload test results
+        if: steps.detect.outputs.exists == 'true' && always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: build/test-results.xcresult
+          retention-days: 14
+
+      - name: Skip (no project yet)
+        if: steps.detect.outputs.exists == 'false'
+        run: echo "::notice::No Xcode project yet — build/test skipped (Phase 0 not complete)"

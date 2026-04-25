@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security vulnerability
+    url: https://github.com/tandori46001/personal-hygiene/security/advisories/new
+    about: Report a security issue privately. See SECURITY.md for the disclosure policy.
+  - name: Question / discussion
+    url: https://github.com/tandori46001/personal-hygiene/discussions
+    about: Ask a question or discuss an idea (enable Discussions in repo settings first).

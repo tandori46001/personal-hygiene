@@ -1,0 +1,44 @@
+# macOS
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+.fseventsd
+
+# Xcode (preparado para fases siguientes)
+xcuserdata/
+*.xcuserstate
+DerivedData/
+build/
+.swiftpm/
+*.xcworkspace/xcuserdata/
+*.xcodeproj/xcuserdata/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+
+# Swift Package Manager
+.build/
+Packages/
+Package.pins
+Package.resolved
+
+# CocoaPods (por si acaso)
+Pods/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots/
+fastlane/test_output/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Secrets / local config
+*.env
+*.env.local
+.env.*
+secrets/
+*-secrets.env

@@ -1,0 +1,19 @@
+# CODEOWNERS — required reviewers for paths
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+#
+# Order matters: the LAST matching pattern wins.
+
+# Default — all files require review by repo owner
+*                       @tandori46001
+
+# Critical configuration — extra scrutiny
+/.github/               @tandori46001
+/.gitignore             @tandori46001
+/.editorconfig          @tandori46001
+/.swiftlint.yml         @tandori46001
+/.swift-format          @tandori46001
+/CLAUDE.md              @tandori46001
+/PRD.md                 @tandori46001
+/ARCHITECTURE.md        @tandori46001
+/SECURITY.md            @tandori46001
+/scripts/               @tandori46001
