@@ -412,6 +412,23 @@
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Latitud y longitud deben ser coordenadas válidas." } },
       "fr" : { "stringUnit" : { "state" : "translated", "value" : "La latitude et la longitude doivent être des coordonnées valides." } } } },
 
+    "a11y.action.addTemplate" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Add template" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Añadir plantilla" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ajouter un modèle" } } } },
+    "a11y.action.addBlock" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Add block" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Añadir bloque" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ajouter un bloc" } } } },
+    "a11y.template.active" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Active template" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Plantilla activa" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Modèle actif" } } } },
+    "a11y.block.timeAndTitle" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "%1$@ at %2$@, %3$@ minutes" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "%1$@ a las %2$@, %3$@ minutos" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "%1$@ à %2$@, %3$@ minutes" } } } },
+
     "tab.medication" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Medication" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Medicación" } },

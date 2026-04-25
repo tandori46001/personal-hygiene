@@ -43,8 +43,14 @@ struct TemplateListView: View {
                     Button {
                         showingNewTemplateSheet = true
                     } label: {
-                        Image(systemName: "plus")
+                        Label {
+                            Text("a11y.action.addTemplate", bundle: .main)
+                        } icon: {
+                            Image(systemName: "plus")
+                        }
+                        .labelStyle(.iconOnly)
                     }
+                    .accessibilityLabel(Text("a11y.action.addTemplate", bundle: .main))
                 }
             }
             .onAppear { viewModel.reload() }
@@ -97,6 +103,7 @@ private struct TemplateRow: View {
                 }
                 .labelStyle(.iconOnly)
                 .foregroundStyle(.green)
+                .accessibilityLabel(Text("a11y.template.active", bundle: .main))
             } else {
                 Button(action: onActivate) {
                     Text("templateList.action.activate", bundle: .main)

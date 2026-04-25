@@ -65,6 +65,7 @@ private struct BlockNowRow: View {
             Text(formattedTime(minutes: block.startMinutesFromMidnight))
                 .font(.system(.title2, design: .monospaced))
         }
+        .accessibilityElement(children: .combine)
     }
 
     private func formattedTime(minutes: Int) -> String {
@@ -96,6 +97,7 @@ private struct BlockTimelineRow: View {
                 .foregroundStyle(.secondary)
         }
         .padding(.vertical, 2)
+        .accessibilityElement(children: .combine)
     }
 
     private func formattedTime(minutes: Int) -> String {

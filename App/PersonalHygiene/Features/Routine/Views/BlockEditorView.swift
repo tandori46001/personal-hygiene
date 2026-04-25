@@ -39,7 +39,8 @@ struct BlockEditorView: View {
                         }
                         .pickerStyle(.menu)
                         .labelsHidden()
-                        Text(":")
+                        Text(verbatim: ":")
+                            .accessibilityHidden(true)
                         Picker("", selection: $viewModel.startMinute) {
                             ForEach(Array(stride(from: 0, to: 60, by: 5)), id: \.self) { minute in
                                 Text(String(format: "%02d", minute)).tag(minute)

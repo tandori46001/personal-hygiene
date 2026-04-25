@@ -144,6 +144,7 @@ private struct BlockSummaryRow: View {
                     .foregroundStyle(.secondary)
             }
         }
+        .accessibilityElement(children: .combine)
     }
 
     private func formattedTime(minutes: Int) -> String {
