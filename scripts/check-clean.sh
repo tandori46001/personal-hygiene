@@ -14,6 +14,7 @@ WARN=0
 # 1. gitleaks — known-secret patterns
 if command -v gitleaks >/dev/null 2>&1; then
   echo "==> gitleaks (committed history)"
+  mkdir -p build
   if ! gitleaks detect --no-banner --redact --report-format json --report-path build/gitleaks.json --source . 2>&1; then
     echo "  FAIL: gitleaks found committed secrets"
     EXIT=1
