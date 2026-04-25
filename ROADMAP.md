@@ -54,7 +54,8 @@ Modules: M1 (templates) · M2 (notifications) · M3 (medication) · M4 (sleep).
 | First UI slice — `RoutineListView` rendering blocks | ✅ |
 | i18n catalog (`Localizable.xcstrings`) with EN+ES+FR | ✅ (1 key) |
 | Routine template created and editable | ⬜ |
-| Persistence (SwiftData + CloudKit) | ⬜ |
+| Persistence (SwiftData) | ✅ |
+| CloudKit sync wiring | 🔒 deferred — needs Apple Developer Program ($99/yr) |
 | Notifications arrive 15min before each block | ⬜ |
 | HealthKit Medications integrated (Critical Alerts or fallback) | ⬜ |
 | Sleep block with auto-bedtime calculation, HealthKit Sleep read | ⬜ |

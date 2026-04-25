@@ -1,0 +1,108 @@
+import SwiftData
+import XCTest
+
+@testable import PersonalHygiene
+
+@MainActor
+final class TodayViewModelTests: XCTestCase {
+
+    private var container: ModelContainer!
+    private var repo: SwiftDataRoutineRepository!
+
+    override func setUp() async throws {
+        try await super.setUp()
+        container = try AppModelContainer.makeInMemory()
+        repo = SwiftDataRoutineRepository(context: container.mainContext)
+    }
+
+    override func tearDown() async throws {
+        repo = nil
+        container = nil
+        try await super.tearDown()
+    }
+
+    private func calendarFixedToDay(weekday: Int) -> Calendar {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(secondsFromGMT: 0)!
+        return cal
+    }
+
+    private func date(weekday: Int, hour: Int = 8, minute: Int = 0) -> Date {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(secondsFromGMT: 0)!
+        // 2026-01-04 was a Sunday → weekday 1. Build forward.
+        let baseSunday = DateComponents(
+            calendar: cal, timeZone: cal.timeZone,
+            year: 2026, month: 1, day: 4, hour: hour, minute: minute
+        ).date!
+        let offset = (weekday - 1 + 7) % 7
+        return cal.date(byAdding: .day, value: offset, to: baseSunday)!
+    }
+
+    func test_dayType_weekendOnSundayAndSaturday() {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(secondsFromGMT: 0)!
+        XCTAssertEqual(TodayViewModel.dayType(for: date(weekday: 1), in: cal), .weekend)
+        XCTAssertEqual(TodayViewModel.dayType(for: date(weekday: 7), in: cal), .weekend)
+    }
+
+    func test_dayType_weekdayOnMondayThroughFriday() {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(secondsFromGMT: 0)!
+        for weekday in 2...6 {
+            XCTAssertEqual(TodayViewModel.dayType(for: date(weekday: weekday), in: cal), .weekday)
+        }
+    }
+
+    func test_reload_pullsActiveTemplateForToday() throws {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(secondsFromGMT: 0)!
+        let template = RoutineTemplate(name: "Weekday", dayType: .weekday, isActive: true)
+        try repo.upsert(template)
+
+        let vm = TodayViewModel(repository: repo, calendar: cal)
+        vm.reload(now: date(weekday: 3, hour: 8))
+
+        XCTAssertEqual(vm.activeTemplate?.name, "Weekday")
+        XCTAssertEqual(vm.todaysDayType, .weekday)
+    }
+
+    func test_currentBlock_returnsBlockContainingNow() throws {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(secondsFromGMT: 0)!
+        let block = Block(
+            title: "Work",
+            category: .work,
+            startMinutesFromMidnight: 9 * 60,
+            durationMinutes: 8 * 60
+        )
+        let template = RoutineTemplate(
+            name: "Weekday",
+            dayType: .weekday,
+            blocks: [block],
+            isActive: true
+        )
+        try repo.upsert(template)
+
+        let vm = TodayViewModel(repository: repo, calendar: cal)
+        vm.reload(now: date(weekday: 3, hour: 12))
+
+        XCTAssertEqual(vm.currentBlock(at: date(weekday: 3, hour: 12))?.title, "Work")
+    }
+
+    func test_nextBlock_returnsFirstBlockAfterNow() throws {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(secondsFromGMT: 0)!
+        let blocks = [
+            Block(title: "Hygiene", category: .hygiene, startMinutesFromMidnight: 7 * 60, durationMinutes: 30),
+            Block(title: "Lunch", category: .meal, startMinutesFromMidnight: 13 * 60, durationMinutes: 60),
+        ]
+        let template = RoutineTemplate(name: "T", dayType: .weekday, blocks: blocks, isActive: true)
+        try repo.upsert(template)
+
+        let vm = TodayViewModel(repository: repo, calendar: cal)
+        vm.reload(now: date(weekday: 3, hour: 8))
+
+        XCTAssertEqual(vm.nextBlock(after: date(weekday: 3, hour: 8))?.title, "Lunch")
+    }
+}

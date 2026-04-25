@@ -2,28 +2,303 @@
   "sourceLanguage" : "en",
   "version" : "1.0",
   "strings" : {
-    "routine.title" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "My routine"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Mi rutina"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ma routine"
-          }
-        }
-      }
-    }
+    "routine.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "My routine" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Mi rutina" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ma routine" } } } },
+
+    "common.cancel" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Cancel" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Cancelar" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Annuler" } } } },
+    "common.save" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Save" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Guardar" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Enregistrer" } } } },
+    "common.create" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Create" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Crear" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Créer" } } } },
+    "common.ok" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "OK" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "OK" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "OK" } } } },
+    "common.error" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Error" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Error" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Erreur" } } } },
+
+    "tab.today" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Today" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hoy" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aujourd'hui" } } } },
+    "tab.templates" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Templates" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Plantillas" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Modèles" } } } },
+
+    "today.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Today" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hoy" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aujourd'hui" } } } },
+    "today.now" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Now" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Ahora" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Maintenant" } } } },
+    "today.next" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Next up" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Siguiente" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Suivant" } } } },
+    "today.section.schedule" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Today's schedule" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Horario de hoy" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Programme du jour" } } } },
+    "today.empty.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "No active template" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Sin plantilla activa" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aucun modèle actif" } } } },
+    "today.empty.description" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Pick or create a template in the Templates tab to see today's schedule." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Elige o crea una plantilla en la pestaña Plantillas para ver el horario de hoy." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Choisis ou crée un modèle dans l'onglet Modèles pour voir le programme du jour." } } } },
+
+    "templateList.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Templates" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Plantillas" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Modèles" } } } },
+    "templateList.empty.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "No templates yet" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Aún no hay plantillas" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aucun modèle pour l'instant" } } } },
+    "templateList.empty.description" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Tap + to create your first routine template." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Toca + para crear tu primera plantilla de rutina." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Appuie sur + pour créer ton premier modèle de routine." } } } },
+    "templateList.active" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Active" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Activa" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Active" } } } },
+    "templateList.action.activate" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Activate" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Activar" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Activer" } } } },
+    "templateList.new.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "New template" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Nueva plantilla" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Nouveau modèle" } } } },
+    "templateList.new.name" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Name" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Nombre" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Nom" } } } },
+    "templateList.new.name.placeholder" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Weekday routine" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Rutina laborable" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Routine de semaine" } } } },
+    "templateList.new.dayType" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Day type" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Tipo de día" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Type de jour" } } } },
+
+    "templateEditor.section.metadata" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Template" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Plantilla" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Modèle" } } } },
+    "templateEditor.section.blocks" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Blocks" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Bloques" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Blocs" } } } },
+    "templateEditor.field.name" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Name" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Nombre" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Nom" } } } },
+    "templateEditor.field.name.placeholder" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Template name" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Nombre de la plantilla" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Nom du modèle" } } } },
+    "templateEditor.field.dayType" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Day type" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Tipo de día" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Type de jour" } } } },
+    "templateEditor.empty" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "No blocks yet — add your first one below." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Aún no hay bloques — añade el primero abajo." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aucun bloc pour l'instant — ajoute le premier ci-dessous." } } } },
+    "templateEditor.action.addBlock" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Add block" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Añadir bloque" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ajouter un bloc" } } } },
+
+    "blockEditor.title.new" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "New block" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Nuevo bloque" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Nouveau bloc" } } } },
+    "blockEditor.title.edit" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Edit block" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Editar bloque" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Modifier le bloc" } } } },
+    "blockEditor.section.basics" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Basics" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Básicos" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Essentiel" } } } },
+    "blockEditor.section.timing" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Timing" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Horario" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Horaire" } } } },
+    "blockEditor.section.alerts" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Alerts" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Alertas" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Alertes" } } } },
+    "blockEditor.section.notes" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Notes" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Notas" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Notes" } } } },
+    "blockEditor.field.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Title" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Título" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Titre" } } } },
+    "blockEditor.field.title.placeholder" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "What's this block?" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "¿Qué es este bloque?" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Quel est ce bloc ?" } } } },
+    "blockEditor.field.category" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Category" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Categoría" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Catégorie" } } } },
+    "blockEditor.field.startTime" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Start time" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hora de inicio" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Heure de début" } } } },
+    "blockEditor.field.duration" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Duration" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Duración" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Durée" } } } },
+    "blockEditor.field.leadTime" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Notify before" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Avisar antes" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Avertir avant" } } } },
+    "blockEditor.field.deepFocus" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Deep focus" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Enfoque profundo" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Concentration" } } } },
+    "blockEditor.field.notes" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Notes" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Notas" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Notes" } } } },
+    "blockEditor.field.notes.placeholder" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Optional details" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Detalles opcionales" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Détails facultatifs" } } } },
+
+    "onboarding.welcome.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Welcome" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Bienvenido" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Bienvenue" } } } },
+    "onboarding.welcome.body" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "personal-hygiene helps you follow your day with military precision: hygiene, meals, work, medication, sleep. We'll start with two example templates you can edit." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "personal-hygiene te ayuda a seguir tu día con precisión militar: aseo, comidas, trabajo, medicación, sueño. Empezamos con dos plantillas de ejemplo que puedes editar." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "personal-hygiene t'aide à suivre ta journée avec une précision militaire : hygiène, repas, travail, médicaments, sommeil. On commence avec deux modèles d'exemple que tu peux modifier." } } } },
+    "onboarding.action.start" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Get started" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Empezar" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Commencer" } } } },
+    "onboarding.template.weekday" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Weekday routine" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Rutina laborable" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Routine de semaine" } } } },
+    "onboarding.template.weekend" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Weekend routine" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Rutina fin de semana" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Routine de week-end" } } } },
+
+    "seed.block.hygiene" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Hygiene" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Aseo" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Toilette" } } } },
+    "seed.block.breakfast" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Breakfast" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Desayuno" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Petit-déjeuner" } } } },
+    "seed.block.medication" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Medication" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Medicación" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Médicament" } } } },
+    "seed.block.work" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Work" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Trabajo" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Travail" } } } },
+    "seed.block.dinner" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Dinner" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Cena" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Dîner" } } } },
+    "seed.block.sleep" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Sleep" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Dormir" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Sommeil" } } } },
+
+    "category.hygiene" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Hygiene" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Aseo" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Hygiène" } } } },
+    "category.meal" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Meal" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Comida" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Repas" } } } },
+    "category.sport" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Sport" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Deporte" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Sport" } } } },
+    "category.work" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Work" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Trabajo" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Travail" } } } },
+    "category.medical" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Medical" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Médico" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Médical" } } } },
+    "category.shopping" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Shopping" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Compras" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Courses" } } } },
+    "category.medication" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Medication" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Medicación" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Médicament" } } } },
+    "category.social" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Social" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Social" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Social" } } } },
+    "category.kids" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Kids" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hijos" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Enfants" } } } },
+    "category.sleep" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Sleep" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Dormir" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Sommeil" } } } },
+    "category.hydration" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Hydration" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hidratación" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Hydratation" } } } },
+    "category.housekeeping" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Housekeeping" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Tareas del hogar" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ménage" } } } },
+
+    "dayType.weekday" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Weekday" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Laborable" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Semaine" } } } },
+    "dayType.weekend" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Weekend" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Fin de semana" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Week-end" } } } },
+    "dayType.vacation" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Vacation" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Vacaciones" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Vacances" } } } },
+    "dayType.custom" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Custom" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Personalizado" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Personnalisé" } } } }
   }
 }
