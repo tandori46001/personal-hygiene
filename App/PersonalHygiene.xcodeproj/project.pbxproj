@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		197BB847B9FF176068AD1459 /* BlockCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4606FE1130F7F17EBC7A28C /* BlockCategory.swift */; };
+		250031CFAF00CF1146907A67 /* SwiftDataRoutineRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB758833B5B3BA55E64050D2 /* SwiftDataRoutineRepositoryTests.swift */; };
+		26D58ABFFB89540BD41A2144 /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15A10D5DE460A958A5D53E2 /* AppModelContainer.swift */; };
 		31E1A1EBE429E2F6947F6D57 /* Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDDDB2E7C9372D2292C447A /* Block.swift */; };
 		409F9A9E8B2F32FFE4F6D195 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CB4A3562E685E7DF57957B22 /* Assets.xcassets */; };
 		43744829A8E5B780683E07E3 /* PersonalHygieneWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B2F3900B8AA9251273F093 /* PersonalHygieneWatchApp.swift */; };
@@ -17,13 +19,16 @@
 		5F0577EC49473FBE13718355 /* DayType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018597A028807D4803454994 /* DayType.swift */; };
 		640F0F42B7F296D84317AF76 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 902DCDD24FE37E96168D6152 /* ContentView.swift */; };
 		72148BB53EEFC93362D896D1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCDD26F1F9BE6897C802F9D /* ContentView.swift */; };
+		7D39144F9F0937DEB78AAB07 /* RoutineRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2C54C3BD0F8E70F3D7B226 /* RoutineRepository.swift */; };
 		7DDDA435DC36C77FED5EC9FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA729D9A2D577664E06AE28B /* Assets.xcassets */; };
 		876226091BED9FBB52ACF09B /* RoutineListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9016CA1F69F72664DB39DCF /* RoutineListView.swift */; };
 		9055F831A75308CB44735BE2 /* RoutineListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B564307C0E98CEC05BE5E6 /* RoutineListViewModel.swift */; };
+		ABDD9F80A4A0A76EDFFCB191 /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15A10D5DE460A958A5D53E2 /* AppModelContainer.swift */; };
 		B0885D4926F6DA65D5BEA7B3 /* Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDDDB2E7C9372D2292C447A /* Block.swift */; };
 		C1910B00DCCDC3B350817BC5 /* RoutineTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD16FF8317F205F6929F8F70 /* RoutineTemplate.swift */; };
 		CE5EA2D79B93964D2C63F233 /* RoutineTemplateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9DD5A1125D33167C915BCF /* RoutineTemplateTests.swift */; };
 		D5D642DE4DD036C2C32B91A2 /* PersonalHygieneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45E12146599CB7B994CFF2A /* PersonalHygieneApp.swift */; };
+		E22943F6FF0797156673D181 /* RoutineRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2C54C3BD0F8E70F3D7B226 /* RoutineRepository.swift */; };
 		E863416DC18BBBA1CFF0A52A /* RoutineTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD16FF8317F205F6929F8F70 /* RoutineTemplate.swift */; };
 		FCFA2F8A993CE5F7821AC3EB /* BlockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F2C380F4A6452D827B3B69 /* BlockTests.swift */; };
 /* End PBXBuildFile section */
@@ -56,9 +61,12 @@
 		C9016CA1F69F72664DB39DCF /* RoutineListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineListView.swift; sourceTree = "<group>"; };
 		CB4A3562E685E7DF57957B22 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CD16FF8317F205F6929F8F70 /* RoutineTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineTemplate.swift; sourceTree = "<group>"; };
+		D15A10D5DE460A958A5D53E2 /* AppModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModelContainer.swift; sourceTree = "<group>"; };
 		E6A8C11F35E6E1B646B3CE0E /* PersonalHygiene.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = PersonalHygiene.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E73E2DA386467B754FD2B15A /* PersonalHygieneWatch.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PersonalHygieneWatch.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA729D9A2D577664E06AE28B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		FB2C54C3BD0F8E70F3D7B226 /* RoutineRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineRepository.swift; sourceTree = "<group>"; };
+		FB758833B5B3BA55E64050D2 /* SwiftDataRoutineRepositoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftDataRoutineRepositoryTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -66,6 +74,7 @@
 			isa = PBXGroup;
 			children = (
 				CA62A221C4503D8740C1F517 /* Models */,
+				F2E10C274DE300B347234421 /* Persistence */,
 			);
 			path = Unit;
 			sourceTree = "<group>";
@@ -155,6 +164,15 @@
 			path = Tests;
 			sourceTree = "<group>";
 		};
+		95ED8E330F659CBC5A417057 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				D15A10D5DE460A958A5D53E2 /* AppModelContainer.swift */,
+				FB2C54C3BD0F8E70F3D7B226 /* RoutineRepository.swift */,
+			);
+			path = Persistence;
+			sourceTree = "<group>";
+		};
 		A0A73222011B5AA0B356FC77 /* personal-hygiene */ = {
 			isa = PBXGroup;
 			children = (
@@ -187,6 +205,7 @@
 			isa = PBXGroup;
 			children = (
 				31EDB6184A34F1EE9EDA665D /* Models */,
+				95ED8E330F659CBC5A417057 /* Persistence */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -231,6 +250,14 @@
 				788E60145BFFD9263CD80A74 /* Localizable.xcstrings */,
 			);
 			path = Localization;
+			sourceTree = "<group>";
+		};
+		F2E10C274DE300B347234421 /* Persistence */ = {
+			isa = PBXGroup;
+			children = (
+				FB758833B5B3BA55E64050D2 /* SwiftDataRoutineRepositoryTests.swift */,
+			);
+			path = Persistence;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -357,11 +384,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				26D58ABFFB89540BD41A2144 /* AppModelContainer.swift in Sources */,
 				B0885D4926F6DA65D5BEA7B3 /* Block.swift in Sources */,
 				5C4C158A605F002079D5781D /* BlockCategory.swift in Sources */,
 				72148BB53EEFC93362D896D1 /* ContentView.swift in Sources */,
 				5F0577EC49473FBE13718355 /* DayType.swift in Sources */,
 				43744829A8E5B780683E07E3 /* PersonalHygieneWatchApp.swift in Sources */,
+				E22943F6FF0797156673D181 /* RoutineRepository.swift in Sources */,
 				E863416DC18BBBA1CFF0A52A /* RoutineTemplate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -372,6 +401,7 @@
 			files = (
 				FCFA2F8A993CE5F7821AC3EB /* BlockTests.swift in Sources */,
 				CE5EA2D79B93964D2C63F233 /* RoutineTemplateTests.swift in Sources */,
+				250031CFAF00CF1146907A67 /* SwiftDataRoutineRepositoryTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -379,6 +409,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ABDD9F80A4A0A76EDFFCB191 /* AppModelContainer.swift in Sources */,
 				31E1A1EBE429E2F6947F6D57 /* Block.swift in Sources */,
 				197BB847B9FF176068AD1459 /* BlockCategory.swift in Sources */,
 				640F0F42B7F296D84317AF76 /* ContentView.swift in Sources */,
@@ -386,6 +417,7 @@
 				D5D642DE4DD036C2C32B91A2 /* PersonalHygieneApp.swift in Sources */,
 				876226091BED9FBB52ACF09B /* RoutineListView.swift in Sources */,
 				9055F831A75308CB44735BE2 /* RoutineListViewModel.swift in Sources */,
+				7D39144F9F0937DEB78AAB07 /* RoutineRepository.swift in Sources */,
 				C1910B00DCCDC3B350817BC5 /* RoutineTemplate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1,6 +1,9 @@
+import SwiftData
 import XCTest
+
 @testable import PersonalHygiene
 
+@MainActor
 final class BlockTests: XCTestCase {
 
     func test_endMinutesFromMidnight_isStartPlusDuration() {
@@ -25,18 +28,26 @@ final class BlockTests: XCTestCase {
         XCTAssertNil(block.notes)
     }
 
-    func test_codable_roundtrip_preservesAllFields() throws {
-        let original = Block(
+    func test_persistAndFetch_roundtripsAllFields() throws {
+        let container = try AppModelContainer.makeInMemory()
+        let context = container.mainContext
+
+        let block = Block(
             title: "Medicación",
             category: .medication,
             startMinutesFromMidnight: 8 * 60,
             durationMinutes: 5,
             notes: "Con agua",
-            notificationLeadMinutes: 5,
-            isDeepFocus: false
+            notificationLeadMinutes: 5
         )
-        let encoded = try JSONEncoder().encode(original)
-        let decoded = try JSONDecoder().decode(Block.self, from: encoded)
-        XCTAssertEqual(original, decoded)
+        context.insert(block)
+        try context.save()
+
+        let fetched = try context.fetch(FetchDescriptor<Block>())
+        XCTAssertEqual(fetched.count, 1)
+        XCTAssertEqual(fetched.first?.title, "Medicación")
+        XCTAssertEqual(fetched.first?.category, .medication)
+        XCTAssertEqual(fetched.first?.notes, "Con agua")
+        XCTAssertEqual(fetched.first?.notificationLeadMinutes, 5)
     }
 }

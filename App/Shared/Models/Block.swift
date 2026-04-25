@@ -1,8 +1,10 @@
 import Foundation
+import SwiftData
 
 /// A single time-blocked item in the user's daily routine.
-public struct Block: Identifiable, Hashable, Sendable, Codable {
-    public let id: UUID
+@Model
+public final class Block {
+    public var id: UUID
     public var title: String
     public var category: BlockCategory
     public var startMinutesFromMidnight: Int
@@ -10,6 +12,8 @@ public struct Block: Identifiable, Hashable, Sendable, Codable {
     public var notes: String?
     public var notificationLeadMinutes: Int
     public var isDeepFocus: Bool
+
+    public var template: RoutineTemplate?
 
     public init(
         id: UUID = UUID(),

@@ -69,7 +69,7 @@ See [LESSONS.md](LESSONS.md) for full text. Quick table:
 
 | L0NN | Rule | Guard |
 |---|---|---|
-| (none yet) | Lessons accrue from real bugs encountered | — |
+| L001 | Keep `ModelContainer` alive for the lifetime of any `ModelContext` built from it; never drop it from a helper | `SwiftDataRoutineRepositoryTests` exercises insert + cascade-delete + relationship-append (suite crashes if regressed) |
 
 ---
 
