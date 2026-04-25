@@ -9,7 +9,9 @@ cd "$REPO_ROOT"
 
 PROJECT="App/PersonalHygiene.xcodeproj"
 SCHEME="PersonalHygiene"
-DESTINATION="platform=iOS Simulator,name=iPhone 16,OS=latest"
+# Pick the first available iPhone simulator (iPhone 17 Pro on dev, iPhone 17 on CI, etc.)
+DEVICE="${IOS_SIMULATOR_NAME:-iPhone 17 Pro}"
+DESTINATION="platform=iOS Simulator,name=${DEVICE}"
 
 # Pre-flight: project must exist
 if [ ! -d "$PROJECT" ]; then

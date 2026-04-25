@@ -32,7 +32,9 @@ Format:
 
 ## Index
 
-_(none yet — sections accrue per feature shipped)_
+| Section | Module | Phase | Shipped |
+|---|---|---|---|
+| [T-001](#t-001--block--routinetemplate-domain-models) | M1 | 1 | First slice |
 
 ---
 
@@ -49,4 +51,28 @@ Always test with: `MockHealthKit OFF` + real iCloud account on the device.
 
 ## Sections
 
-_(append `## [T-001]`, `## [T-002]`, … below as features ship)_
+## [T-001] — Block + RoutineTemplate domain models
+
+**Module:** M1 (routine templates)
+**Phase:** 1 (first slice)
+**Shipped in:** [pending commit]
+
+### Cases (automated — `Tests/Unit/Models/`)
+1. `Block.endMinutesFromMidnight` returns `start + duration`.
+2. `Block` default initializer uses `notificationLeadMinutes = 15`, `isDeepFocus = false`, `notes = nil`.
+3. `Block` Codable round-trip preserves all fields.
+4. `RoutineTemplate.sortedBlocks` returns blocks in chronological order.
+5. `RoutineTemplate` default initializer sets `version = 1` and empty blocks.
+
+### How to test
+```bash
+./scripts/check-tests.sh
+```
+Expected: 5 tests green.
+
+### Manual verification (sanity)
+1. Open app in Simulator (iPhone 17 Pro or any iPhone 18+).
+2. Verify `RoutineListView` renders 4 sample blocks in chronological order: Aseo (07:00), Desayuno (07:30), Medicación (08:00), Trabajo (09:00).
+3. Verify each row shows title, category, and start time in HH:MM format.
+4. Verify `routine.title` localizes correctly when device locale is `en` / `es` / `fr` ("My routine" / "Mi rutina" / "Ma routine").
+

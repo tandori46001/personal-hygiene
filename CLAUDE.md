@@ -123,8 +123,8 @@ See [LESSONS.md](LESSONS.md) for full text. Quick table:
 
 | Phase | Status | Acceptance |
 |---|---|---|
-| 0 — Bootstrap | 🟡 In progress | Repo + tooling ready |
-| 1 — MVP daily routine | ⬜ | See [PRD.md § 11](PRD.md#11-acceptance-criteria-por-fase) |
+| 0 — Bootstrap | ✅ Done | Repo + tooling ready · Xcode project + 5 tests green |
+| 1 — MVP daily routine | 🟡 First slice | M1 domain models + UI shell + i18n catalog shipped |
 | 2 — Apple Watch | ⬜ | Watch app + complications |
 | 3 — Secondary modules | ⬜ | Hydration, housekeeping, contacts, deep focus |
 | 4 — TestFlight beta | ⬜ | 30 days personal use |

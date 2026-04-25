@@ -18,6 +18,12 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 - `LESSONS.md` + `QA_MANUAL.md` — meta-system stubs.
 - `App/`, `Tests/`, `docs/`, `scripts/` directory placeholders.
 - GitHub Actions CI workflow + dependabot + issue / PR templates + CODEOWNERS.
+- **Xcode project** generated from `App/project.yml` via xcodegen — iOS app + watchOS app + unit-test target.
+- **Phase 1 first slice (M1):** domain models `Block`, `BlockCategory`, `DayType`, `RoutineTemplate` in `App/Shared/Models/`.
+- **Phase 1 first slice (M1):** SwiftUI scaffold — `RoutineListView` with `RoutineListViewModel` (sample data preview).
+- **i18n bootstrap:** `Localizable.xcstrings` with 1 key (`routine.title`) in EN + ES + FR.
+- **Watch app shell:** `PersonalHygieneWatch` placeholder for Phase 2.
+- **Unit tests:** 5 cases on `Block` + `RoutineTemplate` — all green.
 
 ---
 

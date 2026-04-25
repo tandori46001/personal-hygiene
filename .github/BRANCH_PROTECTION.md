@@ -2,6 +2,8 @@
 
 Documentation of the intended protection rules for `main`. Apply these via repo Settings → Branches, or via the `gh` CLI snippet below.
 
+> ⚠️ **Free-tier limitation (verified 2026-04-25):** Branch protection rules AND repository rulesets both require **GitHub Pro** when the repo is private. Both API endpoints return `403: Upgrade to GitHub Pro or make this repository public`. Until the repo goes public or upgrades to Pro, formal protection is NOT enforced — rely on Git client discipline (no `--force`, no branch delete on `main`).
+
 ---
 
 ## Rules for `main`

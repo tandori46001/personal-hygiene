@@ -18,7 +18,7 @@
 
 ## Phases
 
-### Phase 0 — Bootstrap 🟡
+### Phase 0 — Bootstrap ✅
 
 **Goal:** repo + tooling ready before first line of Swift.
 
@@ -32,16 +32,17 @@
 | `App/`, `Tests/`, `docs/`, `scripts/` placeholders | ✅ |
 | GitHub Actions CI workflow | ✅ |
 | Issue + PR templates, dependabot, CODEOWNERS | ✅ |
-| Initial commit + push to `origin/main` | ⬜ |
-| Xcode project (`PersonalHygiene.xcodeproj`) created | ⬜ |
-| HealthKit + CloudKit + Critical Alerts entitlements requested | ⬜ |
-| First green CI run | ⬜ |
+| Initial commit + push to `origin/main` | ✅ |
+| Xcode project (`PersonalHygiene.xcodeproj`) generated via xcodegen | ✅ |
+| First Swift code compiles + tests pass locally | ✅ |
+| HealthKit + CloudKit + Critical Alerts entitlements requested | ⬜ (deferred — needed for M3) |
+| First green CI run on GitHub | ⬜ (verified after push) |
 
-**Acceptance:** `git clone` → `./scripts/bootstrap.sh` → `xcodebuild build` → green CI.
+**Acceptance:** `git clone` → `./scripts/bootstrap.sh` → `xcodebuild test` → green CI ✅ (local), verified post-push.
 
 ---
 
-### Phase 1 — MVP daily routine (iOS only) ⬜
+### Phase 1 — MVP daily routine (iOS only) 🟡
 
 **Goal:** end user follows full daily routine on iPhone for 14 consecutive days using only this app's notifications.
 
@@ -49,11 +50,15 @@ Modules: M1 (templates) · M2 (notifications) · M3 (medication) · M4 (sleep).
 
 | Acceptance | Status |
 |---|---|
+| Domain models for routine (`Block`, `RoutineTemplate`) with tests | ✅ |
+| First UI slice — `RoutineListView` rendering blocks | ✅ |
+| i18n catalog (`Localizable.xcstrings`) with EN+ES+FR | ✅ (1 key) |
 | Routine template created and editable | ⬜ |
+| Persistence (SwiftData + CloudKit) | ⬜ |
 | Notifications arrive 15min before each block | ⬜ |
 | HealthKit Medications integrated (Critical Alerts or fallback) | ⬜ |
 | Sleep block with auto-bedtime calculation, HealthKit Sleep read | ⬜ |
-| i18n ES + EN + FR — zero untranslated keys | ⬜ |
+| i18n complete — zero untranslated keys | ⬜ |
 | 14 consecutive days of real personal use | ⬜ |
 
 ---

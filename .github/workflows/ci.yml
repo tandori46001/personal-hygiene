@@ -104,10 +104,6 @@ jobs:
             echo "exists=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Select Xcode
-        if: steps.detect.outputs.exists == 'true'
-        run: sudo xcode-select -s /Applications/Xcode_16.app
-
       - name: Show Xcode version
         if: steps.detect.outputs.exists == 'true'
         run: xcodebuild -version
