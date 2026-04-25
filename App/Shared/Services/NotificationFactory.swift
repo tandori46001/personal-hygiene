@@ -42,19 +42,101 @@ public enum NotificationFactory {
         let dayKey = isoDayKey(for: date, calendar: calendar)
 
         return blocks.compactMap { block -> ScheduledNotification? in
-            let triggerMinutes = block.startMinutesFromMidnight - block.notificationLeadMinutes
-            guard triggerMinutes >= 0 else { return nil }
-            guard let trigger = calendar.date(byAdding: .minute, value: triggerMinutes, to: dayStart) else {
-                return nil
-            }
-            return ScheduledNotification(
-                identifier: "\(identifierPrefix)\(block.id.uuidString).\(dayKey)",
-                title: block.title,
-                body: block.notes,
-                triggerDate: trigger,
-                isCritical: block.category == .medication
+            scheduledNotification(
+                for: block,
+                effectiveLeadMinutes: block.notificationLeadMinutes,
+                dayStart: dayStart,
+                dayKey: dayKey,
+                calendar: calendar
             )
         }
+    }
+
+    /// Async variant that adds travel-time on top of each block's static lead
+    /// minutes when the block has a `location` and an `origin` + service are
+    /// supplied. If the service throws, the static lead is used as a safe
+    /// fallback so the user still gets a notification.
+    @MainActor
+    public static func notifications(
+        for blocks: [Block],
+        on date: Date,
+        origin: BlockLocation?,
+        travelTimeService: (any TravelTimeService)?,
+        travelMode: TravelMode = .automobile,
+        calendar: Calendar = .autoupdatingCurrent
+    ) async -> [ScheduledNotification] {
+        let dayStart = calendar.startOfDay(for: date)
+        let dayKey = isoDayKey(for: date, calendar: calendar)
+
+        var result: [ScheduledNotification] = []
+        result.reserveCapacity(blocks.count)
+
+        for block in blocks {
+            let lead = await effectiveLeadMinutes(
+                for: block,
+                origin: origin,
+                travelTimeService: travelTimeService,
+                travelMode: travelMode
+            )
+            if let notification = scheduledNotification(
+                for: block,
+                effectiveLeadMinutes: lead,
+                dayStart: dayStart,
+                dayKey: dayKey,
+                calendar: calendar
+            ) {
+                result.append(notification)
+            }
+        }
+        return result
+    }
+
+    @MainActor
+    private static func effectiveLeadMinutes(
+        for block: Block,
+        origin: BlockLocation?,
+        travelTimeService: (any TravelTimeService)?,
+        travelMode: TravelMode
+    ) async -> Int {
+        guard
+            let destination = block.location,
+            let origin,
+            let travelTimeService
+        else {
+            return block.notificationLeadMinutes
+        }
+        do {
+            let seconds = try await travelTimeService.estimatedTravelTime(
+                from: origin,
+                to: destination,
+                mode: travelMode
+            )
+            let travelMinutes = Int((seconds / 60).rounded(.up))
+            return block.notificationLeadMinutes + max(0, travelMinutes)
+        } catch {
+            return block.notificationLeadMinutes
+        }
+    }
+
+    private static func scheduledNotification(
+        for block: Block,
+        effectiveLeadMinutes: Int,
+        dayStart: Date,
+        dayKey: String,
+        calendar: Calendar
+    ) -> ScheduledNotification? {
+        let triggerMinutes = block.startMinutesFromMidnight - effectiveLeadMinutes
+        guard triggerMinutes >= 0 else { return nil }
+        guard let trigger = calendar.date(byAdding: .minute, value: triggerMinutes, to: dayStart) else {
+            return nil
+        }
+        return ScheduledNotification(
+            identifier: "\(identifierPrefix)\(block.id.uuidString).\(dayKey)",
+            title: block.title,
+            body: block.notes,
+            triggerDate: trigger,
+            isCritical: block.category == .medication
+        )
     }
 
     private static func isoDayKey(for date: Date, calendar: Calendar) -> String {

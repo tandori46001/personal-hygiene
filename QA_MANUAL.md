@@ -44,6 +44,7 @@ Format:
 | [T-008](#t-008--notificationservice--scheduling) | M2 | 1 | Slices 9-11 |
 | [T-009](#t-009--medicationcomplianceview) | M3 | 1 | Slice 17 |
 | [T-010](#t-010--bedtimecalculator--sleepdashboard) | M4 | 1 | Slices 18-20 |
+| [T-011](#t-011--travel-time-notifications-domain--service) | M2 | 1 | Slice 12a |
 
 ---
 
@@ -231,4 +232,20 @@ The suite as a whole crashes the simulator if `ModelContainer` is allowed to dea
 2. Adjust wake-up via steppers → bedtime recomputes live.
 3. "Open Focus settings" link opens iOS Settings → Focus.
 4. Real device with sleep data: "Last night actual" + deficit warning appear.
+
+---
+
+## [T-011] — Travel-time notifications (domain + service)
+
+**Module:** M2 · **Phase:** 1 · **Shipped in:** slice 12a
+
+### Cases (automated)
+- `Tests/Unit/Models/BlockLocationTests.swift` — coordinate exposure, validity, Codable roundtrip.
+- `Tests/Unit/Models/BlockTests.swift` — location getter/setter mirrors lat/lon/name; SwiftData roundtrip preserves location fields.
+- `Tests/Unit/Services/TravelTimeServiceTests.swift` — `StaticTravelTimeService` returns default vs override; overrides are directional.
+- `Tests/Unit/Services/NotificationFactoryTests.swift` — async path adds travel-time on top of static lead, rounds seconds up to the next minute, falls back to static lead when no location / when service throws, skips blocks where the combined lead would cross midnight.
+
+### Manual verification (deferred to slice 12b — UI)
+1. Slice 12b will add a location picker on `BlockEditor` and a home-location field in Settings; this section will gain step-by-step coverage at that time.
+2. Until then, travel-time wiring is exercised only via tests + by passing `homeLocation` + `MKDirectionsTravelTimeService()` to `NotificationCoordinator` programmatically.
 

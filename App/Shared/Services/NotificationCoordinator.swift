@@ -7,15 +7,24 @@ public final class NotificationCoordinator {
 
     private let repository: any RoutineRepository
     private let service: any NotificationService
+    private let travelTimeService: (any TravelTimeService)?
+    private let homeLocation: BlockLocation?
+    private let travelMode: TravelMode
     private let calendar: Calendar
 
     public init(
         repository: any RoutineRepository,
         service: any NotificationService,
+        travelTimeService: (any TravelTimeService)? = nil,
+        homeLocation: BlockLocation? = nil,
+        travelMode: TravelMode = .automobile,
         calendar: Calendar = .autoupdatingCurrent
     ) {
         self.repository = repository
         self.service = service
+        self.travelTimeService = travelTimeService
+        self.homeLocation = homeLocation
+        self.travelMode = travelMode
         self.calendar = calendar
     }
 
@@ -28,11 +37,23 @@ public final class NotificationCoordinator {
             return
         }
 
-        let notifications = NotificationFactory.notifications(
-            for: template.sortedBlocks,
-            on: now,
-            calendar: calendar
-        )
+        let notifications: [ScheduledNotification]
+        if travelTimeService != nil, homeLocation != nil {
+            notifications = await NotificationFactory.notifications(
+                for: template.sortedBlocks,
+                on: now,
+                origin: homeLocation,
+                travelTimeService: travelTimeService,
+                travelMode: travelMode,
+                calendar: calendar
+            )
+        } else {
+            notifications = NotificationFactory.notifications(
+                for: template.sortedBlocks,
+                on: now,
+                calendar: calendar
+            )
+        }
         try await service.scheduleAll(notifications)
     }
 }
