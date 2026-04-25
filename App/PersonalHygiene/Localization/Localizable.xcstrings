@@ -27,6 +27,10 @@
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Error" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Error" } },
       "fr" : { "stringUnit" : { "state" : "translated", "value" : "Erreur" } } } },
+    "common.dismiss" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Dismiss" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Descartar" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ignorer" } } } },
 
     "tab.today" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Today" } },

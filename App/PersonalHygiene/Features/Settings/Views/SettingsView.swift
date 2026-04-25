@@ -14,6 +14,11 @@ struct SettingsView: View {
     var body: some View {
         NavigationStack {
             List {
+                if let error = viewModel.lastError {
+                    Section {
+                        ErrorBanner(message: error, onDismiss: { viewModel.lastError = nil })
+                    }
+                }
                 Section {
                     HStack {
                         Text("settings.notifications.status", bundle: .main)

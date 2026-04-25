@@ -6,6 +6,11 @@ struct SleepDashboardView: View {
     var body: some View {
         NavigationStack {
             Form {
+                if let error = viewModel.errorMessage {
+                    Section {
+                        ErrorBanner(message: error, onDismiss: { viewModel.errorMessage = nil })
+                    }
+                }
                 Section {
                     Stepper(value: $viewModel.wakeUpHour, in: 0...23) {
                         HStack {

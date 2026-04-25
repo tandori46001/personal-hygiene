@@ -71,6 +71,7 @@
 		EA6172A3F41984E15DDBDE1A /* NotificationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 685542340D132BBBD5D1B0F6 /* NotificationCoordinator.swift */; };
 		EE73AC4C89BAEC42F0C2EF88 /* MedicationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F2E746124742819F23D63A4 /* MedicationService.swift */; };
 		F51DCDA108CFD308325E6DCE /* MedicationComplianceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9671CFCAC1D7614EBAD1CFB6 /* MedicationComplianceViewModel.swift */; };
+		FA097D4CF1B4CB5A060C2635 /* ErrorBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF8C3958E0B46A4FDCABDC6 /* ErrorBanner.swift */; };
 		FC0D4F42034DC4F3AF5A8ABB /* BedtimeCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE9435A405AE37512198FC9 /* BedtimeCalculatorTests.swift */; };
 		FCFA2F8A993CE5F7821AC3EB /* BlockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F2C380F4A6452D827B3B69 /* BlockTests.swift */; };
 		FF4A505B0FFCCC2D201FBDFB /* MedicationCompliance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87CF274A384796487EFA71A4 /* MedicationCompliance.swift */; };
@@ -133,6 +134,7 @@
 		D286C3CA04A9375E3768F117 /* NotificationFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationFactoryTests.swift; sourceTree = "<group>"; };
 		D4325233FA9F02871FCDA344 /* BedtimeCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BedtimeCalculator.swift; sourceTree = "<group>"; };
 		D857E2973DD7DB00C327D6DD /* NotificationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationService.swift; sourceTree = "<group>"; };
+		DAF8C3958E0B46A4FDCABDC6 /* ErrorBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorBanner.swift; sourceTree = "<group>"; };
 		DB275300FF46571006F368E2 /* TodayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewModel.swift; sourceTree = "<group>"; };
 		DC6E0FA22F887BB223629773 /* HomeLocationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeLocationStore.swift; sourceTree = "<group>"; };
 		E6126279A32AD79122C97619 /* TemplateEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateEditorView.swift; sourceTree = "<group>"; };
@@ -184,6 +186,14 @@
 			path = Today;
 			sourceTree = "<group>";
 		};
+		24EFBF6D867D52FF1F4F424B /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				DAF8C3958E0B46A4FDCABDC6 /* ErrorBanner.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
 		2973C7111BF519FE7DBCB70E /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -225,6 +235,7 @@
 			isa = PBXGroup;
 			children = (
 				D6FB3273019F1C5573C6E385 /* App */,
+				24EFBF6D867D52FF1F4F424B /* Components */,
 				C8524E7BB2A1AA718104905E /* Features */,
 				F04ED05758E9B8952C695741 /* Localization */,
 				AA09F3F302A8E4C0C0B03D8F /* Resources */,
@@ -681,6 +692,7 @@
 				76E23C539CE8B21795D5AE13 /* BlockLocation.swift in Sources */,
 				640F0F42B7F296D84317AF76 /* ContentView.swift in Sources */,
 				55512E018BDB30A6773BFA91 /* DayType.swift in Sources */,
+				FA097D4CF1B4CB5A060C2635 /* ErrorBanner.swift in Sources */,
 				A0BB5D8B286A960EB2BF8E2F /* HomeLocationStore.swift in Sources */,
 				CEF991870B88A8EF20833892 /* MedicationCompliance.swift in Sources */,
 				B5B93C08D52435D705C86EE7 /* MedicationComplianceView.swift in Sources */,

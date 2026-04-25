@@ -28,6 +28,11 @@ struct MedicationComplianceView: View {
                     }
                 } else {
                     List {
+                        if let error = viewModel.errorMessage {
+                            Section {
+                                ErrorBanner(message: error, onDismiss: { viewModel.errorMessage = nil })
+                            }
+                        }
                         Section {
                             HStack {
                                 Text("medication.overall", bundle: .main)
