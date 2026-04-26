@@ -42,7 +42,7 @@
 
 ---
 
-### Phase 1 — MVP daily routine (iOS only) ✅ feature-complete (~98%)
+### Phase 1 — MVP daily routine (iOS only) ✅ feature-complete (~99%)
 
 **Goal:** end user follows full daily routine on iPhone for 14 consecutive days using only this app's notifications.
 
@@ -51,6 +51,8 @@ Modules: M1 (templates) · M2 (notifications) · M3 (medication) · M4 (sleep).
 > **Session 5 polish (2026-04-26):** Today empty-state CTA, block skip-today + notification exclusion, snooze-5-min action, notification grouping (thread/category), `WhatsNextIntent` Siri shortcut, `PersonalHygieneWidgets` (small + medium "next block"), VoiceOver pass on time-only rows, scheduled focus windows (DeepFocusFilter merges block + schedule). Remaining work is non-code: real-device validation + paid Apple Developer Program.
 >
 > **Session 6 polish (2026-04-26):** snooze-once badge on Today rows (`BlockSnoozeStore` + `BlockNotificationIdentifier.parse`), custom snooze duration picker (5/10/15 via `SnoozeDurationStore`), Templates / Settings / Hydration / Trips a11y combine, `WhatsNextDialogBuilder` extracted for testing, `DeepFocusHomeWidget` (small) shipped, hydration best-streak trophy, Birthdays auto-refresh on scenePhase, Housekeeping room picker, onboarding tips.
+>
+> **Session 10 polish (2026-04-26 round 8):** robust medication follow-up matching via `BlockNotificationIdentifier.parseAny` (no more substring-contains); `RecentlyDeliveredNotificationsView` companion to Pending; xcodegen `preBuildScript` stamps `CommitSHA.txt` on every build; Today summary preview-line shows next block; Templates confirm-on-delete with block count; Hydration undo toast on log delete; BlockEditor footer reflects per-firing notification count.
 
 | Acceptance | Status |
 |---|---|
@@ -78,7 +80,7 @@ Modules: M1 (templates) · M2 (notifications) · M3 (medication) · M4 (sleep).
 
 ---
 
-### Phase 2 — Apple Watch companion ✅ feature-complete (~95%)
+### Phase 2 — Apple Watch companion ✅ feature-complete (~97%)
 
 **Goal:** glanceable schedule on the wrist + ability to mark blocks done from Watch.
 
@@ -88,7 +90,10 @@ Modules: M1 (templates) · M2 (notifications) · M3 (medication) · M4 (sleep).
 | At least one complication ("next block") | ✅ `PersonalHygieneWatchWidgets` `NextBlockComplication` |
 | Haptic notifications mirror iPhone | ✅ via shared notification scheduling |
 | Mark block done from Watch | ✅ session 3 |
-| Real-device validation | ⬜ pending |
+| Watch Today refreshes on scenePhase active | ✅ round 8 |
+| Watch complication reloads after mark-done | ✅ round 8 (`WidgetCenter.reloadAllTimelines()`) |
+| CI watchOS build guard (L003 regressions) | ✅ round 8 (`build-watch` job) |
+| Real-device validation | 🟡 standalone deploy verified session 9; needs daily-use validation |
 
 ---
 

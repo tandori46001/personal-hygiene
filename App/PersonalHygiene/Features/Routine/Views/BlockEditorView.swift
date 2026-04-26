@@ -79,6 +79,8 @@ struct BlockEditorView: View {
                     }
                 } header: {
                     Text("blockEditor.section.alerts", bundle: .main)
+                } footer: {
+                    notificationsFooter
                 }
 
                 Section {
@@ -185,6 +187,16 @@ struct BlockEditorView: View {
 
     private func localizedCategory(_ category: BlockCategory) -> LocalizedStringKey {
         LocalizedStringKey("category.\(category.rawValue)")
+    }
+
+    /// Tells the user how many notifications this block will schedule per
+    /// firing day (1 primary, +1 follow-up at +30min for medications). The
+    /// recurrence (active days) lives on the template, not the block, so we
+    /// describe per-firing impact rather than weekly count.
+    @ViewBuilder
+    private var notificationsFooter: some View {
+        let count = viewModel.category == .medication ? 2 : 1
+        Text("blockEditor.notifications.footer.\(count)", bundle: .main)
     }
 }
 

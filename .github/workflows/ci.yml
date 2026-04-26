@@ -150,3 +150,64 @@ jobs:
       - name: Skip (no project yet)
         if: steps.detect.outputs.exists == 'false'
         run: echo "::notice::No Xcode project yet — build/test skipped (Phase 0 not complete)"
+
+  # ───────────────────────────────────────────────────────────────────
+  # 4. Watch build — guard against L003 regressions (Shared/ files
+  #    using iOS-only APIs without `#if !os(watchOS)` guards). Builds
+  #    the PersonalHygieneWatch scheme without installing.
+  # ───────────────────────────────────────────────────────────────────
+  build-watch:
+    name: Build (watchOS)
+    runs-on: macos-latest
+    needs: hygiene
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Detect Xcode project
+        id: detect
+        run: |
+          if [ -d "App/PersonalHygiene.xcodeproj" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Show Xcode version
+        if: steps.detect.outputs.exists == 'true'
+        run: xcodebuild -version
+
+      - name: Cache derived data (watch)
+        if: steps.detect.outputs.exists == 'true'
+        uses: actions/cache@v5
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData
+          key: ${{ runner.os }}-derived-watch-${{ hashFiles('App/**/*.swift', 'App/**/project.pbxproj') }}
+          restore-keys: |
+            ${{ runner.os }}-derived-watch-
+
+      - name: Install xcodegen
+        if: steps.detect.outputs.exists == 'true'
+        run: brew install xcodegen
+
+      - name: Regenerate project
+        if: steps.detect.outputs.exists == 'true'
+        run: |
+          cd App && xcodegen generate
+
+      - name: Build PersonalHygieneWatch scheme
+        if: steps.detect.outputs.exists == 'true'
+        run: |
+          xcodebuild build \
+            -project App/PersonalHygiene.xcodeproj \
+            -scheme PersonalHygieneWatch \
+            -destination 'generic/platform=watchOS' \
+            -derivedDataPath build/ci-watch \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            | grep -E "^\*\*|error:|BUILD SUCCEEDED|BUILD FAILED" || true
+
+      - name: Skip (no project yet)
+        if: steps.detect.outputs.exists == 'false'
+        run: echo "::notice::No Xcode project yet — watch build skipped"

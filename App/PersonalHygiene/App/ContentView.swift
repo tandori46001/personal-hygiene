@@ -239,11 +239,11 @@ private struct MainTabs: View {
         skipStore: any BlockSkipStore,
         snoozeStore: any BlockSnoozeStore
     ) {
-        let now = Date()
-        let cal = Calendar.autoupdatingCurrent
-        // Purging with keepLastDays: 0 wipes every entry (cutoff equals startOfDay(now)).
-        skipStore.purgeStale(before: now, calendar: cal, keepLastDays: 0)
-        snoozeStore.purgeStale(before: now, calendar: cal, keepLastDays: 0)
+        // `removeAll()` wipes every entry, including today's. Older code used
+        // `purgeStale(keepLastDays: 0)` which kept today (cutoff `>=` today),
+        // so a snooze inserted earlier the same day would survive a reset.
+        skipStore.removeAll()
+        snoozeStore.removeAll()
         SnoozeDurationStore.set(SnoozeDurationStore.defaultMinutes, in: .standard)
     }
 }

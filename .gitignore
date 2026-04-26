@@ -47,3 +47,6 @@ secrets/
 # The committed file holds "dev" so plain xcodebuild still produces a readable
 # value; local mutations during deploy are noise.
 App/PersonalHygiene/Resources/CommitSHA.txt
+
+# Claude Code session state (host-local; not part of the repo)
+.claude/

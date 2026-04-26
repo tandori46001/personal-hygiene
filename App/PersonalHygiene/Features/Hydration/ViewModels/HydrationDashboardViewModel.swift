@@ -13,6 +13,11 @@ final class HydrationDashboardViewModel {
     var goal: HydrationGoal
     var errorMessage: String?
 
+    /// Captures the most recently deleted log so the UI can offer an undo. The
+    /// view sets a timer to clear this after a few seconds; tapping Undo
+    /// replays the original `(milliliters, timestamp)` and clears it.
+    var lastDeleted: HydrationLog?
+
     /// Number of days of history we keep around to compute the streak.
     /// 14 is plenty for a UI badge — anything higher just bloats the fetch.
     private let streakWindowDays = 14
@@ -56,10 +61,26 @@ final class HydrationDashboardViewModel {
     func deleteLog(_ log: HydrationLog, now: Date = Date()) {
         do {
             try service.delete(log)
+            lastDeleted = log
             reload(now: now)
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+
+    func undoLastDelete(now: Date = Date()) {
+        guard let log = lastDeleted else { return }
+        do {
+            try service.log(milliliters: log.milliliters, at: log.drankAt)
+            lastDeleted = nil
+            reload(now: now)
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    func clearLastDeleted() {
+        lastDeleted = nil
     }
 
     var totalMilliliters: Int {

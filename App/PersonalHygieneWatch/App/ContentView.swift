@@ -1,5 +1,6 @@
 import SwiftData
 import SwiftUI
+import WidgetKit
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
@@ -20,6 +21,7 @@ struct TodayWatchView: View {
 
     @State private var doneBlockIDs: Set<UUID> = []
     @State private var errorMessage: String?
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         NavigationStack {
@@ -65,6 +67,16 @@ struct TodayWatchView: View {
                 viewModel.reload()
                 refreshDoneSet()
             }
+            .onChange(of: scenePhase) { _, phase in
+                // Watch dozes between glances; when the user wakes the watch we
+                // re-pull the schedule + done set so the snooze badge mirrored
+                // from iPhone reflects whatever the user did on the phone in
+                // the meantime.
+                if phase == .active {
+                    viewModel.reload()
+                    refreshDoneSet()
+                }
+            }
         }
     }
 
@@ -101,6 +113,10 @@ struct TodayWatchView: View {
                 try repository.markDone(block, on: Date(), calendar: .autoupdatingCurrent)
                 doneBlockIDs.insert(block.id)
             }
+            // The NextBlock complication renders the upcoming block; toggling
+            // done here invalidates that, so force a timeline reload instead
+            // of waiting for the system's next scheduled refresh.
+            WidgetCenter.shared.reloadAllTimelines()
         } catch {
             errorMessage = error.localizedDescription
         }

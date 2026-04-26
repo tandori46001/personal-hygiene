@@ -153,6 +153,37 @@ final class BlockEditorViewModelTests: XCTestCase {
         XCTAssertEqual(block.locationName, "Clinic")
     }
 
+    func test_hasUnsavedChanges_falseAfterInit() {
+        let vm = BlockEditorViewModel()
+        XCTAssertFalse(vm.hasUnsavedChanges)
+    }
+
+    func test_hasUnsavedChanges_trueAfterTitleEdit() {
+        let vm = BlockEditorViewModel()
+        vm.title = "Aseo"
+        XCTAssertTrue(vm.hasUnsavedChanges)
+    }
+
+    func test_hasUnsavedChanges_falseAfterTypeAndDelete() {
+        let vm = BlockEditorViewModel()
+        vm.title = "tmp"
+        vm.title = ""
+        XCTAssertFalse(vm.hasUnsavedChanges, "typing then deleting back to initial counts as 'no change'")
+    }
+
+    func test_hasUnsavedChanges_falseAfterEditingInitWithMatchingFields() {
+        let block = Block(title: "Pill", category: .medication, startMinutesFromMidnight: 8 * 60, durationMinutes: 5)
+        let vm = BlockEditorViewModel(editing: block)
+        XCTAssertFalse(vm.hasUnsavedChanges)
+    }
+
+    func test_hasUnsavedChanges_trueWhenAnyFieldDiverges() {
+        let block = Block(title: "Pill", category: .medication, startMinutesFromMidnight: 8 * 60, durationMinutes: 5)
+        let vm = BlockEditorViewModel(editing: block)
+        vm.notificationLeadMinutes += 5
+        XCTAssertTrue(vm.hasUnsavedChanges)
+    }
+
     func test_apply_clearsLocationWhenFieldsEmpty() {
         let block = Block(
             title: "Dentist",

@@ -279,10 +279,25 @@ dark for the unparsed kind (LESSONS L002).
 - **`NextBlockComplication`** now exposes `isFocusActive` in its snapshot; the entry view shows a small `moon.zzz.fill` glyph when a Deep Focus window is in effect. Focus state is computed via `DeepFocusFilter.isFocusActive(at:in:scheduledWindows:)` reading `UserDefaultsFocusScheduleStore.appGroupOrStandard()` — same store the iOS widget uses.
 - **`TodayWatchView` rows** show the `alarm` badge when `viewModel.isSnoozedToday(_:)` is true, mirroring the iPhone Today list. The watch app passes `UserDefaultsBlockSnoozeStore()` into `TodayViewModel` via `ContentView`; once an App Group entitlement lands, both targets can share the same `UserDefaults` suite.
 
+## 23. Build identity pipeline (round 8)
+
+The short git SHA is stamped into `App/PersonalHygiene/Resources/CommitSHA.txt` from three places, in priority order:
+
+1. **`./scripts/deploy-iphone.sh`** + **`./scripts/deploy-watch.sh`** — CLI deploys overwrite the file before the xcodebuild step. Authoritative for installs onto physical devices.
+2. **`PersonalHygiene` target preBuildScript in `App/project.yml`** (round 8) — runs on every build (incl. plain ▶ in Xcode). Falls back to `dev` when run outside a git checkout. `basedOnDependencyAnalysis: false` keeps Xcode from caching the script away.
+3. **Bundled fallback** — `BuildInfo.commitSHA` reads the resource at runtime; if missing, returns `"dev"`.
+
+`CommitSHA.txt` is gitignored so the file is reproducible-from-checkout, not committed.
+
+## 24. CI watchOS guard (round 8)
+
+L003 (Shared/ files using iOS-only APIs need `#if !os(watchOS)` gating) was caught manually in session 9 by a local watch deploy. The CI workflow now has a `build-watch` job (`.github/workflows/ci.yml`) that runs `xcodebuild build -scheme PersonalHygieneWatch -destination 'generic/platform=watchOS'` on `macos-latest` for every push and PR. Code-signing is disabled for the CI build so it doesn't need credentials. Failure here means a Shared/ file probably regressed; resolve by guarding the offending file with `#if canImport(UIKit) && !os(watchOS)`.
+
 ---
 
 **Version history:**
 
+- **v0.5 (2026-04-26)** — added §23 (build identity pipeline) + §24 (CI watchOS guard) reflecting session 10 (round 8). Robust medication follow-up matching via `BlockNotificationIdentifier.parseAny`; `RecentlyDeliveredNotificationsView` + `DeliveredNotificationsGrouper`; `removeAll()` on snooze/skip stores.
 - **v0.4 (2026-04-26)** — added §21-§22 reflecting session 9 (round 7): Diagnostics dev tools (`DiagnosticsActions`), `MedicationFollowUpFactory`, `BlockSnoozeSource.medicationFollowUp`, build-time `CommitSHA.txt` injection, watch complication focus indicator + watch app snooze badge.
 - **v0.3 (2026-04-26)** — added §18-§20 reflecting session 8 (round 6): cross-module shared services, notification-identifier registry pattern, diagnostics + deploy automation.
 - **v0.2 (2026-04-26)** — added §13-§17 reflecting session 5: widget extension target, value-type registry, service decorator convention, current notification architecture.

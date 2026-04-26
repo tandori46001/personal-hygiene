@@ -1611,6 +1611,60 @@
     "trip.milestone.alreadyNotified" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Notification already fired" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Notificación ya enviada" } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Notification déjà envoyée" } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Notification déjà envoyée" } } } },
+
+    "common.undo" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Undo" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Deshacer" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Annuler" } } } },
+
+    "settings.recentlyDelivered.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Recently delivered" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Entregadas recientes" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Récemment délivrées" } } } },
+    "settings.recentlyDelivered.loading" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Loading…" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Cargando…" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Chargement…" } } } },
+    "settings.recentlyDelivered.empty.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Nothing delivered yet" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Sin entregas todavía" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Rien de délivré pour le moment" } } } },
+    "settings.recentlyDelivered.empty.description" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Notifications fired in the last 24h appear here." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Las notificaciones disparadas en las últimas 24h aparecen aquí." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Les notifications déclenchées dans les dernières 24 h apparaissent ici." } } } },
+    "settings.diagnostics.notif.deliveredCount" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Recently delivered" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Entregadas recientes" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Récemment délivrées" } } } },
+    "settings.diagnostics.openDelivered" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Recently delivered…" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Entregadas recientes…" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Récemment délivrées…" } } } },
+    "settings.pendingNotifications.source.medicationFollowUp" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Medication follow-up" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Seguimiento de medicación" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Suivi de médication" } } } },
+
+    "today.summary.nextPreview %@ %@" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Next: %1$@ · %2$@" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Siguiente: %1$@ · %2$@" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Suivant : %1$@ · %2$@" } } } },
+
+    "templateList.delete.confirm.title %@ %lld" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete \"%1$@\"? %2$lld blocks will be removed." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "¿Borrar \"%1$@\"? Se eliminarán %2$lld bloques." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Supprimer « %1$@ » ? %2$lld blocs seront supprimés." } } } },
+
+    "hydration.undo.deleted %lld" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Removed %lld ml log" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Registro de %lld ml eliminado" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Entrée de %lld ml supprimée" } } } },
+
+    "blockEditor.notifications.footer.%lld" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Schedules %lld notification(s) per active day." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Programa %lld notificación(es) por día activo." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Programme %lld notification(s) par jour actif." } } } }
   }
 }

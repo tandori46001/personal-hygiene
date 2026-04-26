@@ -33,7 +33,8 @@ struct TodayView: View {
                                 } label: {
                                     ProgressSummaryRow(
                                         done: viewModel.doneCount,
-                                        total: viewModel.totalCount
+                                        total: viewModel.totalCount,
+                                        nextBlock: viewModel.nextBlock()
                                     )
                                 }
                                 .buttonStyle(.plain)
@@ -207,6 +208,7 @@ private struct TripCountdownRow: View {
 private struct ProgressSummaryRow: View {
     let done: Int
     let total: Int
+    let nextBlock: Block?
 
     var body: some View {
         HStack(spacing: 12) {
@@ -218,9 +220,21 @@ private struct ProgressSummaryRow: View {
                     .font(.headline)
                 ProgressView(value: Double(done), total: Double(max(total, 1)))
                     .progressViewStyle(.linear)
+                if let nextBlock {
+                    Text("today.summary.nextPreview \(formattedTime(nextBlock)) \(nextBlock.title)", bundle: .main)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
             }
         }
         .accessibilityElement(children: .combine)
+    }
+
+    private func formattedTime(_ block: Block) -> String {
+        let hour = block.startMinutesFromMidnight / 60
+        let minute = block.startMinutesFromMidnight % 60
+        return String(format: "%02d:%02d", hour, minute)
     }
 }
 

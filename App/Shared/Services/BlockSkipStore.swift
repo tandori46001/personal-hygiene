@@ -14,6 +14,8 @@ public protocol BlockSkipStore: Sendable {
     func unskip(blockID: UUID, on date: Date, calendar: Calendar)
     /// Drop entries older than `keepLastDays` days. Called from refresh paths.
     func purgeStale(before now: Date, calendar: Calendar, keepLastDays: Int)
+    /// Wipe every entry, including today. Used by the dev-tools reset.
+    func removeAll()
 }
 
 extension BlockSkipStore {
@@ -83,6 +85,11 @@ public final class UserDefaultsBlockSkipStore: BlockSkipStore, @unchecked Sendab
         writeKeys(kept)
     }
 
+    public func removeAll() {
+        lock.lock(); defer { lock.unlock() }
+        defaults.removeObject(forKey: Self.storageKey)
+    }
+
     private func compositeKey(blockID: UUID, date: Date, calendar: Calendar) -> String {
         "\(blockID.uuidString)|\(Self.dayKey(for: date, calendar: calendar))"
     }
@@ -123,6 +130,11 @@ public final class InMemoryBlockSkipStore: BlockSkipStore, @unchecked Sendable {
 
     public func purgeStale(before now: Date, calendar: Calendar, keepLastDays: Int) {
         // No-op for in-memory: tests construct fresh instances per case.
+    }
+
+    public func removeAll() {
+        lock.lock(); defer { lock.unlock() }
+        keys.removeAll()
     }
 
     private func compositeKey(blockID: UUID, date: Date, calendar: Calendar) -> String {

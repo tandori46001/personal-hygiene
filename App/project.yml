@@ -34,6 +34,21 @@ targets:
     dependencies:
       - target: PersonalHygieneWidgets
         embed: true
+    preBuildScripts:
+      - name: Stamp commit SHA
+        # Writes the short git SHA into Resources/CommitSHA.txt so plain ▶ in
+        # Xcode reflects the same build-identity that ./scripts/deploy-iphone.sh
+        # already stamps via the CLI flow. basedOnDependencyAnalysis:false makes
+        # the script run on every build (otherwise Xcode caches based on input
+        # hash and skips it). Falls back to "dev" when run outside a git
+        # checkout (e.g. archive in CI without fetch-depth).
+        script: |
+          set -eu
+          SHA="$(cd "$SRCROOT/.." && git rev-parse --short HEAD 2>/dev/null || echo dev)"
+          echo "$SHA" > "$SRCROOT/PersonalHygiene/Resources/CommitSHA.txt"
+        outputFiles:
+          - $(SRCROOT)/PersonalHygiene/Resources/CommitSHA.txt
+        basedOnDependencyAnalysis: false
     info:
       path: PersonalHygiene/Info.plist
       properties:

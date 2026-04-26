@@ -17,6 +17,7 @@
 		058AC12BE5497BDCEB019EF6 /* TripDetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2F31840C148B9BB955A118 /* TripDetailViewModelTests.swift */; };
 		06C853E6719CE72B66433DB6 /* TodayView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0188FB39F51C1FB6F2DC489D /* TodayView.swift */; };
 		075E6CDC92892EA406CC5A9B /* HydrationGoal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C442826202995F6E163D01 /* HydrationGoal.swift */; };
+		08DDAF381E9B63CC5D5FFE44 /* DeliveredNotificationsGrouper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95070F8E0B12432BD917236D /* DeliveredNotificationsGrouper.swift */; };
 		0B8BAB6D5E651B540C52316F /* MedicationCompliance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87CF274A384796487EFA71A4 /* MedicationCompliance.swift */; };
 		0CF8BDD7F0CA4228EDA273D6 /* BlockLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498429D0D47787A663C6BD39 /* BlockLocation.swift */; };
 		0EC39DBD33AE82788E02AA61 /* BlockCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4606FE1130F7F17EBC7A28C /* BlockCategory.swift */; };
@@ -46,6 +47,8 @@
 		20DE79D78CDA1B9066ACE4EB /* CachedMarineWeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14F4E7F23174D00046E98CE /* CachedMarineWeatherService.swift */; };
 		2118EE39DDED2040C22AFDA7 /* BackupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4D88BD5D07D48B8F4A8382 /* BackupService.swift */; };
 		2177A12DC18A8748585819CA /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9375851F4D5F463754AC9DA /* KeychainStore.swift */; };
+		21C916629DA50A9E648633B3 /* DeliveredNotificationsGrouperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8095181374ADC6BBC88847D /* DeliveredNotificationsGrouperTests.swift */; };
+		22070CDABCDDC12762A56745 /* DeliveredNotificationsGrouper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95070F8E0B12432BD917236D /* DeliveredNotificationsGrouper.swift */; };
 		22C0FB4016F6323D125A9BB0 /* TemplateListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DBBB3077A4EB0BCA37AB72B /* TemplateListViewModel.swift */; };
 		234648D12C739B9E6BD2CFA4 /* CommitSHA.txt in Resources */ = {isa = PBXBuildFile; fileRef = D868AA76A93090AC2E19FBB3 /* CommitSHA.txt */; };
 		2390C6BA2876639BF3B3F4CB /* BirthdayContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE1D8CDA189133B95EB97D9 /* BirthdayContact.swift */; };
@@ -71,10 +74,12 @@
 		31CB266D8CD430FEA2958239 /* HydrationServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C60BB97B3DF5358A08BB2E3 /* HydrationServiceTests.swift */; };
 		31E1A1EBE429E2F6947F6D57 /* Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDDDB2E7C9372D2292C447A /* Block.swift */; };
 		323CCEEBDCFFA60184A4CF68 /* TripItinerary.swift in Sources */ = {isa = PBXBuildFile; fileRef = E342CDD00B03B08D6A5B0FED /* TripItinerary.swift */; };
+		327B28B2393423BF1D94DED5 /* NotificationCoordinatorFollowUpTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5848E9A6512B2BB764234C2 /* NotificationCoordinatorFollowUpTests.swift */; };
 		34CC9F47222DBB3F80BED636 /* Block.swift in Sources */ = {isa = PBXBuildFile; fileRef = AEDDDB2E7C9372D2292C447A /* Block.swift */; };
 		34F00767C92565FA3E4906AE /* UpcomingBirthdaysTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6667FC15B2416991F9DE600 /* UpcomingBirthdaysTests.swift */; };
 		356F26B9F147087FD6FEC2CE /* OnboardingFlagStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 836F62E722041EA2D1B052CC /* OnboardingFlagStore.swift */; };
 		3639F36A6FAF277FBBC28E37 /* HomeLocationStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFC05394EC5A6EB86F475464 /* HomeLocationStoreTests.swift */; };
+		36DE3B1DCBA442E064A1511B /* DeliveredNotificationsGrouper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95070F8E0B12432BD917236D /* DeliveredNotificationsGrouper.swift */; };
 		371568B943322A276DEE5FBA /* TripMilestoneScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757F7B808F6ED88D37AFB308 /* TripMilestoneScheduler.swift */; };
 		37DAA06B36BF3D1070C2E67C /* BirthdayContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE1D8CDA189133B95EB97D9 /* BirthdayContact.swift */; };
 		3929382BA5BE2D0E8544CB64 /* BirthdayLeadStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CA59C249EF5BC8CDBD6115 /* BirthdayLeadStore.swift */; };
@@ -224,6 +229,7 @@
 		985346F3F5EA23B2DBFA6869 /* DiagnosticsActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F4184BE105E8D1B78C9072E /* DiagnosticsActions.swift */; };
 		99E0C58F79A2D66EA660D416 /* TripsRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5273E32D9DF4C1E6D733D961 /* TripsRepository.swift */; };
 		9A855226A3086FA9EFD08141 /* TripDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9B6406D489CCF198CE9DA0 /* TripDocument.swift */; };
+		9AB7DCD988439A04E568A3A5 /* DeliveredNotificationsGrouper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95070F8E0B12432BD917236D /* DeliveredNotificationsGrouper.swift */; };
 		9C18FF110B379294ECE808FE /* PersonalHygieneWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A416D138EFCC3B100C488468 /* PersonalHygieneWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		9C2F4B1B4B6A17DE5DF121DF /* NextBlockResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2FC99C764A6B3A7034D3B1 /* NextBlockResolver.swift */; };
 		9DE8AA351B04B685D9D39F1E /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35C73220A71429E371C3F70 /* ShareSheet.swift */; };
@@ -275,6 +281,7 @@
 		C46DA119756B4A0604FC9BF2 /* PersonalHygieneWatchWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A708BA2C28D4442A3FA8006 /* PersonalHygieneWatchWidgets.swift */; };
 		C5383F43A15F67A0C659AA72 /* RoutineTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD16FF8317F205F6929F8F70 /* RoutineTemplate.swift */; };
 		C5D31AB87C499A008D3D8F80 /* CurrencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78282BEB856188E32419812A /* CurrencyView.swift */; };
+		C64394845914F8DA746DE87F /* RecentlyDeliveredNotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E4040C3997160AB3641CCF /* RecentlyDeliveredNotificationsView.swift */; };
 		C6BC558EB773369B97D8FE07 /* BirthdaysView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5077526B02AB76ABF1198BD /* BirthdaysView.swift */; };
 		C806F6E013CD6123F3B34BF1 /* BlockSnoozeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02FE39F914F22E90D9E738B /* BlockSnoozeStore.swift */; };
 		C816C39D8BCE9667E0CE460B /* TripMilestoneScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757F7B808F6ED88D37AFB308 /* TripMilestoneScheduler.swift */; };
@@ -487,6 +494,7 @@
 		65B5E443DB54BE2356D7C388 /* HousekeepingListViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousekeepingListViewModelTests.swift; sourceTree = "<group>"; };
 		663722BBB35DB8492E87B16F /* TodayViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayViewModelTests.swift; sourceTree = "<group>"; };
 		670BAB8DA0279AFA097EE358 /* MedicationFollowUpFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationFollowUpFactoryTests.swift; sourceTree = "<group>"; };
+		67E4040C3997160AB3641CCF /* RecentlyDeliveredNotificationsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentlyDeliveredNotificationsView.swift; sourceTree = "<group>"; };
 		685542340D132BBBD5D1B0F6 /* NotificationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCoordinator.swift; sourceTree = "<group>"; };
 		6AEA6CA266446873BEA7D333 /* HydrationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HydrationService.swift; sourceTree = "<group>"; };
 		6D726A1E455A2F5D5035053F /* RenderSmokeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RenderSmokeTests.swift; sourceTree = "<group>"; };
@@ -517,6 +525,7 @@
 		8F7D6EB2189F2A13D70E79F9 /* HousekeepingService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousekeepingService.swift; sourceTree = "<group>"; };
 		902DCDD24FE37E96168D6152 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		90B51EECB8573E877BC9C9C1 /* BlockEditorViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockEditorViewModelTests.swift; sourceTree = "<group>"; };
+		95070F8E0B12432BD917236D /* DeliveredNotificationsGrouper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveredNotificationsGrouper.swift; sourceTree = "<group>"; };
 		95D34D08644B45EC9C764C6B /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
 		9671CFCAC1D7614EBAD1CFB6 /* MedicationComplianceViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationComplianceViewModel.swift; sourceTree = "<group>"; };
 		9A708BA2C28D4442A3FA8006 /* PersonalHygieneWatchWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalHygieneWatchWidgets.swift; sourceTree = "<group>"; };
@@ -570,6 +579,7 @@
 		E02FE39F914F22E90D9E738B /* BlockSnoozeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockSnoozeStore.swift; sourceTree = "<group>"; };
 		E342CDD00B03B08D6A5B0FED /* TripItinerary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripItinerary.swift; sourceTree = "<group>"; };
 		E55AD4BBE099C629664D352C /* PersonalHygieneWatchWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = PersonalHygieneWatchWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		E5848E9A6512B2BB764234C2 /* NotificationCoordinatorFollowUpTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCoordinatorFollowUpTests.swift; sourceTree = "<group>"; };
 		E6126279A32AD79122C97619 /* TemplateEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateEditorView.swift; sourceTree = "<group>"; };
 		E6A8C11F35E6E1B646B3CE0E /* PersonalHygiene.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = PersonalHygiene.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E73879E25833E6C0994E9F07 /* Localizable.xcstrings */ = {isa = PBXFileReference; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
@@ -585,6 +595,7 @@
 		F31D865D49871448597D80E4 /* OnboardingUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingUITests.swift; sourceTree = "<group>"; };
 		F35C73220A71429E371C3F70 /* ShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheet.swift; sourceTree = "<group>"; };
 		F448734951A6A88D0AEBEBBE /* TripDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripDetailViewModel.swift; sourceTree = "<group>"; };
+		F8095181374ADC6BBC88847D /* DeliveredNotificationsGrouperTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeliveredNotificationsGrouperTests.swift; sourceTree = "<group>"; };
 		F86510F75C6CA64C5BC6AA1C /* HydrationComplianceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HydrationComplianceTests.swift; sourceTree = "<group>"; };
 		F8ED70B984B000223C891B6A /* NotificationActionHandlerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationActionHandlerTests.swift; sourceTree = "<group>"; };
 		F9BE7A2CD4AF4CA663821C20 /* CachedTravelAdvisoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CachedTravelAdvisoryService.swift; sourceTree = "<group>"; };
@@ -698,6 +709,7 @@
 				368835748FB83D6467F23505 /* FocusScheduleView.swift */,
 				1F785A48F0078152688043B0 /* HomeLocationSection.swift */,
 				05F3E1931277F6352D7E404A /* PendingNotificationsView.swift */,
+				67E4040C3997160AB3641CCF /* RecentlyDeliveredNotificationsView.swift */,
 				3B0DA38D6BF0668B6B35E476 /* SettingsView.swift */,
 				2FDACF50AC4C448A3DC6253E /* WhatsNewSheet.swift */,
 			);
@@ -873,6 +885,7 @@
 				CC8AF1C127CD25DD6CBF1485 /* ContactsService.swift */,
 				D2F3DECAA2114CB1342EC37B /* CurrencyService.swift */,
 				7D9FEB31CBE9708BAB03C30C /* DeepFocusFilter.swift */,
+				95070F8E0B12432BD917236D /* DeliveredNotificationsGrouper.swift */,
 				B281292A9B77BC14ADC7FF54 /* FocusSchedule.swift */,
 				830CE2EED13F4D5045D82195 /* FoundationModelsItineraryGenerator.swift */,
 				DC6E0FA22F887BB223629773 /* HomeLocationStore.swift */,
@@ -1014,6 +1027,7 @@
 				77A55750A47D1F4CB6D2942F /* CachedTravelAdvisoryServiceTests.swift */,
 				9B4B7C0C3656EBA46280D550 /* ContactsServiceTests.swift */,
 				0AD448CC6DDECC5C5D628BA8 /* DeepFocusFilterTests.swift */,
+				F8095181374ADC6BBC88847D /* DeliveredNotificationsGrouperTests.swift */,
 				9AFB7D982141CF1FBDED9D4E /* FocusScheduleTests.swift */,
 				C58447287FB1755502148F87 /* FrankfurterCurrencyServiceTests.swift */,
 				BFC05394EC5A6EB86F475464 /* HomeLocationStoreTests.swift */,
@@ -1029,6 +1043,7 @@
 				670BAB8DA0279AFA097EE358 /* MedicationFollowUpFactoryTests.swift */,
 				03B243F1A829D97FE7827AFA /* NextBlockResolverTests.swift */,
 				F8ED70B984B000223C891B6A /* NotificationActionHandlerTests.swift */,
+				E5848E9A6512B2BB764234C2 /* NotificationCoordinatorFollowUpTests.swift */,
 				D286C3CA04A9375E3768F117 /* NotificationFactoryTests.swift */,
 				BBEC60DE989BBD3377AE6FF3 /* OnboardingFlagStoreTests.swift */,
 				0EEDCF07757910F0B5CF4E3D /* OpenMeteoMarineServiceTests.swift */,
@@ -1318,6 +1333,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 70654A426AF1FCB1DE603C1F /* Build configuration list for PBXNativeTarget "PersonalHygiene" */;
 			buildPhases = (
+				840C2B68B3BF887A9496D4CB /* Stamp commit SHA */,
 				FAE493FEEF3E439AAA8FDE63 /* Sources */,
 				53480DEF69C210F0E2A91766 /* Resources */,
 				87033ADE6BBEDEB98E39D54B /* Embed Foundation Extensions */,
@@ -1428,6 +1444,29 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		840C2B68B3BF887A9496D4CB /* Stamp commit SHA */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Stamp commit SHA";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(SRCROOT)/PersonalHygiene/Resources/CommitSHA.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "set -eu\nSHA=\"$(cd \"$SRCROOT/..\" && git rev-parse --short HEAD 2>/dev/null || echo dev)\"\necho \"$SHA\" > \"$SRCROOT/PersonalHygiene/Resources/CommitSHA.txt\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		5BD9A99FEDAE779EB341A38A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -1454,6 +1493,7 @@
 				EC7E92A407630C1942FFF568 /* CurrencyService.swift in Sources */,
 				5F0577EC49473FBE13718355 /* DayType.swift in Sources */,
 				A74EE37BE73B4F33809C16C1 /* DeepFocusFilter.swift in Sources */,
+				9AB7DCD988439A04E568A3A5 /* DeliveredNotificationsGrouper.swift in Sources */,
 				E33D6C593336AA4FA32A870E /* FocusSchedule.swift in Sources */,
 				4B212588F89CA40C528755BC /* FoundationModelsItineraryGenerator.swift in Sources */,
 				6C56A3BEFA8F7940D1251421 /* HomeLocationStore.swift in Sources */,
@@ -1522,6 +1562,7 @@
 				DF96B293C015F53534EE5E8F /* CurrencyService.swift in Sources */,
 				51F69FCE150D1FBA31E3B318 /* DayType.swift in Sources */,
 				61B822844DAC83DCFA4A24EE /* DeepFocusFilter.swift in Sources */,
+				08DDAF381E9B63CC5D5FFE44 /* DeliveredNotificationsGrouper.swift in Sources */,
 				DAC56985E7BFB81E282E0BC3 /* FocusSchedule.swift in Sources */,
 				A789F2AF754B9070494F89E6 /* FoundationModelsItineraryGenerator.swift in Sources */,
 				0212B4D017D023050FD34C0D /* HomeLocationStore.swift in Sources */,
@@ -1593,6 +1634,7 @@
 				1290841158AC0A8F345DB666 /* CachedTravelAdvisoryServiceTests.swift in Sources */,
 				03CC3856A4A2116B7C4DF81F /* ContactsServiceTests.swift in Sources */,
 				4C7B66D9453EE7869DB1D75A /* DeepFocusFilterTests.swift in Sources */,
+				21C916629DA50A9E648633B3 /* DeliveredNotificationsGrouperTests.swift in Sources */,
 				BED2E28E09124499401E9FF6 /* FocusScheduleTests.swift in Sources */,
 				127E3E5D1760C92A6114EA6E /* FrankfurterCurrencyServiceTests.swift in Sources */,
 				3639F36A6FAF277FBBC28E37 /* HomeLocationStoreTests.swift in Sources */,
@@ -1610,6 +1652,7 @@
 				A9ED1D59876E10CE5634C47F /* MedicationFollowUpFactoryTests.swift in Sources */,
 				77A9FD494E0663CF7EA3CA33 /* NextBlockResolverTests.swift in Sources */,
 				40360AC7C6A03D2BBFC4F803 /* NotificationActionHandlerTests.swift in Sources */,
+				327B28B2393423BF1D94DED5 /* NotificationCoordinatorFollowUpTests.swift in Sources */,
 				C89D5C3D112C1122B7366F14 /* NotificationFactoryTests.swift in Sources */,
 				5305C6ACCE1AEFFD03E0410D /* OnboardingFlagStoreTests.swift in Sources */,
 				01C73F3FBD1A83B992264586 /* OpenMeteoMarineServiceTests.swift in Sources */,
@@ -1663,6 +1706,7 @@
 				C5D31AB87C499A008D3D8F80 /* CurrencyView.swift in Sources */,
 				55512E018BDB30A6773BFA91 /* DayType.swift in Sources */,
 				F953B00695617595C5CB3A6E /* DeepFocusFilter.swift in Sources */,
+				22070CDABCDDC12762A56745 /* DeliveredNotificationsGrouper.swift in Sources */,
 				985346F3F5EA23B2DBFA6869 /* DiagnosticsActions.swift in Sources */,
 				68FA730C29CA768146D2EAF8 /* DiagnosticsView.swift in Sources */,
 				913E7910B858F41D75ABD103 /* DocumentMetadataSheet.swift in Sources */,
@@ -1706,6 +1750,7 @@
 				9839644B52D35ED735D75AEA /* OnboardingView.swift in Sources */,
 				CEEC33FDE8CF3B26D6FA6220 /* PendingNotificationsView.swift in Sources */,
 				D5D642DE4DD036C2C32B91A2 /* PersonalHygieneApp.swift in Sources */,
+				C64394845914F8DA746DE87F /* RecentlyDeliveredNotificationsView.swift in Sources */,
 				876226091BED9FBB52ACF09B /* RoutineListView.swift in Sources */,
 				9055F831A75308CB44735BE2 /* RoutineListViewModel.swift in Sources */,
 				7D39144F9F0937DEB78AAB07 /* RoutineRepository.swift in Sources */,
@@ -1769,6 +1814,7 @@
 				448083BF196E668EB6C8B9FA /* CurrencyService.swift in Sources */,
 				D1262F4532A8ECACDF21A14B /* DayType.swift in Sources */,
 				264A9C1DA014CC0E17E95B40 /* DeepFocusFilter.swift in Sources */,
+				36DE3B1DCBA442E064A1511B /* DeliveredNotificationsGrouper.swift in Sources */,
 				394C54E7D43B0261A8F3871D /* FocusSchedule.swift in Sources */,
 				EF16BC67DABC603B224C10BD /* FoundationModelsItineraryGenerator.swift in Sources */,
 				41EB1A2E96817B8F28ACE0CB /* HomeLocationStore.swift in Sources */,

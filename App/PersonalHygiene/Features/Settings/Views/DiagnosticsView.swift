@@ -12,6 +12,7 @@ struct DiagnosticsView: View {
     let actions: DiagnosticsActions
 
     @State private var pendingCount: Int?
+    @State private var deliveredCount: Int?
     @State private var pendingError: String?
     @State private var lastDevAction: String?
     @State private var showingResetConfirm = false
@@ -50,6 +51,19 @@ struct DiagnosticsView: View {
                         Image(systemName: "list.bullet.rectangle")
                     }
                 }
+                row(
+                    label: "settings.diagnostics.notif.deliveredCount",
+                    value: deliveredCount.map(String.init) ?? "—"
+                )
+                NavigationLink {
+                    RecentlyDeliveredNotificationsView()
+                } label: {
+                    Label {
+                        Text("settings.diagnostics.openDelivered", bundle: .main)
+                    } icon: {
+                        Image(systemName: "checkmark.bubble")
+                    }
+                }
             } header: {
                 Text("settings.diagnostics.section.notifications", bundle: .main)
             }
@@ -66,8 +80,8 @@ struct DiagnosticsView: View {
         }
         .navigationTitle(Text("settings.diagnostics.title", bundle: .main))
         .navigationBarTitleDisplayMode(.inline)
-        .task { await refreshPendingCount() }
-        .refreshable { await refreshPendingCount() }
+        .task { await refreshCounts() }
+        .refreshable { await refreshCounts() }
         .confirmationDialog(
             Text("settings.diagnostics.devTools.reset.confirm.title", bundle: .main),
             isPresented: $showingResetConfirm,
@@ -93,7 +107,7 @@ struct DiagnosticsView: View {
                 Task {
                     await actions.scheduleTestNotification()
                     lastDevAction = String(localized: "settings.diagnostics.devTools.testNotif.done")
-                    await refreshPendingCount()
+                    await refreshCounts()
                 }
             } label: {
                 Label {
@@ -107,7 +121,7 @@ struct DiagnosticsView: View {
                 Task {
                     await actions.clearAllPending()
                     lastDevAction = String(localized: "settings.diagnostics.devTools.clearPending.done")
-                    await refreshPendingCount()
+                    await refreshCounts()
                 }
             } label: {
                 Label {
@@ -172,10 +186,12 @@ struct DiagnosticsView: View {
         .accessibilityElement(children: .combine)
     }
 
-    private func refreshPendingCount() async {
+    private func refreshCounts() async {
         let center = UNUserNotificationCenter.current()
         let requests = await center.pendingNotificationRequests()
         pendingCount = requests.count
+        let delivered = await center.deliveredNotifications()
+        deliveredCount = delivered.count
     }
 
     private func localizedStatus(_ status: NotificationAuthorizationStatus) -> LocalizedStringKey {

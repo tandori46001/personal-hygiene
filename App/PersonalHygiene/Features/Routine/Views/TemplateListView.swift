@@ -11,6 +11,7 @@ struct TemplateListView: View {
     @State private var showingNewTemplateSheet = false
     @State private var newTemplateName = ""
     @State private var newTemplateDayType: DayType = .weekday
+    @State private var pendingDelete: RoutineTemplate?
 
     var body: some View {
         NavigationStack {
@@ -90,6 +91,27 @@ struct TemplateListView: View {
                     onCancel: { showingNewTemplateSheet = false }
                 )
             }
+            .confirmationDialog(
+                Text(deleteConfirmKey, bundle: .main),
+                isPresented: Binding(
+                    get: { pendingDelete != nil },
+                    set: { if !$0 { pendingDelete = nil } }
+                ),
+                titleVisibility: .visible,
+                presenting: pendingDelete
+            ) { template in
+                Button(role: .destructive) {
+                    viewModel.delete(template)
+                    pendingDelete = nil
+                } label: {
+                    Text("common.delete", bundle: .main)
+                }
+                Button(role: .cancel) {
+                    pendingDelete = nil
+                } label: {
+                    Text("common.cancel", bundle: .main)
+                }
+            }
         }
     }
 
@@ -103,9 +125,18 @@ struct TemplateListView: View {
     }
 
     private func deleteTemplates(at offsets: IndexSet) {
-        for index in offsets {
-            viewModel.delete(viewModel.templates[index])
+        // Stage the first template only — confirmation dialog gates the actual
+        // delete. Multi-row swipe is rare and we'd rather confirm one at a time
+        // than auto-confirm the rest.
+        if let index = offsets.first {
+            pendingDelete = viewModel.templates[index]
         }
+    }
+
+    private var deleteConfirmKey: LocalizedStringKey {
+        let name = pendingDelete?.name ?? ""
+        let count = pendingDelete?.blocks.count ?? 0
+        return "templateList.delete.confirm.title \(name) \(count)"
     }
 }
 

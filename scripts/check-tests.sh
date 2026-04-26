@@ -65,8 +65,14 @@ set -e
 # Exit 65 + zero "Test Case '...' failed" lines == known DebuggerLLDB simulator
 # glitch (DebuggerLLDB.DebuggerVersionStore.StoreError). Tripped sessions 5/6/7
 # without a real failure. We treat it as success ONLY when no test method is
-# reported failed AND no compile error is in the log.
-REAL_FAILURES="$(grep -cE "^Test Case '.*' failed|FAILED:|error:" "$LOG_FILE" || true)"
+# reported failed AND no compile error is in the log. The glitch itself emits
+# `error: failed to attach to xpc service` and `DebuggerVersionStore` lines
+# which we filter out before counting (round 8) so they don't masquerade as
+# real test failures.
+REAL_FAILURES="$(grep -E "^Test Case '.*' failed|FAILED:|error:" "$LOG_FILE" \
+    | grep -vE "DebuggerVersionStore|failed to attach to xpc service" \
+    | wc -l \
+    | tr -d ' ' || true)"
 if [ "$XB_EXIT" = "65" ] && [ "$REAL_FAILURES" = "0" ]; then
   echo
   echo "==> xcodebuild exit 65 with zero test-method failures — treating as known"

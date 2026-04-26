@@ -1091,3 +1091,77 @@ None — purely build-time guard.
 2. PhotosPicker opens the system photo library.
 3. Pick a portrait photo → cover image appears at 200 px height (slice 15 round 6 — bumped from 160).
 4. "Remove" button replaces the cover with the empty state.
+
+---
+
+## [T-069] — Watch Today: snooze badge mirror
+
+**Module:** watch · **Shipped in:** round 8 (session 10)
+
+### Manual verification (real device, requires paired Apple Watch + iPhone)
+1. iPhone: open Settings → Diagnostics → Dev tools → "Inject snooze badge on first block".
+2. Open watch app → Today.
+3. The first block of today's template shows the `alarm` blue glyph at the row trailing edge.
+4. iPhone: Diagnostics → "Reset all dev stores".
+5. Bring the watch back to active (raise wrist). Glyph disappears within ~1s — verifies scenePhase refresh wired in round 8.
+
+---
+
+## [T-070] — Watch complication: Deep Focus moon glyph
+
+**Module:** watch · **Shipped in:** round 7 / verified on-device round 8
+
+### Manual verification
+1. iPhone: Settings → Scheduling → Deep Focus → schedule a focus window covering "now".
+2. Add the `NextBlock` watch complication to a watch face.
+3. The glyph next to the title shows `moon.zzz.fill` in purple instead of the default bell.
+4. End the focus window (or wait it out). Within the next system timeline refresh, the moon clears.
+
+---
+
+## [T-071] — Watch standalone install + cold launch
+
+**Module:** watch · **Shipped in:** round 7 wrap (session 9)
+
+### Manual verification
+1. From CLI: `./scripts/deploy-watch.sh --clean`.
+2. Watch boots into the app via `xcrun devicectl process launch`.
+3. Force-quit (long-press Digital Crown → close), then launch again from the watch app drawer (no iPhone required).
+4. App opens, today list renders, no missing-bundle errors. Standalone confirms `WKWatchOnly: true`.
+
+---
+
+## [T-072] — Medication follow-up at +30min
+
+**Module:** medication · **Shipped in:** round 7 (Tier E)
+
+### Manual verification (real device)
+1. iPhone: pick a template with at least one `medication` block.
+2. Settings → Diagnostics → Pending notifications.
+3. Each medication block has TWO entries: the primary at the lead time + a `personal-hygiene.medication.followup.*` entry +30 min after the primary trigger date.
+4. Snooze the primary from the lock screen → re-fire shape preserved (round 8 hardened the matching via `parseAny`).
+
+---
+
+## [T-073] — Diagnostics: Recently delivered panel
+
+**Module:** diagnostics · **Shipped in:** round 8 (Tier B)
+
+### Manual verification (real device, needs ≥1 delivered notification in the last 24h)
+1. Settings → Diagnostics → "Recently delivered (N)" link.
+2. Panel groups every notification fired in the last 24h by source: routine / hydration / milestone / medication follow-up / unknown.
+3. Each row: title, body (2-line cap), delivered timestamp, identifier suffix.
+4. Pull-to-refresh re-reads `UNUserNotificationCenter.deliveredNotifications`.
+
+---
+
+## [T-074] — Hydration undo toast on swipe-to-delete
+
+**Module:** hydration · **Shipped in:** round 8 (Tier D)
+
+### Manual verification
+1. Hydration tab → log a quick 250ml.
+2. Swipe-to-delete the row.
+3. Undo toast appears at the top of the list with the deleted volume + an `Undo` button.
+4. Tapping `Undo` restores the log with the original timestamp.
+5. Letting the toast sit for 5s clears it automatically.

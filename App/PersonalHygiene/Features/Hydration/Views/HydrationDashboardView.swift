@@ -17,6 +17,34 @@ struct HydrationDashboardView: View {
                     }
                 }
 
+                if let lastDeleted = viewModel.lastDeleted {
+                    Section {
+                        HStack {
+                            Image(systemName: "arrow.uturn.backward.circle")
+                                .foregroundStyle(.tint)
+                                .accessibilityHidden(true)
+                            Text(
+                                "hydration.undo.deleted \(lastDeleted.milliliters)",
+                                bundle: .main
+                            )
+                            Spacer()
+                            Button {
+                                viewModel.undoLastDelete()
+                            } label: {
+                                Text("common.undo", bundle: .main)
+                            }
+                            .buttonStyle(.bordered)
+                        }
+                        .accessibilityElement(children: .combine)
+                    }
+                    .task(id: lastDeleted.id) {
+                        try? await Task.sleep(nanoseconds: 5_000_000_000)
+                        if viewModel.lastDeleted?.id == lastDeleted.id {
+                            viewModel.clearLastDeleted()
+                        }
+                    }
+                }
+
                 Section {
                     HStack(alignment: .firstTextBaseline) {
                         Text("hydration.today.total", bundle: .main)

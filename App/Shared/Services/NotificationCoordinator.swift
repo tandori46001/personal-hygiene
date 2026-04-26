@@ -84,22 +84,24 @@ public final class NotificationCoordinator {
     /// PRD M3.2 fallback: every primary medication notification gains a +30
     /// min follow-up so the user gets re-notified if they ignored the first
     /// alert. Pure side-effect-free helper so tests can verify the pairing.
+    /// Matches primaries → blocks via `BlockNotificationIdentifier.parseAny`
+    /// (routine kind) so the pairing breaks at compile/parse time if the
+    /// identifier shape ever changes — not silently like the old substring
+    /// match did.
     static func medicationFollowUps(
         primaries: [ScheduledNotification],
         blocks: [Block],
         now: Date,
         calendar: Calendar
     ) -> [ScheduledNotification] {
-        let medicationBlocks = blocks.filter { $0.medicationConceptIdentifier != nil }
-        let dayKey = String(
-            format: "%04d-%02d-%02d",
-            calendar.component(.year, from: now),
-            calendar.component(.month, from: now),
-            calendar.component(.day, from: now)
+        let medicationBlocks = Dictionary(
+            uniqueKeysWithValues: blocks
+                .filter { $0.medicationConceptIdentifier != nil }
+                .map { ($0.id, $0) }
         )
         return primaries.compactMap { primary -> ScheduledNotification? in
-            // Match the primary to its source block by identifier suffix.
-            guard let block = medicationBlocks.first(where: { primary.identifier.contains($0.id.uuidString) })
+            guard case let .routine(blockID, dayKey) = BlockNotificationIdentifier.parseAny(primary.identifier),
+                  let block = medicationBlocks[blockID]
             else { return nil }
             return MedicationFollowUpFactory.followUp(
                 for: primary,
