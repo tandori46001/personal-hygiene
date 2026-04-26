@@ -1014,6 +1014,23 @@
     "trip.action.share" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Share trip as PDF" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Compartir viaje como PDF" } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Partager le voyage en PDF" } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Partager le voyage en PDF" } } } },
+
+    "settings.section.backup" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Backup" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Copia de seguridad" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Sauvegarde" } } } },
+    "settings.section.backup.footer" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "JSON exports cover routine, hydration, housekeeping, and trips. Import is destructive — it replaces all data on this device. Document scans (Keychain) are not included." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Las copias en JSON incluyen rutina, hidratación, tareas y viajes. Importar es destructivo — reemplaza todos los datos del dispositivo. Los documentos escaneados (Keychain) no se incluyen." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Les sauvegardes JSON couvrent routine, hydratation, tâches et voyages. L'import est destructif — il remplace toutes les données. Les documents scannés (Keychain) ne sont pas inclus." } } } },
+    "settings.backup.action.export" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Export backup as JSON" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Exportar copia en JSON" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Exporter la sauvegarde JSON" } } } },
+    "settings.backup.action.import" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Import backup (replaces all data)" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Importar copia (reemplaza todo)" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Importer la sauvegarde (tout remplacer)" } } } }
   }
 }

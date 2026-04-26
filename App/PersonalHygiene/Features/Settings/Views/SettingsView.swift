@@ -1,7 +1,11 @@
+import SwiftData
 import SwiftUI
+import UniformTypeIdentifiers
 
 struct SettingsView: View {
     @Bindable var viewModel: SettingsViewModel
+
+    @Environment(\.modelContext) private var modelContext
 
     @AppStorage(HomeLocationStore.isSetKey) private var homeIsSet = false
     @AppStorage(HomeLocationStore.nameKey) private var homeName = ""
@@ -10,6 +14,15 @@ struct SettingsView: View {
 
     @State private var homeLatitudeText = ""
     @State private var homeLongitudeText = ""
+
+    @State private var backupExport: BackupExport?
+    @State private var showingImporter = false
+    @State private var backupError: String?
+
+    private struct BackupExport: Identifiable {
+        let id = UUID()
+        let url: URL
+    }
 
     var body: some View {
         NavigationStack {
@@ -63,10 +76,83 @@ struct SettingsView: View {
                 }
 
                 homeSection
+                backupSection
             }
             .navigationTitle(Text("settings.title", bundle: .main))
             .task { await viewModel.reloadStatus() }
             .onAppear { hydrateHomeFromStore() }
+            .sheet(item: $backupExport) { exp in
+                ShareSheet(items: [exp.url])
+            }
+            .fileImporter(
+                isPresented: $showingImporter,
+                allowedContentTypes: [.json],
+                allowsMultipleSelection: false
+            ) { result in
+                handleImport(result)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var backupSection: some View {
+        Section {
+            Button {
+                exportBackup()
+            } label: {
+                Label {
+                    Text("settings.backup.action.export", bundle: .main)
+                } icon: {
+                    Image(systemName: "square.and.arrow.up")
+                }
+            }
+            Button(role: .destructive) {
+                showingImporter = true
+            } label: {
+                Label {
+                    Text("settings.backup.action.import", bundle: .main)
+                } icon: {
+                    Image(systemName: "square.and.arrow.down")
+                }
+            }
+            if let backupError {
+                Text(verbatim: backupError)
+                    .font(.caption)
+                    .foregroundStyle(.red)
+            }
+        } header: {
+            Text("settings.section.backup", bundle: .main)
+        } footer: {
+            Text("settings.section.backup.footer", bundle: .main)
+        }
+    }
+
+    private func exportBackup() {
+        backupError = nil
+        do {
+            let snapshot = try BackupService.export(from: modelContext)
+            let data = try BackupService.encode(snapshot)
+            let filename = "personal-hygiene-backup-\(Int(Date().timeIntervalSince1970)).json"
+            let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
+            try data.write(to: url, options: .atomic)
+            backupExport = BackupExport(url: url)
+        } catch {
+            backupError = error.localizedDescription
+        }
+    }
+
+    private func handleImport(_ result: Result<[URL], Error>) {
+        backupError = nil
+        do {
+            let urls = try result.get()
+            guard let url = urls.first else { return }
+            let didStartAccessing = url.startAccessingSecurityScopedResource()
+            defer { if didStartAccessing { url.stopAccessingSecurityScopedResource() } }
+            let data = try Data(contentsOf: url)
+            let snapshot = try BackupService.decode(data)
+            try BackupService.restore(snapshot, into: modelContext)
+        } catch {
+            backupError = error.localizedDescription
         }
     }
 
