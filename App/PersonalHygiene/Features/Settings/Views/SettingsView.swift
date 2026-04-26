@@ -23,56 +23,60 @@ struct SettingsView: View {
     }
 
     var body: some View {
-        NavigationStack {
-            List {
-                if let error = viewModel.lastError {
-                    Section {
-                        ErrorBanner(message: error, onDismiss: { viewModel.lastError = nil })
-                    }
+        // No `NavigationStack` here on purpose: when this view lives inside
+        // the iOS 18 TabView "More" overflow tab, the system already wraps
+        // the overflow in its own NavigationStack. Adding a second stack
+        // produced two back chevrons stacked vertically when pushing into
+        // Diagnostics / FocusSchedule. The standalone preview supplies its
+        // own stack so the NavigationLink + navigationTitle still work.
+        List {
+            if let error = viewModel.lastError {
+                Section {
+                    ErrorBanner(message: error, onDismiss: { viewModel.lastError = nil })
                 }
-                notificationsSection
-                schedulingSection
+            }
+            notificationsSection
+            schedulingSection
 
-                HomeLocationSection()
-                if let focusScheduleStore {
-                    Section {
-                        NavigationLink {
-                            FocusScheduleView(store: focusScheduleStore)
-                        } label: {
-                            Label {
-                                Text("settings.focus.entry", bundle: .main)
-                            } icon: {
-                                Image(systemName: "moon.zzz")
-                            }
+            HomeLocationSection()
+            if let focusScheduleStore {
+                Section {
+                    NavigationLink {
+                        FocusScheduleView(store: focusScheduleStore)
+                    } label: {
+                        Label {
+                            Text("settings.focus.entry", bundle: .main)
+                        } icon: {
+                            Image(systemName: "moon.zzz")
                         }
-                    } header: {
-                        Text("settings.section.focus", bundle: .main)
                     }
+                } header: {
+                    Text("settings.section.focus", bundle: .main)
                 }
-                aboutSection
-                backupSection
             }
-            .navigationTitle(Text("settings.title", bundle: .main))
-            .task { await viewModel.reloadStatus() }
-            .sheet(item: $backupExport) { exp in
-                ShareSheet(items: [exp.url])
-            }
-            .sheet(isPresented: $showingWhatsNew) {
-                WhatsNewSheet()
-            }
-            .confirmationDialog(
-                Text("settings.onboarding.restart.confirm.title", bundle: .main),
-                isPresented: $showingOnboardingRestartConfirm,
-                titleVisibility: .visible,
-                actions: { onboardingRestartActions }
-            )
-            .fileImporter(
-                isPresented: $showingImporter,
-                allowedContentTypes: [.json],
-                allowsMultipleSelection: false
-            ) { result in
-                handleImport(result)
-            }
+            aboutSection
+            backupSection
+        }
+        .navigationTitle(Text("settings.title", bundle: .main))
+        .task { await viewModel.reloadStatus() }
+        .sheet(item: $backupExport) { exp in
+            ShareSheet(items: [exp.url])
+        }
+        .sheet(isPresented: $showingWhatsNew) {
+            WhatsNewSheet()
+        }
+        .confirmationDialog(
+            Text("settings.onboarding.restart.confirm.title", bundle: .main),
+            isPresented: $showingOnboardingRestartConfirm,
+            titleVisibility: .visible,
+            actions: { onboardingRestartActions }
+        )
+        .fileImporter(
+            isPresented: $showingImporter,
+            allowedContentTypes: [.json],
+            allowsMultipleSelection: false
+        ) { result in
+            handleImport(result)
         }
     }
 
