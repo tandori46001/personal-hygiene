@@ -80,4 +80,38 @@ final class HydrationComplianceTests: XCTestCase {
         )
         XCTAssertEqual(progress, 1.0)
     }
+
+    func test_currentStreakDays_countsConsecutiveCompletedDaysEndingToday() {
+        let goal = HydrationGoal(dailyMilliliters: 2000)
+        let now = date(year: 2026, month: 4, day: 25)
+        let logs = [
+            // Today met
+            HydrationLog(milliliters: 2200, drankAt: date(year: 2026, month: 4, day: 25)),
+            // Yesterday met
+            HydrationLog(milliliters: 2100, drankAt: date(year: 2026, month: 4, day: 24)),
+            // 2 days ago met
+            HydrationLog(milliliters: 2000, drankAt: date(year: 2026, month: 4, day: 23)),
+            // 3 days ago NOT met (gap)
+            HydrationLog(milliliters: 800, drankAt: date(year: 2026, month: 4, day: 22)),
+            // 4 days ago met (irrelevant after gap)
+            HydrationLog(milliliters: 2500, drankAt: date(year: 2026, month: 4, day: 21)),
+        ]
+        XCTAssertEqual(
+            HydrationCompliance.currentStreakDays(on: now, logs: logs, goal: goal, calendar: gregorianUTC()),
+            3
+        )
+    }
+
+    func test_currentStreakDays_zeroWhenTodayMissesGoal() {
+        let goal = HydrationGoal(dailyMilliliters: 2000)
+        let now = date(year: 2026, month: 4, day: 25)
+        let logs = [
+            HydrationLog(milliliters: 1500, drankAt: now),  // missed today
+            HydrationLog(milliliters: 2200, drankAt: date(year: 2026, month: 4, day: 24)),
+        ]
+        XCTAssertEqual(
+            HydrationCompliance.currentStreakDays(on: now, logs: logs, goal: goal, calendar: gregorianUTC()),
+            0
+        )
+    }
 }

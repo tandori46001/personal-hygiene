@@ -4,6 +4,7 @@ import UniformTypeIdentifiers
 
 struct SettingsView: View {
     @Bindable var viewModel: SettingsViewModel
+    var focusScheduleStore: (any FocusScheduleStore)?
 
     @Environment(\.modelContext) private var modelContext
 
@@ -76,6 +77,21 @@ struct SettingsView: View {
                 }
 
                 homeSection
+                if let focusScheduleStore {
+                    Section {
+                        NavigationLink {
+                            FocusScheduleView(store: focusScheduleStore)
+                        } label: {
+                            Label {
+                                Text("settings.focus.entry", bundle: .main)
+                            } icon: {
+                                Image(systemName: "moon.zzz")
+                            }
+                        }
+                    } header: {
+                        Text("settings.section.focus", bundle: .main)
+                    }
+                }
                 backupSection
             }
             .navigationTitle(Text("settings.title", bundle: .main))

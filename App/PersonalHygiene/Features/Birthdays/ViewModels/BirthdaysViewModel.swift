@@ -6,6 +6,7 @@ import Observation
 final class BirthdaysViewModel {
 
     private let service: any ContactsService
+    private let leadStore: any BirthdayLeadStore
     private let calendar: Calendar
     private let windowDays: Int
 
@@ -13,10 +14,36 @@ final class BirthdaysViewModel {
     var upcoming: [UpcomingBirthdays.Upcoming] = []
     var errorMessage: String?
 
-    init(service: any ContactsService, windowDays: Int = 60, calendar: Calendar = .autoupdatingCurrent) {
+    let defaultLeadDays: Int
+
+    init(
+        service: any ContactsService,
+        leadStore: any BirthdayLeadStore = InMemoryBirthdayLeadStore(),
+        defaultLeadDays: Int = UserDefaultsBirthdayLeadStore.defaultLeadDays,
+        windowDays: Int = 60,
+        calendar: Calendar = .autoupdatingCurrent
+    ) {
         self.service = service
+        self.leadStore = leadStore
+        self.defaultLeadDays = defaultLeadDays
         self.windowDays = windowDays
         self.calendar = calendar
+    }
+
+    func leadDays(for contact: BirthdayContact) -> Int {
+        leadStore.leadDays(for: contact.identifier) ?? defaultLeadDays
+    }
+
+    func hasOverride(_ contact: BirthdayContact) -> Bool {
+        leadStore.leadDays(for: contact.identifier) != nil
+    }
+
+    func setLeadDays(_ value: Int, for contact: BirthdayContact) {
+        leadStore.setLeadDays(max(0, value), for: contact.identifier)
+    }
+
+    func clearLeadDays(for contact: BirthdayContact) {
+        leadStore.setLeadDays(nil, for: contact.identifier)
     }
 
     func reloadStatus() {

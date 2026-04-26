@@ -54,6 +54,39 @@ final class NotificationFactoryTests: XCTestCase {
         XCTAssertTrue(result.isEmpty)
     }
 
+    func test_notifications_assignsRoutineThreadAndCategoryByDefault() {
+        let block = Block(
+            title: "Aseo",
+            category: .hygiene,
+            startMinutesFromMidnight: 7 * 60,
+            durationMinutes: 30
+        )
+        let result = NotificationFactory.notifications(
+            for: [block],
+            on: date(year: 2026, month: 4, day: 25),
+            calendar: gregorianUTC()
+        )
+        XCTAssertEqual(result[0].threadIdentifier, NotificationThreadID.routine)
+        XCTAssertEqual(result[0].categoryIdentifier, NotificationCategoryID.routineBlock)
+    }
+
+    func test_notifications_medicationGetsMedicationThreadAndCategory() {
+        let block = Block(
+            title: "Pastilla",
+            category: .medication,
+            startMinutesFromMidnight: 8 * 60,
+            durationMinutes: 5,
+            notificationLeadMinutes: 5
+        )
+        let result = NotificationFactory.notifications(
+            for: [block],
+            on: date(year: 2026, month: 4, day: 25),
+            calendar: gregorianUTC()
+        )
+        XCTAssertEqual(result[0].threadIdentifier, NotificationThreadID.medication)
+        XCTAssertEqual(result[0].categoryIdentifier, NotificationCategoryID.medication)
+    }
+
     func test_notifications_marksMedicationAsCritical() {
         let block = Block(
             title: "Pastilla",

@@ -8,11 +8,22 @@ final class TripDetailViewModel {
     private let repository: any TripsRepository
     let documentStore: TripDocumentStore?
     let itineraryGenerator: (any ItineraryGenerator)?
+    let itineraryStore: (any ItineraryStore)?
     let marineService: (any MarineWeatherService)?
     let currencyService: (any CurrencyService)?
     let advisoryService: (any TravelAdvisoryService)?
 
     var trip: Trip
+
+    /// Editable snapshot of trip's scalar fields. The view binds to these so
+    /// pressing Cancel can discard changes without leaking them into the
+    /// shared `Trip` model. `commit()` writes the draft back + saves; `revert()`
+    /// reloads the draft from the model.
+    var draftName: String
+    var draftDestination: String
+    var draftStartDate: Date
+    var draftEndDate: Date
+
     var errorMessage: String?
 
     init(
@@ -20,6 +31,7 @@ final class TripDetailViewModel {
         repository: any TripsRepository,
         documentStore: TripDocumentStore? = nil,
         itineraryGenerator: (any ItineraryGenerator)? = nil,
+        itineraryStore: (any ItineraryStore)? = nil,
         marineService: (any MarineWeatherService)? = nil,
         currencyService: (any CurrencyService)? = nil,
         advisoryService: (any TravelAdvisoryService)? = nil
@@ -28,9 +40,44 @@ final class TripDetailViewModel {
         self.repository = repository
         self.documentStore = documentStore
         self.itineraryGenerator = itineraryGenerator
+        self.itineraryStore = itineraryStore
         self.marineService = marineService
         self.currencyService = currencyService
         self.advisoryService = advisoryService
+        self.draftName = trip.name
+        self.draftDestination = trip.destinationName
+        self.draftStartDate = trip.startDate
+        self.draftEndDate = trip.endDate
+    }
+
+    var hasChanges: Bool {
+        draftName != trip.name
+            || draftDestination != trip.destinationName
+            || draftStartDate != trip.startDate
+            || draftEndDate != trip.endDate
+    }
+
+    func revertDraft() {
+        draftName = trip.name
+        draftDestination = trip.destinationName
+        draftStartDate = trip.startDate
+        draftEndDate = trip.endDate
+    }
+
+    func commitDraft() {
+        let trimmedName = draftName.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedDest = draftDestination.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedName.isEmpty, !trimmedDest.isEmpty else { return }
+        trip.name = trimmedName
+        trip.destinationName = trimmedDest
+        trip.startDate = draftStartDate
+        trip.endDate = max(draftStartDate, draftEndDate)
+        // Reflect the trimmed values + clamped end date back into the draft so
+        // `hasChanges` is false right after a commit.
+        draftName = trimmedName
+        draftDestination = trimmedDest
+        draftEndDate = trip.endDate
+        saveEdits()
     }
 
     var advisoryLink: TravelAdvisoryLink? {
@@ -119,5 +166,45 @@ final class TripDetailViewModel {
         let today = calendar.startOfDay(for: now)
         let target = calendar.startOfDay(for: trip.startDate)
         return calendar.dateComponents([.day], from: today, to: target).day ?? 0
+    }
+
+    // MARK: - Cover photo
+
+    /// Compress + store the cover photo. Caller is responsible for converting
+    /// the picked PhotosPicker selection into JPEG/PNG bytes.
+    func updateCoverPhoto(_ data: Data?) {
+        trip.coverPhotoData = data
+        saveEdits()
+    }
+
+    // MARK: - Packing list
+
+    var sortedPackingItems: [PackingItem] {
+        trip.packingItems.sorted { lhs, rhs in
+            if lhs.isPacked == rhs.isPacked {
+                return lhs.title.localizedCaseInsensitiveCompare(rhs.title) == .orderedAscending
+            }
+            return !lhs.isPacked && rhs.isPacked
+        }
+    }
+
+    var packedCount: Int { trip.packingItems.filter(\.isPacked).count }
+
+    func addPackingItem(title: String) {
+        let trimmed = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        trip.packingItems.append(PackingItem(title: trimmed))
+        saveEdits()
+    }
+
+    func togglePackingItem(_ item: PackingItem) {
+        guard let idx = trip.packingItems.firstIndex(where: { $0.id == item.id }) else { return }
+        trip.packingItems[idx].isPacked.toggle()
+        saveEdits()
+    }
+
+    func deletePackingItem(_ item: PackingItem) {
+        trip.packingItems.removeAll { $0.id == item.id }
+        saveEdits()
     }
 }

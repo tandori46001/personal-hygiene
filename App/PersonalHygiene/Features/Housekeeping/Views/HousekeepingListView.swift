@@ -7,6 +7,7 @@ struct HousekeepingListView: View {
     @State private var newTitle = ""
     @State private var newRecurrence: HousekeepingRecurrence = .weekly
     @State private var newEscalationDays = 2
+    @State private var newRoom = ""
 
     var body: some View {
         NavigationStack {
@@ -28,7 +29,26 @@ struct HousekeepingListView: View {
                         Text("housekeeping.empty.description", bundle: .main)
                     }
                 } else {
-                    ForEach(viewModel.tasks) { task in
+                    if !viewModel.availableRooms.isEmpty || viewModel.hasUnsortedTasks {
+                        Section {
+                            Picker(selection: $viewModel.roomFilter) {
+                                Text("housekeeping.filter.all", bundle: .main)
+                                    .tag(HousekeepingListViewModel.RoomFilter.all)
+                                ForEach(viewModel.availableRooms, id: \.self) { room in
+                                    Text(verbatim: room)
+                                        .tag(HousekeepingListViewModel.RoomFilter.named(room))
+                                }
+                                if viewModel.hasUnsortedTasks {
+                                    Text("housekeeping.filter.unsorted", bundle: .main)
+                                        .tag(HousekeepingListViewModel.RoomFilter.unsorted)
+                                }
+                            } label: {
+                                Text("housekeeping.filter.label", bundle: .main)
+                            }
+                            .pickerStyle(.menu)
+                        }
+                    }
+                    ForEach(viewModel.filteredTasks) { task in
                         HousekeepingRow(
                             task: task,
                             status: viewModel.status(for: task),
@@ -104,6 +124,12 @@ struct HousekeepingListView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
+                TextField(
+                    text: $newRoom,
+                    prompt: Text("housekeeping.field.room.placeholder", bundle: .main)
+                ) {
+                    Text("housekeeping.field.room", bundle: .main)
+                }
             }
             .navigationTitle(Text("housekeeping.new.title", bundle: .main))
             .navigationBarTitleDisplayMode(.inline)
@@ -120,11 +146,15 @@ struct HousekeepingListView: View {
                         viewModel.add(
                             title: newTitle,
                             recurrence: newRecurrence,
-                            escalationDays: newEscalationDays
+                            escalationDays: newEscalationDays,
+                            room: newRoom.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                                ? nil
+                                : newRoom
                         )
                         newTitle = ""
                         newRecurrence = .weekly
                         newEscalationDays = 2
+                        newRoom = ""
                         showingNewSheet = false
                     } label: {
                         Text("common.create", bundle: .main)
@@ -146,9 +176,15 @@ private struct HousekeepingRow: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(task.title)
                     .font(.body)
-                Text(LocalizedStringKey("housekeeping.recurrence.\(task.recurrence.rawValue)"))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                HStack(spacing: 6) {
+                    Text(LocalizedStringKey("housekeeping.recurrence.\(task.recurrence.rawValue)"))
+                    if let room = task.room {
+                        Text(verbatim: "•")
+                        Text(verbatim: room)
+                    }
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
             }
             Spacer()
             statusBadge

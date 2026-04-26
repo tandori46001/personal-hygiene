@@ -8,20 +8,50 @@ public struct ScheduledNotification: Equatable, Sendable {
     public let body: String?
     public let triggerDate: Date
     public let isCritical: Bool
+    /// Used by iOS to group notifications in the lock-screen / Notification
+    /// Center stack. Same identifier → same stack. Defaults to a single
+    /// app-wide thread when empty.
+    public let threadIdentifier: String
+    /// Identifier of the `UNNotificationCategory` whose actions (e.g. snooze)
+    /// should appear when the user long-presses the alert.
+    public let categoryIdentifier: String?
 
     public init(
         identifier: String,
         title: String,
         body: String? = nil,
         triggerDate: Date,
-        isCritical: Bool
+        isCritical: Bool,
+        threadIdentifier: String = "personal-hygiene",
+        categoryIdentifier: String? = nil
     ) {
         self.identifier = identifier
         self.title = title
         self.body = body
         self.triggerDate = triggerDate
         self.isCritical = isCritical
+        self.threadIdentifier = threadIdentifier
+        self.categoryIdentifier = categoryIdentifier
     }
+}
+
+public enum NotificationCategoryID {
+    public static let routineBlock = "personal-hygiene.category.routineBlock"
+    public static let medication = "personal-hygiene.category.medication"
+    public static let tripMilestone = "personal-hygiene.category.tripMilestone"
+    public static let hydration = "personal-hygiene.category.hydration"
+}
+
+public enum NotificationActionID {
+    public static let snooze5min = "personal-hygiene.action.snooze5min"
+    public static let markDone = "personal-hygiene.action.markDone"
+}
+
+public enum NotificationThreadID {
+    public static let routine = "personal-hygiene.thread.routine"
+    public static let medication = "personal-hygiene.thread.medication"
+    public static let tripMilestone = "personal-hygiene.thread.tripMilestone"
+    public static let hydration = "personal-hygiene.thread.hydration"
 }
 
 /// Maps `Block`s to `ScheduledNotification`s for a given calendar day.
@@ -130,12 +160,15 @@ public enum NotificationFactory {
         guard let trigger = calendar.date(byAdding: .minute, value: triggerMinutes, to: dayStart) else {
             return nil
         }
+        let isMedication = block.category == .medication
         return ScheduledNotification(
             identifier: "\(identifierPrefix)\(block.id.uuidString).\(dayKey)",
             title: block.title,
             body: block.notes,
             triggerDate: trigger,
-            isCritical: block.category == .medication
+            isCritical: isMedication,
+            threadIdentifier: isMedication ? NotificationThreadID.medication : NotificationThreadID.routine,
+            categoryIdentifier: isMedication ? NotificationCategoryID.medication : NotificationCategoryID.routineBlock
         )
     }
 

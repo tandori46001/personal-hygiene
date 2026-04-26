@@ -1,10 +1,11 @@
 import Foundation
 
-/// Pure value type returned by `ItineraryGenerator`. Not persisted in
-/// SwiftData — itineraries are regenerated on demand and live in-memory only.
-public struct TripItinerary: Equatable, Sendable {
+/// Pure value type returned by `ItineraryGenerator`. Persisted to disk by
+/// `ItineraryStore` (one JSON file per trip) so the last generation survives
+/// app restarts; not stored in SwiftData / not synced via CloudKit.
+public struct TripItinerary: Equatable, Sendable, Codable {
 
-    public struct Day: Equatable, Sendable {
+    public struct Day: Equatable, Sendable, Codable {
         public let title: String
         public let activities: [String]
 

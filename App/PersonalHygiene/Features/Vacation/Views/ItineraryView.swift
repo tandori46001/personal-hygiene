@@ -4,10 +4,17 @@ struct ItineraryView: View {
 
     let trip: Trip
     let generator: any ItineraryGenerator
+    let store: (any ItineraryStore)?
 
     @State private var itinerary: TripItinerary?
     @State private var errorMessage: String?
     @State private var isGenerating = false
+
+    init(trip: Trip, generator: any ItineraryGenerator, store: (any ItineraryStore)? = nil) {
+        self.trip = trip
+        self.generator = generator
+        self.store = store
+    }
 
     var body: some View {
         Form {
@@ -61,6 +68,11 @@ struct ItineraryView: View {
         }
         .navigationTitle(Text("trip.itinerary.title", bundle: .main))
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            if itinerary == nil, let cached = store?.load(for: trip.id) {
+                itinerary = cached
+            }
+        }
     }
 
     private var generateButton: some View {
@@ -80,7 +92,9 @@ struct ItineraryView: View {
         isGenerating = true
         errorMessage = nil
         do {
-            itinerary = try await generator.generate(for: trip)
+            let result = try await generator.generate(for: trip)
+            itinerary = result
+            store?.save(result, for: trip.id)
         } catch {
             errorMessage = error.localizedDescription
         }

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct TodayView: View {
     @Bindable var viewModel: TodayViewModel
+    var onCreateTemplate: (() -> Void)?
 
     @ViewBuilder
     private var tripCountdownSection: some View {
@@ -46,8 +47,29 @@ struct TodayView: View {
                                 BlockTimelineRow(
                                     block: block,
                                     isDone: viewModel.isDone(block),
+                                    isSkipped: viewModel.isSkipped(block),
                                     onToggle: { viewModel.toggleDone(block) }
                                 )
+                                .swipeActions(edge: .trailing) {
+                                    Button {
+                                        viewModel.toggleSkippedToday(block)
+                                    } label: {
+                                        if viewModel.isSkipped(block) {
+                                            Label {
+                                                Text("today.action.unskipToday", bundle: .main)
+                                            } icon: {
+                                                Image(systemName: "arrow.uturn.backward.circle")
+                                            }
+                                        } else {
+                                            Label {
+                                                Text("today.action.skipToday", bundle: .main)
+                                            } icon: {
+                                                Image(systemName: "moon.zzz")
+                                            }
+                                        }
+                                    }
+                                    .tint(.orange)
+                                }
                             }
                         } header: {
                             Text("today.section.schedule", bundle: .main)
@@ -62,6 +84,17 @@ struct TodayView: View {
                         }
                     } description: {
                         Text("today.empty.description", bundle: .main)
+                    } actions: {
+                        if let onCreateTemplate {
+                            Button(action: onCreateTemplate) {
+                                Label {
+                                    Text("today.empty.action.createTemplate", bundle: .main)
+                                } icon: {
+                                    Image(systemName: "plus")
+                                }
+                            }
+                            .buttonStyle(.borderedProminent)
+                        }
                     }
                 }
             }
@@ -166,6 +199,7 @@ private struct BlockNowRow: View {
             Spacer()
             Text(formattedTime(minutes: block.startMinutesFromMidnight))
                 .font(.system(.title2, design: .monospaced))
+                .accessibilityLabel(spokenTime(minutes: block.startMinutesFromMidnight))
         }
         .accessibilityElement(children: .combine)
     }
@@ -175,11 +209,24 @@ private struct BlockNowRow: View {
         let minute = minutes % 60
         return String(format: "%02d:%02d", hour, minute)
     }
+
+    private func spokenTime(minutes: Int) -> Text {
+        let hour = minutes / 60
+        let minute = minutes % 60
+        var components = DateComponents()
+        components.hour = hour
+        components.minute = minute
+        if let date = Calendar.autoupdatingCurrent.date(from: components) {
+            return Text(date, format: .dateTime.hour().minute())
+        }
+        return Text(verbatim: formattedTime(minutes: minutes))
+    }
 }
 
 private struct BlockTimelineRow: View {
     let block: Block
     let isDone: Bool
+    let isSkipped: Bool
     let onToggle: () -> Void
 
     var body: some View {
@@ -195,20 +242,27 @@ private struct BlockTimelineRow: View {
                     ? Text("today.action.unmarkDone", bundle: .main)
                     : Text("today.action.markDone", bundle: .main)
             )
+            .disabled(isSkipped)
 
             Text(formattedTime(minutes: block.startMinutesFromMidnight))
                 .font(.system(.body, design: .monospaced))
                 .foregroundStyle(.secondary)
                 .frame(width: 56, alignment: .leading)
+                .accessibilityLabel(spokenTime(minutes: block.startMinutesFromMidnight))
             VStack(alignment: .leading, spacing: 1) {
                 Text(block.title)
                     .font(.body)
-                    .strikethrough(isDone, color: .secondary)
+                    .strikethrough(isDone || isSkipped, color: .secondary)
                 Text(LocalizedStringKey("category.\(block.category.rawValue)"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
             Spacer()
+            if isSkipped {
+                Image(systemName: "moon.zzz")
+                    .foregroundStyle(.orange)
+                    .accessibilityLabel(Text("today.action.skipToday", bundle: .main))
+            }
             if block.isDeepFocus {
                 Image(systemName: "moon.zzz.fill")
                     .foregroundStyle(.purple)
@@ -219,11 +273,22 @@ private struct BlockTimelineRow: View {
                 .foregroundStyle(.secondary)
         }
         .padding(.vertical, 2)
+        .opacity(isSkipped ? 0.6 : 1.0)
     }
 
     private func formattedTime(minutes: Int) -> String {
         let hour = minutes / 60
         let minute = minutes % 60
         return String(format: "%02d:%02d", hour, minute)
+    }
+
+    private func spokenTime(minutes: Int) -> Text {
+        var components = DateComponents()
+        components.hour = minutes / 60
+        components.minute = minutes % 60
+        if let date = Calendar.autoupdatingCurrent.date(from: components) {
+            return Text(date, format: .dateTime.hour().minute())
+        }
+        return Text(verbatim: formattedTime(minutes: minutes))
     }
 }

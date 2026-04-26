@@ -21,15 +21,17 @@ public enum DeepFocusFilter {
         }
     }
 
-    /// All focus windows for `blocks` on the calendar day of `date`.
+    /// All focus windows for `blocks` on the calendar day of `date`. When
+    /// `scheduledWindows` is non-empty, scheduled-focus entries that fire on
+    /// today's weekday are appended.
     public static func focusWindows(
         for blocks: [Block],
         on date: Date,
+        scheduledWindows: [ScheduledFocusWindow] = [],
         calendar: Calendar = .autoupdatingCurrent
     ) -> [FocusWindow] {
         let dayStart = calendar.startOfDay(for: date)
-        return
-            blocks
+        let blockBased: [FocusWindow] = blocks
             .filter(\.isDeepFocus)
             .compactMap { block -> FocusWindow? in
                 guard
@@ -38,24 +40,30 @@ public enum DeepFocusFilter {
                 else { return nil }
                 return FocusWindow(blockTitle: block.title, start: start, end: end)
             }
+        let scheduled = scheduledWindows.compactMap { $0.window(on: date, calendar: calendar) }
+        return blockBased + scheduled
     }
 
     /// `true` when `now` falls inside any focus window built from `blocks`.
     public static func isFocusActive(
         at now: Date,
         in blocks: [Block],
+        scheduledWindows: [ScheduledFocusWindow] = [],
         calendar: Calendar = .autoupdatingCurrent
     ) -> Bool {
-        focusWindows(for: blocks, on: now, calendar: calendar).contains { $0.contains(now) }
+        focusWindows(for: blocks, on: now, scheduledWindows: scheduledWindows, calendar: calendar)
+            .contains { $0.contains(now) }
     }
 
     /// Returns the currently active focus window covering `now`, if any.
     public static func activeWindow(
         at now: Date,
         in blocks: [Block],
+        scheduledWindows: [ScheduledFocusWindow] = [],
         calendar: Calendar = .autoupdatingCurrent
     ) -> FocusWindow? {
-        focusWindows(for: blocks, on: now, calendar: calendar).first { $0.contains(now) }
+        focusWindows(for: blocks, on: now, scheduledWindows: scheduledWindows, calendar: calendar)
+            .first { $0.contains(now) }
     }
 
     /// Filter `notifications` removing entries whose trigger lands inside any

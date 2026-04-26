@@ -10,6 +10,8 @@ public final class NotificationCoordinator {
     private let travelTimeService: (any TravelTimeService)?
     private let homeLocation: BlockLocation?
     private let travelMode: TravelMode
+    private let skipStore: (any BlockSkipStore)?
+    private let focusScheduleStore: (any FocusScheduleStore)?
     private let calendar: Calendar
 
     public init(
@@ -18,6 +20,8 @@ public final class NotificationCoordinator {
         travelTimeService: (any TravelTimeService)? = nil,
         homeLocation: BlockLocation? = nil,
         travelMode: TravelMode = .automobile,
+        skipStore: (any BlockSkipStore)? = nil,
+        focusScheduleStore: (any FocusScheduleStore)? = nil,
         calendar: Calendar = .autoupdatingCurrent
     ) {
         self.repository = repository
@@ -25,6 +29,8 @@ public final class NotificationCoordinator {
         self.travelTimeService = travelTimeService
         self.homeLocation = homeLocation
         self.travelMode = travelMode
+        self.skipStore = skipStore
+        self.focusScheduleStore = focusScheduleStore
         self.calendar = calendar
     }
 
@@ -37,7 +43,10 @@ public final class NotificationCoordinator {
             return
         }
 
-        let blocks = template.sortedBlocks
+        skipStore?.purgeStale(before: now, calendar: calendar, keepLastDays: 7)
+        let blocks = template.sortedBlocks.filter { block in
+            skipStore?.isSkipped(blockID: block.id, on: now, calendar: calendar) != true
+        }
         let raw: [ScheduledNotification]
         if travelTimeService != nil, homeLocation != nil {
             raw = await NotificationFactory.notifications(
@@ -55,7 +64,13 @@ public final class NotificationCoordinator {
                 calendar: calendar
             )
         }
-        let focusWindows = DeepFocusFilter.focusWindows(for: blocks, on: now, calendar: calendar)
+        let scheduled = focusScheduleStore?.windows() ?? []
+        let focusWindows = DeepFocusFilter.focusWindows(
+            for: blocks,
+            on: now,
+            scheduledWindows: scheduled,
+            calendar: calendar
+        )
         let filtered = DeepFocusFilter.suppressing(raw, focusWindows: focusWindows)
         try await service.scheduleAll(filtered)
     }

@@ -51,7 +51,9 @@ public enum HydrationNotificationFactory {
                     title: title,
                     body: body,
                     triggerDate: trigger,
-                    isCritical: false
+                    isCritical: false,
+                    threadIdentifier: NotificationThreadID.hydration,
+                    categoryIdentifier: NotificationCategoryID.hydration
                 )
             )
             minute += schedule.intervalMinutes

@@ -29,24 +29,31 @@ struct TripsListView: View {
                         Text("trips.empty.description", bundle: .main)
                     }
                 } else {
-                    ForEach(viewModel.trips) { trip in
-                        NavigationLink {
-                            TripDetailView(
-                                viewModel: TripDetailViewModel(
-                                    trip: trip,
-                                    repository: viewModel.repository,
-                                    documentStore: viewModel.documentStore,
-                                    itineraryGenerator: viewModel.itineraryGenerator,
-                                    marineService: viewModel.marineService,
-                                    currencyService: viewModel.currencyService,
-                                    advisoryService: viewModel.advisoryService
-                                )
-                            )
-                        } label: {
-                            TripRow(trip: trip)
+                    let upcoming = viewModel.upcomingTrips()
+                    let past = viewModel.pastTrips()
+
+                    if !upcoming.isEmpty {
+                        Section {
+                            ForEach(upcoming) { trip in
+                                tripLink(for: trip)
+                            }
+                            .onDelete { offsets in delete(upcoming, at: offsets) }
+                        } header: {
+                            Text("trips.section.upcoming", bundle: .main)
                         }
                     }
-                    .onDelete(perform: delete)
+
+                    if !past.isEmpty {
+                        Section {
+                            ForEach(past) { trip in
+                                tripLink(for: trip)
+                                    .foregroundStyle(.secondary)
+                            }
+                            .onDelete { offsets in delete(past, at: offsets) }
+                        } header: {
+                            Text("trips.section.past", bundle: .main)
+                        }
+                    }
                 }
             }
             .navigationTitle(Text("trips.title", bundle: .main))
@@ -123,9 +130,29 @@ struct TripsListView: View {
         }
     }
 
-    private func delete(at offsets: IndexSet) {
+    private func delete(_ collection: [Trip], at offsets: IndexSet) {
         for idx in offsets {
-            viewModel.delete(viewModel.trips[idx])
+            viewModel.delete(collection[idx])
+        }
+    }
+
+    @ViewBuilder
+    private func tripLink(for trip: Trip) -> some View {
+        NavigationLink {
+            TripDetailView(
+                viewModel: TripDetailViewModel(
+                    trip: trip,
+                    repository: viewModel.repository,
+                    documentStore: viewModel.documentStore,
+                    itineraryGenerator: viewModel.itineraryGenerator,
+                    itineraryStore: viewModel.itineraryStore,
+                    marineService: viewModel.marineService,
+                    currencyService: viewModel.currencyService,
+                    advisoryService: viewModel.advisoryService
+                )
+            )
+        } label: {
+            TripRow(trip: trip)
         }
     }
 }
@@ -149,6 +176,7 @@ private struct TripRow: View {
                 Text(verbatim: "→")
                     .font(.caption2)
                     .foregroundStyle(.secondary)
+                    .accessibilityHidden(true)
                 Text(trip.endDate, format: .dateTime.day().month(.abbreviated))
                     .font(.caption)
             }

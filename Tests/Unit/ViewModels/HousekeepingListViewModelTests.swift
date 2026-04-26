@@ -42,4 +42,49 @@ final class HousekeepingListViewModelTests: XCTestCase {
         vm.delete(task)
         XCTAssertTrue(vm.tasks.isEmpty)
     }
+
+    func test_roomFilter_named_returnsOnlyMatchingRoom() {
+        let service = InMemoryHousekeepingService()
+        let vm = HousekeepingListViewModel(service: service)
+        vm.add(title: "Vacuum", recurrence: .weekly, escalationDays: 2, room: "Living")
+        vm.add(title: "Sink", recurrence: .weekly, escalationDays: 2, room: "Kitchen")
+        vm.add(title: "Mop", recurrence: .weekly, escalationDays: 2, room: "Living")
+
+        vm.roomFilter = .named("Living")
+        XCTAssertEqual(vm.filteredTasks.map(\.title).sorted(), ["Mop", "Vacuum"])
+    }
+
+    func test_roomFilter_unsorted_returnsTasksWithoutRoom() {
+        let service = InMemoryHousekeepingService()
+        let vm = HousekeepingListViewModel(service: service)
+        vm.add(title: "Vacuum", recurrence: .weekly, escalationDays: 2, room: "Kitchen")
+        vm.add(title: "Sweep", recurrence: .weekly, escalationDays: 2)
+
+        vm.roomFilter = .unsorted
+        XCTAssertEqual(vm.filteredTasks.map(\.title), ["Sweep"])
+    }
+
+    func test_roomFilter_all_returnsEverything() {
+        let service = InMemoryHousekeepingService()
+        let vm = HousekeepingListViewModel(service: service)
+        vm.add(title: "Vacuum", recurrence: .weekly, escalationDays: 2, room: "Kitchen")
+        vm.add(title: "Sweep", recurrence: .weekly, escalationDays: 2)
+        XCTAssertEqual(vm.filteredTasks.count, 2)
+    }
+
+    func test_availableRooms_distinctSorted() {
+        let service = InMemoryHousekeepingService()
+        let vm = HousekeepingListViewModel(service: service)
+        vm.add(title: "A", recurrence: .weekly, escalationDays: 2, room: "Living")
+        vm.add(title: "B", recurrence: .weekly, escalationDays: 2, room: "Kitchen")
+        vm.add(title: "C", recurrence: .weekly, escalationDays: 2, room: "Living")
+        XCTAssertEqual(vm.availableRooms, ["Kitchen", "Living"])
+    }
+
+    func test_addTask_trimsRoomAndStoresAsNilWhenBlank() {
+        let service = InMemoryHousekeepingService()
+        let vm = HousekeepingListViewModel(service: service)
+        vm.add(title: "X", recurrence: .weekly, escalationDays: 2, room: "  ")
+        XCTAssertNil(vm.tasks.first?.room)
+    }
 }

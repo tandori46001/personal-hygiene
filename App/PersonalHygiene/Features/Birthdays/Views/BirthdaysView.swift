@@ -3,6 +3,8 @@ import SwiftUI
 struct BirthdaysView: View {
     @Bindable var viewModel: BirthdaysViewModel
 
+    @State private var leadEditing: BirthdayContact?
+
     var body: some View {
         NavigationStack {
             Group {
@@ -19,6 +21,9 @@ struct BirthdaysView: View {
             .task {
                 viewModel.reloadStatus()
                 await viewModel.reload()
+            }
+            .sheet(item: $leadEditing) { contact in
+                BirthdayLeadEditorSheet(contact: contact, viewModel: viewModel)
             }
         }
     }
@@ -72,7 +77,23 @@ struct BirthdaysView: View {
             }
         } else {
             List(viewModel.upcoming, id: \.contact.identifier) { entry in
-                BirthdayRow(entry: entry)
+                BirthdayRow(
+                    entry: entry,
+                    leadDays: viewModel.leadDays(for: entry.contact),
+                    hasOverride: viewModel.hasOverride(entry.contact)
+                )
+                .swipeActions(edge: .trailing) {
+                    Button {
+                        leadEditing = entry.contact
+                    } label: {
+                        Label {
+                            Text("birthdays.action.editLead", bundle: .main)
+                        } icon: {
+                            Image(systemName: "bell")
+                        }
+                    }
+                    .tint(.blue)
+                }
             }
         }
     }
@@ -80,15 +101,22 @@ struct BirthdaysView: View {
 
 private struct BirthdayRow: View {
     let entry: UpcomingBirthdays.Upcoming
+    let leadDays: Int
+    let hasOverride: Bool
 
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
                 Text(entry.contact.displayName)
                     .font(.body)
-                Text(entry.nextOccurrence, format: .dateTime.weekday(.abbreviated).month(.abbreviated).day())
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                HStack(spacing: 6) {
+                    Text(entry.nextOccurrence, format: .dateTime.weekday(.abbreviated).month(.abbreviated).day())
+                    Text(verbatim: "•")
+                    Text("birthdays.lead.\(leadDays)", bundle: .main)
+                        .foregroundStyle(hasOverride ? .blue : .secondary)
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
             }
             Spacer()
             Text(LocalizedStringResource("birthdays.daysUntil \(entry.daysUntil)"))
@@ -96,5 +124,66 @@ private struct BirthdayRow: View {
                 .foregroundStyle(entry.daysUntil <= 7 ? .orange : .secondary)
         }
         .accessibilityElement(children: .combine)
+    }
+}
+
+private struct BirthdayLeadEditorSheet: View {
+    let contact: BirthdayContact
+    @Bindable var viewModel: BirthdaysViewModel
+    @Environment(\.dismiss) private var dismiss
+    @State private var draft: Int
+
+    init(contact: BirthdayContact, viewModel: BirthdaysViewModel) {
+        self.contact = contact
+        self.viewModel = viewModel
+        self._draft = State(initialValue: viewModel.leadDays(for: contact))
+    }
+
+    var body: some View {
+        NavigationStack {
+            Form {
+                Section {
+                    Stepper(value: $draft, in: 0...60) {
+                        HStack {
+                            Text("birthdays.lead.field", bundle: .main)
+                            Spacer()
+                            Text("birthdays.lead.\(draft)", bundle: .main)
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                } footer: {
+                    Text("birthdays.lead.footer.\(viewModel.defaultLeadDays)", bundle: .main)
+                }
+                if viewModel.hasOverride(contact) {
+                    Section {
+                        Button(role: .destructive) {
+                            viewModel.clearLeadDays(for: contact)
+                            dismiss()
+                        } label: {
+                            Text("birthdays.lead.action.useDefault", bundle: .main)
+                        }
+                    }
+                }
+            }
+            .navigationTitle(Text(contact.displayName))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Text("common.cancel", bundle: .main)
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button {
+                        viewModel.setLeadDays(draft, for: contact)
+                        dismiss()
+                    } label: {
+                        Text("common.save", bundle: .main)
+                    }
+                }
+            }
+        }
     }
 }

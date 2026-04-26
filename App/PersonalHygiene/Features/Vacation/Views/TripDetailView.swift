@@ -1,3 +1,4 @@
+import PhotosUI
 import SwiftUI
 
 struct TripDetailView: View {
@@ -7,6 +8,8 @@ struct TripDetailView: View {
     @State private var showingScanner = false
     @State private var pendingDocumentBytes: PendingDocument?
     @State private var pendingExport: ExportPayload?
+    @State private var coverPickerItem: PhotosPickerItem?
+    @State private var newPackingItemTitle: String = ""
 
     private struct ExportPayload: Identifiable {
         let id = UUID()
@@ -38,28 +41,30 @@ struct TripDetailView: View {
                 }
             }
 
+            CoverPhotoSection(viewModel: viewModel, pickerItem: $coverPickerItem)
+
             Section {
                 TextField(
-                    text: $viewModel.trip.name,
+                    text: $viewModel.draftName,
                     prompt: Text("trips.field.name.placeholder", bundle: .main)
                 ) {
                     Text("trips.field.name", bundle: .main)
                 }
                 TextField(
-                    text: $viewModel.trip.destinationName,
+                    text: $viewModel.draftDestination,
                     prompt: Text("trips.field.destination.placeholder", bundle: .main)
                 ) {
                     Text("trips.field.destination", bundle: .main)
                 }
                 DatePicker(
-                    selection: $viewModel.trip.startDate,
+                    selection: $viewModel.draftStartDate,
                     displayedComponents: .date
                 ) {
                     Text("trips.field.startDate", bundle: .main)
                 }
                 DatePicker(
-                    selection: $viewModel.trip.endDate,
-                    in: viewModel.trip.startDate...,
+                    selection: $viewModel.draftEndDate,
+                    in: viewModel.draftStartDate...,
                     displayedComponents: .date
                 ) {
                     Text("trips.field.endDate", bundle: .main)
@@ -107,7 +112,11 @@ struct TripDetailView: View {
             if let generator = viewModel.itineraryGenerator {
                 Section {
                     NavigationLink {
-                        ItineraryView(trip: viewModel.trip, generator: generator)
+                        ItineraryView(
+                            trip: viewModel.trip,
+                            generator: generator,
+                            store: viewModel.itineraryStore
+                        )
                     } label: {
                         Label {
                             Text("trip.itinerary.title", bundle: .main)
@@ -118,7 +127,7 @@ struct TripDetailView: View {
                 }
             }
 
-            marineSection
+            MarineSection(viewModel: viewModel)
 
             if let currency = viewModel.currencyService {
                 Section {
@@ -147,6 +156,8 @@ struct TripDetailView: View {
                     }
                 }
             }
+
+            PackingListSection(viewModel: viewModel, newItemTitle: $newPackingItemTitle)
 
             Section {
                 if viewModel.sortedDocuments.isEmpty {
@@ -184,6 +195,26 @@ struct TripDetailView: View {
         .navigationTitle(viewModel.trip.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
+            ToolbarItem(placement: .cancellationAction) {
+                Button {
+                    viewModel.revertDraft()
+                } label: {
+                    Text("common.cancel", bundle: .main)
+                }
+                .disabled(!viewModel.hasChanges)
+            }
+            ToolbarItem(placement: .confirmationAction) {
+                Button {
+                    viewModel.commitDraft()
+                } label: {
+                    Text("common.save", bundle: .main)
+                }
+                .disabled(
+                    !viewModel.hasChanges
+                        || viewModel.draftName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                        || viewModel.draftDestination.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                )
+            }
             ToolbarItem(placement: .primaryAction) {
                 Button {
                     exportPDF()
@@ -193,7 +224,6 @@ struct TripDetailView: View {
                 .accessibilityLabel(Text("trip.action.share", bundle: .main))
             }
         }
-        .onDisappear { viewModel.saveEdits() }
         .sheet(item: $milestoneSheet) { state in
             switch state {
             case .create:
@@ -248,42 +278,6 @@ struct TripDetailView: View {
         }
     }
 
-    @ViewBuilder
-    private var marineSection: some View {
-        if let payload = marinePayload {
-            Section {
-                NavigationLink {
-                    MarineConditionsView(
-                        latitude: payload.latitude,
-                        longitude: payload.longitude,
-                        service: payload.service
-                    )
-                } label: {
-                    Label {
-                        Text("trip.marine.title", bundle: .main)
-                    } icon: {
-                        Image(systemName: "water.waves")
-                    }
-                }
-            }
-        }
-    }
-
-    private struct MarinePayload {
-        let service: any MarineWeatherService
-        let latitude: Double
-        let longitude: Double
-    }
-
-    private var marinePayload: MarinePayload? {
-        guard
-            let service = viewModel.marineService,
-            let lat = viewModel.trip.destinationLatitude,
-            let lon = viewModel.trip.destinationLongitude
-        else { return nil }
-        return MarinePayload(service: service, latitude: lat, longitude: lon)
-    }
-
     private func deleteMilestones(at offsets: IndexSet) {
         for idx in offsets {
             viewModel.deleteMilestone(viewModel.sortedMilestones[idx])
@@ -293,66 +287,6 @@ struct TripDetailView: View {
     private func deleteDocuments(at offsets: IndexSet) {
         for idx in offsets {
             viewModel.deleteDocument(viewModel.sortedDocuments[idx])
-        }
-    }
-}
-
-private struct MilestoneRow: View {
-    let milestone: TripMilestone
-    let onToggle: () -> Void
-
-    var body: some View {
-        HStack {
-            Button(action: onToggle) {
-                Image(systemName: milestone.isComplete ? "checkmark.circle.fill" : "circle")
-                    .foregroundStyle(milestone.isComplete ? Color.green : Color.secondary)
-            }
-            .buttonStyle(.plain)
-            .accessibilityLabel(
-                milestone.isComplete
-                    ? Text("trip.milestone.action.unmarkDone", bundle: .main)
-                    : Text("trip.milestone.action.markDone", bundle: .main)
-            )
-
-            VStack(alignment: .leading, spacing: 2) {
-                Text(milestone.title)
-                    .font(.body)
-                Text("trip.milestone.daysBefore.\(milestone.daysBefore)", bundle: .main)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            Spacer()
-        }
-    }
-}
-
-private struct DocumentRow: View {
-    let document: TripDocument
-
-    var body: some View {
-        HStack {
-            Image(systemName: documentIconName)
-                .foregroundStyle(.secondary)
-                .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(document.name)
-                    .font(.body)
-                Text(LocalizedStringKey("trip.document.kind.\(document.kind.rawValue)"))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-        }
-        .accessibilityElement(children: .combine)
-    }
-
-    private var documentIconName: String {
-        switch document.kind {
-        case .passport: "person.text.rectangle"
-        case .visa: "doc.text.below.ecg"
-        case .insurance: "cross.case"
-        case .ticket: "ticket"
-        case .reservation: "bed.double"
-        case .other: "doc"
         }
     }
 }

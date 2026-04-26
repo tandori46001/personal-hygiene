@@ -1,6 +1,10 @@
 import SwiftData
 import SwiftUI
 
+enum AppTab: Hashable {
+    case today, templates, medication, sleep, hydration, housekeeping, birthdays, trips, settings
+}
+
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
@@ -23,15 +27,20 @@ struct ContentView: View {
 
 private struct MainTabs: View {
     let env: AppEnvironment
+    @State private var selection: AppTab = .today
 
     var body: some View {
-        TabView {
+        TabView(selection: $selection) {
             TodayView(
                 viewModel: TodayViewModel(
                     repository: env.routineRepository,
-                    tripsRepository: env.tripsRepository
-                )
+                    tripsRepository: env.tripsRepository,
+                    skipStore: env.blockSkipStore,
+                    focusScheduleStore: env.focusScheduleStore
+                ),
+                onCreateTemplate: { selection = .templates }
             )
+            .tag(AppTab.today)
             .tabItem {
                 Label {
                     Text("tab.today", bundle: .main)
@@ -44,6 +53,7 @@ private struct MainTabs: View {
                 viewModel: TemplateListViewModel(repository: env.routineRepository),
                 repository: env.routineRepository
             )
+            .tag(AppTab.templates)
             .tabItem {
                 Label {
                     Text("tab.templates", bundle: .main)
@@ -58,6 +68,7 @@ private struct MainTabs: View {
                     repository: env.routineRepository
                 )
             )
+            .tag(AppTab.medication)
             .tabItem {
                 Label {
                     Text("tab.medication", bundle: .main)
@@ -69,6 +80,7 @@ private struct MainTabs: View {
             SleepDashboardView(
                 viewModel: SleepDashboardViewModel(service: env.sleepService)
             )
+            .tag(AppTab.sleep)
             .tabItem {
                 Label {
                     Text("tab.sleep", bundle: .main)
@@ -80,6 +92,7 @@ private struct MainTabs: View {
             HydrationDashboardView(
                 viewModel: HydrationDashboardViewModel(service: env.hydrationService)
             )
+            .tag(AppTab.hydration)
             .tabItem {
                 Label {
                     Text("tab.hydration", bundle: .main)
@@ -91,6 +104,7 @@ private struct MainTabs: View {
             HousekeepingListView(
                 viewModel: HousekeepingListViewModel(service: env.housekeepingService)
             )
+            .tag(AppTab.housekeeping)
             .tabItem {
                 Label {
                     Text("tab.housekeeping", bundle: .main)
@@ -100,8 +114,12 @@ private struct MainTabs: View {
             }
 
             BirthdaysView(
-                viewModel: BirthdaysViewModel(service: env.contactsService)
+                viewModel: BirthdaysViewModel(
+                    service: env.contactsService,
+                    leadStore: env.birthdayLeadStore
+                )
             )
+            .tag(AppTab.birthdays)
             .tabItem {
                 Label {
                     Text("tab.birthdays", bundle: .main)
@@ -115,11 +133,13 @@ private struct MainTabs: View {
                     repository: env.tripsRepository,
                     documentStore: env.tripDocumentStore,
                     itineraryGenerator: env.itineraryGenerator,
+                    itineraryStore: env.itineraryStore,
                     marineService: env.marineService,
                     currencyService: env.currencyService,
                     advisoryService: env.advisoryService
                 )
             )
+            .tag(AppTab.trips)
             .tabItem {
                 Label {
                     Text("tab.trips", bundle: .main)
@@ -132,8 +152,10 @@ private struct MainTabs: View {
                 viewModel: SettingsViewModel(
                     service: env.notificationService,
                     coordinator: env.makeNotificationCoordinator()
-                )
+                ),
+                focusScheduleStore: env.focusScheduleStore
             )
+            .tag(AppTab.settings)
             .tabItem {
                 Label {
                     Text("tab.settings", bundle: .main)

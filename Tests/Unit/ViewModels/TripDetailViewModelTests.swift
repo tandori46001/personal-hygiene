@@ -70,6 +70,49 @@ final class TripDetailViewModelTests: XCTestCase {
         XCTAssertEqual(trips.first?.name, "Renombrado")
     }
 
+    func test_revertDraft_resetsToTripValues() throws {
+        let fix = try makeFixture()
+        fix.viewModel.draftName = "Borrador"
+        fix.viewModel.draftDestination = "Otro destino"
+        XCTAssertTrue(fix.viewModel.hasChanges)
+
+        fix.viewModel.revertDraft()
+
+        XCTAssertEqual(fix.viewModel.draftName, fix.trip.name)
+        XCTAssertEqual(fix.viewModel.draftDestination, fix.trip.destinationName)
+        XCTAssertFalse(fix.viewModel.hasChanges)
+    }
+
+    func test_commitDraft_writesToTripAndPersists() throws {
+        let fix = try makeFixture()
+        fix.viewModel.draftName = "  Renombrado  "
+        fix.viewModel.draftDestination = "Ibiza"
+        fix.viewModel.commitDraft()
+
+        XCTAssertEqual(fix.trip.name, "Renombrado")
+        XCTAssertEqual(fix.trip.destinationName, "Ibiza")
+        XCTAssertFalse(fix.viewModel.hasChanges)
+
+        let trips = try fix.repo.allTrips()
+        XCTAssertEqual(trips.first?.name, "Renombrado")
+    }
+
+    func test_commitDraft_blankNameIsNoop() throws {
+        let fix = try makeFixture()
+        let original = fix.trip.name
+        fix.viewModel.draftName = "   "
+        fix.viewModel.commitDraft()
+        XCTAssertEqual(fix.trip.name, original)
+    }
+
+    func test_commitDraft_clampsEndBeforeStart() throws {
+        let fix = try makeFixture()
+        fix.viewModel.draftStartDate = Date(timeIntervalSince1970: 5_000_000)
+        fix.viewModel.draftEndDate = Date(timeIntervalSince1970: 4_000_000)
+        fix.viewModel.commitDraft()
+        XCTAssertEqual(fix.trip.endDate, fix.trip.startDate)
+    }
+
     func test_addMilestone_appendsTrimmedAndClampsDays() throws {
         let fix = try makeFixture()
         fix.viewModel.addMilestone(title: "  Pack  ", daysBefore: -3)
@@ -107,5 +150,75 @@ final class TripDetailViewModelTests: XCTestCase {
 
         fix.viewModel.toggleMilestoneCompletion(milestone)
         XCTAssertFalse(milestone.isComplete)
+    }
+}
+
+@MainActor
+final class TripsListViewModelArchiveTests: XCTestCase {
+
+    private func makeListViewModel() throws -> (TripsListViewModel, SwiftDataTripsRepository) {
+        let container = try AppModelContainer.makeInMemory()
+        let repo = SwiftDataTripsRepository(context: container.mainContext)
+        let viewModel = TripsListViewModel(repository: repo)
+        return (viewModel, repo)
+    }
+
+    func test_upcomingAndPastTrips_splitByEndDate() throws {
+        let (vm, repo) = try makeListViewModel()
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+        let now = DateComponents(calendar: calendar, year: 2026, month: 4, day: 25).date!
+        let pastTrip = Trip(
+            name: "Past",
+            startDate: DateComponents(calendar: calendar, year: 2026, month: 1, day: 1).date!,
+            endDate: DateComponents(calendar: calendar, year: 2026, month: 1, day: 10).date!,
+            destinationName: "X"
+        )
+        let activeTrip = Trip(
+            name: "Active",
+            startDate: DateComponents(calendar: calendar, year: 2026, month: 4, day: 20).date!,
+            endDate: DateComponents(calendar: calendar, year: 2026, month: 4, day: 30).date!,
+            destinationName: "Y"
+        )
+        let futureTrip = Trip(
+            name: "Future",
+            startDate: DateComponents(calendar: calendar, year: 2026, month: 6, day: 1).date!,
+            endDate: DateComponents(calendar: calendar, year: 2026, month: 6, day: 10).date!,
+            destinationName: "Z"
+        )
+        try repo.upsert(pastTrip)
+        try repo.upsert(activeTrip)
+        try repo.upsert(futureTrip)
+        vm.reload()
+
+        let upcoming = vm.upcomingTrips(now: now, calendar: calendar)
+        let past = vm.pastTrips(now: now, calendar: calendar)
+        XCTAssertEqual(upcoming.map(\.name).sorted(), ["Active", "Future"])
+        XCTAssertEqual(past.map(\.name), ["Past"])
+    }
+
+    func test_pastTrips_sortedByMostRecentlyEnded() throws {
+        let (vm, repo) = try makeListViewModel()
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.timeZone = TimeZone(secondsFromGMT: 0)!
+        let now = DateComponents(calendar: calendar, year: 2026, month: 4, day: 25).date!
+
+        let trip1 = Trip(
+            name: "Trip1",
+            startDate: DateComponents(calendar: calendar, year: 2026, month: 1, day: 1).date!,
+            endDate: DateComponents(calendar: calendar, year: 2026, month: 1, day: 5).date!,
+            destinationName: "A"
+        )
+        let trip2 = Trip(
+            name: "Trip2",
+            startDate: DateComponents(calendar: calendar, year: 2026, month: 3, day: 1).date!,
+            endDate: DateComponents(calendar: calendar, year: 2026, month: 3, day: 10).date!,
+            destinationName: "B"
+        )
+        try repo.upsert(trip1)
+        try repo.upsert(trip2)
+        vm.reload()
+
+        XCTAssertEqual(vm.pastTrips(now: now, calendar: calendar).map(\.name), ["Trip2", "Trip1"])
     }
 }

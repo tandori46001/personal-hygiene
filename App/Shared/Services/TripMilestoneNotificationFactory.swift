@@ -41,7 +41,9 @@ public enum TripMilestoneNotificationFactory {
             title: trip.name,
             body: milestone.title,
             triggerDate: trigger,
-            isCritical: false
+            isCritical: false,
+            threadIdentifier: NotificationThreadID.tripMilestone,
+            categoryIdentifier: NotificationCategoryID.tripMilestone
         )
     }
 }

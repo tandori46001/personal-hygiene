@@ -32,6 +32,17 @@ struct HydrationDashboardView: View {
                         Text(verbatim: "\(viewModel.goal.dailyMilliliters) ml")
                             .foregroundStyle(.secondary)
                     }
+                    let streak = viewModel.streakDays()
+                    if streak > 0 {
+                        HStack {
+                            Image(systemName: "flame.fill")
+                                .foregroundStyle(.orange)
+                                .accessibilityHidden(true)
+                            Text("hydration.streak.\(streak)", bundle: .main)
+                            Spacer()
+                        }
+                        .accessibilityElement(children: .combine)
+                    }
                 } header: {
                     Text("hydration.section.today", bundle: .main)
                 }

@@ -1,10 +1,12 @@
 import SwiftData
 import SwiftUI
+import UserNotifications
 
 @main
 struct PersonalHygieneApp: App {
 
     let modelContainer: ModelContainer
+    private let notificationDelegate = NotificationActionHandler()
 
     init() {
         // UI tests pass `-uiTestReset` to launch on a clean in-memory container,
@@ -22,6 +24,8 @@ struct PersonalHygieneApp: App {
         } catch {
             fatalError("Failed to create ModelContainer: \(error)")
         }
+        UNUserNotificationCenter.current().delegate = notificationDelegate
+        NotificationCategoryRegistrar.register()
     }
 
     var body: some Scene {

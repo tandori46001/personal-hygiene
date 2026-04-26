@@ -13,6 +13,7 @@ struct AppEnvironment {
     let tripsRepository: any TripsRepository
     let tripDocumentStore: TripDocumentStore
     let itineraryGenerator: any ItineraryGenerator
+    let itineraryStore: any ItineraryStore
     let marineService: any MarineWeatherService
     let currencyService: any CurrencyService
     let advisoryService: any TravelAdvisoryService
@@ -22,6 +23,9 @@ struct AppEnvironment {
     let contactsService: any ContactsService
     let travelTimeService: any TravelTimeService
     let homeStore: HomeLocationStore
+    let blockSkipStore: any BlockSkipStore
+    let birthdayLeadStore: any BirthdayLeadStore
+    let focusScheduleStore: any FocusScheduleStore
 
     init(modelContext: ModelContext) {
         let trips = SwiftDataTripsRepository(context: modelContext)
@@ -31,15 +35,19 @@ struct AppEnvironment {
         self.tripsRepository = trips
         self.tripDocumentStore = TripDocumentStore(repository: trips, keychain: SecKeychainStore())
         self.itineraryGenerator = Self.makeItineraryGenerator()
-        self.marineService = OpenMeteoMarineService()
-        self.currencyService = FrankfurterCurrencyService()
-        self.advisoryService = ExterioresAdvisoryService()
+        self.itineraryStore = FileItineraryStore()
+        self.marineService = CachedMarineWeatherService(upstream: OpenMeteoMarineService())
+        self.currencyService = CachedCurrencyService(upstream: FrankfurterCurrencyService())
+        self.advisoryService = CachedTravelAdvisoryService(upstream: ExterioresAdvisoryService())
         self.notificationService = UserNotificationsService()
         self.medicationService = HealthKitMedicationService()
         self.sleepService = HealthKitSleepService()
         self.contactsService = CNContactsService()
         self.travelTimeService = MKDirectionsTravelTimeService()
         self.homeStore = HomeLocationStore()
+        self.blockSkipStore = UserDefaultsBlockSkipStore()
+        self.birthdayLeadStore = UserDefaultsBirthdayLeadStore()
+        self.focusScheduleStore = UserDefaultsFocusScheduleStore()
     }
 
     func makeNotificationCoordinator(calendar: Calendar = .autoupdatingCurrent) -> NotificationCoordinator {
@@ -48,6 +56,8 @@ struct AppEnvironment {
             service: notificationService,
             travelTimeService: travelTimeService,
             homeLocation: homeStore.location,
+            skipStore: blockSkipStore,
+            focusScheduleStore: focusScheduleStore,
             calendar: calendar
         )
     }

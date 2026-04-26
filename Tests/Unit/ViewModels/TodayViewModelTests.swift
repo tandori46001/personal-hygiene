@@ -162,6 +162,29 @@ final class TodayViewModelTests: XCTestCase {
         XCTAssertEqual(result?.name, "Near")
     }
 
+    func test_toggleSkippedToday_persistsThroughSkipStore() throws {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(secondsFromGMT: 0)!
+        let block = Block(
+            title: "Hygiene",
+            category: .hygiene,
+            startMinutesFromMidnight: 7 * 60,
+            durationMinutes: 30
+        )
+        let template = RoutineTemplate(name: "T", dayType: .weekday, blocks: [block], isActive: true)
+        try repo.upsert(template)
+
+        let skipStore = InMemoryBlockSkipStore()
+        let vm = TodayViewModel(repository: repo, skipStore: skipStore, calendar: cal)
+        let now = date(weekday: 3, hour: 9)
+
+        XCTAssertFalse(vm.isSkipped(block, now: now))
+        vm.toggleSkippedToday(block, now: now)
+        XCTAssertTrue(vm.isSkipped(block, now: now))
+        vm.toggleSkippedToday(block, now: now)
+        XCTAssertFalse(vm.isSkipped(block, now: now))
+    }
+
     func test_reload_rehydratesCompletionsForToday() throws {
         var cal = Calendar(identifier: .gregorian)
         cal.timeZone = TimeZone(secondsFromGMT: 0)!

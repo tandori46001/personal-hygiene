@@ -97,8 +97,30 @@ custom_rules:
     name: "Hardcoded Text view"
     regex: 'Text\("[^"]+"\s*\)'
     message: "Use Localizable.xcstrings (Text(\"key\", bundle: .main)) or Text(verbatim:) for non-localizable literals."
-    severity: warning
+    severity: error
     excluded:
       - "App/PersonalHygiene/App/PersonalHygieneApp.swift"
+      - "Tests"
+  hardcoded_navigation_title:
+    name: "Hardcoded navigationTitle"
+    regex: '\.navigationTitle\("[^"]+"\)'
+    message: "navigationTitle should take a Text view from Localizable.xcstrings, not a string literal."
+    severity: error
+    excluded:
+      - "Tests"
+  hardcoded_accessibility_label:
+    name: "Hardcoded accessibilityLabel"
+    regex: '\.accessibilityLabel\("[^"]+"\)'
+    message: "accessibilityLabel should pass a localized Text view, not a string literal."
+    severity: error
+    excluded:
+      - "Tests"
+  hardcoded_button_label:
+    name: "Hardcoded Button label"
+    regex: 'Button\("[^"]+"\s*[\),]'
+    message: "Button should be built with a Text(\"key\", bundle: .main) label, not a string literal."
+    severity: error
+    excluded:
+      - "Tests"
 
 reporter: "xcode"

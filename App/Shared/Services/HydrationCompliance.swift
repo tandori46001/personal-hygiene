@@ -31,4 +31,28 @@ public enum HydrationCompliance {
         let total = totalMilliliters(on: now, logs: logs, calendar: calendar)
         return min(1.0, Double(total) / Double(goal.dailyMilliliters))
     }
+
+    /// Number of consecutive days (ending on the calendar day of `now`) where
+    /// total hydration met or exceeded `goal.dailyMilliliters`. The current
+    /// day counts only when its total has already crossed the goal.
+    public static func currentStreakDays(
+        on now: Date,
+        logs: [HydrationLog],
+        goal: HydrationGoal,
+        calendar: Calendar = .autoupdatingCurrent
+    ) -> Int {
+        guard goal.dailyMilliliters > 0 else { return 0 }
+        let totalsByDay = Dictionary(grouping: logs) { log -> Date in
+            calendar.startOfDay(for: log.drankAt)
+        }.mapValues { $0.reduce(0) { $0 + max(0, $1.milliliters) } }
+
+        var streak = 0
+        var cursor = calendar.startOfDay(for: now)
+        while let total = totalsByDay[cursor], total >= goal.dailyMilliliters {
+            streak += 1
+            guard let prev = calendar.date(byAdding: .day, value: -1, to: cursor) else { break }
+            cursor = prev
+        }
+        return streak
+    }
 }

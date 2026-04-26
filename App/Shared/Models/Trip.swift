@@ -11,6 +11,15 @@ public final class Trip {
     public var destinationLatitude: Double?
     public var destinationLongitude: Double?
 
+    /// JPEG/PNG bytes of an optional cover photo selected via PhotosPicker.
+    /// Compressed to ~512KB max before storing.
+    @Attribute(.externalStorage)
+    public var coverPhotoData: Data?
+
+    /// Free-form packing checklist for the trip. Stored as a single value-type
+    /// array so we can persist without introducing a new @Model.
+    public var packingItems: [PackingItem]
+
     @Relationship(deleteRule: .cascade, inverse: \TripMilestone.trip)
     public var milestones: [TripMilestone]
 
@@ -25,6 +34,8 @@ public final class Trip {
         destinationName: String,
         destinationLatitude: Double? = nil,
         destinationLongitude: Double? = nil,
+        coverPhotoData: Data? = nil,
+        packingItems: [PackingItem] = [],
         milestones: [TripMilestone] = [],
         documents: [TripDocument] = []
     ) {
@@ -35,7 +46,23 @@ public final class Trip {
         self.destinationName = destinationName
         self.destinationLatitude = destinationLatitude
         self.destinationLongitude = destinationLongitude
+        self.coverPhotoData = coverPhotoData
+        self.packingItems = packingItems
         self.milestones = milestones
         self.documents = documents
+    }
+}
+
+/// A line in the trip packing list. Value type so the parent `Trip` `@Model`
+/// owns the collection without needing a child `@Model` table.
+public struct PackingItem: Codable, Hashable, Sendable, Identifiable {
+    public var id: UUID
+    public var title: String
+    public var isPacked: Bool
+
+    public init(id: UUID = UUID(), title: String, isPacked: Bool = false) {
+        self.id = id
+        self.title = title
+        self.isPacked = isPacked
     }
 }

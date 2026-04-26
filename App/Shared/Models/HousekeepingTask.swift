@@ -27,18 +27,27 @@ public final class HousekeepingTask {
     public var lastCompletedAt: Date?
     /// Days past `nextDueDate` before the task is treated as `overdue`.
     public var escalationDays: Int
+    /// Optional free-form room/location grouping (e.g. "Kitchen", "Bathroom")
+    /// used by the list view's filter. `nil` means "Unsorted".
+    public var room: String?
 
     public init(
         id: UUID = UUID(),
         title: String,
         recurrence: HousekeepingRecurrence,
         lastCompletedAt: Date? = nil,
-        escalationDays: Int = 2
+        escalationDays: Int = 2,
+        room: String? = nil
     ) {
         self.id = id
         self.title = title
         self.recurrence = recurrence
         self.lastCompletedAt = lastCompletedAt
         self.escalationDays = max(0, escalationDays)
+        self.room = room?.trimmingCharacters(in: .whitespacesAndNewlines).nilIfEmpty
     }
+}
+
+extension String {
+    fileprivate var nilIfEmpty: String? { isEmpty ? nil : self }
 }

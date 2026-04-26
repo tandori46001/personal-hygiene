@@ -85,6 +85,36 @@ extension BackupSnapshot {
         public let destinationLatitude: Double?
         public let destinationLongitude: Double?
         public let milestones: [MilestonePayload]
+        // Added in v1.1; older backups omit these. Decode as nil/empty.
+        public let packingItems: [PackingItemPayload]?
+
+        public init(
+            id: UUID,
+            name: String,
+            startDate: Date,
+            endDate: Date,
+            destinationName: String,
+            destinationLatitude: Double?,
+            destinationLongitude: Double?,
+            milestones: [MilestonePayload],
+            packingItems: [PackingItemPayload]? = nil
+        ) {
+            self.id = id
+            self.name = name
+            self.startDate = startDate
+            self.endDate = endDate
+            self.destinationName = destinationName
+            self.destinationLatitude = destinationLatitude
+            self.destinationLongitude = destinationLongitude
+            self.milestones = milestones
+            self.packingItems = packingItems
+        }
+    }
+
+    public struct PackingItemPayload: Codable, Equatable, Sendable {
+        public let id: UUID
+        public let title: String
+        public let isPacked: Bool
     }
 
     public struct MilestonePayload: Codable, Equatable, Sendable {
@@ -202,6 +232,9 @@ public enum BackupService {
                 isComplete: milestone.isComplete
             )
         }
+        let packingItems = (payload.packingItems ?? []).map { item in
+            PackingItem(id: item.id, title: item.title, isPacked: item.isPacked)
+        }
         context.insert(
             Trip(
                 id: payload.id,
@@ -211,6 +244,7 @@ public enum BackupService {
                 destinationName: payload.destinationName,
                 destinationLatitude: payload.destinationLatitude,
                 destinationLongitude: payload.destinationLongitude,
+                packingItems: packingItems,
                 milestones: milestones,
                 documents: []
             )
@@ -315,6 +349,13 @@ public enum BackupService {
                     title: milestone.title,
                     daysBefore: milestone.daysBefore,
                     isComplete: milestone.isComplete
+                )
+            },
+            packingItems: trip.packingItems.map { item in
+                BackupSnapshot.PackingItemPayload(
+                    id: item.id,
+                    title: item.title,
+                    isPacked: item.isPacked
                 )
             }
         )

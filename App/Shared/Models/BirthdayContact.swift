@@ -2,7 +2,10 @@ import Foundation
 
 /// Lightweight value-type DTO of a contact's birthday. Used so the rest of
 /// the app does not depend on the `Contacts` framework directly.
-public struct BirthdayContact: Equatable, Hashable, Sendable {
+public struct BirthdayContact: Equatable, Hashable, Sendable, Identifiable {
+
+    public var id: String { identifier }
+
     public let identifier: String
     public let displayName: String
     /// Birth month (1-12).

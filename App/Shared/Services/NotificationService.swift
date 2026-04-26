@@ -94,6 +94,10 @@ public final class UserNotificationsService: NotificationService {
             if notification.isCritical {
                 content.interruptionLevel = .critical
             }
+            content.threadIdentifier = notification.threadIdentifier
+            if let categoryID = notification.categoryIdentifier {
+                content.categoryIdentifier = categoryID
+            }
 
             let triggerComponents = Calendar.current.dateComponents(
                 [.year, .month, .day, .hour, .minute],
@@ -108,5 +112,105 @@ public final class UserNotificationsService: NotificationService {
             )
             try await center.add(request)
         }
+    }
+}
+
+/// Registers `UNNotificationCategory`s on launch so the user sees the snooze
+/// + mark-done actions when long-pressing a routine notification. Critical
+/// medication alerts intentionally only get "Mark done" — we never want a
+/// snooze button on a medication reminder.
+public enum NotificationCategoryRegistrar {
+
+    @MainActor
+    public static func register(center: UNUserNotificationCenter = .current()) {
+        let snooze = UNNotificationAction(
+            identifier: NotificationActionID.snooze5min,
+            title: NSLocalizedString(
+                "notification.action.snooze5min",
+                comment: "Push action that re-fires the alert in 5 minutes"
+            ),
+            options: []
+        )
+        let markDone = UNNotificationAction(
+            identifier: NotificationActionID.markDone,
+            title: NSLocalizedString(
+                "notification.action.markDone",
+                comment: "Push action that marks the block as done"
+            ),
+            options: []
+        )
+
+        let routine = UNNotificationCategory(
+            identifier: NotificationCategoryID.routineBlock,
+            actions: [markDone, snooze],
+            intentIdentifiers: [],
+            options: []
+        )
+        let medication = UNNotificationCategory(
+            identifier: NotificationCategoryID.medication,
+            actions: [markDone],
+            intentIdentifiers: [],
+            options: []
+        )
+        let milestone = UNNotificationCategory(
+            identifier: NotificationCategoryID.tripMilestone,
+            actions: [snooze],
+            intentIdentifiers: [],
+            options: []
+        )
+        let hydration = UNNotificationCategory(
+            identifier: NotificationCategoryID.hydration,
+            actions: [snooze],
+            intentIdentifiers: [],
+            options: []
+        )
+        center.setNotificationCategories([routine, medication, milestone, hydration])
+    }
+}
+
+/// `UNUserNotificationCenterDelegate` wrapper that handles the snooze action
+/// by re-firing the notification 5 minutes later with the same content.
+///
+/// The class itself is not main-actor-isolated; the system invokes delegate
+/// callbacks on a background queue. Snooze rescheduling hops to a Task and
+/// uses the (concurrency-safe) async API on `UNUserNotificationCenter`.
+public final class NotificationActionHandler: NSObject, UNUserNotificationCenterDelegate {
+
+    public static let snoozeDelay: TimeInterval = 5 * 60
+
+    override public init() {
+        super.init()
+    }
+
+    public func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        willPresent notification: UNNotification,
+        withCompletionHandler completionHandler: @escaping @Sendable (UNNotificationPresentationOptions) -> Void
+    ) {
+        completionHandler([.banner, .sound, .badge])
+    }
+
+    public func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping @Sendable () -> Void
+    ) {
+        guard response.actionIdentifier == NotificationActionID.snooze5min else {
+            completionHandler()
+            return
+        }
+        let identifier = response.notification.request.identifier
+        let original = response.notification.request
+        let content = (original.content.mutableCopy() as? UNMutableNotificationContent)
+            ?? UNMutableNotificationContent()
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: Self.snoozeDelay, repeats: false)
+        let request = UNNotificationRequest(
+            identifier: "\(identifier).snooze.\(Int(Date().timeIntervalSince1970))",
+            content: content,
+            trigger: trigger
+        )
+        // Use the completion-handler API instead of `await center.add(request)`
+        // so we don't have to capture `completionHandler` across an actor hop.
+        center.add(request) { _ in completionHandler() }
     }
 }

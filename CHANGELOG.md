@@ -8,6 +8,27 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added — Session 5 ("haz todo" round 3, 20 slices)
+
+- **Slice 1 — Itinerary persistence:** `ItineraryStore` (file-on-disk JSON keyed by `Trip.id`) so the last AI-generated itinerary survives app restarts. `TripItinerary` is now `Codable`.
+- **Slice 2-4 — API caching:** Decorator wrappers `CachedMarineWeatherService`, `CachedCurrencyService`, `CachedTravelAdvisoryService` add 30-min TTL caching for the three external/deep-link services.
+- **Slice 5 — Past trips archive:** `TripsListView` splits into "Upcoming" + "Past" sections via `upcomingTrips()` / `pastTrips()` helpers.
+- **Slice 6 — Trip detail Cancel/Save:** `TripDetailViewModel` exposes draft scalar fields with `commitDraft()` / `revertDraft()`; auto-save on disappear is gone.
+- **Slice 7 — SwiftLint hardcoded UI strings:** Custom rules (`hardcoded_text_view`, `…_navigationTitle`, `…_accessibilityLabel`, `…_button_label`) are now `error`-level, blocking builds when a literal slips into UI code.
+- **Slice 8 — Today empty-state CTA:** When no template is active, the empty state shows a "Create template" button that switches to the Templates tab via a new `selection` binding in `MainTabs`.
+- **Slice 9 — Skip block today:** `BlockSkipStore` (UserDefaults-backed) records `(blockID, dayKey)` skips; swipe-action on Today rows toggles them. `NotificationCoordinator` filters skipped blocks before scheduling.
+- **Slice 10 — Notification snooze 5 min:** `UNNotificationCategory`s registered at launch; `NotificationActionHandler` reschedules with a `UNTimeIntervalNotificationTrigger`.
+- **Slice 11 — Notification grouping:** Routine, medication, milestone, hydration each get their own `threadIdentifier` + `categoryIdentifier`.
+- **Slice 12 — "What's next?" Siri Shortcut:** `WhatsNextIntent` reads the active template + `NextBlockResolver` and reports the current/next block via Siri / Shortcuts.
+- **Slice 13 — iOS WidgetKit extension:** New `PersonalHygieneWidgets` target with `NextBlockHomeWidget` (small + medium families). Reuses `NextBlockResolver`.
+- **Slice 14 — Trip cover photo:** `Trip.coverPhotoData` (external storage) + `PhotosPicker` in Trip detail; JPEG-compressed at 0.7 quality before persisting.
+- **Slice 15 — Packing list:** `Trip.packingItems` (value-type array) + `PackingListSection` with toggle/delete + summary footer; persists across `BackupService` (v1.1).
+- **Slice 16 — Hydration streak:** `HydrationCompliance.currentStreakDays(...)` counts consecutive goal-meeting days; rendered as a flame badge.
+- **Slice 17 — Housekeeping room filter:** `HousekeepingTask.room` (free text) + Picker filter (`.all` / `.unsorted` / `.named`).
+- **Slice 18 — Birthdays per-contact heads-up:** `BirthdayLeadStore` (UserDefaults-backed) overrides the global default; sheet editor reachable via swipe action.
+- **Slice 19 — Scheduled focus windows:** `ScheduledFocusWindow` + `FocusScheduleStore`; Settings → Deep Focus opens an editor with weekday toggles and time pickers. `DeepFocusFilter.focusWindows` merges block-derived + schedule-derived windows.
+- **Slice 20 — VoiceOver pass:** Time-only displays speak natural-language time via `Text(date, format: .dateTime.hour().minute())`; arrow glyphs hidden from VoiceOver.
+
 ### Added — Phase 5 (M9 vacation, session 4)
 
 - **Slice 1 — Trip detail view:** `TripDetailViewModel` + `TripDetailView` with editable name/destination/dates, milestones list, documents list, and days-until-departure footer.

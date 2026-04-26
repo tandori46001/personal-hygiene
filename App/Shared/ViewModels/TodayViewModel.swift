@@ -7,6 +7,8 @@ final class TodayViewModel {
 
     private let repository: any RoutineRepository
     private let tripsRepository: (any TripsRepository)?
+    private let skipStore: (any BlockSkipStore)?
+    private let focusScheduleStore: (any FocusScheduleStore)?
     private let calendar: Calendar
 
     var activeTemplate: RoutineTemplate?
@@ -21,11 +23,30 @@ final class TodayViewModel {
     init(
         repository: any RoutineRepository,
         tripsRepository: (any TripsRepository)? = nil,
+        skipStore: (any BlockSkipStore)? = nil,
+        focusScheduleStore: (any FocusScheduleStore)? = nil,
         calendar: Calendar = .autoupdatingCurrent
     ) {
         self.repository = repository
         self.tripsRepository = tripsRepository
+        self.skipStore = skipStore
+        self.focusScheduleStore = focusScheduleStore
         self.calendar = calendar
+    }
+
+    /// Whether the user marked `block` as skipped for today.
+    func isSkipped(_ block: Block, now: Date = Date()) -> Bool {
+        skipStore?.isSkipped(blockID: block.id, on: now, calendar: calendar) ?? false
+    }
+
+    /// Toggle skip-for-today for `block`.
+    func toggleSkippedToday(_ block: Block, now: Date = Date()) {
+        guard let skipStore else { return }
+        if skipStore.isSkipped(blockID: block.id, on: now, calendar: calendar) {
+            skipStore.unskip(blockID: block.id, on: now, calendar: calendar)
+        } else {
+            skipStore.skip(blockID: block.id, on: now, calendar: calendar)
+        }
     }
 
     func reload(now: Date = Date()) {
@@ -109,6 +130,12 @@ final class TodayViewModel {
     }
 
     func activeFocusWindow(at now: Date = Date()) -> DeepFocusFilter.FocusWindow? {
-        DeepFocusFilter.activeWindow(at: now, in: blocks, calendar: calendar)
+        let scheduled = focusScheduleStore?.windows() ?? []
+        return DeepFocusFilter.activeWindow(
+            at: now,
+            in: blocks,
+            scheduledWindows: scheduled,
+            calendar: calendar
+        )
     }
 }
