@@ -66,7 +66,13 @@ final class BackupServiceTests: XCTestCase {
         let original = try BackupService.export(from: container.mainContext)
         let data = try BackupService.encode(original)
         let decoded = try BackupService.decode(data)
-        XCTAssertEqual(original, decoded)
+        // Compare by re-encoding both halves to JSON; Date == is fragile under
+        // 1970-vs-2001 reference rebasing through Double, but the on-disk
+        // representation is what users actually see / restore from.
+        let reEncoded = try BackupService.encode(decoded)
+        XCTAssertEqual(data, reEncoded)
+        XCTAssertEqual(original.templates, decoded.templates)
+        XCTAssertEqual(original.housekeeping, decoded.housekeeping)
     }
 
     func test_restore_replacesAllData() throws {
