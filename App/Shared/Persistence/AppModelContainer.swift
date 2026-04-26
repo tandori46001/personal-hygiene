@@ -13,6 +13,9 @@ public enum AppModelContainer {
         BlockCompletion.self,
         HydrationLog.self,
         HousekeepingTask.self,
+        Trip.self,
+        TripMilestone.self,
+        TripDocument.self,
     ])
 
     /// On-disk container used by the running app.

@@ -105,6 +105,17 @@ private struct MainTabs: View {
                 }
             }
 
+            TripsListView(
+                viewModel: TripsListViewModel(repository: env.tripsRepository)
+            )
+            .tabItem {
+                Label {
+                    Text("tab.trips", bundle: .main)
+                } icon: {
+                    Image(systemName: "airplane")
+                }
+            }
+
             SettingsView(
                 viewModel: SettingsViewModel(
                     service: env.notificationService,

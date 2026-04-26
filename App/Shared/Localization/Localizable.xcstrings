@@ -470,6 +470,54 @@
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Birthdays" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Cumpleaños" } },
       "fr" : { "stringUnit" : { "state" : "translated", "value" : "Anniversaires" } } } },
+    "tab.trips" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Trips" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Viajes" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Voyages" } } } },
+    "trips.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Trips" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Viajes" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Voyages" } } } },
+    "trips.empty.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "No trips yet" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Aún sin viajes" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aucun voyage" } } } },
+    "trips.empty.description" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Add a trip to schedule pre-trip milestones and store documents." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Añade un viaje para programar hitos previos y guardar documentos." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ajoutez un voyage pour planifier les jalons et stocker les documents." } } } },
+    "trips.action.add" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Add trip" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Añadir viaje" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ajouter un voyage" } } } },
+    "trips.new.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "New trip" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Nuevo viaje" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Nouveau voyage" } } } },
+    "trips.field.name" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Name" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Nombre" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Nom" } } } },
+    "trips.field.name.placeholder" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Mediterranean cruise" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Crucero por el Mediterráneo" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Croisière en Méditerranée" } } } },
+    "trips.field.destination" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Destination" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Destino" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Destination" } } } },
+    "trips.field.destination.placeholder" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "City or country" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Ciudad o país" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ville ou pays" } } } },
+    "trips.field.startDate" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Start" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Inicio" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Début" } } } },
+    "trips.field.endDate" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "End" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Fin" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Fin" } } } },
     "birthdays.title" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Birthdays" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Cumpleaños" } },

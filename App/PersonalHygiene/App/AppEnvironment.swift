@@ -10,6 +10,7 @@ struct AppEnvironment {
     let routineRepository: any RoutineRepository
     let hydrationService: any HydrationService
     let housekeepingService: any HousekeepingService
+    let tripsRepository: any TripsRepository
     let notificationService: any NotificationService
     let medicationService: any MedicationService
     let sleepService: any SleepService
@@ -21,6 +22,7 @@ struct AppEnvironment {
         self.routineRepository = SwiftDataRoutineRepository(context: modelContext)
         self.hydrationService = SwiftDataHydrationService(context: modelContext)
         self.housekeepingService = SwiftDataHousekeepingService(context: modelContext)
+        self.tripsRepository = SwiftDataTripsRepository(context: modelContext)
         self.notificationService = UserNotificationsService()
         self.medicationService = HealthKitMedicationService()
         self.sleepService = HealthKitSleepService()
