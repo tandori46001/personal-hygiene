@@ -76,6 +76,7 @@
 		6F41F6FA39ECD4CF88F2AC48 /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15A10D5DE460A958A5D53E2 /* AppModelContainer.swift */; };
 		716FA22E19ED933CA74840AA /* BlockEditorViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B51EECB8573E877BC9C9C1 /* BlockEditorViewModelTests.swift */; };
 		72148BB53EEFC93362D896D1 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCDD26F1F9BE6897C802F9D /* ContentView.swift */; };
+		761D6AEA1F2BDDAE61256729 /* BirthdaysViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 504DC37DA7DFB28CB886230A /* BirthdaysViewModel.swift */; };
 		7678C99D9C12FB2EB4E1EEDB /* BirthdayContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE1D8CDA189133B95EB97D9 /* BirthdayContact.swift */; };
 		76E23C539CE8B21795D5AE13 /* BlockLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498429D0D47787A663C6BD39 /* BlockLocation.swift */; };
 		7989AA017757180F433889C0 /* TodayViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663722BBB35DB8492E87B16F /* TodayViewModelTests.swift */; };
@@ -110,6 +111,7 @@
 		C33E82E0B4AC99330C21CAF3 /* HousekeepingListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02FBB394A9114A6F84D83F8B /* HousekeepingListViewModel.swift */; };
 		C46DA119756B4A0604FC9BF2 /* PersonalHygieneWatchWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A708BA2C28D4442A3FA8006 /* PersonalHygieneWatchWidgets.swift */; };
 		C5383F43A15F67A0C659AA72 /* RoutineTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD16FF8317F205F6929F8F70 /* RoutineTemplate.swift */; };
+		C6BC558EB773369B97D8FE07 /* BirthdaysView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5077526B02AB76ABF1198BD /* BirthdaysView.swift */; };
 		C89D5C3D112C1122B7366F14 /* NotificationFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D286C3CA04A9375E3768F117 /* NotificationFactoryTests.swift */; };
 		C8D380261FF02ABD2149E83C /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D857E2973DD7DB00C327D6DD /* NotificationService.swift */; };
 		CAE4CECF76EA420958B1DA42 /* BlockLocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337B6DAD7C25B99941041664 /* BlockLocationTests.swift */; };
@@ -195,6 +197,7 @@
 		3E9DD5A1125D33167C915BCF /* RoutineTemplateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineTemplateTests.swift; sourceTree = "<group>"; };
 		498429D0D47787A663C6BD39 /* BlockLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockLocation.swift; sourceTree = "<group>"; };
 		4BE1D8CDA189133B95EB97D9 /* BirthdayContact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayContact.swift; sourceTree = "<group>"; };
+		504DC37DA7DFB28CB886230A /* BirthdaysViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdaysViewModel.swift; sourceTree = "<group>"; };
 		57F86C0070A0F11D03F5A574 /* MedicationComplianceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationComplianceView.swift; sourceTree = "<group>"; };
 		5D9ED449793E3F94C0C2F63D /* HousekeepingServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousekeepingServiceTests.swift; sourceTree = "<group>"; };
 		6225759542A5B4D3E911E35A /* TravelTimeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelTimeService.swift; sourceTree = "<group>"; };
@@ -220,6 +223,7 @@
 		9A708BA2C28D4442A3FA8006 /* PersonalHygieneWatchWidgets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalHygieneWatchWidgets.swift; sourceTree = "<group>"; };
 		9B4B7C0C3656EBA46280D550 /* ContactsServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsServiceTests.swift; sourceTree = "<group>"; };
 		9BA29AAD568119789FF93F7C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		A5077526B02AB76ABF1198BD /* BirthdaysView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdaysView.swift; sourceTree = "<group>"; };
 		A89B34922E3306EEFFDF709A /* SleepDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepDashboardView.swift; sourceTree = "<group>"; };
 		AEDDDB2E7C9372D2292C447A /* Block.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Block.swift; sourceTree = "<group>"; };
 		B086E91EEE6AEDB0F4E3EC2D /* NotificationFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationFactory.swift; sourceTree = "<group>"; };
@@ -293,6 +297,14 @@
 			children = (
 				90B51EECB8573E877BC9C9C1 /* BlockEditorViewModelTests.swift */,
 				663722BBB35DB8492E87B16F /* TodayViewModelTests.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		14A3AFDA12C8BCD535E50BE6 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				504DC37DA7DFB28CB886230A /* BirthdaysViewModel.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -514,6 +526,14 @@
 			path = PersonalHygieneWatchWidgets;
 			sourceTree = "<group>";
 		};
+		89ABAB4E52B62469F377349F /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A5077526B02AB76ABF1198BD /* BirthdaysView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		8E901126CE272FBFC7E450EF /* Tests */ = {
 			isa = PBXGroup;
 			children = (
@@ -659,6 +679,7 @@
 		C8524E7BB2A1AA718104905E /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				F18561BAF0855203631B79C3 /* Birthdays */,
 				344C5A5EF8A624F3E8860DCF /* Housekeeping */,
 				C75BADBC5663DFF8A4CE72A3 /* Hydration */,
 				A2ABBE284C036A5E3643C83D /* Medication */,
@@ -699,6 +720,15 @@
 				B45E12146599CB7B994CFF2A /* PersonalHygieneApp.swift */,
 			);
 			path = App;
+			sourceTree = "<group>";
+		};
+		F18561BAF0855203631B79C3 /* Birthdays */ = {
+			isa = PBXGroup;
+			children = (
+				14A3AFDA12C8BCD535E50BE6 /* ViewModels */,
+				89ABAB4E52B62469F377349F /* Views */,
+			);
+			path = Birthdays;
 			sourceTree = "<group>";
 		};
 		F2E10C274DE300B347234421 /* Persistence */ = {
@@ -940,6 +970,8 @@
 				ABDD9F80A4A0A76EDFFCB191 /* AppModelContainer.swift in Sources */,
 				DC5818E1D58D2B5D49051124 /* BedtimeCalculator.swift in Sources */,
 				7678C99D9C12FB2EB4E1EEDB /* BirthdayContact.swift in Sources */,
+				C6BC558EB773369B97D8FE07 /* BirthdaysView.swift in Sources */,
+				761D6AEA1F2BDDAE61256729 /* BirthdaysViewModel.swift in Sources */,
 				31E1A1EBE429E2F6947F6D57 /* Block.swift in Sources */,
 				197BB847B9FF176068AD1459 /* BlockCategory.swift in Sources */,
 				CB5409D0C60F104771EA3A0F /* BlockCompletion.swift in Sources */,

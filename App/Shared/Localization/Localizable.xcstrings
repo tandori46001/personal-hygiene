@@ -466,6 +466,46 @@
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Housekeeping" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Tareas casa" } },
       "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ménage" } } } },
+    "tab.birthdays" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Birthdays" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Cumpleaños" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Anniversaires" } } } },
+    "birthdays.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Birthdays" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Cumpleaños" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Anniversaires" } } } },
+    "birthdays.permission.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Allow access to Contacts" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Permitir acceso a Contactos" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Autoriser l'accès aux Contacts" } } } },
+    "birthdays.permission.description" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Read-only access lets the app show upcoming birthdays from your address book." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Acceso de solo lectura para mostrar cumpleaños próximos de tu agenda." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Accès en lecture seule pour afficher les anniversaires à venir." } } } },
+    "birthdays.permission.action" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Allow" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Permitir" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Autoriser" } } } },
+    "birthdays.denied.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Access blocked" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Acceso bloqueado" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Accès bloqué" } } } },
+    "birthdays.denied.description" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Open Settings to grant access to your Contacts." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Abre Ajustes para conceder acceso a tus Contactos." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ouvrez Réglages pour autoriser l'accès aux Contacts." } } } },
+    "birthdays.empty.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Nothing in the next 60 days" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Nada en los próximos 60 días" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Rien dans les 60 prochains jours" } } } },
+    "birthdays.empty.description" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "We'll show contacts whose birthday falls in the upcoming 60 days." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Mostraremos los contactos cuyos cumpleaños caigan en los próximos 60 días." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Nous afficherons les contacts dont l'anniversaire arrive dans les 60 prochains jours." } } } },
+    "birthdays.daysUntil" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "in %lld d" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "en %lld d" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "dans %lld j" } } } },
     "housekeeping.title" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Housekeeping" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Tareas de casa" } },
