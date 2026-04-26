@@ -109,6 +109,7 @@
 		7678C99D9C12FB2EB4E1EEDB /* BirthdayContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4BE1D8CDA189133B95EB97D9 /* BirthdayContact.swift */; };
 		76E23C539CE8B21795D5AE13 /* BlockLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498429D0D47787A663C6BD39 /* BlockLocation.swift */; };
 		77260F85608551C7D1D9999D /* HydrationDashboardViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDC54A811B51A0036F6803B /* HydrationDashboardViewModelTests.swift */; };
+		77E4C8BF233EA560E952F478 /* OnboardingUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F31D865D49871448597D80E4 /* OnboardingUITests.swift */; };
 		7989AA017757180F433889C0 /* TodayViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663722BBB35DB8492E87B16F /* TodayViewModelTests.swift */; };
 		7A31CE50AE0FBD7F26565ADE /* HydrationCompliance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63821CA8C548D983DE625643 /* HydrationCompliance.swift */; };
 		7C74D583AB2869F015113585 /* MilestoneEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778E4E083674A6875D375C01 /* MilestoneEditorView.swift */; };
@@ -223,6 +224,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		C8882084A0AD92D7AE9CAA5F /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 042C6B15BCBFDD6454D20A92 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EA4A0CBD4488A7F9FBBF420B;
+			remoteInfo = PersonalHygiene;
+		};
 		DDFAA217159790EBE3F6FF9D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 042C6B15BCBFDD6454D20A92 /* Project object */;
@@ -312,6 +320,7 @@
 		7099FBF5BE60662DEC8B45D3 /* MedicationComplianceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationComplianceTests.swift; sourceTree = "<group>"; };
 		757F7B808F6ED88D37AFB308 /* TripMilestoneScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripMilestoneScheduler.swift; sourceTree = "<group>"; };
 		75E5D7C2C1DB27941694663D /* TripPDFExporterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripPDFExporterTests.swift; sourceTree = "<group>"; };
+		772D9D82D0A23DCBF46EEEBE /* PersonalHygieneUITests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PersonalHygieneUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		778E4E083674A6875D375C01 /* MilestoneEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MilestoneEditorView.swift; sourceTree = "<group>"; };
 		78282BEB856188E32419812A /* CurrencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyView.swift; sourceTree = "<group>"; };
 		7BCDD26F1F9BE6897C802F9D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -375,6 +384,7 @@
 		EED8E573F98679F9BF723F4E /* TravelAdvisoryServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelAdvisoryServiceTests.swift; sourceTree = "<group>"; };
 		EF6DCB5D30BD8C57759C588D /* HydrationLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HydrationLog.swift; sourceTree = "<group>"; };
 		F1452EA6E8BFCF9CC4685916 /* HydrationDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HydrationDashboardView.swift; sourceTree = "<group>"; };
+		F31D865D49871448597D80E4 /* OnboardingUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingUITests.swift; sourceTree = "<group>"; };
 		F35C73220A71429E371C3F70 /* ShareSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareSheet.swift; sourceTree = "<group>"; };
 		F448734951A6A88D0AEBEBBE /* TripDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripDetailViewModel.swift; sourceTree = "<group>"; };
 		F86510F75C6CA64C5BC6AA1C /* HydrationComplianceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HydrationComplianceTests.swift; sourceTree = "<group>"; };
@@ -559,6 +569,7 @@
 			children = (
 				E6A8C11F35E6E1B646B3CE0E /* PersonalHygiene.app */,
 				C4285CE2A6DE82DABC589094 /* PersonalHygieneTests.xctest */,
+				772D9D82D0A23DCBF46EEEBE /* PersonalHygieneUITests.xctest */,
 				E73E2DA386467B754FD2B15A /* PersonalHygieneWatch.app */,
 				E55AD4BBE099C629664D352C /* PersonalHygieneWatchWidgets.appex */,
 			);
@@ -670,6 +681,14 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
+		7DF5677D2659A4A1B0190938 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				F31D865D49871448597D80E4 /* OnboardingUITests.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
 		8296F0E0049012E4EB39291B /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
@@ -706,6 +725,7 @@
 		8E901126CE272FBFC7E450EF /* Tests */ = {
 			isa = PBXGroup;
 			children = (
+				7DF5677D2659A4A1B0190938 /* UI */,
 				086908A7329B6437288F5984 /* Unit */,
 			);
 			path = Tests;
@@ -987,6 +1007,24 @@
 			productReference = E73E2DA386467B754FD2B15A /* PersonalHygieneWatch.app */;
 			productType = "com.apple.product-type.application";
 		};
+		840A3FBBDC31D44AF3C25D4E /* PersonalHygieneUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 76EAE69FD509ABDFB0935C37 /* Build configuration list for PBXNativeTarget "PersonalHygieneUITests" */;
+			buildPhases = (
+				E44103DAB8F5B65298A52802 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				8C797A27D156507EFF9954BD /* PBXTargetDependency */,
+			);
+			name = PersonalHygieneUITests;
+			packageProductDependencies = (
+			);
+			productName = PersonalHygieneUITests;
+			productReference = 772D9D82D0A23DCBF46EEEBE /* PersonalHygieneUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		8A17D09ECA9D8B0495F9AE2E /* PersonalHygieneTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C29BAC105B28DB39559F0F2D /* Build configuration list for PBXNativeTarget "PersonalHygieneTests" */;
@@ -1040,6 +1078,9 @@
 						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
 					};
+					840A3FBBDC31D44AF3C25D4E = {
+						TestTargetID = EA4A0CBD4488A7F9FBBF420B;
+					};
 					EA4A0CBD4488A7F9FBBF420B = {
 						DevelopmentTeam = "";
 						ProvisioningStyle = Automatic;
@@ -1064,6 +1105,7 @@
 			targets = (
 				EA4A0CBD4488A7F9FBBF420B /* PersonalHygiene */,
 				8A17D09ECA9D8B0495F9AE2E /* PersonalHygieneTests */,
+				840A3FBBDC31D44AF3C25D4E /* PersonalHygieneUITests */,
 				3CA650373B41858253B6102B /* PersonalHygieneWatch */,
 				207CCB03A27C7A4FF07B59FF /* PersonalHygieneWatchWidgets */,
 			);
@@ -1150,6 +1192,14 @@
 				3A4ACF1CA723AA549EE90237 /* TripPDFExporter.swift in Sources */,
 				BA13982AD9D163407F68990D /* TripsRepository.swift in Sources */,
 				4EAF0CD8467E96872DD3DFE1 /* UpcomingBirthdays.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		E44103DAB8F5B65298A52802 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				77E4C8BF233EA560E952F478 /* OnboardingUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1343,6 +1393,11 @@
 			target = EA4A0CBD4488A7F9FBBF420B /* PersonalHygiene */;
 			targetProxy = DDFAA217159790EBE3F6FF9D /* PBXContainerItemProxy */;
 		};
+		8C797A27D156507EFF9954BD /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EA4A0CBD4488A7F9FBBF420B /* PersonalHygiene */;
+			targetProxy = C8882084A0AD92D7AE9CAA5F /* PBXContainerItemProxy */;
+		};
 		F79E73FAA06B4821A8D10480 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 207CCB03A27C7A4FF07B59FF /* PersonalHygieneWatchWidgets */;
@@ -1351,6 +1406,24 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		03E553BC479100B39BC7EF17 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.tandori46001.personalhygiene.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = PersonalHygiene;
+			};
+			name = Debug;
+		};
 		0B9F03BC0B60913596DC59E4 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1408,6 +1481,24 @@
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PersonalHygiene.app/PersonalHygiene";
 			};
 			name = Debug;
+		};
+		60ACCA610F22508A0A5EAFAC /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.tandori46001.personalhygiene.uitests;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = PersonalHygiene;
+			};
+			name = Release;
 		};
 		6608EEC43889481494965748 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -1652,6 +1743,15 @@
 			buildConfigurations = (
 				0B9F03BC0B60913596DC59E4 /* Debug */,
 				6608EEC43889481494965748 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		76EAE69FD509ABDFB0935C37 /* Build configuration list for PBXNativeTarget "PersonalHygieneUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				03E553BC479100B39BC7EF17 /* Debug */,
+				60ACCA610F22508A0A5EAFAC /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Debug;

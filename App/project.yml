@@ -119,15 +119,31 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: com.tandori46001.personalhygiene.tests
 
+  PersonalHygieneUITests:
+    type: bundle.ui-testing
+    platform: iOS
+    deploymentTarget: "18.0"
+    sources:
+      - path: ../Tests/UI
+    dependencies:
+      - target: PersonalHygiene
+    settings:
+      base:
+        GENERATE_INFOPLIST_FILE: YES
+        PRODUCT_BUNDLE_IDENTIFIER: com.tandori46001.personalhygiene.uitests
+        TEST_TARGET_NAME: PersonalHygiene
+
 schemes:
   PersonalHygiene:
     build:
       targets:
         PersonalHygiene: all
         PersonalHygieneTests: [test]
+        PersonalHygieneUITests: [test]
     test:
       targets:
         - PersonalHygieneTests
+        - PersonalHygieneUITests
       gatherCoverageData: true
     run:
       config: Debug

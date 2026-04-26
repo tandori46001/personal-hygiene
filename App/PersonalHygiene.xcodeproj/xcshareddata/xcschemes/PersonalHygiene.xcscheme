@@ -35,6 +35,20 @@
                ReferencedContainer = "container:PersonalHygiene.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "840A3FBBDC31D44AF3C25D4E"
+               BuildableName = "PersonalHygieneUITests.xctest"
+               BlueprintName = "PersonalHygieneUITests"
+               ReferencedContainer = "container:PersonalHygiene.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -62,6 +76,17 @@
                BlueprintIdentifier = "8A17D09ECA9D8B0495F9AE2E"
                BuildableName = "PersonalHygieneTests.xctest"
                BlueprintName = "PersonalHygieneTests"
+               ReferencedContainer = "container:PersonalHygiene.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "NO"
+            parallelizable = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "840A3FBBDC31D44AF3C25D4E"
+               BuildableName = "PersonalHygieneUITests.xctest"
+               BlueprintName = "PersonalHygieneUITests"
                ReferencedContainer = "container:PersonalHygiene.xcodeproj">
             </BuildableReference>
          </TestableReference>
