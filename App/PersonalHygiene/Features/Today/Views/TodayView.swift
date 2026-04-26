@@ -13,6 +13,14 @@ struct TodayView: View {
                                 FocusActiveBanner(window: focus)
                             }
                         }
+                        if viewModel.totalCount > 0 {
+                            Section {
+                                ProgressSummaryRow(
+                                    done: viewModel.doneCount,
+                                    total: viewModel.totalCount
+                                )
+                            }
+                        }
                         if let current = viewModel.currentBlock() {
                             Section {
                                 BlockNowRow(block: current, label: Text("today.now", bundle: .main))
@@ -50,6 +58,26 @@ struct TodayView: View {
             .navigationTitle(Text("today.title", bundle: .main))
             .onAppear { viewModel.reload() }
         }
+    }
+}
+
+private struct ProgressSummaryRow: View {
+    let done: Int
+    let total: Int
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: done == total ? "checkmark.circle.fill" : "circle.dotted")
+                .foregroundStyle(done == total ? Color.green : Color.accentColor)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("today.summary.title.\(done).\(total)", bundle: .main)
+                    .font(.headline)
+                ProgressView(value: Double(done), total: Double(max(total, 1)))
+                    .progressViewStyle(.linear)
+            }
+        }
+        .accessibilityElement(children: .combine)
     }
 }
 
