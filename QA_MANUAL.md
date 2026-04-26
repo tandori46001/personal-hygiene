@@ -45,6 +45,17 @@ Format:
 | [T-009](#t-009--medicationcomplianceview) | M3 | 1 | Slice 17 |
 | [T-010](#t-010--bedtimecalculator--sleepdashboard) | M4 | 1 | Slices 18-20 |
 | [T-011](#t-011--travel-time-notifications-domain--service) | M2 | 1 | Slice 12a |
+| [T-012](#t-012--hydration-tab) | M5 | 3 | Slice 9-10 (S3) |
+| [T-013](#t-013--housekeeping-tab) | M6 | 3 | Slice 11-12 (S3) |
+| [T-014](#t-014--birthdays-tab) | M7 | 3 | Slice 13-14 (S3) |
+| [T-015](#t-015--deep-focus-filter) | M8 | 3 | Slice 15-16 (S3) |
+| [T-016](#t-016--trip-crud--documents-keychain) | M9 | 5 | Slice 20-21 (S3) |
+| [T-017](#t-017--trip-detail--milestones-ui) | M9 | 5 | Slices 1-2 (S4) |
+| [T-018](#t-018--milestone-notifications) | M9 | 5 | Slice 3 (S4) |
+| [T-019](#t-019--document-scanner--preview) | M9 | 5 | Slices 4-5 (S4) |
+| [T-020](#t-020--ai-itinerary--marine--currency--advisory) | M9 | 5 | Slices 6-9 (S4) |
+| [T-021](#t-021--trip-pdf-export) | M9 | 5 | Slice 10 (S4) |
+| [T-022](#t-022--today-completion--summary--countdown) | M1+M9 | 1 | Slices 11-13 (S4) |
 
 ---
 
@@ -248,4 +259,195 @@ The suite as a whole crashes the simulator if `ModelContainer` is allowed to dea
 ### Manual verification (deferred to slice 12b — UI)
 1. Slice 12b will add a location picker on `BlockEditor` and a home-location field in Settings; this section will gain step-by-step coverage at that time.
 2. Until then, travel-time wiring is exercised only via tests + by passing `homeLocation` + `MKDirectionsTravelTimeService()` to `NotificationCoordinator` programmatically.
+
+---
+
+## [T-012] — Hydration tab
+
+**Module:** M5 · **Phase:** 3
+
+### Cases (automated)
+- `Tests/Unit/Services/HydrationServiceTests.swift` — log/append/total flows.
+- `Tests/Unit/Services/HydrationComplianceTests.swift` — 7-day adherence math.
+- `Tests/Unit/Services/HydrationNotificationFactoryTests.swift` — reminder cadence.
+- `Tests/Unit/ViewModels/HydrationDashboardViewModelTests.swift` — VM logging.
+
+### Manual verification
+1. Hydration tab → verify default goal = 2000 mL.
+2. Tap +250 mL three times → progress bar advances; today's history lists 3 entries.
+3. Adjust goal stepper down → progress percentage recomputes.
+4. Restart app → today's logs persist; yesterday's are absent (separate calendar day).
+5. Empty state appears the next day before any log is added.
+
+---
+
+## [T-013] — Housekeeping tab
+
+**Module:** M6 · **Phase:** 3
+
+### Cases (automated)
+- `Tests/Unit/Services/HousekeepingSchedulerTests.swift` — pending/dueToday/overdue arithmetic.
+- `Tests/Unit/Services/HousekeepingServiceTests.swift` — CRUD flows.
+- `Tests/Unit/ViewModels/HousekeepingListViewModelTests.swift` — VM CRUD + status badges.
+
+### Manual verification
+1. Housekeeping tab → tap "+" → create "Vacuum" with 7-day cadence.
+2. Mark complete → status badge flips to OK; next-due date is +7d.
+3. Skip-time-forward 8 days → badge flips to "overdue".
+4. Swipe-to-delete a task → it's gone; relaunching confirms it's removed.
+
+---
+
+## [T-014] — Birthdays tab
+
+**Module:** M7 · **Phase:** 3
+
+### Cases (automated)
+- `Tests/Unit/Services/UpcomingBirthdaysTests.swift` — 60-day window, year-rollover, sorting.
+- `Tests/Unit/Services/ContactsServiceTests.swift` — InMemory service stub.
+- `Tests/Unit/ViewModels/BirthdaysViewModelTests.swift` — permission flow + denied state.
+
+### Manual verification
+1. Birthdays tab on first launch → permission CTA visible.
+2. Tap "Allow" → grant Contacts permission → list populates with upcoming birthdays.
+3. Tap "Deny" → denied state explains how to grant access in Settings.
+4. List shows "in N d" countdown for each contact.
+
+---
+
+## [T-015] — Deep Focus filter
+
+**Module:** M8 · **Phase:** 3
+
+### Cases (automated — `Tests/Unit/Services/DeepFocusFilterTests.swift`)
+1. `focusWindows(for:on:)` produces a window per `block.isDeepFocus == true`.
+2. `suppressing(_:focusWindows:)` removes non-critical notifications inside windows.
+3. Medication-critical notifications always pass (interruptionLevel = .critical).
+
+### Manual verification
+1. Mark a non-medication block as Deep Focus → its notification is suppressed during the window.
+2. Today view banner shows "Deep focus on <block>" while inside the window.
+3. Block rows that are Deep Focus show a moon.zzz badge.
+
+---
+
+## [T-016] — Trip CRUD + documents (Keychain)
+
+**Module:** M9 · **Phase:** 5
+
+### Cases (automated)
+- `Tests/Unit/Persistence/TripsRepositoryTests.swift` — upsert / cascade delete.
+- `Tests/Unit/Services/KeychainStoreTests.swift` — read/write/delete + missing-item.
+- `Tests/Unit/Services/TripDocumentStoreTests.swift` — paired metadata + bytes.
+
+### Manual verification
+1. Trips tab → tap "+" → create "Crucero" Mallorca, dates ahead.
+2. Tap row → trip detail opens; edit name + Save (auto-saved on disappear).
+3. Add a milestone "Pack" with 1 day before. Verify it appears in the milestones list.
+4. Swipe-delete trip → trip + milestones + documents are all gone.
+
+---
+
+## [T-017] — Trip detail + milestones UI
+
+**Module:** M9 · **Phase:** 5
+
+### Cases (automated — `Tests/Unit/ViewModels/TripDetailViewModelTests.swift`)
+1. `sortedMilestones` orders by `daysBefore` descending (farthest-first).
+2. `addMilestone(title:daysBefore:)` trims title and clamps days to ≥ 0.
+3. `addMilestone` with blank title is a no-op.
+4. `updateMilestone(...)` applies title / days / completion.
+5. `toggleMilestoneCompletion(_:)` flips the bool.
+6. `deleteMilestone(_:)` removes from the trip.
+7. `daysUntilDeparture` returns positive Int when target is in the future.
+
+### Manual verification
+1. Trip detail → tap "Add milestone" → fill form → Save. Row appears.
+2. Tap a milestone row → editor opens with prefilled fields → edit → Save → row updates.
+3. Tap the circle icon on a milestone row → it flips to ✓ without opening the sheet.
+4. Pull title down to a longer name → blocks save action.
+5. Days-stepper clamps at 0 lower bound, 365 upper bound.
+
+---
+
+## [T-018] — Milestone notifications
+
+**Module:** M9 · **Phase:** 5
+
+### Cases (automated — `Tests/Unit/Services/TripMilestoneNotificationFactoryTests.swift`)
+1. Each milestone fires at 09:00 local on `tripStart - daysBefore`.
+2. `isComplete` milestones produce no notification.
+3. Past-trigger milestones are skipped.
+4. Identifiers are stable for the same milestone.
+5. Each milestone in a trip yields exactly one notification.
+
+### Manual verification
+1. Create a trip starting in 14 days; add milestones at 7d / 1d / 0d.
+2. Background the app → relaunch → check pending notifications via Settings → personal-hygiene.
+3. Confirm three pending alerts at 09:00 on day −7, −1, and trip start.
+4. Mark the 7d milestone done → relaunch → that notification disappears from pending.
+
+---
+
+## [T-019] — Document scanner + preview
+
+**Module:** M9 · **Phase:** 5
+
+### Manual verification (real device — camera required)
+1. Trip detail → tap "Scan document" → grant Camera permission once.
+2. Scan a passport-shaped sheet → tap "Save" in the system scanner UI.
+3. Metadata sheet appears → set name = "Passport", kind = passport → Save.
+4. Document row appears under Documents. Tap it → PDF preview opens via PDFKit.
+5. Force-quit app → relaunch → document still visible (Keychain-persisted).
+6. Swipe-delete the document row → both metadata and Keychain bytes are gone.
+
+---
+
+## [T-020] — AI itinerary / Marine / Currency / Advisory
+
+**Module:** M9 · **Phase:** 5
+
+### Cases (automated)
+- `Tests/Unit/Services/StubItineraryGeneratorTests.swift` — deterministic per-day count.
+- `Tests/Unit/Services/OpenMeteoMarineServiceTests.swift` — JSON parse + offshore-only fallback.
+- `Tests/Unit/Services/FrankfurterCurrencyServiceTests.swift` — rate computation + missing-target error.
+- `Tests/Unit/Services/TravelAdvisoryServiceTests.swift` — URL synthesis.
+
+### Manual verification
+1. **Itinerary**: Trip detail → "AI itinerary" → "Generate". On iOS 26+ device with Apple Intelligence, real plan appears; on older OS, deterministic stub appears.
+2. **Marine**: Trip detail → "Marine conditions" (only visible if trip has lat/lon). Wave height + sea temp populate or show "offshore only" error.
+3. **Currency**: Trip detail → "Currency" → enter amount → Convert. Verify rate + amount converted.
+4. **Advisory**: Trip detail → "Travel advisory" → tap "Open advisory page" → opens Safari at exteriores.gob.es with destination as `?q=…`.
+
+---
+
+## [T-021] — Trip PDF export
+
+**Module:** M9 · **Phase:** 5
+
+### Cases (automated — `Tests/Unit/Services/TripPDFExporterTests.swift`)
+1. `render(trip:)` returns non-empty Data that PDFKit can parse.
+2. Rendered PDF text contains trip name, destination, milestone titles, and document names.
+
+### Manual verification
+1. Trip detail → toolbar share button (square.and.arrow.up).
+2. Share sheet appears with a PDF preview.
+3. Save to Files / send via Mail → verify the PDF opens with cover + Milestones + Documents sections.
+
+---
+
+## [T-022] — Today: completion / summary / trip countdown
+
+**Module:** M1 + M9 · **Phase:** 1
+
+### Cases (automated — `Tests/Unit/ViewModels/TodayViewModelTests.swift`)
+1. `toggleDone(_:)` marks then unmarks idempotently.
+2. `reload(now:)` rehydrates today's completions into `completedBlockIDs`.
+3. `nextUpcoming(...)` picks the earliest future trip, ignoring past trips.
+
+### Manual verification
+1. Today tab → each block row has a circle icon. Tap → it flips to ✓ + title strikes-through.
+2. Summary card above the now-row shows "X of N blocks done"; ProgressView fills as you check off rows.
+3. Create an upcoming trip → return to Today → the trip countdown card shows the trip name + days-until-departure.
+4. Restart app → completions and countdown still accurate (depends on calendar day).
 
