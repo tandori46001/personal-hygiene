@@ -47,4 +47,8 @@ final class TodayViewModel {
             $0.startMinutesFromMidnight <= nowMinutes && $0.endMinutesFromMidnight > nowMinutes
         }
     }
+
+    func activeFocusWindow(at now: Date = Date()) -> DeepFocusFilter.FocusWindow? {
+        DeepFocusFilter.activeWindow(at: now, in: blocks, calendar: calendar)
+    }
 }

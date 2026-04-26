@@ -8,6 +8,11 @@ struct TodayView: View {
             Group {
                 if let template = viewModel.activeTemplate {
                     List {
+                        if let focus = viewModel.activeFocusWindow() {
+                            Section {
+                                FocusActiveBanner(window: focus)
+                            }
+                        }
                         if let current = viewModel.currentBlock() {
                             Section {
                                 BlockNowRow(block: current, label: Text("today.now", bundle: .main))
@@ -41,6 +46,30 @@ struct TodayView: View {
             .navigationTitle(Text("today.title", bundle: .main))
             .onAppear { viewModel.reload() }
         }
+    }
+}
+
+private struct FocusActiveBanner: View {
+    let window: DeepFocusFilter.FocusWindow
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "moon.zzz.fill")
+                .foregroundStyle(.purple)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 2) {
+                Text("today.focus.active", bundle: .main)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                Text(window.blockTitle)
+                    .font(.headline)
+            }
+            Spacer()
+            Text(window.end, format: .dateTime.hour().minute())
+                .font(.caption.bold())
+                .foregroundStyle(.secondary)
+        }
+        .accessibilityElement(children: .combine)
     }
 }
 
@@ -92,6 +121,11 @@ private struct BlockTimelineRow: View {
                     .foregroundStyle(.secondary)
             }
             Spacer()
+            if block.isDeepFocus {
+                Image(systemName: "moon.zzz.fill")
+                    .foregroundStyle(.purple)
+                    .accessibilityLabel(Text("today.focus.deep", bundle: .main))
+            }
             Text("\(block.durationMinutes) min")
                 .font(.caption)
                 .foregroundStyle(.secondary)

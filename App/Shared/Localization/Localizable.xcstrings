@@ -506,6 +506,14 @@
       "en" : { "stringUnit" : { "state" : "translated", "value" : "in %lld d" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "en %lld d" } },
       "fr" : { "stringUnit" : { "state" : "translated", "value" : "dans %lld j" } } } },
+    "today.focus.active" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Deep focus on" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Foco profundo activo" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Focus profond actif" } } } },
+    "today.focus.deep" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Deep focus" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Foco profundo" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Focus profond" } } } },
     "housekeeping.title" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Housekeeping" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Tareas de casa" } },
