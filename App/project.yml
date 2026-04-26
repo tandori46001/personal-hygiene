@@ -135,6 +135,11 @@ targets:
         TARGETED_DEVICE_FAMILY: "4"
         DEVELOPMENT_TEAM: "XC79TD476V"
         CODE_SIGN_STYLE: Automatic
+        # Watch widget extension uses synchronous WidgetKit callbacks that need
+        # to touch @MainActor SwiftData APIs (mirrors the iOS PersonalHygieneWidgets
+        # downgrade). Swift 6 strict mode rejects passing the non-Sendable
+        # completion handler across actor boundaries without it.
+        SWIFT_VERSION: "5"
 
   PersonalHygieneTests:
     type: bundle.unit-test

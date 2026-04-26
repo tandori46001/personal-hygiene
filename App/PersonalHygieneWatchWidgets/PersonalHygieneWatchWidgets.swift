@@ -56,18 +56,18 @@ struct NextBlockProvider: TimelineProvider {
         )
     }
 
-    func getSnapshot(in _: Context, completion: @escaping (NextBlockEntry) -> Void) {
-        completion(placeholder(in: .init()))
+    func getSnapshot(in context: Context, completion: @escaping (NextBlockEntry) -> Void) {
+        completion(placeholder(in: context))
     }
 
     func getTimeline(in _: Context, completion: @escaping (Timeline<NextBlockEntry>) -> Void) {
         let now = Date()
-        let snapshot = Self.fetchNextBlockSnapshot(now: now)
-        let entry = NextBlockEntry(date: now, block: snapshot)
-        // Refresh every 15 minutes — the block's start time is what changes,
-        // not real-time data, so a coarse cadence is fine.
         let nextRefresh = Calendar.current.date(byAdding: .minute, value: 15, to: now) ?? now
-        completion(Timeline(entries: [entry], policy: .after(nextRefresh)))
+        Task { @MainActor in
+            let snapshot = Self.fetchNextBlockSnapshot(now: now)
+            let entry = NextBlockEntry(date: now, block: snapshot)
+            completion(Timeline(entries: [entry], policy: .after(nextRefresh)))
+        }
     }
 
     @MainActor

@@ -1,9 +1,13 @@
 import Foundation
+#if canImport(UIKit) && !os(watchOS)
 import UIKit
 
 /// Renders a `Trip` to a single-file PDF summary: cover page, milestones,
 /// and a documents inventory. Returns the PDF as bytes so the caller can
 /// hand it to `UIActivityViewController` or save it.
+///
+/// iOS-only: uses `UIGraphicsPDFRenderer` which isn't part of watchOS UIKit.
+/// The file is excluded from the watchOS targets via `#if`.
 @MainActor
 public enum TripPDFExporter {
 
@@ -152,3 +156,4 @@ public enum TripPDFExporter {
         return cursor
     }
 }
+#endif

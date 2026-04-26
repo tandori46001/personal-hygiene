@@ -74,6 +74,8 @@ struct HydrationDashboardView: View {
                                 viewModel.log(milliliters: amount)
                             } label: {
                                 Text(verbatim: "+\(amount)")
+                                    .lineLimit(1)
+                                    .minimumScaleFactor(0.6)
                                     .frame(maxWidth: .infinity)
                             }
                             .buttonStyle(.borderedProminent)
@@ -159,6 +161,8 @@ struct HydrationDashboardView: View {
     @ViewBuilder
     private func presetButton(_ preset: Int) -> some View {
         let label = Text(verbatim: presetLabel(preset))
+            .lineLimit(1)
+            .minimumScaleFactor(0.6)
             .frame(maxWidth: .infinity)
         let a11y = Text(LocalizedStringResource("hydration.goal.preset \(preset)"))
         if goalMilliliters == preset {
