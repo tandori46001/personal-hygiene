@@ -108,6 +108,25 @@ SCHEME="…"          # default: PersonalHygiene
 - Personal team free Apple IDs cap at 3 app extensions and apps expire after 7 days. The default `PersonalHygiene` scheme builds only the iPhone target — widgets and the watch app are excluded so a free team can install it.
 - Renew before expiry: `git pull && ./scripts/deploy-iphone.sh --clean`.
 
+### Deploy to your Apple Watch
+
+Mirror script for the watch app + complications:
+
+```bash
+./scripts/deploy-watch.sh            # build + install + launch
+./scripts/deploy-watch.sh --clean    # nuke build/watch-build first
+./scripts/deploy-watch.sh --no-launch
+```
+
+Override via `WATCH_UDID` (find with `xcrun devicectl list devices`).
+
+**One-time prerequisites:**
+1. **watchOS SDK** — Xcode → Settings (⌘,) → **Components** → install the watchOS SDK matching your iPhone's iOS version (~3 GB).
+2. **Watch must be on your wrist** with the paired iPhone awake; otherwise it shows as `unavailable` and the script exits with a clear error.
+3. **First install only** — on the Watch, you may need to confirm "Allow developer apps".
+
+The watch deploy uses the `PersonalHygieneWatch` scheme which embeds `PersonalHygieneWatchWidgets`. Combined with the iPhone scheme's `PersonalHygieneWidgets`, that's exactly the 3-extension cap on a personal team free Apple ID — running the iPhone + watch deploys back-to-back works.
+
 ### Pre-flight checklist (one-time, in Xcode)
 
 1. **Xcode → Settings → Accounts** → `+` → **Apple ID** → sign in.
