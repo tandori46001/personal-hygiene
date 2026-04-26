@@ -79,7 +79,7 @@ private struct ComplianceRow: View {
             Text(summary.day, format: .dateTime.weekday(.abbreviated).day().month(.abbreviated))
                 .font(.body)
             Spacer()
-            Text("\(summary.takenCount)/\(summary.scheduledCount)")
+            Text(verbatim: "\(summary.takenCount)/\(summary.scheduledCount)")
                 .font(.system(.body, design: .monospaced))
                 .foregroundStyle(.secondary)
         }

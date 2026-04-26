@@ -139,7 +139,7 @@ private struct BlockSummaryRow: View {
             VStack(alignment: .trailing, spacing: 2) {
                 Text(formattedTime(minutes: block.startMinutesFromMidnight))
                     .font(.system(.body, design: .monospaced))
-                Text("\(block.durationMinutes) min")
+                Text(verbatim: "\(block.durationMinutes) min")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

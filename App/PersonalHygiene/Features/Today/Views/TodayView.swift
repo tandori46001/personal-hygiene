@@ -126,7 +126,7 @@ private struct BlockTimelineRow: View {
                     .foregroundStyle(.purple)
                     .accessibilityLabel(Text("today.focus.deep", bundle: .main))
             }
-            Text("\(block.durationMinutes) min")
+            Text(verbatim: "\(block.durationMinutes) min")
                 .font(.caption)
                 .foregroundStyle(.secondary)
         }

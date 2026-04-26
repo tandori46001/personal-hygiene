@@ -54,7 +54,7 @@ struct BlockEditorView: View {
                         HStack {
                             Text("blockEditor.field.duration", bundle: .main)
                             Spacer()
-                            Text("\(viewModel.durationMinutes) min")
+                            Text(verbatim: "\(viewModel.durationMinutes) min")
                                 .foregroundStyle(.secondary)
                         }
                     }
@@ -67,7 +67,7 @@ struct BlockEditorView: View {
                         HStack {
                             Text("blockEditor.field.leadTime", bundle: .main)
                             Spacer()
-                            Text("\(viewModel.notificationLeadMinutes) min")
+                            Text(verbatim: "\(viewModel.notificationLeadMinutes) min")
                                 .foregroundStyle(.secondary)
                         }
                     }

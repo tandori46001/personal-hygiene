@@ -92,4 +92,13 @@ identifier_name:
     - to
     - on
 
+custom_rules:
+  hardcoded_text_view:
+    name: "Hardcoded Text view"
+    regex: 'Text\("[^"]+"\s*\)'
+    message: "Use Localizable.xcstrings (Text(\"key\", bundle: .main)) or Text(verbatim:) for non-localizable literals."
+    severity: warning
+    excluded:
+      - "App/PersonalHygiene/App/PersonalHygieneApp.swift"
+
 reporter: "xcode"
