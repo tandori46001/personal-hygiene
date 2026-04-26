@@ -112,7 +112,7 @@ Modules: M5 (hydration) · M6 (housekeeping) · M7 (contacts birthdays) · M8 (d
 
 ---
 
-### Phase 5 — Vacation module ⬜
+### Phase 5 — Vacation module ✅ (feature-complete, real-trip validation pending)
 
 **Goal:** complete an international trip end-to-end with the app handling all preparation + on-trip + return.
 
@@ -120,15 +120,15 @@ Module M9 — see [PRD.md § 6 M9](PRD.md#m9--módulo-vacaciones-fase-final) for
 
 | Acceptance | Status |
 |---|---|
-| Trip setup < 2 minutes | ⬜ |
-| Escalated reminders (6m → day-D) generated | ⬜ |
-| Documents scanned + Keychain-encrypted, offline-accessible | ⬜ |
-| AI itinerary generated (on-device) | ⬜ |
-| Marine weather + tides shown for marine activities | ⬜ |
-| Currency conversion + cash estimate | ⬜ |
-| Advisory from exteriores.gob.es for destination | ⬜ |
-| PDF export shareable via Mail/SMS/WhatsApp | ⬜ |
-| Validated with one real international trip | ⬜ |
+| Trip setup < 2 minutes | ✅ Trips tab + add sheet (session 3) |
+| Escalated reminders (6m → day-D) generated | ✅ `TripMilestoneNotificationFactory` + scheduler (session 4 slice 3) |
+| Documents scanned + Keychain-encrypted, offline-accessible | ✅ `DocumentScannerView` + `TripDocumentStore` + PDFKit preview (session 4 slices 4-5) |
+| AI itinerary generated (on-device) | ✅ `FoundationModelsItineraryGenerator` (iOS 26+) + `StubItineraryGenerator` fallback (session 4 slice 6) |
+| Marine weather + tides shown for marine activities | ✅ `OpenMeteoMarineService` (session 4 slice 7) |
+| Currency conversion + cash estimate | ✅ `FrankfurterCurrencyService` (session 4 slice 8) |
+| Advisory from exteriores.gob.es for destination | ✅ `ExterioresAdvisoryService` deep link (session 4 slice 9) |
+| PDF export shareable via Mail/SMS/WhatsApp | ✅ `TripPDFExporter` + share sheet (session 4 slice 10) |
+| Validated with one real international trip | ⬜ Pending |
 
 ---
 
