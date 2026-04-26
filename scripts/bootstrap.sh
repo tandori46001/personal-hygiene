@@ -62,13 +62,23 @@ if ! command -v xcbeautify >/dev/null 2>&1; then
   brew install xcbeautify
 fi
 
-# 8. Make scripts executable
+# 8. xcodegen — needed to (re)generate App/PersonalHygiene.xcodeproj
+if ! command -v xcodegen >/dev/null 2>&1; then
+  echo "==> installing xcodegen"
+  brew install xcodegen
+else
+  echo "==> xcodegen already installed: $(xcodegen --version 2>&1 | head -n1)"
+fi
+
+# 9. Make scripts executable
 echo "==> making scripts executable"
 chmod +x "$REPO_ROOT"/scripts/*.sh
 
 echo
 echo "==> bootstrap complete"
 echo "    next steps:"
-echo "      - open Xcode and create the project at App/PersonalHygiene.xcodeproj (Phase 0)"
 echo "      - run ./scripts/lint.sh to verify lint setup"
-echo "      - run ./scripts/check-tests.sh once tests exist"
+echo "      - run ./scripts/check-tests.sh to run the suite"
+echo "      - run ./scripts/deploy-iphone.sh to install on your paired iPhone"
+echo "        (override DEVICE_UDID and TEAM_ID env vars if you're not the"
+echo "         primary developer; see README \"Deploy to your iPhone\")"

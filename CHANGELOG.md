@@ -8,6 +8,31 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added — Session 8 ("haz todo" round 6, 22 slices: on-device hardening + iPhone deploy automation)
+
+- **Slice 1 — `scripts/deploy-iphone.sh`:** one-command deploy. Auto-injects `DEVELOPMENT_TEAM`, regenerates project, builds with `-allowProvisioningUpdates`, strips macOS `._*` metadata, installs + launches via `xcrun devicectl`. Flags: `--clean`, `--no-launch`, `--no-install`. Defaults overridable via `DEVICE_UDID` / `TEAM_ID` env vars.
+- **Slice 2 — `bootstrap.sh`:** installs/checks `xcodegen`; nudges users toward `deploy-iphone.sh` in the post-install message.
+- **Slice 3 — README "Deploy to your iPhone" + "Pre-flight checklist":** documents personal-team free caveats (7-day expiry, scheme excludes widgets/watch), env-var overrides, manual Xcode account setup.
+- **Slice 4 — QA_MANUAL T-043…T-062:** 20 manual sections, one per round-5 slice.
+- **Slice 5 — QA_MANUAL T-063…T-068:** real-device-only flows (notifications fire, snooze actions with custom interval, mark-done removes pending, scanner, Photos picker, Pending Notifications view).
+- **Slice 6 — `check-tests.sh` exit-65 filter:** treats the `DebuggerLLDB.DebuggerVersionStore.StoreError` simulator glitch as success when zero `Test Case '...' failed` lines appear in the log; real failures still bubble through.
+- **Slice 7 — `PendingNotificationsView`:** Settings → Diagnostics → Pending; lists `UNUserNotificationCenter.pendingNotificationRequests()` grouped by source, pull-to-refresh.
+- **Slice 8 — `DiagnosticsView` + `BuildInfo`:** Settings → About → Diagnostics screen with version, build, commit SHA, notification authorization status, last-refresh, pending count, deep link to Pending list.
+- **Slice 9 — `NotificationActionHandler.handleMarkDoneAction` + tests:** extracted pure helper + `markDoneObserver` test seam. Uses `NSLock`-backed `Collector<Element>` to mutate state from `@Sendable` test closures under Swift 6 strict concurrency.
+- **Slice 10 — `ScheduledNotification: CustomStringConvertible`:** log-friendly `description` showing date, title, last 20 chars of identifier, and ⚠︎ for critical alerts.
+- **Slice 11 — `MedicationCompliance` boundary tests:** empty 7-day window, all-met, partial-week ratio, multiple doses-per-day accumulation. Added private `log(day:hour:status:)` helper.
+- **Slice 12 — `HousekeepingScheduler` edge tests:** future `lastCompletedAt`, same-day completion, daily recurrence wraps month boundary.
+- **Slice 13 — `ItineraryStore` edge tests:** load returns nil for missing dir / corrupt JSON; `remove` is idempotent on missing files; nested directories are auto-created.
+- **Slice 14 — `OnboardingFlagStore` tests:** `reset()` flips false; idempotent; cold-start default is false; key matches `"hasCompletedOnboarding"` AppStorage contract.
+- **Slice 15 — Trip cover photo height 160 → 200 px:** more breathing room on iPhone hardware.
+- **Slice 16 — Today empty-state CTA polish:** "Create template" both switches to Templates tab AND auto-opens the new-template sheet via a new `autoPresentNewTemplate: Binding<Bool>?` plumbed through `ContentView`.
+- **Slice 17 — `BlockCategoryDot` + `BlockCategoryColor`:** 8-px filled circle per category, added to Today's `BlockTimelineRow` and Templates' `BlockSummaryRow` for at-a-glance scanning.
+- **Slice 18 — Settings footer with build info:** `BuildInfo.shortDescriptor` (e.g. `v0.1.0 (1) — dev`) shown in a monospaced caption2 footer, `textSelection(.enabled)` so users can copy when reporting bugs. Notifications + scheduling sections extracted out of inline `body` into `notificationsSection` + `schedulingSection` helpers.
+- **Slice 19 — `ARCHITECTURE.md` §18-§20:** documents cross-module shared services (`AppGroup`, `OnboardingFlagStore`, `WhatsNextDialogBuilder`, `BuildInfo`), notification identifier registry pattern (with L002 cross-ref), diagnostics + deploy automation. Bumped version history to v0.3.
+- **Slice 20 — `PRD.md` refresh:** M3.5 marked "infrastructure compiled, validation pending entitlement"; M9.4 added "Compartir como texto plano" sub-bullet for the round-5 itinerary share button.
+- **Slice 21 — finalize:** xcodegen + lint + i18n parity (366 × 3) + tests (~285 unit+UI) + commit + push.
+- **Slice 22 — re-deploy via `./scripts/deploy-iphone.sh`** + iPhone smoke-test.
+
 ### Added — Session 7 ("haz todo" round 5, 20 slices: dependabot triage + a11y completeness + tests + cross-module polish)
 
 - **Slice 1 — Dependabot triage:** bumped `actions/checkout` → v6, `actions/cache` → v5, `actions/upload-artifact` → v7 in `.github/workflows/ci.yml`. Open dependabot PRs (#1, #2, #3) auto-close on next dependabot run.

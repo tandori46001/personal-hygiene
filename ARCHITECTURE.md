@@ -230,12 +230,43 @@ The decorator pattern keeps the underlying service free of caching concerns and 
 ## 17. Widget architecture (iOS — `PersonalHygieneWidgets`)
 
 - `NextBlockHomeWidget` exposes small + medium families.
+- `DeepFocusHomeWidget` (small) shows active / upcoming / idle focus state, reads from `UserDefaultsFocusScheduleStore.appGroupOrStandard()` so it can promote to an App-Group suite once the entitlement is added without code changes.
 - `NextBlockResolver` is the shared brain (also used by `WhatsNextIntent`); it returns `.empty` / `.now(block)` / `.next(block)` from the active `RoutineTemplate`.
 - The widget's `TimelineProvider` constructs its own `ModelContainer` + `ModelContext` directly because the `@MainActor`-isolated `RoutineRepository` cannot be called from synchronous WidgetKit callbacks under Swift 6 strict mode.
+
+## 18. Cross-module shared services (`App/Shared/Services/`)
+
+Single sources of truth pulled out of feature folders so iOS, watch, and the
+widget extension see the same constants:
+
+- **`AppGroup`** — `suiteName = "group.com.tandori46001.personalhygiene"`. `UserDefaults(suiteName:)` returns nil until the entitlement is added; callers fall back to `.standard`. The constant means a single line changes when the entitlement lands.
+- **`OnboardingFlagStore`** — owns the `hasCompletedOnboarding` UserDefaults key. `reset()` re-arms the welcome flow on next launch (used by Settings → "Show onboarding again", and by `-uiTestReset` for XCUITest).
+- **`WhatsNextDialogBuilder`** — pure formatter that turns `RoutineTemplate?` + `Date` into a localized one-liner. Lives in Shared so the watch complication can build the same accessibility label as the Siri intent. Two overloads: full `(template:at:calendar:)` for the iOS intent + `(resolved:)` for callers that already computed the next block.
+- **`BuildInfo`** — reads `CFBundleShortVersionString` + `CFBundleVersion` from the main bundle and an optional `PERSONAL_HYGIENE_COMMIT_SHA` Info.plist key (defaults to `"dev"`). `BuildInfo.shortDescriptor` is shown in the Settings footer.
+
+## 19. Notification identifier registry + per-source snooze tracking
+
+When multiple modules emit notifications and a central handler reasons about
+them, parsers must enumerate every kind exhaustively or features go silently
+dark for the unparsed kind (LESSONS L002).
+
+- **`BlockSnoozeSource`** (enum) — single registry of notification kinds: `.routine`, `.hydration`, `.milestone`. Adding a kind here forces a compile error in `BlockNotificationIdentifier.parseAny` (switch is non-exhaustive).
+- **`ParsedNotificationIdentifier`** — enum with payload per kind: `.routine(blockID, dayKey)`, `.hydration(dayKey, index)`, `.milestone(milestoneID)`. Returned from `parseAny`; carries a `.source: BlockSnoozeSource` accessor.
+- **`BlockNotificationIdentifier.parseAny(_:)`** — accepts a raw `UNNotificationRequest.identifier` (including snooze re-fire suffixes `.snooze.<ts>`); recognizes the prefix of any registered kind. Guarded by `test_parse_recognizesAllKnownPrefixes` which iterates `BlockSnoozeSource.allCases`.
+- **`BlockSnoozeStore`** — per-source isolation. Routine entries can use either the legacy `{uuid}|{dayKey}` format (pre-session-7 user data) or the new `{source}|{key}|{dayKey}` format; new APIs read both.
+- **`NotificationActionHandler`** — `snoozeRecorder: (ParsedNotificationIdentifier) -> Void` is dispatched on every kind; the production wiring in `PersonalHygieneApp` calls `BlockSnoozeStore.markSnoozed(parsed:on:)` which routes to the right key. `markDoneObserver: (String) -> Void` is the test seam for the Mark-done flow.
+
+## 20. Diagnostics + deploy automation (round 6)
+
+- **`DiagnosticsView`** (Settings → About → Diagnostics) — surfaces version, build, commit SHA, notification authorization status, last refresh, pending notification count, link into `PendingNotificationsView`.
+- **`PendingNotificationsView`** — pulls `UNUserNotificationCenter.pendingNotificationRequests()` and groups by `BlockSnoozeSource` derived from `parseAny`. Pull-to-refresh re-reads. Critical for verifying schedule on real device without waiting hours.
+- **`scripts/deploy-iphone.sh`** — one-shot iPhone install: injects `DEVELOPMENT_TEAM` into `project.yml` if empty, regenerates the project, builds with `-allowProvisioningUpdates`, strips macOS `._*` metadata files (USB-mounted volume artifact), installs via `xcrun devicectl`, launches via `xcrun devicectl process launch`. Defaults are baked from `memory/session_handoff.md` (round 5/6); override via `DEVICE_UDID` / `TEAM_ID` env vars.
+- **`scripts/check-tests.sh`** — exits 0 when xcodebuild returns 65 *and* there are zero `Test Case '...' failed` lines in the log (the known `DebuggerLLDB.DebuggerVersionStore.StoreError` simulator glitch present since session 5).
 
 ---
 
 **Version history:**
 
+- **v0.3 (2026-04-26)** — added §18-§20 reflecting session 8 (round 6): cross-module shared services, notification-identifier registry pattern, diagnostics + deploy automation.
 - **v0.2 (2026-04-26)** — added §13-§17 reflecting session 5: widget extension target, value-type registry, service decorator convention, current notification architecture.
 - **v0.1 (2026-04-25)** — esqueleto inicial. Detalle a rellenar en Fase 0 (creación del proyecto Xcode + schema SwiftData concreto).

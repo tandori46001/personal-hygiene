@@ -208,6 +208,11 @@ public final class NotificationActionHandler: NSObject, UNUserNotificationCenter
     /// kind (routine / hydration / milestone) when its snooze action is fired —
     /// used by per-module UI surfaces to show a "snoozed once" badge.
     private let snoozeRecorder: (@Sendable (ParsedNotificationIdentifier) -> Void)?
+    /// Optional callback invoked with the identifier of a notification that
+    /// was just dismissed via "Mark done". Used by tests to verify the
+    /// removal call site fires; in production it's nil and the real
+    /// `UNUserNotificationCenter` removal still runs.
+    private let markDoneObserver: (@Sendable (String) -> Void)?
 
     /// Default initializer reads the user's chosen snooze duration from
     /// `SnoozeDurationStore` (UserDefaults-backed) and uses `Date()` as `now`.
@@ -222,11 +227,13 @@ public final class NotificationActionHandler: NSObject, UNUserNotificationCenter
     public init(
         snoozeIntervalProvider: @escaping @Sendable () -> TimeInterval,
         nowProvider: @escaping @Sendable () -> Date = { Date() },
-        snoozeRecorder: (@Sendable (ParsedNotificationIdentifier) -> Void)? = nil
+        snoozeRecorder: (@Sendable (ParsedNotificationIdentifier) -> Void)? = nil,
+        markDoneObserver: (@Sendable (String) -> Void)? = nil
     ) {
         self.snoozeIntervalProvider = snoozeIntervalProvider
         self.nowProvider = nowProvider
         self.snoozeRecorder = snoozeRecorder
+        self.markDoneObserver = markDoneObserver
         super.init()
     }
 
@@ -259,13 +266,26 @@ public final class NotificationActionHandler: NSObject, UNUserNotificationCenter
             // Defensive removal: when the user explicitly marks done, we drop
             // any pending duplicate of the same identifier so a second alert
             // doesn't fire later.
-            center.removePendingNotificationRequests(
-                withIdentifiers: [response.notification.request.identifier]
-            )
+            let identifier = response.notification.request.identifier
+            center.removePendingNotificationRequests(withIdentifiers: [identifier])
+            markDoneObserver?(identifier)
             completionHandler()
         default:
             completionHandler()
         }
+    }
+
+    /// Pure helper — invoked by the live delegate when the "Mark done"
+    /// action is tapped. Tests use this directly because `UNNotificationResponse`
+    /// has a private initializer that prevents direct construction.
+    /// Calls `removePending([identifier])` on the supplied center and notifies
+    /// the optional `markDoneObserver` (used as a test seam).
+    public func handleMarkDoneAction(
+        identifier: String,
+        removePending: @Sendable ([String]) -> Void
+    ) {
+        removePending([identifier])
+        markDoneObserver?(identifier)
     }
 
     /// Pure builder — exposed for testing.

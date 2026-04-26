@@ -3,6 +3,10 @@ import SwiftUI
 struct TemplateListView: View {
     @Bindable var viewModel: TemplateListViewModel
     let repository: any RoutineRepository
+    /// When set to `true` from the outside, auto-presents the new-template
+    /// sheet on next render. Used by Today empty-state CTA to land directly
+    /// on the form. Reset to `false` after presenting.
+    var autoPresentNewTemplate: Binding<Bool>?
 
     @State private var showingNewTemplateSheet = false
     @State private var newTemplateName = ""
@@ -53,7 +57,19 @@ struct TemplateListView: View {
                     .accessibilityLabel(Text("a11y.action.addTemplate", bundle: .main))
                 }
             }
-            .onAppear { viewModel.reload() }
+            .onAppear {
+                viewModel.reload()
+                if autoPresentNewTemplate?.wrappedValue == true {
+                    showingNewTemplateSheet = true
+                    autoPresentNewTemplate?.wrappedValue = false
+                }
+            }
+            .onChange(of: autoPresentNewTemplate?.wrappedValue ?? false) { _, newValue in
+                if newValue {
+                    showingNewTemplateSheet = true
+                    autoPresentNewTemplate?.wrappedValue = false
+                }
+            }
             .sheet(isPresented: $showingNewTemplateSheet) {
                 NewTemplateSheet(
                     name: $newTemplateName,

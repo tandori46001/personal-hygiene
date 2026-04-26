@@ -88,4 +88,78 @@ final class MedicationComplianceTests: XCTestCase {
 
         XCTAssertEqual(result, 1.0, accuracy: 0.001)
     }
+
+    // MARK: - 7-day window edges (round 6 slice 11)
+
+    func test_dailySummaries_emptyWindowReturnsEmpty() {
+        let summaries = MedicationCompliance.dailySummaries(
+            from: [],
+            between: date(year: 2026, month: 4, day: 19, hour: 0),
+            and: date(year: 2026, month: 4, day: 25, hour: 23),
+            calendar: gregorianUTC()
+        )
+        // No logs → no summaries (we don't synthesize empty days).
+        XCTAssertTrue(summaries.isEmpty)
+    }
+
+    func test_overallAdherence_allTakenAcross7Days() {
+        var logs: [MedicationDoseLog] = []
+        for offset in 0..<7 {
+            logs.append(
+                MedicationDoseLog(
+                    conceptIdentifier: "c1",
+                    scheduledAt: date(year: 2026, month: 4, day: 19 + offset),
+                    status: .taken
+                )
+            )
+        }
+        let rate = MedicationCompliance.overallAdherence(
+            from: logs,
+            between: date(year: 2026, month: 4, day: 19),
+            and: date(year: 2026, month: 4, day: 25, hour: 23)
+        )
+        XCTAssertEqual(rate, 1.0, accuracy: 0.001)
+    }
+
+    private func log(day: Int, hour: Int = 8, status: MedicationDoseLog.Status) -> MedicationDoseLog {
+        MedicationDoseLog(
+            conceptIdentifier: "c1",
+            scheduledAt: date(year: 2026, month: 4, day: day, hour: hour),
+            status: status
+        )
+    }
+
+    func test_overallAdherence_partialOverWeek_isCorrectRatio() {
+        let logs = [
+            log(day: 19, status: .taken),
+            log(day: 20, status: .taken),
+            log(day: 21, status: .missed),
+            log(day: 22, status: .skipped),
+            log(day: 23, status: .taken),
+        ]
+        let rate = MedicationCompliance.overallAdherence(
+            from: logs,
+            between: date(year: 2026, month: 4, day: 19),
+            and: date(year: 2026, month: 4, day: 25, hour: 23)
+        )
+        XCTAssertEqual(rate, 3.0 / 5.0, accuracy: 0.001)
+    }
+
+    func test_dailySummaries_multipleDosesPerDayAccumulate() {
+        let cal = gregorianUTC()
+        let logs = [
+            log(day: 25, hour: 8, status: .taken),
+            log(day: 25, hour: 14, status: .taken),
+            log(day: 25, hour: 22, status: .missed),
+        ]
+        let summaries = MedicationCompliance.dailySummaries(
+            from: logs,
+            between: date(year: 2026, month: 4, day: 25),
+            and: date(year: 2026, month: 4, day: 25, hour: 23),
+            calendar: cal
+        )
+        XCTAssertEqual(summaries.count, 1)
+        XCTAssertEqual(summaries[0].scheduledCount, 3)
+        XCTAssertEqual(summaries[0].takenCount, 2)
+    }
 }

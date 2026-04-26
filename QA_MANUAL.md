@@ -784,3 +784,310 @@ None — purely build-time guard.
 1. Settings → Accessibility → VoiceOver → On.
 2. Open Today → tap a block row → VoiceOver pronounces the time naturally.
 3. Open Trips → swipe across rows → arrow glyphs are silent.
+
+---
+
+## [T-043] — Dependabot GH-Actions bumps
+
+**Module:** ci · **Shipped in:** session 7 slice 1
+
+### Manual verification
+1. After push, open the dependabot PRs (#1, #2, #3) and confirm they auto-close.
+2. CI run on `main` after the push completes green (no warning about deprecated action versions).
+
+---
+
+## [T-044] — LESSONS.md L002 (notification-identifier prefix scope)
+
+**Module:** dev-process · **Shipped in:** session 7 slice 3
+
+### Cases (automated — `Tests/Unit/Services/BlockSnoozeStoreTests.swift`)
+1. `test_parse_recognizesAllKnownPrefixes` iterates `BlockSnoozeSource.allCases` and round-trips each.
+2. Adding a new `BlockSnoozeSource` case without updating `BlockNotificationIdentifier.parseAny` fails the test.
+
+---
+
+## [T-045] — Birthdays editor Stepper a11y
+
+**Module:** birthdays · **Shipped in:** session 7 slice 4
+
+### Manual verification
+1. Settings → Accessibility → VoiceOver → On.
+2. Birthdays tab → swipe a contact → "Edit lead time".
+3. Focus on the Stepper. VoiceOver should read "Birthdays lead time, 7 days before" (or similar) as a single element.
+4. Swipe up/down on the Stepper changes the value; VoiceOver re-announces the new lead.
+
+---
+
+## [T-046] — Deep Focus schedule editor a11y
+
+**Module:** deep-focus · **Shipped in:** session 7 slice 5
+
+### Manual verification
+1. Settings → Deep Focus → existing schedule row.
+2. With VoiceOver on, the row reads as "<title>, from HH:MM to HH:MM, <weekday symbols>" combined into one element.
+3. The arrow glyph between start/end times is not spoken.
+
+---
+
+## [T-047] — Document scanner / preview a11y
+
+**Module:** vacation · **Shipped in:** session 7 slice 6
+
+### Manual verification
+1. Open a Trip → Documents → tap a PDF document.
+2. With VoiceOver on, the preview reads "PDF document, N pages, <name>".
+3. Image documents read "Scanned document image, <name>".
+4. Loading state reads "Loading document".
+
+---
+
+## [T-048] — Dynamic Type AX5 round-2 smoke
+
+**Module:** a11y · **Shipped in:** session 7 slice 7
+
+### Cases (automated — `Tests/Unit/Snapshots/RenderSmokeTests.swift`)
+1. `test_birthdaysView_render_atAccessibilityXXXL`
+2. `test_focusScheduleView_render_atAccessibilityXXXL`
+3. `test_settingsView_render_atAccessibilityXXXL`
+
+### Manual verification
+1. Settings → Accessibility → Display & Text Size → Larger Text → AX5.
+2. Open Birthdays / Settings → Deep Focus / Settings — no truncation, every row scrollable.
+
+---
+
+## [T-049] — `BlockNotificationIdentifier.parseAny`
+
+**Module:** notifications · **Shipped in:** session 7 slice 8
+
+### Cases (automated — `Tests/Unit/Services/BlockSnoozeStoreTests.swift`)
+1. Routine, hydration, milestone identifiers all parse.
+2. Snooze re-fire (`...snooze.<ts>` suffix) parses to original kind.
+3. Garbage / malformed UUID / malformed hydration index → nil.
+4. Exhaustive `BlockSnoozeSource.allCases` round-trip (L002 guard).
+
+---
+
+## [T-050] — `SnoozeDurationStore` boundary table
+
+**Module:** notifications · **Shipped in:** session 7 slice 9
+
+### Cases (automated — `Tests/Unit/Services/NotificationActionHandlerTests.swift`)
+1. Default = 5 min when unset.
+2. 5 / 10 / 15 are accepted and round-tripped.
+3. Out-of-range (0, negative, 99) is rejected, last valid value preserved.
+4. `seconds()` matches `minutes() * 60` for each allowed value.
+
+---
+
+## [T-051] — `DeepFocusFilter.activeWindow`
+
+**Module:** deep-focus · **Shipped in:** session 7 slice 10
+
+### Cases (automated — `Tests/Unit/Services/DeepFocusFilterTests.swift`)
+1. Scheduled window covers `now` → returned.
+2. No overlap → nil.
+3. Block-derived + scheduled both cover → block wins (insertion order).
+4. Scheduled with mismatched weekday → nil.
+
+---
+
+## [T-052] — `HydrationCompliance.bestStreakDays` edges
+
+**Module:** hydration · **Shipped in:** session 7 slice 11
+
+### Cases (automated — `Tests/Unit/Services/HydrationComplianceTests.swift`)
+1. Single uninterrupted run → best == current.
+2. One-day miss in middle resets streak; best is the longer half.
+3. No day meets goal → 0.
+
+---
+
+## [T-053] — Backup v1.1 → v1 downgrade safety
+
+**Module:** backup · **Shipped in:** session 7 slice 12
+
+### Cases (automated — `Tests/Unit/Services/BackupServiceTests.swift`)
+1. Strip `packingItems` from a v1.1 export, re-decode, every v1-era field intact.
+
+### Manual verification
+1. Settings → Export backup → save the file.
+2. Open the JSON in a text editor; confirm `packingItems` is present.
+3. Settings → Import the same file → all data restored.
+
+---
+
+## [T-054] — `BlockSnoozeStore` cross-module
+
+**Module:** notifications · **Shipped in:** session 7 slice 13
+
+### Cases (automated — `Tests/Unit/Services/BlockSnoozeStoreTests.swift`)
+1. Per-source isolation: hydration "1" doesn't trigger milestone "1".
+2. Legacy routine UUID entry readable via new `(source: .routine)` API.
+3. `markSnoozed(parsed:on:)` dispatches each `ParsedNotificationIdentifier` to the right key.
+
+### Manual verification (real device)
+1. Wait for a hydration notification → snooze 5 min → no badge appears in Today (because hydration badges aren't surfaced in Today row — by design).
+2. Wait for a routine block notification → snooze → return to Today → badge appears on that row.
+
+---
+
+## [T-055] — `DeepFocusHomeWidget` app-group prep
+
+**Module:** deep-focus · **Shipped in:** session 7 slice 14
+
+### Manual verification (no entitlement yet)
+1. Add Deep Focus widget to the home screen.
+2. Confirm it shows the right state (active / upcoming / idle) — currently reads from `UserDefaults.standard` because the App Group entitlement isn't configured.
+
+### Pending validation
+- After paid Apple Developer Program lands and the App Group entitlement is added, `UserDefaultsFocusScheduleStore.appGroupOrStandard()` should switch to the suite. Verify with `defaults read group.com.tandori46001.personalhygiene`.
+
+---
+
+## [T-056] — `WhatsNextDialogBuilder` watch share
+
+**Module:** intent · **Shipped in:** session 7 slice 15
+
+### Cases (automated — `Tests/Unit/Services/WhatsNextDialogBuilderTests.swift`)
+1. Existing tests still pass after the move to `App/Shared/Services/`.
+
+### Manual verification (real device + Apple Watch)
+1. With VoiceOver on the watch, focus the NextBlockComplication. The spoken label uses the same phrasing as the Siri intent ("<title> at HH:MM").
+
+---
+
+## [T-057] — Settings → What's New + Onboarding restart
+
+**Module:** settings · **Shipped in:** session 7 slices 16, 20
+
+### Manual verification
+1. Settings → About → "What's new" → sheet opens with widget / Siri / notifications tips.
+2. Settings → About → "Show onboarding again" → confirmation dialog → tap "Show again" → relaunch the app → onboarding wizard fires again.
+
+---
+
+## [T-058] — Today X-of-N tap-to-expand
+
+**Module:** today · **Shipped in:** session 7 slice 17
+
+### Manual verification
+1. Today → tap the X-of-N progress card.
+2. Sheet appears listing every block of today's template with a circle/check-fill indicator + start time.
+3. With VoiceOver on, the summary card has a hint "Tap to see each block's status".
+
+---
+
+## [T-059] — Hydration goal presets
+
+**Module:** hydration · **Shipped in:** session 7 slice 18
+
+### Manual verification
+1. Hydration tab → Goal section.
+2. Three buttons: 2.0L / 2.5L / 3.0L. Tap one → Stepper jumps to that value, button becomes filled (borderedProminent), others stay outlined.
+3. Tap the Stepper → custom value works as before.
+
+---
+
+## [T-060] — Trip itinerary text Share
+
+**Module:** vacation · **Shipped in:** session 7 slice 19
+
+### Manual verification (real device — UIActivityViewController)
+1. Open a Trip → Itinerary → Generate.
+2. Once the itinerary appears, the toolbar shows a Share icon (top right).
+3. Tap → standard iOS share sheet opens with the itinerary as plain text. Try Mail or Notes; the destination receives the trip name + summary + day-by-day bullets.
+
+---
+
+## [T-061] — Onboarding restart confirmation
+
+**Module:** onboarding · **Shipped in:** session 7 slice 20
+
+### Manual verification
+1. Settings → About → "Show onboarding again".
+2. Confirmation dialog appears with title "Replay the welcome flow next launch?".
+3. Tap "Show again" (destructive) → confirms; cancel discards.
+4. Force-quit the app and relaunch → onboarding shows.
+
+---
+
+## [T-062] — `OnboardingFlagStore` reset
+
+**Module:** onboarding · **Shipped in:** session 7 slice 20
+
+### Cases (automated — `Tests/Unit/Services/OnboardingFlagStoreTests.swift`)
+*(added in round 6 slice 14)*
+
+---
+
+## [T-063] — Real-device: notifications fire
+
+**Module:** notifications · **Real-device only**
+
+### Manual verification
+1. Settings → grant notification permission.
+2. Today → ensure today's template has a block starting in ~2 minutes.
+3. Wait for the notification to arrive on the iPhone lock screen.
+4. Tap-and-hold → buttons "Snooze 5 min" + "Mark done" appear.
+
+---
+
+## [T-064] — Real-device: snooze action with custom interval
+
+**Module:** notifications · **Real-device only**
+
+### Manual verification
+1. Settings → Scheduling → Snooze duration → 10 min.
+2. Trigger a block notification (T-063).
+3. Tap-hold → "Snooze 10 min".
+4. Wait 10 min → notification re-appears.
+5. Open the app → Today row for that block shows the alarm badge (snoozed-once indicator).
+
+---
+
+## [T-065] — Real-device: mark-done removes pending duplicate
+
+**Module:** notifications · **Real-device only**
+
+### Manual verification
+1. Trigger a block notification.
+2. Tap-hold → "Mark done".
+3. Open Settings → Diagnostics → Pending notifications (round 6 T-066).
+4. Confirm the original block's identifier is no longer in the list.
+
+---
+
+## [T-066] — Real-device: PendingNotifications view
+
+**Module:** diagnostics · **Shipped in:** session 8 slice 7
+
+### Manual verification (real device)
+1. Settings → Diagnostics → Pending notifications.
+2. List shows every pending notification grouped by kind (routine / hydration / milestone).
+3. Each row: identifier suffix, fire time, body. Pull-to-refresh re-reads the center.
+
+---
+
+## [T-067] — Real-device: VisionKit document scanner
+
+**Module:** vacation · **Real-device only** (camera not in simulator)
+
+### Manual verification
+1. Open a Trip → Documents → "Scan document" button.
+2. Native VisionKit scanner takes over; align a document → tap shutter.
+3. After capture, metadata sheet asks for name + kind.
+4. Save → document appears in the list; tap to preview shows PDF.
+
+---
+
+## [T-068] — Real-device: Photos picker for trip cover photo
+
+**Module:** vacation · **Real-device only**
+
+### Manual verification
+1. Open a Trip → Cover photo section → "Choose photo".
+2. PhotosPicker opens the system photo library.
+3. Pick a portrait photo → cover image appears at 200 px height (slice 15 round 6 — bumped from 160).
+4. "Remove" button replaces the cover with the empty state.

@@ -56,7 +56,7 @@ targets:
         PRODUCT_BUNDLE_IDENTIFIER: com.tandori46001.personalhygiene
         TARGETED_DEVICE_FAMILY: "1,2"
         SUPPORTS_MACCATALYST: NO
-        DEVELOPMENT_TEAM: ""
+        DEVELOPMENT_TEAM: "XC79TD476V"
         CODE_SIGN_STYLE: Automatic
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
@@ -80,7 +80,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.tandori46001.personalhygiene.widgets
         TARGETED_DEVICE_FAMILY: "1,2"
-        DEVELOPMENT_TEAM: ""
+        DEVELOPMENT_TEAM: "XC79TD476V"
         CODE_SIGN_STYLE: Automatic
         # Widget extension uses synchronous WidgetKit callbacks that need to
         # touch @MainActor SwiftData APIs. Swift 6 strict mode rejects this
@@ -110,7 +110,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.tandori46001.personalhygiene.watchkitapp
         TARGETED_DEVICE_FAMILY: "4"
-        DEVELOPMENT_TEAM: ""
+        DEVELOPMENT_TEAM: "XC79TD476V"
         CODE_SIGN_STYLE: Automatic
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
 
@@ -133,7 +133,7 @@ targets:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.tandori46001.personalhygiene.watchkitapp.widgets
         TARGETED_DEVICE_FAMILY: "4"
-        DEVELOPMENT_TEAM: ""
+        DEVELOPMENT_TEAM: "XC79TD476V"
         CODE_SIGN_STYLE: Automatic
 
   PersonalHygieneTests:

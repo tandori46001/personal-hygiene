@@ -140,7 +140,7 @@ Diferenciador: no es un calendario más. Es un **planificador de rutina total** 
 - M3.2 Soporte de Dose Reminders y Follow-up Reminders (30 min después si no marcada). Critical Alerts (sobrepasa silencio/Focus) **sólo si Apple aprueba el entitlement** `com.apple.developer.usernotifications.critical-alerts`. Plan de fallback: si el entitlement es denegado, usar notificación normal con sonido propio + repetición a 5 y 10 min hasta que el usuario actúe.
 - M3.3 Tracking de cumplimiento — única estadística persistente en la app.
 - M3.4 Dashboard semanal: días con 100% adherencia / días con alguna dosis omitida.
-- M3.5 **Sincronización Health → bloque M1.** La app observa cambios en HealthKit Medications mediante `HKObserverQuery` con background delivery habilitado. Cuando una dosis se marca como tomada/omitida en Health, el bloque correspondiente en M1 se actualiza automáticamente sin requerir abrir la app. La asociación bloque ↔ dosis se establece por `HKMedicationConcept` + ventana horaria (±30 min del horario del bloque).
+- M3.5 **Sincronización Health → bloque M1.** La app observa cambios en HealthKit Medications mediante `HKObserverQuery` con background delivery habilitado. Cuando una dosis se marca como tomada/omitida en Health, el bloque correspondiente en M1 se actualiza automáticamente sin requerir abrir la app. La asociación bloque ↔ dosis se establece por `HKMedicationConcept` + ventana horaria (±30 min del horario del bloque). **Estado:** infraestructura compilada (`HealthKitMedicationService` placeholder + `MedicationCompliance` + `MedicationDoseLog`); validación con dispositivo real + entitlement HealthKit pendiente. Sin entitlement, todo el módulo funciona en modo `InMemoryMedicationService` (sin sincronización con Health).
 
 ### M4 — Sueño
 
@@ -217,6 +217,7 @@ Generación automática de bloques en el calendario principal con la siguiente c
 - **Fase posterior:** opción de elegir entre Google AI Studio Flash, Claude API, GPT API, Ollama local.
 - Prompt incluye: fechas, destino, presupuesto, actividades elegidas, intereses.
 - El usuario puede editar manualmente el itinerario generado.
+- **Compartir como texto plano**: el itinerario generado puede exportarse vía Share Sheet (`UIActivityViewController`) como texto simple — útil para enviar por WhatsApp/SMS/Mail a familiares sin abrir el PDF completo.
 - Disclaimer obligatorio: "Verificar precios y horarios antes de reservar — la IA puede tener datos desactualizados".
 
 #### M9.5 — Meteo + mareas + olas

@@ -127,6 +127,7 @@ private struct BlockSummaryRow: View {
 
     var body: some View {
         HStack {
+            BlockCategoryDot(category: block.category)
             VStack(alignment: .leading, spacing: 2) {
                 Text(block.title)
                     .font(.body)

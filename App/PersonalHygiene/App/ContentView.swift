@@ -28,6 +28,7 @@ struct ContentView: View {
 private struct MainTabs: View {
     let env: AppEnvironment
     @State private var selection: AppTab = .today
+    @State private var autoOpenNewTemplate = false
 
     var body: some View {
         TabView(selection: $selection) {
@@ -39,7 +40,10 @@ private struct MainTabs: View {
                     snoozeStore: env.blockSnoozeStore,
                     focusScheduleStore: env.focusScheduleStore
                 ),
-                onCreateTemplate: { selection = .templates }
+                onCreateTemplate: {
+                    autoOpenNewTemplate = true
+                    selection = .templates
+                }
             )
             .tag(AppTab.today)
             .tabItem {
@@ -52,7 +56,8 @@ private struct MainTabs: View {
 
             TemplateListView(
                 viewModel: TemplateListViewModel(repository: env.routineRepository),
-                repository: env.routineRepository
+                repository: env.routineRepository,
+                autoPresentNewTemplate: $autoOpenNewTemplate
             )
             .tag(AppTab.templates)
             .tabItem {

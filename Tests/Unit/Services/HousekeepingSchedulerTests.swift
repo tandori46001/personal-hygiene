@@ -79,4 +79,45 @@ final class HousekeepingSchedulerTests: XCTestCase {
             .overdue
         )
     }
+
+    // MARK: - Edge cases (round 6 slice 12)
+
+    func test_nextDueDate_lastCompletedInTheFuture_stillAdvancesByRecurrence() {
+        // Defensive: a clock skew on the device could plant a future completion.
+        // We don't try to "correct" it; we just compute next-due deterministically.
+        let task = HousekeepingTask(
+            title: "x",
+            recurrence: .weekly,
+            lastCompletedAt: date(year: 2026, month: 5, day: 1)
+        )
+        XCTAssertEqual(
+            HousekeepingScheduler.nextDueDate(for: task, calendar: gregorianUTC()),
+            date(year: 2026, month: 5, day: 8)
+        )
+    }
+
+    func test_status_okWhenLastCompletedSameDayAsNow() {
+        let now = date(year: 2026, month: 4, day: 25)
+        let task = HousekeepingTask(
+            title: "x",
+            recurrence: .weekly,
+            lastCompletedAt: now
+        )
+        XCTAssertEqual(
+            HousekeepingScheduler.status(for: task, on: now, calendar: gregorianUTC()),
+            .ok
+        )
+    }
+
+    func test_status_dailyRecurrenceWrapsCorrectlyAcrossMonth() {
+        let task = HousekeepingTask(
+            title: "x",
+            recurrence: .daily,
+            lastCompletedAt: date(year: 2026, month: 4, day: 30)
+        )
+        XCTAssertEqual(
+            HousekeepingScheduler.nextDueDate(for: task, calendar: gregorianUTC()),
+            date(year: 2026, month: 5, day: 1)
+        )
+    }
 }

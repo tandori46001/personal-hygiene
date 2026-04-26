@@ -74,4 +74,38 @@ final class ItineraryStoreTests: XCTestCase {
         store.remove(for: id)
         XCTAssertNil(store.load(for: id))
     }
+
+    // MARK: - File-store edge cases (round 6 slice 13)
+
+    func testFileStore_loadReturnsNilWhenDirectoryDoesNotExist() {
+        let bogus = tempDir.appendingPathComponent("does-not-exist", isDirectory: true)
+        let store = FileItineraryStore(directory: bogus)
+        XCTAssertNil(store.load(for: UUID()))
+    }
+
+    func testFileStore_loadReturnsNilWhenFileIsCorruptJSON() throws {
+        try FileManager.default.createDirectory(at: tempDir, withIntermediateDirectories: true)
+        let id = UUID()
+        let path = tempDir.appendingPathComponent("\(id.uuidString).json")
+        try Data("not-json{".utf8).write(to: path)
+        let store = FileItineraryStore(directory: tempDir)
+        XCTAssertNil(store.load(for: id))
+    }
+
+    func testFileStore_removeIsIdempotentWhenFileMissing() {
+        let store = FileItineraryStore(directory: tempDir)
+        let id = UUID()
+        store.remove(for: id)  // never saved → must not throw
+        store.remove(for: id)  // second call also a no-op
+        XCTAssertNil(store.load(for: id))
+    }
+
+    func testFileStore_saveCreatesIntermediateDirectory() {
+        let nested = tempDir.appendingPathComponent("created/by/save", isDirectory: true)
+        let store = FileItineraryStore(directory: nested)
+        let id = UUID()
+        let itinerary = TripItinerary(summary: "auto-mkdir", days: [])
+        store.save(itinerary, for: id)
+        XCTAssertEqual(store.load(for: id), itinerary)
+    }
 }

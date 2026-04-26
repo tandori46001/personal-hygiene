@@ -307,6 +307,7 @@ private struct BlockTimelineRow: View {
                 .foregroundStyle(.secondary)
                 .frame(width: 56, alignment: .leading)
                 .accessibilityLabel(spokenTime(minutes: block.startMinutesFromMidnight))
+            BlockCategoryDot(category: block.category)
             VStack(alignment: .leading, spacing: 1) {
                 Text(block.title)
                     .font(.body)

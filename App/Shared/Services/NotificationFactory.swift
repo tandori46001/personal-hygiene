@@ -2,7 +2,7 @@ import Foundation
 
 /// A planned notification computed from a `Block`. Pure value type — no
 /// dependency on `UNUserNotificationCenter` so it can be unit-tested freely.
-public struct ScheduledNotification: Equatable, Sendable {
+public struct ScheduledNotification: Equatable, Sendable, CustomStringConvertible {
     public let identifier: String
     public let title: String
     public let body: String?
@@ -32,6 +32,13 @@ public struct ScheduledNotification: Equatable, Sendable {
         self.isCritical = isCritical
         self.threadIdentifier = threadIdentifier
         self.categoryIdentifier = categoryIdentifier
+    }
+
+    public var description: String {
+        let critical = isCritical ? " ⚠︎" : ""
+        let suffix = String(identifier.suffix(20))
+        let when = triggerDate.formatted(date: .abbreviated, time: .shortened)
+        return "ScheduledNotification(\(when), \"\(title)\", …\(suffix)\(critical))"
     }
 }
 

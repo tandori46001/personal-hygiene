@@ -129,4 +129,52 @@ final class NotificationActionHandlerTests: XCTestCase {
     func test_snoozeDuration_allowedMinutesContains_5_10_15() {
         XCTAssertEqual(Set(SnoozeDurationStore.allowedMinutes), [5, 10, 15])
     }
+
+    // MARK: - markDone integration (round 6 slice 9)
+
+    /// Thread-safe collector for `@Sendable` test closures that need to
+    /// accumulate values without tripping Swift 6 strict concurrency.
+    private final class Collector<Element: Sendable>: @unchecked Sendable {
+        private let lock = NSLock()
+        private var items: [Element] = []
+        func append(_ value: Element) { lock.lock(); defer { lock.unlock() }; items.append(value) }
+        func append(contentsOf values: [Element]) {
+            lock.lock(); defer { lock.unlock() }
+            items.append(contentsOf: values)
+        }
+        var snapshot: [Element] { lock.lock(); defer { lock.unlock() }; return items }
+    }
+
+    func test_markDone_removesPendingForExactIdentifierAndFiresObserver() {
+        let identifier = "personal-hygiene.block.\(UUID().uuidString).2026-04-26"
+        let removed = Collector<String>()
+        let observed = Collector<String>()
+
+        let handler = NotificationActionHandler(
+            snoozeIntervalProvider: { 300 },
+            nowProvider: { Date() },
+            markDoneObserver: { observed.append($0) }
+        )
+
+        handler.handleMarkDoneAction(identifier: identifier) { ids in
+            removed.append(contentsOf: ids)
+        }
+
+        XCTAssertEqual(removed.snapshot, [identifier])
+        XCTAssertEqual(observed.snapshot, [identifier])
+    }
+
+    func test_markDone_doesNotRemoveOtherIdentifiers() {
+        let target = "personal-hygiene.block.\(UUID().uuidString).2026-04-26"
+        let other = "personal-hygiene.hydration.2026-04-26.0"
+        let removed = Collector<String>()
+
+        let handler = NotificationActionHandler(snoozeIntervalProvider: { 300 })
+        handler.handleMarkDoneAction(identifier: target) { ids in
+            removed.append(contentsOf: ids)
+        }
+
+        XCTAssertTrue(removed.snapshot.contains(target))
+        XCTAssertFalse(removed.snapshot.contains(other))
+    }
 }

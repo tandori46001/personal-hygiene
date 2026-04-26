@@ -176,8 +176,22 @@ struct SettingsView: View {
                     Image(systemName: "arrow.counterclockwise")
                 }
             }
+            NavigationLink {
+                DiagnosticsView(viewModel: viewModel)
+            } label: {
+                Label {
+                    Text("settings.diagnostics.title", bundle: .main)
+                } icon: {
+                    Image(systemName: "stethoscope")
+                }
+            }
         } header: {
             Text("settings.section.about", bundle: .main)
+        } footer: {
+            Text(verbatim: BuildInfo.shortDescriptor)
+                .font(.caption2.monospacedDigit())
+                .foregroundStyle(.secondary)
+                .textSelection(.enabled)
         }
     }
 

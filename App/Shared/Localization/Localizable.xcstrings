@@ -1434,6 +1434,80 @@
     "settings.onboarding.restart.confirm.action" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Show again" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Volver a mostrar" } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Afficher à nouveau" } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Afficher à nouveau" } } } },
+
+    "settings.diagnostics.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Diagnostics" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Diagnóstico" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Diagnostic" } } } },
+    "settings.diagnostics.section.app" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "App" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "App" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "App" } } } },
+    "settings.diagnostics.section.notifications" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Notifications" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Notificaciones" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Notifications" } } } },
+    "settings.diagnostics.version" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Version" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Versión" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Version" } } } },
+    "settings.diagnostics.build" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Build" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Build" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Build" } } } },
+    "settings.diagnostics.commit" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Commit" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Commit" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Commit" } } } },
+    "settings.diagnostics.notif.status" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Authorization status" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Estado de autorización" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "État d'autorisation" } } } },
+    "settings.diagnostics.notif.lastRefresh" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Last refresh" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Último refresco" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Dernier rafraîchissement" } } } },
+    "settings.diagnostics.notif.pendingCount" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Pending count" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Número de pendientes" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Nombre de notifications en attente" } } } },
+    "settings.diagnostics.openPending" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Pending notifications" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Notificaciones pendientes" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Notifications en attente" } } } },
+
+    "settings.pendingNotifications.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Pending notifications" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Notificaciones pendientes" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Notifications en attente" } } } },
+    "settings.pendingNotifications.loading" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Loading…" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Cargando…" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Chargement…" } } } },
+    "settings.pendingNotifications.empty.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "No pending notifications" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "No hay notificaciones pendientes" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aucune notification en attente" } } } },
+    "settings.pendingNotifications.empty.description" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Schedule a routine for today and pull to refresh." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Programa una rutina para hoy y desliza para refrescar." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Planifiez une routine et tirez pour rafraîchir." } } } },
+    "settings.pendingNotifications.source.routine" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Routine blocks" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Bloques de rutina" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Blocs de routine" } } } },
+    "settings.pendingNotifications.source.hydration" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Hydration" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hidratación" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Hydratation" } } } },
+    "settings.pendingNotifications.source.milestone" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Trip milestones" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hitos de viaje" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Étapes de voyage" } } } },
+    "settings.pendingNotifications.source.unknown" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Other" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Otros" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Autres" } } } }
   }
 }

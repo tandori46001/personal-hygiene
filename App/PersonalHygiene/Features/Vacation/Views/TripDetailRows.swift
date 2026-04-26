@@ -11,7 +11,7 @@ struct CoverPhotoSection: View {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFill()
-                    .frame(height: 160)
+                    .frame(height: 200)
                     .clipped()
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                     .accessibilityLabel(Text("trip.cover.label", bundle: .main))

@@ -82,6 +82,39 @@ open App/PersonalHygiene.xcodeproj  # once project is generated (Phase 0)
 ./scripts/check-tests.sh
 ```
 
+### Deploy to your iPhone
+
+The repo ships a one-shot deploy script for installing onto a paired iPhone:
+
+```bash
+./scripts/deploy-iphone.sh           # build + install + launch
+./scripts/deploy-iphone.sh --clean   # nuke build/device-build first
+./scripts/deploy-iphone.sh --no-launch  # build + install only
+./scripts/deploy-iphone.sh --no-install # build only
+```
+
+Defaults assume the primary developer's setup. Override any of these via env vars:
+
+```bash
+DEVICE_UDID="…"     # find via: xcrun devicectl list devices
+TEAM_ID="…"         # 10-char Team ID from Apple Developer portal
+BUNDLE_ID="…"       # if you re-namespaced the app
+SCHEME="…"          # default: PersonalHygiene
+```
+
+**Notes:**
+- The script auto-injects `DEVELOPMENT_TEAM` into `App/project.yml` and re-runs `xcodegen` if the team line is empty. This is a no-op on subsequent runs.
+- It strips macOS `._*` metadata files from the .app bundle (artifact of building on USB-mounted volumes).
+- Personal team free Apple IDs cap at 3 app extensions and apps expire after 7 days. The default `PersonalHygiene` scheme builds only the iPhone target — widgets and the watch app are excluded so a free team can install it.
+- Renew before expiry: `git pull && ./scripts/deploy-iphone.sh --clean`.
+
+### Pre-flight checklist (one-time, in Xcode)
+
+1. **Xcode → Settings → Accounts** → `+` → **Apple ID** → sign in.
+2. Connect iPhone by USB, **Trust This Computer** when prompted.
+3. After first install: on the iPhone, **Settings → General → VPN & Device Management → your Apple ID → Trust**.
+4. From then on, `./scripts/deploy-iphone.sh` is enough.
+
 ---
 
 ## Repo layout
