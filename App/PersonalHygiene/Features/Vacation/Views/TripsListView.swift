@@ -30,7 +30,13 @@ struct TripsListView: View {
                     }
                 } else {
                     ForEach(viewModel.trips) { trip in
-                        TripRow(trip: trip)
+                        NavigationLink {
+                            TripDetailView(
+                                viewModel: TripDetailViewModel(trip: trip, repository: viewModel.repository)
+                            )
+                        } label: {
+                            TripRow(trip: trip)
+                        }
                     }
                     .onDelete(perform: delete)
                 }

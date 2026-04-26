@@ -5,7 +5,7 @@ import Observation
 @MainActor
 final class TripsListViewModel {
 
-    private let repository: any TripsRepository
+    let repository: any TripsRepository
 
     var trips: [Trip] = []
     var errorMessage: String?

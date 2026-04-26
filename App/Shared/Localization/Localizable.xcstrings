@@ -766,6 +766,59 @@
     "sleep.action.openFocus.note" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "There's no public API to enable Focus programmatically. Configure your Sleep Focus once in Settings; it'll activate automatically per your schedule." } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "No hay API pública para activar Focus de forma programática. Configura tu Focus de Sueño una vez en Ajustes; se activará según tu horario." } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Pas d'API publique pour activer Focus par programme. Configure ton Focus Sommeil une fois dans Réglages ; il s'activera selon ton horaire." } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Pas d'API publique pour activer Focus par programme. Configure ton Focus Sommeil une fois dans Réglages ; il s'activera selon ton horaire." } } } },
+
+    "trip.detail.section.summary" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Trip" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Viaje" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Voyage" } } } },
+    "trip.detail.section.milestones" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Milestones" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hitos" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Jalons" } } } },
+    "trip.detail.section.documents" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Documents" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Documentos" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Documents" } } } },
+    "trip.detail.milestones.empty" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "No milestones yet." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Aún no hay hitos." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aucun jalon pour l'instant." } } } },
+    "trip.detail.documents.empty" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "No documents yet." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Aún no hay documentos." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aucun document pour l'instant." } } } },
+    "trip.detail.countdown.%lld" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Departing in %lld days." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Sales en %lld días." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Départ dans %lld jours." } } } },
+    "trip.milestone.daysBefore.%lld" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "%lld days before" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "%lld días antes" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "%lld jours avant" } } } },
+    "trip.document.kind.passport" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Passport" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Pasaporte" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Passeport" } } } },
+    "trip.document.kind.visa" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Visa" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Visado" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Visa" } } } },
+    "trip.document.kind.insurance" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Insurance" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Seguro" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Assurance" } } } },
+    "trip.document.kind.ticket" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Ticket" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Billete" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Billet" } } } },
+    "trip.document.kind.reservation" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Reservation" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Reserva" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réservation" } } } },
+    "trip.document.kind.other" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Other" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Otro" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Autre" } } } }
   }
 }
