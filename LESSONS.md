@@ -97,3 +97,24 @@ Mirror as a one-line entry in:
 **Where it was caught.** 2026-04-26, session 9 watch deploy — `TripPDFExporter.swift` (uses `UIGraphicsPDFRenderer`) lived in `Shared/Services/` since session 4 (M9 vacation PDF export); first watch build attempt during round 7 deploy surfaced four `unavailable in watchOS` errors. Same fix applied: `#if canImport(UIKit) && !os(watchOS)`.
 
 **Interaction with other lessons.** None.
+
+---
+
+## L004 — Tab-root views inside iOS 18 TabView "More" overflow must NOT add their own `NavigationStack`
+
+**Trigger pattern.** A SwiftUI app has more tabs than iOS shows on the bar (5+ on iPhone). iOS 18 promotes the overflow into a system-provided "More" tab, which wraps each overflowed tab's content in its own `NavigationStack` so list-style navigation works. If the tab-root view *also* declares `NavigationStack { … }` at its top level, the two stacks nest. Every internal `NavigationLink` push then renders **two** stacked back chevrons in the navigation bar (one per stack).
+
+**Symptom.** Tab-root view looks fine in isolation (visible tab, preview, simulator). The bug only shows up after enough tabs exist to trigger the More overflow + the user pushes from the overflowed tab into a child screen. Two circular `<` buttons appear stacked vertically; tapping the upper one pops twice, the lower one pops once. Looks like a styling glitch but is structural.
+
+**Root cause.** iOS 18's More tab is implemented as a `NavigationStack` that pushes the picked tab's root onto its own stack. SwiftUI happily composes nested stacks, but each stack contributes its own back button when not at root.
+
+**Fix.**
+- Remove `NavigationStack { … }` from any view that's a tab root expected to live in More overflow. Keep `.navigationTitle()`, sheets, dialogs, and `NavigationLink` — they all work off the parent (More-provided) stack.
+- For visible tab roots that NEVER overflow into More, keep the `NavigationStack` so previews and standalone presentation still work.
+- Pragmatic rule for this repo: with 9 tabs, only the visible 4 (Today, Templates, Medication, Sleep) should keep `NavigationStack`; the overflowed 5 (Hydration, Housekeeping, Birthdays, Trips, Settings) should drop it.
+
+**Guard test.** None automated — would need a UI test that detects two-back-button rendering, which XCUITest doesn't surface cleanly. Manual: open Settings → Diagnostics on a real device; should show one back arrow, not two. Add to `QA_MANUAL.md` as part of the on-device pass.
+
+**Where it was caught.** 2026-04-26, session 10 round 8 deploy — user took a screenshot of `Settings → Diagnostics` showing two stacked `<` chevrons. Fixed in commit `5b038d0` by dropping the inner `NavigationStack` from `SettingsView`.
+
+**Interaction with other lessons.** None.

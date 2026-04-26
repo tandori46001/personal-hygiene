@@ -8,6 +8,31 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added — Session 10 ("haz todo" round 8, 22 slices: CI watchOS guard + diagnostics + UX polish)
+
+- **Slice 1 — CI watchOS build job:** new `build-watch` job in `.github/workflows/ci.yml` runs `xcodebuild -scheme PersonalHygieneWatch -destination 'generic/platform=watchOS'` on `macos-latest` after every push/PR. Catches L003-class regressions before they reach a manual deploy.
+- **Slice 2 — Build-time CommitSHA stamping:** new `preBuildScripts` in `App/project.yml` writes the short git SHA to `Resources/CommitSHA.txt` on every build (`basedOnDependencyAnalysis: false`), so plain ▶ in Xcode now matches `deploy-iphone.sh`'s CLI parity.
+- **Slice 4 — `RecentlyDeliveredNotificationsView`:** companion to Pending, lists `UNUserNotificationCenter.deliveredNotifications`, groups by parsed `BlockSnoozeSource` newest-first, pull-to-refresh.
+- **Slice 5 — Wired into Diagnostics:** new `Recently delivered (N)` row + deep link below Pending.
+- **Slice 6 — `DeliveredNotificationsGrouper`:** pure value-type helper extracted to `App/Shared/Services/`. Groups items via `BlockNotificationIdentifier.parseAny`, sorts within bucket newest-first, unknown identifiers fall into a trailing `nil`-source group.
+- **Slice 7 — Grouper tests (4):** empty input, allCases bucketing, unknown trailing, within-bucket sort.
+- **Slice 8 — Robust medication follow-up matching:** `NotificationCoordinator.medicationFollowUps` switched from `String.contains` to `BlockNotificationIdentifier.parseAny` + `Dictionary<UUID, Block>` lookup. Future identifier-shape changes break parsing instead of silently dropping the follow-up.
+- **Slice 9 — `NotificationCoordinatorFollowUpTests` (3 cases):** 2-medication round-trip via real `NotificationFactory` shapes, mixed routine filtering (1 medication + 1 hygiene → 1 follow-up), unknown identifier returns empty.
+- **Slice 10 — `BlockEditorViewModel.hasUnsavedChanges` round-trip tests (5):** post-init false, after edit true, type+delete = false, editing-init false, any field divergence = true.
+- **Slice 11 — `removeAll()` on snooze + skip stores:** new protocol method (`UserDefaults` + `InMemory` impls). `Diagnostics → Reset all dev stores` now wipes today's entries too (the old `purgeStale(keepLastDays: 0)` was inclusive on today).
+- **Slice 12 — Today summary "Next:" preview:** `ProgressSummaryRow` now shows `"Next: HH:MM · title"` below the progress bar when a `nextBlock` is supplied.
+- **Slice 13 — Templates confirm-on-delete with block count:** swipe-delete now stages the row in `pendingDelete: RoutineTemplate?`; a `confirmationDialog` reads `"Delete '<name>'? <N> blocks will be removed."` before the actual delete.
+- **Slice 14 — Hydration undo toast:** `HydrationDashboardViewModel.lastDeleted` + `undoLastDelete()`. View shows a banner with `Undo` button when set; auto-clears after 5s. Restores the original `(milliliters, drankAt)`.
+- **Slice 15 — BlockEditor alerts footer:** new `"Schedules N notification(s) per active day."` footer below the alerts section. `count = 2` for medications (primary + +30min follow-up), `1` otherwise.
+- **Slice 16 — Watch Today refresh on scenePhase active:** `TodayWatchView` reloads model + done-set on `.active`. Snooze badge mirror survives wake-from-doze.
+- **Slice 17 — Watch complication reload after mark-done:** `toggleDone(_:)` calls `WidgetCenter.shared.reloadAllTimelines()` so the NextBlock complication reflects the new state immediately.
+- **Slices 18-20 — QA + docs:** QA_MANUAL T-069…T-074 (6 new sections); ARCHITECTURE §23 build identity pipeline + §24 CI watchOS guard; PRD M3.2 hardening note; ROADMAP Phase 1 → ~99%, Phase 2 → ~97%.
+
+### Fixed — Session 10 (post-deploy real-device, commit `5b038d0`)
+
+- **L004 — Settings → Diagnostics double back arrow:** iOS 18 TabView's "More" overflow wraps content in its own `NavigationStack`. `SettingsView` had a second `NavigationStack` inside, producing two stacked back chevrons on every push. Removed the inner stack. Lesson L004 captured.
+- **BlockEditor alerts footer rendering:** `@ViewBuilder` var indirection prevented the Text from rendering in the Form section's `footer:` slot. Inlined the Text directly.
+
 ### Added — Session 9 ("haz todo" round 7, 22 slices: dev tools, medication follow-up, watch parity)
 
 - **Slices 1-4 — Diagnostics dev tools:** `DiagnosticsActions` closure-bag + four buttons in Settings → Diagnostics: schedule test notification (30s, real category), clear all pending, inject snooze badge on first block of today's template, reset skip + snooze stores + snooze duration. ContentView builds the actions from `AppEnvironment`.
