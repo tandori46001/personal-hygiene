@@ -170,6 +170,7 @@ struct MilestoneRow: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
+            .accessibilityElement(children: .combine)
             Spacer()
         }
     }

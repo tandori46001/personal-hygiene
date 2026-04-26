@@ -76,4 +76,15 @@ final class HydrationDashboardViewModel {
             calendar: calendar
         )
     }
+
+    /// Longest goal-meeting run within the rolling 14-day window. Survives a
+    /// missed day so the user has something to chase even after a setback.
+    func bestStreakDays(now: Date = Date()) -> Int {
+        HydrationCompliance.bestStreakDays(
+            on: now,
+            logs: recentLogs,
+            goal: goal,
+            calendar: calendar
+        )
+    }
 }

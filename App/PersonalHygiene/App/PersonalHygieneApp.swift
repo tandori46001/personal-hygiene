@@ -6,9 +6,16 @@ import UserNotifications
 struct PersonalHygieneApp: App {
 
     let modelContainer: ModelContainer
-    private let notificationDelegate = NotificationActionHandler()
+    private let snoozeStore = UserDefaultsBlockSnoozeStore()
+    private let notificationDelegate: NotificationActionHandler
 
     init() {
+        let snooze = self.snoozeStore
+        self.notificationDelegate = NotificationActionHandler(
+            snoozeIntervalProvider: { SnoozeDurationStore.seconds() },
+            nowProvider: { Date() },
+            snoozeRecorder: { blockID, dayKey in snooze.markSnoozed(blockID: blockID, dayKey: dayKey) }
+        )
         // UI tests pass `-uiTestReset` to launch on a clean in-memory container,
         // so flows like onboarding can be exercised deterministically without
         // wiping the user's real on-disk store.

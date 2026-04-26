@@ -8,6 +8,7 @@ final class TodayViewModel {
     private let repository: any RoutineRepository
     private let tripsRepository: (any TripsRepository)?
     private let skipStore: (any BlockSkipStore)?
+    private let snoozeStore: (any BlockSnoozeStore)?
     private let focusScheduleStore: (any FocusScheduleStore)?
     private let calendar: Calendar
 
@@ -24,12 +25,14 @@ final class TodayViewModel {
         repository: any RoutineRepository,
         tripsRepository: (any TripsRepository)? = nil,
         skipStore: (any BlockSkipStore)? = nil,
+        snoozeStore: (any BlockSnoozeStore)? = nil,
         focusScheduleStore: (any FocusScheduleStore)? = nil,
         calendar: Calendar = .autoupdatingCurrent
     ) {
         self.repository = repository
         self.tripsRepository = tripsRepository
         self.skipStore = skipStore
+        self.snoozeStore = snoozeStore
         self.focusScheduleStore = focusScheduleStore
         self.calendar = calendar
     }
@@ -37,6 +40,11 @@ final class TodayViewModel {
     /// Whether the user marked `block` as skipped for today.
     func isSkipped(_ block: Block, now: Date = Date()) -> Bool {
         skipStore?.isSkipped(blockID: block.id, on: now, calendar: calendar) ?? false
+    }
+
+    /// Whether `block` was snoozed at least once today via the notification action.
+    func isSnoozedToday(_ block: Block, now: Date = Date()) -> Bool {
+        snoozeStore?.isSnoozed(blockID: block.id, on: now, calendar: calendar) ?? false
     }
 
     /// Toggle skip-for-today for `block`.

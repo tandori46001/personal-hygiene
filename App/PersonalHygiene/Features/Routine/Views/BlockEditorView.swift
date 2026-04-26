@@ -39,6 +39,7 @@ struct BlockEditorView: View {
                         }
                         .pickerStyle(.menu)
                         .labelsHidden()
+                        .accessibilityLabel(Text("a11y.startTime.hour", bundle: .main))
                         Text(verbatim: ":")
                             .accessibilityHidden(true)
                         Picker("", selection: $viewModel.startMinute) {
@@ -48,6 +49,7 @@ struct BlockEditorView: View {
                         }
                         .pickerStyle(.menu)
                         .labelsHidden()
+                        .accessibilityLabel(Text("a11y.startTime.minute", bundle: .main))
                     }
 
                     Stepper(value: $viewModel.durationMinutes, in: 5...(24 * 60), step: 5) {

@@ -168,17 +168,64 @@ public enum NotificationCategoryRegistrar {
     }
 }
 
-/// `UNUserNotificationCenterDelegate` wrapper that handles the snooze action
-/// by re-firing the notification 5 minutes later with the same content.
+/// UserDefaults-backed configuration for the snooze action — lets the user
+/// pick 5 / 10 / 15 minutes from Settings. Values outside the allowed list
+/// fall back to the default.
+public enum SnoozeDurationStore {
+
+    public static let key = "notifications.snooze.minutes"
+    public static let allowedMinutes: [Int] = [5, 10, 15]
+    public static let defaultMinutes = 5
+
+    public static func minutes(defaults: UserDefaults = .standard) -> Int {
+        let stored = defaults.integer(forKey: key)
+        guard allowedMinutes.contains(stored) else { return defaultMinutes }
+        return stored
+    }
+
+    public static func set(_ minutes: Int, in defaults: UserDefaults = .standard) {
+        guard allowedMinutes.contains(minutes) else { return }
+        defaults.set(minutes, forKey: key)
+    }
+
+    public static func seconds(defaults: UserDefaults = .standard) -> TimeInterval {
+        TimeInterval(minutes(defaults: defaults) * 60)
+    }
+}
+
+/// `UNUserNotificationCenterDelegate` wrapper that handles snooze + mark-done
+/// actions on routine/medication/milestone notifications.
 ///
 /// The class itself is not main-actor-isolated; the system invokes delegate
-/// callbacks on a background queue. Snooze rescheduling hops to a Task and
-/// uses the (concurrency-safe) async API on `UNUserNotificationCenter`.
+/// callbacks on a background queue. Snooze rescheduling uses the (concurrency-
+/// safe) completion-handler API on `UNUserNotificationCenter` so we never hop
+/// actors mid-callback.
 public final class NotificationActionHandler: NSObject, UNUserNotificationCenterDelegate {
 
-    public static let snoozeDelay: TimeInterval = 5 * 60
+    private let snoozeIntervalProvider: @Sendable () -> TimeInterval
+    private let nowProvider: @Sendable () -> Date
+    /// Optional callback invoked with `(blockID, dayKey)` when a routine-block
+    /// notification is snoozed — used by Today UI to show a "snoozed once" badge.
+    private let snoozeRecorder: (@Sendable (UUID, String) -> Void)?
 
-    override public init() {
+    /// Default initializer reads the user's chosen snooze duration from
+    /// `SnoozeDurationStore` (UserDefaults-backed) and uses `Date()` as `now`.
+    override public convenience init() {
+        self.init(
+            snoozeIntervalProvider: { SnoozeDurationStore.seconds() },
+            nowProvider: { Date() }
+        )
+    }
+
+    /// Test-friendly initializer.
+    public init(
+        snoozeIntervalProvider: @escaping @Sendable () -> TimeInterval,
+        nowProvider: @escaping @Sendable () -> Date = { Date() },
+        snoozeRecorder: (@Sendable (UUID, String) -> Void)? = nil
+    ) {
+        self.snoozeIntervalProvider = snoozeIntervalProvider
+        self.nowProvider = nowProvider
+        self.snoozeRecorder = snoozeRecorder
         super.init()
     }
 
@@ -195,22 +242,41 @@ public final class NotificationActionHandler: NSObject, UNUserNotificationCenter
         didReceive response: UNNotificationResponse,
         withCompletionHandler completionHandler: @escaping @Sendable () -> Void
     ) {
-        guard response.actionIdentifier == NotificationActionID.snooze5min else {
+        switch response.actionIdentifier {
+        case NotificationActionID.snooze5min:
+            let originalRequest = response.notification.request
+            if let parsed = BlockNotificationIdentifier.parse(originalRequest.identifier) {
+                snoozeRecorder?(parsed.blockID, parsed.dayKey)
+            }
+            let request = Self.makeSnoozeRequest(
+                from: originalRequest,
+                interval: snoozeIntervalProvider(),
+                now: nowProvider()
+            )
+            center.add(request) { _ in completionHandler() }
+        case NotificationActionID.markDone:
+            // Defensive removal: when the user explicitly marks done, we drop
+            // any pending duplicate of the same identifier so a second alert
+            // doesn't fire later.
+            center.removePendingNotificationRequests(
+                withIdentifiers: [response.notification.request.identifier]
+            )
             completionHandler()
-            return
+        default:
+            completionHandler()
         }
-        let identifier = response.notification.request.identifier
-        let original = response.notification.request
+    }
+
+    /// Pure builder — exposed for testing.
+    public static func makeSnoozeRequest(
+        from original: UNNotificationRequest,
+        interval: TimeInterval,
+        now: Date
+    ) -> UNNotificationRequest {
         let content = (original.content.mutableCopy() as? UNMutableNotificationContent)
             ?? UNMutableNotificationContent()
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: Self.snoozeDelay, repeats: false)
-        let request = UNNotificationRequest(
-            identifier: "\(identifier).snooze.\(Int(Date().timeIntervalSince1970))",
-            content: content,
-            trigger: trigger
-        )
-        // Use the completion-handler API instead of `await center.add(request)`
-        // so we don't have to capture `completionHandler` across an actor hop.
-        center.add(request) { _ in completionHandler() }
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: interval, repeats: false)
+        let identifier = "\(original.identifier).snooze.\(Int(now.timeIntervalSince1970))"
+        return UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
     }
 }

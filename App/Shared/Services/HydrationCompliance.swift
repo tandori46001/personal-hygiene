@@ -42,9 +42,7 @@ public enum HydrationCompliance {
         calendar: Calendar = .autoupdatingCurrent
     ) -> Int {
         guard goal.dailyMilliliters > 0 else { return 0 }
-        let totalsByDay = Dictionary(grouping: logs) { log -> Date in
-            calendar.startOfDay(for: log.drankAt)
-        }.mapValues { $0.reduce(0) { $0 + max(0, $1.milliliters) } }
+        let totalsByDay = Self.totalsByDay(logs: logs, calendar: calendar)
 
         var streak = 0
         var cursor = calendar.startOfDay(for: now)
@@ -54,5 +52,42 @@ public enum HydrationCompliance {
             cursor = prev
         }
         return streak
+    }
+
+    /// Longest run of consecutive goal-meeting days observed anywhere in `logs`
+    /// up to and including `now`. Useful for "best streak" badges that survive
+    /// a missed day. Always >= `currentStreakDays(...)`.
+    public static func bestStreakDays(
+        on now: Date,
+        logs: [HydrationLog],
+        goal: HydrationGoal,
+        calendar: Calendar = .autoupdatingCurrent
+    ) -> Int {
+        guard goal.dailyMilliliters > 0 else { return 0 }
+        let totalsByDay = Self.totalsByDay(logs: logs, calendar: calendar)
+        let metDays = totalsByDay.filter { $0.value >= goal.dailyMilliliters }.keys.sorted()
+        guard !metDays.isEmpty else { return 0 }
+        let today = calendar.startOfDay(for: now)
+        var best = 0
+        var run = 0
+        var previous: Date?
+        for day in metDays where day <= today {
+            if let prev = previous,
+               let next = calendar.date(byAdding: .day, value: 1, to: prev),
+               next == day {
+                run += 1
+            } else {
+                run = 1
+            }
+            previous = day
+            best = max(best, run)
+        }
+        return best
+    }
+
+    private static func totalsByDay(logs: [HydrationLog], calendar: Calendar) -> [Date: Int] {
+        Dictionary(grouping: logs) { log -> Date in
+            calendar.startOfDay(for: log.drankAt)
+        }.mapValues { $0.reduce(0) { $0 + max(0, $1.milliliters) } }
     }
 }

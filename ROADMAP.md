@@ -42,11 +42,13 @@
 
 ---
 
-### Phase 1 — MVP daily routine (iOS only) 🟡
+### Phase 1 — MVP daily routine (iOS only) ✅ feature-complete (~98%)
 
 **Goal:** end user follows full daily routine on iPhone for 14 consecutive days using only this app's notifications.
 
 Modules: M1 (templates) · M2 (notifications) · M3 (medication) · M4 (sleep).
+
+> **Session 5 polish (2026-04-26):** Today empty-state CTA, block skip-today + notification exclusion, snooze-5-min action, notification grouping (thread/category), `WhatsNextIntent` Siri shortcut, `PersonalHygieneWidgets` (small + medium "next block"), VoiceOver pass on time-only rows, scheduled focus windows (DeepFocusFilter merges block + schedule). Remaining work is non-code: real-device validation + paid Apple Developer Program.
 
 | Acceptance | Status |
 |---|---|
@@ -74,29 +76,30 @@ Modules: M1 (templates) · M2 (notifications) · M3 (medication) · M4 (sleep).
 
 ---
 
-### Phase 2 — Apple Watch companion ⬜
+### Phase 2 — Apple Watch companion ✅ feature-complete (~95%)
 
 **Goal:** glanceable schedule on the wrist + ability to mark blocks done from Watch.
 
 | Acceptance | Status |
 |---|---|
-| watchOS app with current-day blocks list | ⬜ |
-| At least one complication ("next block") | ⬜ |
-| Haptic notifications mirror iPhone | ⬜ |
-| Mark block done from Watch | ⬜ |
+| watchOS app with current-day blocks list | ✅ session 3 |
+| At least one complication ("next block") | ✅ `PersonalHygieneWatchWidgets` `NextBlockComplication` |
+| Haptic notifications mirror iPhone | ✅ via shared notification scheduling |
+| Mark block done from Watch | ✅ session 3 |
+| Real-device validation | ⬜ pending |
 
 ---
 
-### Phase 3 — Secondary modules ⬜
+### Phase 3 — Secondary modules ✅
 
 Modules: M5 (hydration) · M6 (housekeeping) · M7 (contacts birthdays) · M8 (deep focus).
 
 | Acceptance | Status |
 |---|---|
-| Hydration reminders configurable | ⬜ |
-| Housekeeping tasks recurring + escalation | ⬜ |
-| Birthdays imported from Contacts | ⬜ |
-| Deep Focus mode silences non-critical alerts | ⬜ |
+| Hydration reminders configurable | ✅ session 3 + streak (S5) |
+| Housekeeping tasks recurring + escalation | ✅ session 3 + room filter (S5) |
+| Birthdays imported from Contacts | ✅ session 3 + per-contact lead days (S5) |
+| Deep Focus mode silences non-critical alerts | ✅ session 3 + scheduled windows (S5) |
 
 ---
 
@@ -117,6 +120,8 @@ Modules: M5 (hydration) · M6 (housekeeping) · M7 (contacts birthdays) · M8 (d
 **Goal:** complete an international trip end-to-end with the app handling all preparation + on-trip + return.
 
 Module M9 — see [PRD.md § 6 M9](PRD.md#m9--módulo-vacaciones-fase-final) for requirements breakdown.
+
+> **Session 5 polish (2026-04-26):** itinerary persistence (`ItineraryStore`), API caching decorators (marine + currency + advisory, 30-min/24h TTL), past-trips archive split, Cancel/Save draft flow on Trip detail, cover photo (`PhotosPicker` + `@Attribute(.externalStorage)`), packing list (value-type round-trip via BackupService v1.1).
 
 | Acceptance | Status |
 |---|---|

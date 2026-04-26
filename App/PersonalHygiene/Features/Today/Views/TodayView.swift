@@ -48,6 +48,7 @@ struct TodayView: View {
                                     block: block,
                                     isDone: viewModel.isDone(block),
                                     isSkipped: viewModel.isSkipped(block),
+                                    isSnoozedToday: viewModel.isSnoozedToday(block),
                                     onToggle: { viewModel.toggleDone(block) }
                                 )
                                 .swipeActions(edge: .trailing) {
@@ -227,6 +228,7 @@ private struct BlockTimelineRow: View {
     let block: Block
     let isDone: Bool
     let isSkipped: Bool
+    let isSnoozedToday: Bool
     let onToggle: () -> Void
 
     var body: some View {
@@ -258,6 +260,11 @@ private struct BlockTimelineRow: View {
                     .foregroundStyle(.secondary)
             }
             Spacer()
+            if isSnoozedToday {
+                Image(systemName: "alarm")
+                    .foregroundStyle(.blue)
+                    .accessibilityLabel(Text("today.snoozedToday", bundle: .main))
+            }
             if isSkipped {
                 Image(systemName: "moon.zzz")
                     .foregroundStyle(.orange)

@@ -24,21 +24,40 @@ struct HydrationDashboardView: View {
                             .font(.system(.title2, design: .monospaced))
                             .foregroundStyle(.tint)
                     }
+                    .accessibilityElement(children: .combine)
                     ProgressView(value: viewModel.progress)
                         .tint(progressColor)
+                        .accessibilityLabel(
+                            Text(LocalizedStringResource(
+                                "a11y.hydration.progress \(Int(viewModel.progress * 100))"
+                            ))
+                        )
                     HStack {
                         Text("hydration.today.goal", bundle: .main)
                         Spacer()
                         Text(verbatim: "\(viewModel.goal.dailyMilliliters) ml")
                             .foregroundStyle(.secondary)
                     }
+                    .accessibilityElement(children: .combine)
                     let streak = viewModel.streakDays()
+                    let best = viewModel.bestStreakDays()
                     if streak > 0 {
                         HStack {
                             Image(systemName: "flame.fill")
                                 .foregroundStyle(.orange)
                                 .accessibilityHidden(true)
                             Text("hydration.streak.\(streak)", bundle: .main)
+                            Spacer()
+                        }
+                        .accessibilityElement(children: .combine)
+                    }
+                    if best > 0 && best > streak {
+                        HStack {
+                            Image(systemName: "trophy.fill")
+                                .foregroundStyle(.yellow)
+                                .accessibilityHidden(true)
+                            Text("hydration.bestStreak.\(best)", bundle: .main)
+                                .foregroundStyle(.secondary)
                             Spacer()
                         }
                         .accessibilityElement(children: .combine)

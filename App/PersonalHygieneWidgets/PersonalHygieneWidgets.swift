@@ -10,6 +10,7 @@ import WidgetKit
 struct PersonalHygieneWidgetsBundle: WidgetBundle {
     var body: some Widget {
         NextBlockHomeWidget()
+        DeepFocusHomeWidget()
     }
 }
 
@@ -158,6 +159,159 @@ struct NextBlockHomeView: View {
                     .foregroundStyle(.secondary)
             }
             Spacer()
+        }
+    }
+
+    private func formattedTime(minutes: Int) -> String {
+        String(format: "%02d:%02d", minutes / 60, minutes % 60)
+    }
+}
+
+// MARK: - Deep Focus widget (small)
+
+struct DeepFocusHomeWidget: Widget {
+    let kind = "DeepFocusHomeWidget"
+
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: DeepFocusHomeProvider()) { entry in
+            DeepFocusHomeView(entry: entry)
+                .containerBackground(.fill.tertiary, for: .widget)
+        }
+        .configurationDisplayName(Text("widget.deepFocus.title", bundle: .main))
+        .description(Text("widget.deepFocus.description", bundle: .main))
+        .supportedFamilies([.systemSmall])
+    }
+}
+
+struct DeepFocusHomeEntry: TimelineEntry {
+    let date: Date
+    let state: DeepFocusHomeSnapshot
+}
+
+enum DeepFocusHomeSnapshot: Sendable, Hashable {
+    case active(title: String, endMinutes: Int)
+    case upcoming(startMinutes: Int)
+    case idle
+}
+
+struct DeepFocusHomeProvider: TimelineProvider {
+
+    func placeholder(in _: Context) -> DeepFocusHomeEntry {
+        DeepFocusHomeEntry(date: Date(), state: .idle)
+    }
+
+    func getSnapshot(in _: Context, completion: @escaping (DeepFocusHomeEntry) -> Void) {
+        completion(DeepFocusHomeEntry(date: Date(), state: .idle))
+    }
+
+    func getTimeline(in _: Context, completion: @escaping (Timeline<DeepFocusHomeEntry>) -> Void) {
+        let now = Date()
+        let snapshot = Self.fetchSnapshot(now: now)
+        let entry = DeepFocusHomeEntry(date: now, state: snapshot)
+        let nextRefresh = Calendar.current.date(byAdding: .minute, value: 15, to: now) ?? now
+        completion(Timeline(entries: [entry], policy: .after(nextRefresh)))
+    }
+
+    private static func fetchSnapshot(now: Date) -> DeepFocusHomeSnapshot {
+        let calendar = Calendar.autoupdatingCurrent
+        let configuration = ModelConfiguration(
+            schema: AppModelContainer.schema,
+            isStoredInMemoryOnly: false,
+            cloudKitDatabase: .none
+        )
+        guard
+            let container = try? ModelContainer(
+                for: AppModelContainer.schema,
+                configurations: [configuration]
+            )
+        else { return .idle }
+        let context = ModelContext(container)
+        let weekday = calendar.component(.weekday, from: now)
+        let dayType: DayType = (weekday == 1 || weekday == 7) ? .weekend : .weekday
+        guard let templates = try? context.fetch(FetchDescriptor<RoutineTemplate>()) else {
+            return .idle
+        }
+        guard let template = templates.first(where: { $0.isActive && $0.dayType == dayType }) else {
+            return .idle
+        }
+
+        let scheduledStore = UserDefaultsFocusScheduleStore()
+        let scheduled = scheduledStore.windows()
+        if let active = DeepFocusFilter.activeWindow(
+            at: now,
+            in: template.sortedBlocks,
+            scheduledWindows: scheduled,
+            calendar: calendar
+        ) {
+            let endMinutes = calendar.component(.hour, from: active.end) * 60
+                + calendar.component(.minute, from: active.end)
+            return .active(title: active.blockTitle, endMinutes: endMinutes)
+        }
+
+        // No active window — surface the *next* deep-focus block start, if any.
+        let nowMinutes = calendar.component(.hour, from: now) * 60
+            + calendar.component(.minute, from: now)
+        if let next = template.sortedBlocks.first(where: {
+            $0.isDeepFocus && $0.startMinutesFromMidnight > nowMinutes
+        }) {
+            return .upcoming(startMinutes: next.startMinutesFromMidnight)
+        }
+        return .idle
+    }
+}
+
+struct DeepFocusHomeView: View {
+
+    let entry: DeepFocusHomeEntry
+
+    var body: some View {
+        switch entry.state {
+        case .active(let title, let endMinutes):
+            VStack(alignment: .leading, spacing: 4) {
+                Label {
+                    Text("widget.deepFocus.active", bundle: .main)
+                        .font(.caption2)
+                } icon: {
+                    Image(systemName: "moon.zzz.fill")
+                }
+                .foregroundStyle(.purple)
+                Text(title)
+                    .font(.headline)
+                    .lineLimit(2)
+                Text(LocalizedStringResource("widget.deepFocus.until \(formattedTime(minutes: endMinutes))"))
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        case .upcoming(let startMinutes):
+            VStack(alignment: .leading, spacing: 4) {
+                Label {
+                    Text("widget.deepFocus.upcoming", bundle: .main)
+                        .font(.caption2)
+                } icon: {
+                    Image(systemName: "moon.zzz")
+                }
+                .foregroundStyle(.secondary)
+                Text(formattedTime(minutes: startMinutes))
+                    .font(.system(.title, design: .monospaced))
+                    .bold()
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        case .idle:
+            VStack(alignment: .leading, spacing: 4) {
+                Label {
+                    Text("widget.deepFocus.idle", bundle: .main)
+                        .font(.caption2)
+                } icon: {
+                    Image(systemName: "moon.zzz")
+                }
+                .foregroundStyle(.secondary)
+                Text("widget.deepFocus.idle.description", bundle: .main)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .lineLimit(3)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
         }
     }
 

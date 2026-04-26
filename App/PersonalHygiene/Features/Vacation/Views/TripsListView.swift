@@ -161,7 +161,9 @@ private struct TripRow: View {
     let trip: Trip
 
     var body: some View {
-        HStack {
+        HStack(spacing: 12) {
+            thumbnail
+                .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
                 Text(trip.name)
                     .font(.body)
@@ -182,5 +184,24 @@ private struct TripRow: View {
             }
         }
         .accessibilityElement(children: .combine)
+    }
+
+    @ViewBuilder
+    private var thumbnail: some View {
+        if let data = trip.coverPhotoData, let image = UIImage(data: data) {
+            Image(uiImage: image)
+                .resizable()
+                .scaledToFill()
+                .frame(width: 44, height: 44)
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+        } else {
+            ZStack {
+                RoundedRectangle(cornerRadius: 8, style: .continuous)
+                    .fill(.tint.opacity(0.15))
+                Image(systemName: "airplane")
+                    .foregroundStyle(.tint)
+            }
+            .frame(width: 44, height: 44)
+        }
     }
 }

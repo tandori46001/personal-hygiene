@@ -56,6 +56,26 @@ Format:
 | [T-020](#t-020--ai-itinerary--marine--currency--advisory) | M9 | 5 | Slices 6-9 (S4) |
 | [T-021](#t-021--trip-pdf-export) | M9 | 5 | Slice 10 (S4) |
 | [T-022](#t-022--today-completion--summary--countdown) | M1+M9 | 1 | Slices 11-13 (S4) |
+| [T-023](#t-023--itinerary-persistence) | M9 | 5 | Slice 1 (S5) |
+| [T-024](#t-024--marine-cache) | M9 | 5 | Slice 2 (S5) |
+| [T-025](#t-025--currency-cache) | M9 | 5 | Slice 3 (S5) |
+| [T-026](#t-026--advisory-cache) | M9 | 5 | Slice 4 (S5) |
+| [T-027](#t-027--past-trips-archive) | M9 | 5 | Slice 5 (S5) |
+| [T-028](#t-028--trip-detail-cancelsave-draft) | M9 | 5 | Slice 6 (S5) |
+| [T-029](#t-029--swiftlint-hardcoded-ui-strings) | infra | — | Slice 7 (S5) |
+| [T-030](#t-030--today-empty-state-cta) | M1 | 1 | Slice 8 (S5) |
+| [T-031](#t-031--block-skip-today) | M1+M2 | 1 | Slice 9 (S5) |
+| [T-032](#t-032--notification-snooze-5min) | M2 | 1 | Slice 10 (S5) |
+| [T-033](#t-033--notification-thread-grouping) | M2 | 1 | Slice 11 (S5) |
+| [T-034](#t-034--whatsnextintent-siri-shortcut) | M1 | 1 | Slice 12 (S5) |
+| [T-035](#t-035--ios-nextblock-home-widget) | M1 | 1 | Slice 13 (S5) |
+| [T-036](#t-036--trip-cover-photo) | M9 | 5 | Slice 14 (S5) |
+| [T-037](#t-037--packing-list) | M9 | 5 | Slice 15 (S5) |
+| [T-038](#t-038--hydration-streak) | M5 | 3 | Slice 16 (S5) |
+| [T-039](#t-039--housekeeping-room-filter) | M6 | 3 | Slice 17 (S5) |
+| [T-040](#t-040--birthdays-per-contact-lead) | M7 | 3 | Slice 18 (S5) |
+| [T-041](#t-041--scheduled-focus-windows) | M8 | 3 | Slice 19 (S5) |
+| [T-042](#t-042--voiceover-natural-language-time) | a11y | — | Slice 20 (S5) |
 
 ---
 
@@ -451,3 +471,316 @@ The suite as a whole crashes the simulator if `ModelContainer` is allowed to dea
 3. Create an upcoming trip → return to Today → the trip countdown card shows the trip name + days-until-departure.
 4. Restart app → completions and countdown still accurate (depends on calendar day).
 
+
+---
+
+## [T-023] — Itinerary persistence
+
+**Module:** M9 · **Phase:** 5 · **Shipped in:** session 5 slice 1
+
+### Cases (automated — `Tests/Unit/Services/ItineraryStoreTests.swift`)
+1. `save(_:for:)` writes a JSON file under the app's documents dir keyed by trip id.
+2. `load(for:)` returns the previously-saved itinerary.
+3. `load(for:)` returns nil after `clear(for:)`.
+4. `clear(for:)` is a no-op when no itinerary exists for that trip.
+
+### Manual verification
+1. Open a trip → AI itinerary → Generate. An itinerary appears.
+2. Force-quit app → relaunch → reopen the same trip → itinerary is still there.
+
+---
+
+## [T-024] — Marine cache
+
+**Module:** M9 · **Phase:** 5 · **Shipped in:** session 5 slice 2
+
+### Cases (automated — `Tests/Unit/Services/CachedMarineWeatherServiceTests.swift`)
+1. First call delegates to underlying service and caches result.
+2. Second call within TTL returns cached result without delegating.
+3. Different (lat, lon) keys do not collide.
+4. After TTL expiry the cache refreshes from underlying service.
+
+### Manual verification
+1. Open a trip with coordinates → Marine conditions panel loads (network call).
+2. Close + reopen panel within 30 minutes → no network spinner; data is instant.
+
+---
+
+## [T-025] — Currency cache
+
+**Module:** M9 · **Phase:** 5 · **Shipped in:** session 5 slice 3
+
+### Cases (automated — `Tests/Unit/Services/CachedCurrencyServiceTests.swift`)
+1. First convert delegates and caches the per-unit rate.
+2. Second convert with same (from, to) pair within TTL applies cached rate locally to the new amount.
+3. Different currency pairs do not collide.
+
+### Manual verification
+1. Trip → Currency → enter 100 EUR → JPY → Convert (network).
+2. Change amount to 200 → Convert. No network call; result is double the previous amount.
+
+---
+
+## [T-026] — Advisory cache
+
+**Module:** M9 · **Phase:** 5 · **Shipped in:** session 5 slice 4
+
+### Cases (automated — `Tests/Unit/Services/CachedTravelAdvisoryServiceTests.swift`)
+1. First `advisoryURL(for:)` call memoizes the URL for the destination.
+2. Subsequent calls within TTL return the cached URL.
+3. Different destinations do not collide.
+
+### Manual verification
+1. Trip → Advisory → Open advisory page. Safari opens at exteriores.gob.es.
+2. Reopen the trip → URL builder hits the in-memory cache (no perceptible difference; verify via test).
+
+---
+
+## [T-027] — Past trips archive
+
+**Module:** M9 · **Phase:** 5 · **Shipped in:** session 5 slice 5
+
+### Cases (automated — extends `TripsRepositoryTests` / view-layer manual)
+- `Trip.endDate < today` → goes to "Past" section.
+- `Trip.endDate >= today` → stays under "Upcoming".
+
+### Manual verification
+1. Create a trip with endDate yesterday → it appears in Past section, not Upcoming.
+2. Create a trip with future startDate → it appears in Upcoming section.
+3. Both sections show counts in their headers.
+
+---
+
+## [T-028] — Trip detail Cancel/Save (draft)
+
+**Module:** M9 · **Phase:** 5 · **Shipped in:** session 5 slice 6
+
+### Cases (automated — `Tests/Unit/ViewModels/TripDetailViewModelTests.swift`)
+1. `commitDraft()` writes draft scalar buffers back to the SwiftData model.
+2. `revertDraft()` restores the draft buffers from the persisted trip.
+3. Editing a draft field without committing leaves persisted trip unchanged.
+
+### Manual verification
+1. Trip detail → edit name → tap "Cancel" → name reverts.
+2. Edit name + dates → tap "Save" → values persist after app restart.
+
+---
+
+## [T-029] — SwiftLint hardcoded UI strings
+
+**Module:** infra · **Shipped in:** session 5 slice 7
+
+### Cases (regression)
+1. Add a `Text("foo")` literal to any view file → `./scripts/lint.sh --strict` fails with `hardcoded_text_view`.
+2. Repeat with `.navigationTitle("foo")`, `.accessibilityLabel("foo")`, button label literals.
+3. Removing the literals (replacing with `LocalizedStringKey`) makes lint green again.
+
+### Manual verification
+None — purely build-time guard.
+
+---
+
+## [T-030] — Today empty-state CTA
+
+**Module:** M1 · **Phase:** 1 · **Shipped in:** session 5 slice 8
+
+### Cases (automated — view-layer manual)
+1. With no active template for today's day type, Today shows empty state + "Create template" button.
+2. Tapping the button switches the tab bar selection to Templates.
+
+### Manual verification
+1. Delete all templates (or de-activate weekday template on a weekday).
+2. Open Today → empty state appears with CTA.
+3. Tap "Create template" → app navigates to Templates tab.
+
+---
+
+## [T-031] — Block skip-today
+
+**Module:** M1 + M2 · **Phase:** 1 · **Shipped in:** session 5 slice 9
+
+### Cases (automated — `Tests/Unit/Services/BlockSkipStoreTests.swift` + `TodayViewModelTests`)
+1. `toggleSkip(blockID:on:)` toggles a `(blockID, dayKey)` entry.
+2. `isSkipped(...)` returns true after toggle, false after second toggle.
+3. Entries older than 7 days auto-purge on next read.
+4. `NotificationCoordinator.refreshForToday` excludes skipped blocks from scheduling.
+
+### Manual verification
+1. Today row → swipe → tap "Skip today". Row dims + skip badge appears.
+2. Pending notifications: open iOS Settings → personal-hygiene → that block's pending alert is gone.
+3. Next calendar day: row appears un-skipped again.
+
+---
+
+## [T-032] — Notification snooze 5 min
+
+**Module:** M2 · **Phase:** 1 · **Shipped in:** session 5 slice 10
+
+### Cases (automated — `Tests/Unit/Services/NotificationActionHandlerTests.swift`)
+1. `didReceive(snooze)` schedules a new notification via `UNTimeIntervalNotificationTrigger` with the configured interval.
+2. `didReceive(markDone)` removes the original pending notification.
+3. Default interval is 300s; reads `UserDefaults` override when present.
+
+### Manual verification (real device)
+1. Receive a routine notification → swipe-down → tap "Snooze 5 min".
+2. ~5 min later a fresh alert with the same title fires.
+
+---
+
+## [T-033] — Notification thread grouping
+
+**Module:** M2 · **Phase:** 1 · **Shipped in:** session 5 slice 11
+
+### Cases (automated — `Tests/Unit/Services/NotificationFactoryTests.swift`)
+1. Routine factory sets `threadIdentifier = "routine"`.
+2. Medication factory sets `threadIdentifier = "medication"` + `categoryIdentifier = "medication"`.
+3. Hydration factory sets `threadIdentifier = "hydration"`.
+4. Milestone factory sets `threadIdentifier = "trip-milestone"`.
+
+### Manual verification
+1. Receive 3 routine alerts in a row → iOS groups them under one stack.
+2. A medication alert appears in its own stack alongside routine alerts.
+
+---
+
+## [T-034] — WhatsNextIntent (Siri Shortcut)
+
+**Module:** M1 · **Phase:** 1 · **Shipped in:** session 5 slice 12
+
+### Cases (automated — `Tests/Unit/Services/WhatsNextIntentTests.swift`)
+1. `perform()` returns the title + start time of the current block when one is active.
+2. Returns the next block when none is active.
+3. Returns a localized "no template" dialogue when no template is active.
+
+### Manual verification (real device)
+1. Hey Siri → "What's next?" → reads out current/next block.
+2. Shortcuts app → personal-hygiene → "What's next?" → tap → result appears.
+
+---
+
+## [T-035] — iOS NextBlock home widget
+
+**Module:** M1 · **Phase:** 1 · **Shipped in:** session 5 slice 13
+
+### Cases (automated — `Tests/Unit/Services/NextBlockResolverTests.swift`)
+1. With no template active → returns `.empty`.
+2. With template + current block → returns `.now(block)`.
+3. With template + only future blocks → returns `.next(block)`.
+4. After last block of the day → returns `.empty` (no wrap to tomorrow).
+
+### Manual verification (real device)
+1. Add the NextBlock widget (small + medium families) to the home screen.
+2. Verify the widget shows current block while one is active.
+3. Verify the widget shows next block (with start time) otherwise.
+
+---
+
+## [T-036] — Trip cover photo
+
+**Module:** M9 · **Phase:** 5 · **Shipped in:** session 5 slice 14
+
+### Cases (automated — view-layer manual; persistence covered by SwiftData round-trip)
+1. `Trip.coverPhotoData: Data?` uses `@Attribute(.externalStorage)`.
+2. `CoverPhotoSection` re-encodes JPEG at 0.7 quality before persisting.
+
+### Manual verification
+1. Trip detail → Cover photo → pick from photo library.
+2. Photo appears in the section. Save. Force-quit + relaunch → photo persists.
+3. Tap "Remove" → photo gone, `coverPhotoData` becomes nil.
+
+---
+
+## [T-037] — Packing list
+
+**Module:** M9 · **Phase:** 5 · **Shipped in:** session 5 slice 15
+
+### Cases (automated — view-layer + `BackupServiceTests`)
+1. `Trip.packingItems` is a `[PackingItem]` value-type array.
+2. `BackupService` v1.1 round-trips packing items through JSON.
+3. v1 backups (without `packingItems`) decode without error (optional field).
+
+### Manual verification
+1. Trip detail → Packing list → add "Passport". Toggle done. Add "Sunscreen".
+2. Footer shows "1 of 2 packed".
+3. Swipe-delete an item → it's gone.
+4. Settings → Export backup → re-import on a clean state → packing items return.
+
+---
+
+## [T-038] — Hydration streak
+
+**Module:** M5 · **Phase:** 3 · **Shipped in:** session 5 slice 16
+
+### Cases (automated — `Tests/Unit/Services/HydrationComplianceTests.swift`)
+1. `currentStreakDays(on:logs:goal:)` returns 0 when today's intake < goal.
+2. Returns N for N consecutive past days each meeting the goal.
+3. Streak breaks when any day in the chain falls below goal.
+
+### Manual verification
+1. Hydration tab → log enough water to meet today's goal → flame badge appears with "1".
+2. Skip a day → flame disappears next time you check on a goal-met day.
+
+---
+
+## [T-039] — Housekeeping room filter
+
+**Module:** M6 · **Phase:** 3 · **Shipped in:** session 5 slice 17
+
+### Cases (automated — `Tests/Unit/ViewModels/HousekeepingListViewModelTests.swift`)
+1. `RoomFilter.all` shows every task.
+2. `RoomFilter.unsorted` shows tasks where `room == nil`.
+3. `RoomFilter.named(value)` shows tasks with `task.room == value`.
+
+### Manual verification
+1. Housekeeping tab → assign a room to a task ("Kitchen").
+2. Picker at top → "Kitchen" → only kitchen tasks visible.
+3. Picker → "Unsorted" → only tasks without a room.
+4. Picker → "All" → full list.
+
+---
+
+## [T-040] — Birthdays per-contact lead
+
+**Module:** M7 · **Phase:** 3 · **Shipped in:** session 5 slice 18
+
+### Cases (automated — `Tests/Unit/Services/BirthdayLeadStoreTests.swift`)
+1. `daysBefore(for:)` returns the global default (7) when no override exists.
+2. `setDaysBefore(_:for:)` persists per-contact overrides.
+3. Reset removes the override.
+
+### Manual verification
+1. Birthdays tab → swipe a contact row → "Lead days" → set 30.
+2. Verify pending notification fires 30 days before.
+3. Other contacts unaffected.
+
+---
+
+## [T-041] — Scheduled focus windows
+
+**Module:** M8 · **Phase:** 3 · **Shipped in:** session 5 slice 19
+
+### Cases (automated — `Tests/Unit/Services/FocusScheduleTests.swift`)
+1. `ScheduledFocusWindow.matches(weekday:)` honors selected weekdays.
+2. `DeepFocusFilter.focusWindows(scheduledWindows:)` merges block-derived + schedule-derived windows.
+3. Empty schedule → result equals block-derived windows alone.
+
+### Manual verification
+1. Settings → Deep Focus → add window: Mon-Fri, 09:00 → 12:00. Save.
+2. During a Mon-Fri 10:00 → only critical (medication) notifications fire.
+3. Outside the window → all notifications fire normally.
+
+---
+
+## [T-042] — VoiceOver natural-language time
+
+**Module:** a11y · **Shipped in:** session 5 slice 20
+
+### Cases (manual — VoiceOver only)
+1. Today row time → VoiceOver reads "08 hours 30 minutes" instead of "08:30".
+2. Trips list → arrow glyphs (→) are not spoken.
+3. Block now-row time → VoiceOver speaks natural language.
+
+### Manual verification
+1. Settings → Accessibility → VoiceOver → On.
+2. Open Today → tap a block row → VoiceOver pronounces the time naturally.
+3. Open Trips → swipe across rows → arrow glyphs are silent.

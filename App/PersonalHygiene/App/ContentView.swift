@@ -36,6 +36,7 @@ private struct MainTabs: View {
                     repository: env.routineRepository,
                     tripsRepository: env.tripsRepository,
                     skipStore: env.blockSkipStore,
+                    snoozeStore: env.blockSnoozeStore,
                     focusScheduleStore: env.focusScheduleStore
                 ),
                 onCreateTemplate: { selection = .templates }

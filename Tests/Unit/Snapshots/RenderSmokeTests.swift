@@ -153,4 +153,68 @@ final class RenderSmokeTests: XCTestCase {
         )
         XCTAssertNotNil(image)
     }
+
+    // MARK: - Dynamic Type extension (session 6 a11y polish)
+
+    func test_templateList_render_atAccessibilityXXXL() throws {
+        let repo = SwiftDataRoutineRepository(context: container.mainContext)
+        let block = Block(title: "Aseo", category: .hygiene, startMinutesFromMidnight: 7 * 60, durationMinutes: 30)
+        try repo.upsert(RoutineTemplate(name: "Weekday", dayType: .weekday, blocks: [block], isActive: true))
+        try repo.upsert(RoutineTemplate(name: "Weekend", dayType: .weekend))
+
+        let viewModel = TemplateListViewModel(repository: repo)
+        viewModel.reload()
+
+        let image = render(
+            TemplateListView(viewModel: viewModel, repository: repo)
+                .environment(\.dynamicTypeSize, .accessibility5)
+        )
+        XCTAssertNotNil(image)
+    }
+
+    func test_tripsList_render_atAccessibilityXXXL() throws {
+        let tripsRepo = SwiftDataTripsRepository(context: container.mainContext)
+        try tripsRepo.upsert(tripFixture())
+
+        let viewModel = TripsListViewModel(repository: tripsRepo)
+        viewModel.reload()
+
+        let image = render(
+            TripsListView(viewModel: viewModel)
+                .environment(\.dynamicTypeSize, .accessibility5)
+        )
+        XCTAssertNotNil(image)
+    }
+
+    func test_emptyTrips_render_smoke() {
+        let tripsRepo = SwiftDataTripsRepository(context: container.mainContext)
+        let viewModel = TripsListViewModel(repository: tripsRepo)
+        viewModel.reload()  // no trips
+        let image = render(TripsListView(viewModel: viewModel))
+        XCTAssertNotNil(image)
+    }
+
+    func test_pastTripsArchive_render_smoke() throws {
+        let tripsRepo = SwiftDataTripsRepository(context: container.mainContext)
+        let upcoming = Trip(
+            name: "Future",
+            startDate: Date().addingTimeInterval(60 * 60 * 24 * 14),
+            endDate: Date().addingTimeInterval(60 * 60 * 24 * 21),
+            destinationName: "Tokyo"
+        )
+        let past = Trip(
+            name: "Past",
+            startDate: Date().addingTimeInterval(-60 * 60 * 24 * 21),
+            endDate: Date().addingTimeInterval(-60 * 60 * 24 * 14),
+            destinationName: "Lisbon"
+        )
+        try tripsRepo.upsert(upcoming)
+        try tripsRepo.upsert(past)
+
+        let viewModel = TripsListViewModel(repository: tripsRepo)
+        viewModel.reload()
+
+        let image = render(TripsListView(viewModel: viewModel))
+        XCTAssertNotNil(image)
+    }
 }

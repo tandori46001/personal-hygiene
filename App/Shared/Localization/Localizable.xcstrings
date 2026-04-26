@@ -1259,6 +1259,109 @@
     "settings.backup.action.import" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Import backup (replaces all data)" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Importar copia (reemplaza todo)" } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Importer la sauvegarde (tout remplacer)" } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Importer la sauvegarde (tout remplacer)" } } } },
+
+    "a11y.startTime.hour" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Hour" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hora" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Heure" } } } },
+    "a11y.startTime.minute" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Minute" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Minuto" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Minute" } } } },
+    "a11y.hydration.progress %lld" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "%lld percent of daily goal" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "%lld por ciento del objetivo diario" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "%lld pour cent de l’objectif quotidien" } } } },
+
+    "settings.snooze.duration.label" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Snooze duration" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Duración del snooze" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Durée du report" } } } },
+    "settings.snooze.duration.5" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "5 minutes" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "5 minutos" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "5 minutes" } } } },
+    "settings.snooze.duration.10" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "10 minutes" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "10 minutos" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "10 minutes" } } } },
+    "settings.snooze.duration.15" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "15 minutes" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "15 minutos" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "15 minutes" } } } },
+
+    "today.snoozedToday" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Snoozed today" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Pospuesto hoy" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Reporté aujourd’hui" } } } },
+
+    "hydration.bestStreak.%lld" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Best streak: %lld days" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Mejor racha: %lld días" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Meilleure série : %lld jours" } } } },
+
+    "housekeeping.field.room.none" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "No room" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Sin habitación" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aucune pièce" } } } },
+    "housekeeping.field.room.addNew" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Add new room…" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Añadir habitación…" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ajouter une pièce…" } } } },
+
+    "widget.deepFocus.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Deep Focus" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Concentración" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Concentration" } } } },
+    "widget.deepFocus.description" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Shows whether deep focus is active or upcoming." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Muestra si la concentración está activa o próxima." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Indique si la concentration est active ou prévue." } } } },
+    "widget.deepFocus.active" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus active" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Concentración activa" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Concentration active" } } } },
+    "widget.deepFocus.until %@" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Until %@" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hasta %@" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Jusqu’à %@" } } } },
+    "widget.deepFocus.upcoming" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Next focus" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Próxima concentración" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Prochaine concentration" } } } },
+    "widget.deepFocus.idle" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "No focus today" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Sin concentración hoy" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Pas de concentration aujourd’hui" } } } },
+    "widget.deepFocus.idle.description" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Mark a block as deep focus to use this widget." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Marca un bloque como concentración profunda para usar este widget." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Marquez un bloc en concentration profonde pour utiliser ce widget." } } } },
+
+    "onboarding.tip.widget.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Add the widget" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Añade el widget" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ajoutez le widget" } } } },
+    "onboarding.tip.widget.body" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Long-press the home screen and pick personal-hygiene to see your next block at a glance." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Mantén pulsada la pantalla de inicio y elige personal-hygiene para ver tu próximo bloque de un vistazo." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Appuyez longuement sur l’écran d’accueil et choisissez personal-hygiene pour voir votre prochain bloc en un coup d’œil." } } } },
+    "onboarding.tip.siri.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Try the Siri shortcut" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Prueba el atajo de Siri" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Essayez le raccourci Siri" } } } },
+    "onboarding.tip.siri.body" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Say “What’s next on personal-hygiene?” to hear the current or upcoming block." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Di «¿Qué toca ahora en personal-hygiene?» para escuchar el bloque actual o el próximo." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Dites « Prochain bloc personal-hygiene ? » pour entendre le bloc en cours ou à venir." } } } },
+    "onboarding.tip.notifications.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Allow notifications" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Permite las notificaciones" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Autorisez les notifications" } } } },
+    "onboarding.tip.notifications.body" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Reminders fire 15 minutes before each block. Snooze or mark done from the lock screen." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Los avisos suenan 15 minutos antes de cada bloque. Pospón o marca como hecho desde la pantalla bloqueada." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Les rappels arrivent 15 minutes avant chaque bloc. Reportez ou marquez fait depuis l’écran verrouillé." } } } }
   }
 }

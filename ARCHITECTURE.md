@@ -182,6 +182,60 @@ Place future ADRs under `docs/adr/NNNN-title.md` using the [Michael Nygard forma
 
 ---
 
+## 13. Targets (current — verified 2026-04-26)
+
+| Target | Type | Platform | Notes |
+|---|---|---|---|
+| `PersonalHygiene` | application | iOS 18+ | Main app. |
+| `PersonalHygieneWidgets` | app-extension | iOS 18+ | Home-screen widgets (small + medium "next block"). Uses `SWIFT_VERSION: "5"` because Swift 6 strict mode rejects calling `@MainActor` SwiftData APIs from synchronous `TimelineProvider` callbacks; the widget builds its own `ModelContainer` + `ModelContext` directly to bypass the `@MainActor` repo wrapper. |
+| `PersonalHygieneWatch` | application | watchOS 11+ | Today list + mark-done. |
+| `PersonalHygieneWatchWidgets` | app-extension | watchOS 11+ | NextBlock complication. |
+| `PersonalHygieneTests` | unit-test | iOS | XCTest. |
+| `PersonalHygieneUITests` | UI-test | iOS | XCUITest. |
+
+## 14. Value types (Codable + Sendable)
+
+The app prefers `@Model` for entities that need CloudKit sync, but uses **value types** for tightly-coupled data that lives on the parent record:
+
+- `BlockCategory`, `BlockLocation`, `DayType`, `HydrationGoal` — primitive form data on routine entities.
+- `BirthdayContact` (Identifiable) — surface model for the Contacts wrapper.
+- `TripItinerary` (Codable) — persisted as JSON via `ItineraryStore` (file-on-disk, keyed by `Trip.id`).
+- `PackingItem` — appears as `Trip.packingItems: [PackingItem]` and round-trips through `BackupService`.
+- `ScheduledFocusWindow` — UserDefaults-backed via `FocusScheduleStore` (intentionally not in the SwiftData backup).
+
+## 15. Service decorator convention
+
+External HTTP services are wrapped in a `Cached*Service` decorator that conforms to the same protocol as the underlying service. The cache key is whatever uniquely identifies a request; the TTL depends on the volatility of the data:
+
+| Service | Decorator | TTL | Key |
+|---|---|---|---|
+| Marine weather | `CachedMarineWeatherService` | 30 min | rounded (lat, lon) |
+| Currency | `CachedCurrencyService` | 30 min | (from, to) — amount applied locally on hits |
+| Travel advisory | `CachedTravelAdvisoryService` | 24 h | destination string |
+
+The decorator pattern keeps the underlying service free of caching concerns and lets tests target either layer in isolation.
+
+## 16. Notification architecture (current)
+
+- **Categories** (registered at app launch in `NotificationCategoryRegistrar`):
+  - `routine` — supports snooze + mark-done actions.
+  - `medication` — critical-alert level, supports mark-done.
+- **Threads** (group notifications visually in iOS):
+  - `routine`, `medication`, `hydration`, `trip-milestone` — set on `ScheduledNotification.threadIdentifier`.
+- **Actions** are dispatched by `NotificationActionHandler` (UNUserNotificationCenterDelegate, non-MainActor):
+  - Snooze 5 min → schedules a fresh `UNTimeIntervalNotificationTrigger` at +N seconds.
+  - Mark done → removes the original pending notification.
+- **Skip-today** is honored upstream of factory: `NotificationCoordinator.refreshForToday` consults `BlockSkipStore` and excludes any `(blockID, dayKey)` pair found there.
+
+## 17. Widget architecture (iOS — `PersonalHygieneWidgets`)
+
+- `NextBlockHomeWidget` exposes small + medium families.
+- `NextBlockResolver` is the shared brain (also used by `WhatsNextIntent`); it returns `.empty` / `.now(block)` / `.next(block)` from the active `RoutineTemplate`.
+- The widget's `TimelineProvider` constructs its own `ModelContainer` + `ModelContext` directly because the `@MainActor`-isolated `RoutineRepository` cannot be called from synchronous WidgetKit callbacks under Swift 6 strict mode.
+
+---
+
 **Version history:**
 
+- **v0.2 (2026-04-26)** — added §13-§17 reflecting session 5: widget extension target, value-type registry, service decorator convention, current notification architecture.
 - **v0.1 (2026-04-25)** — esqueleto inicial. Detalle a rellenar en Fase 0 (creación del proyecto Xcode + schema SwiftData concreto).

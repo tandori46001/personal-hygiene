@@ -24,6 +24,7 @@ struct AppEnvironment {
     let travelTimeService: any TravelTimeService
     let homeStore: HomeLocationStore
     let blockSkipStore: any BlockSkipStore
+    let blockSnoozeStore: any BlockSnoozeStore
     let birthdayLeadStore: any BirthdayLeadStore
     let focusScheduleStore: any FocusScheduleStore
 
@@ -46,6 +47,7 @@ struct AppEnvironment {
         self.travelTimeService = MKDirectionsTravelTimeService()
         self.homeStore = HomeLocationStore()
         self.blockSkipStore = UserDefaultsBlockSkipStore()
+        self.blockSnoozeStore = UserDefaultsBlockSnoozeStore()
         self.birthdayLeadStore = UserDefaultsBirthdayLeadStore()
         self.focusScheduleStore = UserDefaultsFocusScheduleStore()
     }

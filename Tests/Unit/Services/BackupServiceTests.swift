@@ -91,4 +91,72 @@ final class BackupServiceTests: XCTestCase {
         XCTAssertEqual(templates.count, 1)
         XCTAssertEqual(templates.first?.name, "Weekday")
     }
+
+    // MARK: - v1.1 packing items (session 5 → tests added session 6)
+
+    func test_packingItems_roundtripThroughBackup() throws {
+        let context = container.mainContext
+        let trip = Trip(
+            name: "Roma",
+            startDate: Date(timeIntervalSince1970: 2_000_000_000),
+            endDate: Date(timeIntervalSince1970: 2_001_000_000),
+            destinationName: "Roma",
+            packingItems: [
+                PackingItem(title: "Pasaporte", isPacked: false),
+                PackingItem(title: "Crema solar", isPacked: true),
+            ],
+            milestones: []
+        )
+        context.insert(trip)
+        try context.save()
+
+        let snapshot = try BackupService.export(from: container.mainContext)
+        XCTAssertEqual(snapshot.trips.first?.packingItems?.count, 2)
+
+        // Round-trip through restore on a clean context.
+        try BackupService.restore(snapshot, into: container.mainContext)
+        let restoredTrips = try container.mainContext.fetch(FetchDescriptor<Trip>())
+        XCTAssertEqual(restoredTrips.count, 1)
+        let titles = restoredTrips.first?.packingItems.map(\.title).sorted()
+        XCTAssertEqual(titles, ["Crema solar", "Pasaporte"])
+        let packed = restoredTrips.first?.packingItems.first(where: { $0.title == "Crema solar" })?.isPacked
+        XCTAssertEqual(packed, true)
+    }
+
+    func test_decode_v1Backup_withoutPackingItems_succeeds() throws {
+        // Hand-crafted minimal v1 JSON (pre-packing-items). The decoder must
+        // accept it because `packingItems` is optional.
+        let jsonString = """
+        {
+          "version": 1,
+          "exportedAt": 1700000000.0,
+          "templates": [],
+          "completions": [],
+          "hydration": [],
+          "housekeeping": [],
+          "trips": [
+            {
+              "id": "00000000-0000-0000-0000-000000000001",
+              "name": "Old trip",
+              "startDate": 2000000000.0,
+              "endDate": 2001000000.0,
+              "destinationName": "Lisbon",
+              "destinationLatitude": null,
+              "destinationLongitude": null,
+              "milestones": []
+            }
+          ]
+        }
+        """
+        let json = Data(jsonString.utf8)
+
+        let decoded = try BackupService.decode(json)
+        XCTAssertEqual(decoded.trips.count, 1)
+        XCTAssertNil(decoded.trips.first?.packingItems)
+
+        try BackupService.restore(decoded, into: container.mainContext)
+        let restored = try container.mainContext.fetch(FetchDescriptor<Trip>())
+        XCTAssertEqual(restored.count, 1)
+        XCTAssertTrue(restored.first?.packingItems.isEmpty ?? false)
+    }
 }

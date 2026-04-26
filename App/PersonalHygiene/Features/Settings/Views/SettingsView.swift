@@ -13,6 +13,8 @@ struct SettingsView: View {
     @AppStorage(HomeLocationStore.latitudeKey) private var homeLatitude = 0.0
     @AppStorage(HomeLocationStore.longitudeKey) private var homeLongitude = 0.0
 
+    @AppStorage(SnoozeDurationStore.key) private var snoozeMinutes = SnoozeDurationStore.defaultMinutes
+
     @State private var homeLatitudeText = ""
     @State private var homeLongitudeText = ""
 
@@ -40,6 +42,7 @@ struct SettingsView: View {
                         Text(localizedStatus(viewModel.status))
                             .foregroundStyle(.secondary)
                     }
+                    .accessibilityElement(children: .combine)
                     if viewModel.status == .notDetermined {
                         Button {
                             Task { await viewModel.requestPermission() }
@@ -71,6 +74,15 @@ struct SettingsView: View {
                         )
                         .font(.caption)
                         .foregroundStyle(.secondary)
+                    }
+
+                    Picker(selection: $snoozeMinutes) {
+                        ForEach(SnoozeDurationStore.allowedMinutes, id: \.self) { minutes in
+                            Text(LocalizedStringResource("settings.snooze.duration.\(minutes)"))
+                                .tag(minutes)
+                        }
+                    } label: {
+                        Text("settings.snooze.duration.label", bundle: .main)
                     }
                 } header: {
                     Text("settings.section.scheduling", bundle: .main)

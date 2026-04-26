@@ -137,7 +137,7 @@ private struct BlockSummaryRow: View {
             }
             Spacer()
             VStack(alignment: .trailing, spacing: 2) {
-                Text(formattedTime(minutes: block.startMinutesFromMidnight))
+                Text(startDate, format: .dateTime.hour().minute())
                     .font(.system(.body, design: .monospaced))
                 Text(verbatim: "\(block.durationMinutes) min")
                     .font(.caption)
@@ -147,10 +147,13 @@ private struct BlockSummaryRow: View {
         .accessibilityElement(children: .combine)
     }
 
-    private func formattedTime(minutes: Int) -> String {
-        let hour = minutes / 60
-        let minute = minutes % 60
-        return String(format: "%02d:%02d", hour, minute)
+    private var startDate: Date {
+        let calendar = Calendar.current
+        let components = DateComponents(
+            hour: block.startMinutesFromMidnight / 60,
+            minute: block.startMinutesFromMidnight % 60
+        )
+        return calendar.date(from: components) ?? Date()
     }
 }
 

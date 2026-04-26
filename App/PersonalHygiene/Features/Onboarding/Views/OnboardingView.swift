@@ -15,6 +15,25 @@ struct OnboardingView: View {
                     .font(.body)
                     .foregroundStyle(.secondary)
 
+                VStack(alignment: .leading, spacing: 12) {
+                    onboardingTip(
+                        icon: "rectangle.3.offgrid.fill",
+                        titleKey: "onboarding.tip.widget.title",
+                        bodyKey: "onboarding.tip.widget.body"
+                    )
+                    onboardingTip(
+                        icon: "mic",
+                        titleKey: "onboarding.tip.siri.title",
+                        bodyKey: "onboarding.tip.siri.body"
+                    )
+                    onboardingTip(
+                        icon: "bell.badge",
+                        titleKey: "onboarding.tip.notifications.title",
+                        bodyKey: "onboarding.tip.notifications.body"
+                    )
+                }
+                .padding(.top, 8)
+
                 Spacer()
 
                 Button {
@@ -37,6 +56,25 @@ struct OnboardingView: View {
                 message: { Text(errorMessage ?? "") }
             )
         }
+    }
+
+    @ViewBuilder
+    private func onboardingTip(icon: String, titleKey: LocalizedStringKey, bodyKey: LocalizedStringKey) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: icon)
+                .font(.title3)
+                .foregroundStyle(.tint)
+                .accessibilityHidden(true)
+                .frame(width: 28)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(titleKey, bundle: .main)
+                    .font(.subheadline.bold())
+                Text(bodyKey, bundle: .main)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .accessibilityElement(children: .combine)
     }
 
     private func seedAndContinue() {

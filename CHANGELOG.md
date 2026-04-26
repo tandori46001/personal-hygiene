@@ -8,6 +8,29 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added — Session 6 ("haz todo" round 4, 20 slices: docs hygiene + a11y + tests + UX polish)
+
+- **Slice 1 — ROADMAP refresh:** Phase 1 → ✅ ~98%, Phase 2 → ✅ ~95%, Phase 3 → ✅, with session-5 polish notes added under Phase 1 and Phase 5.
+- **Slice 2 — QA_MANUAL T-023…T-042:** 20 new sections cover every session-5 slice with cases + manual verification.
+- **Slice 3 — ARCHITECTURE §13-§17:** documents the `PersonalHygieneWidgets` target, value-type registry, `Cached*Service` decorator convention, current notification architecture, and widget extension trade-offs.
+- **Slice 4 — Templates editor a11y:** `BlockSummaryRow` now speaks natural-language time via `Text(date, format: .dateTime.hour().minute())`; BlockEditor's hour/minute pickers gain explicit accessibility labels via `a11y.startTime.{hour,minute}`.
+- **Slice 5 — Settings a11y:** notifications-status row combined into one VoiceOver element.
+- **Slice 6 — Hydration a11y:** progress bar gets a spoken percentage label; "today total" + "today goal" rows combine into single VoiceOver elements.
+- **Slice 7 — Trips a11y + thumbnail:** `TripRow` gains a 44×44 cover-photo thumbnail (or airplane glyph fallback) and explicit `accessibilityHidden(true)` on decorative chevrons. Milestone row groups its title + days-before subtitle.
+- **Slice 8 — Dynamic Type smoke tests:** added `test_templateList_render_atAccessibilityXXXL`, `test_tripsList_render_atAccessibilityXXXL`, `test_emptyTrips_render_smoke`, `test_pastTripsArchive_render_smoke`.
+- **Slice 9 — NextBlockResolver edge cases:** 5 new tests cover empty template, exact-start = current, exact-end = next, no-wrap-after-midnight, before-first-block, and overlapping blocks.
+- **Slice 10 — WhatsNextDialogBuilder:** intent's dialog logic extracted into a pure helper + 4 unit tests (no template / empty / current / upcoming).
+- **Slice 11 — NotificationActionHandler refactor + tests:** snooze interval is now injectable via `snoozeIntervalProvider`; mark-done now removes the original pending notification; 8 new tests cover snooze-request building + `SnoozeDurationStore` (UserDefaults-backed, allows 5/10/15 min).
+- **Slice 12 — BackupService v1.1 tests:** new round-trip test for `packingItems`; retro-compat decoder test confirms a v1 backup without `packingItems` decodes successfully.
+- **Slice 13 — Snoozed-once indicator:** new `BlockSnoozeStore` + `BlockNotificationIdentifier.parse` (parses routine block notification IDs into `(blockID, dayKey)`). `NotificationActionHandler` records snooze taps via an injected `snoozeRecorder`. `TodayViewModel.isSnoozedToday(_:)` exposes it; Today row shows an alarm badge.
+- **Slice 14 — Custom snooze duration:** Settings → Scheduling section gains a Picker (5/10/15 min) backed by `SnoozeDurationStore`; the action handler reads the stored value at fire time.
+- **Slice 15 — Trip thumbnails:** see slice 7.
+- **Slice 16 — Hydration best streak:** new `HydrationCompliance.bestStreakDays(...)` + view-model `bestStreakDays()`. UI shows a trophy badge when best > current streak. 3 new tests.
+- **Slice 17 — Birthdays auto-refresh:** `BirthdaysView` re-runs `reloadStatus()` + `reload()` on `scenePhase == .active` so re-granted Contacts permission is picked up without a relaunch.
+- **Slice 18 — Deep Focus widget (small):** new `DeepFocusHomeWidget` exposes three states (active / upcoming / idle), uses the same `UserDefaultsFocusScheduleStore` + `DeepFocusFilter.activeWindow` as the app.
+- **Slice 19 — Housekeeping room picker:** new-task sheet auto-suggests existing rooms via Picker derived from `availableRooms`, with an "Add new room…" escape hatch that switches to free-text input.
+- **Slice 20 — Onboarding tips:** welcome screen now lists three tips (add the widget, try the Siri shortcut, allow notifications) so the user discovers the new platform extensions.
+
 ### Added — Session 5 ("haz todo" round 3, 20 slices)
 
 - **Slice 1 — Itinerary persistence:** `ItineraryStore` (file-on-disk JSON keyed by `Trip.id`) so the last AI-generated itinerary survives app restarts. `TripItinerary` is now `Codable`.

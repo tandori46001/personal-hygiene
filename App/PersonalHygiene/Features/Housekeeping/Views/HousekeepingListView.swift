@@ -8,6 +8,7 @@ struct HousekeepingListView: View {
     @State private var newRecurrence: HousekeepingRecurrence = .weekly
     @State private var newEscalationDays = 2
     @State private var newRoom = ""
+    @State private var addingCustomRoom = false
 
     var body: some View {
         NavigationStack {
@@ -99,6 +100,37 @@ struct HousekeepingListView: View {
     }
 
     @ViewBuilder
+    private var roomFieldSection: some View {
+        if viewModel.availableRooms.isEmpty || addingCustomRoom {
+            TextField(
+                text: $newRoom,
+                prompt: Text("housekeeping.field.room.placeholder", bundle: .main)
+            ) {
+                Text("housekeeping.field.room", bundle: .main)
+            }
+        } else {
+            Picker(selection: $newRoom) {
+                Text("housekeeping.field.room.none", bundle: .main).tag("")
+                ForEach(viewModel.availableRooms, id: \.self) { room in
+                    Text(verbatim: room).tag(room)
+                }
+            } label: {
+                Text("housekeeping.field.room", bundle: .main)
+            }
+            Button {
+                addingCustomRoom = true
+                newRoom = ""
+            } label: {
+                Label {
+                    Text("housekeeping.field.room.addNew", bundle: .main)
+                } icon: {
+                    Image(systemName: "plus.circle")
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
     private var newTaskSheet: some View {
         NavigationStack {
             Form {
@@ -124,12 +156,7 @@ struct HousekeepingListView: View {
                             .foregroundStyle(.secondary)
                     }
                 }
-                TextField(
-                    text: $newRoom,
-                    prompt: Text("housekeeping.field.room.placeholder", bundle: .main)
-                ) {
-                    Text("housekeeping.field.room", bundle: .main)
-                }
+                roomFieldSection
             }
             .navigationTitle(Text("housekeeping.new.title", bundle: .main))
             .navigationBarTitleDisplayMode(.inline)
@@ -155,6 +182,7 @@ struct HousekeepingListView: View {
                         newRecurrence = .weekly
                         newEscalationDays = 2
                         newRoom = ""
+                        addingCustomRoom = false
                         showingNewSheet = false
                     } label: {
                         Text("common.create", bundle: .main)

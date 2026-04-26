@@ -4,6 +4,7 @@ struct BirthdaysView: View {
     @Bindable var viewModel: BirthdaysViewModel
 
     @State private var leadEditing: BirthdayContact?
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         NavigationStack {
@@ -21,6 +22,13 @@ struct BirthdaysView: View {
             .task {
                 viewModel.reloadStatus()
                 await viewModel.reload()
+            }
+            .onChange(of: scenePhase) { _, newPhase in
+                guard newPhase == .active else { return }
+                Task {
+                    viewModel.reloadStatus()
+                    await viewModel.reload()
+                }
             }
             .sheet(item: $leadEditing) { contact in
                 BirthdayLeadEditorSheet(contact: contact, viewModel: viewModel)

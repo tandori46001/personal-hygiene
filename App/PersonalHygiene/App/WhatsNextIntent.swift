@@ -23,33 +23,36 @@ struct WhatsNextIntent: AppIntent {
         let now = Date()
         let calendar = Calendar.autoupdatingCurrent
         let dayType = TodayViewModel.dayType(for: now, in: calendar)
+        let template = try repo.activeTemplate(for: dayType)
 
-        guard let template = try repo.activeTemplate(for: dayType) else {
-            return .result(
-                dialog: IntentDialog(
-                    LocalizedStringResource("intent.whatsNext.noTemplate")
-                )
-            )
+        let dialog = WhatsNextDialogBuilder.build(template: template, at: now, calendar: calendar)
+        return .result(dialog: IntentDialog(stringLiteral: dialog))
+    }
+}
+
+/// Pure helper extracted for unit testing — the intent itself can't run inside
+/// XCTest because it needs the production container, so we test this builder
+/// instead with stub templates.
+enum WhatsNextDialogBuilder {
+
+    static func build(template: RoutineTemplate?, at now: Date, calendar: Calendar) -> String {
+        guard let template else {
+            return String(localized: "intent.whatsNext.noTemplate")
         }
-
         guard let resolved = NextBlockResolver.resolve(in: template, at: now, calendar: calendar) else {
-            return .result(
-                dialog: IntentDialog(
-                    LocalizedStringResource("intent.whatsNext.noMore")
-                )
-            )
+            return String(localized: "intent.whatsNext.noMore")
         }
-
         let timeString = String(
             format: "%02d:%02d",
             resolved.startMinutesFromMidnight / 60,
             resolved.startMinutesFromMidnight % 60
         )
         let format = String(
-            localized: resolved.isCurrent ? "intent.whatsNext.current.format" : "intent.whatsNext.upcoming.format"
+            localized: resolved.isCurrent
+                ? "intent.whatsNext.current.format"
+                : "intent.whatsNext.upcoming.format"
         )
-        let dialog = String(format: format, resolved.block.title, timeString)
-        return .result(dialog: IntentDialog(stringLiteral: dialog))
+        return String(format: format, resolved.block.title, timeString)
     }
 }
 

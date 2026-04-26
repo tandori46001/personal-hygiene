@@ -114,4 +114,52 @@ final class HydrationComplianceTests: XCTestCase {
             0
         )
     }
+
+    // MARK: - Best streak (session 6)
+
+    func test_bestStreakDays_returnsLongestRunEvenAfterGap() {
+        let goal = HydrationGoal(dailyMilliliters: 2000)
+        let now = date(year: 2026, month: 4, day: 25)
+        let logs = [
+            // Past 4-day run met (April 18-21)
+            HydrationLog(milliliters: 2100, drankAt: date(year: 2026, month: 4, day: 18)),
+            HydrationLog(milliliters: 2100, drankAt: date(year: 2026, month: 4, day: 19)),
+            HydrationLog(milliliters: 2100, drankAt: date(year: 2026, month: 4, day: 20)),
+            HydrationLog(milliliters: 2100, drankAt: date(year: 2026, month: 4, day: 21)),
+            // Gap on Apr 22 (no log)
+            // Today met
+            HydrationLog(milliliters: 2200, drankAt: now),
+        ]
+        XCTAssertEqual(
+            HydrationCompliance.bestStreakDays(on: now, logs: logs, goal: goal, calendar: gregorianUTC()),
+            4
+        )
+        XCTAssertEqual(
+            HydrationCompliance.currentStreakDays(on: now, logs: logs, goal: goal, calendar: gregorianUTC()),
+            1
+        )
+    }
+
+    func test_bestStreakDays_zeroWithEmptyLogs() {
+        let goal = HydrationGoal(dailyMilliliters: 2000)
+        let now = date(year: 2026, month: 4, day: 25)
+        XCTAssertEqual(
+            HydrationCompliance.bestStreakDays(on: now, logs: [], goal: goal, calendar: gregorianUTC()),
+            0
+        )
+    }
+
+    func test_bestStreakDays_ignoresFutureDays() {
+        let goal = HydrationGoal(dailyMilliliters: 2000)
+        let now = date(year: 2026, month: 4, day: 25)
+        let logs = [
+            HydrationLog(milliliters: 2100, drankAt: date(year: 2026, month: 4, day: 25)),
+            // Future log (shouldn't be counted in best streak)
+            HydrationLog(milliliters: 2100, drankAt: date(year: 2026, month: 4, day: 26)),
+        ]
+        XCTAssertEqual(
+            HydrationCompliance.bestStreakDays(on: now, logs: logs, goal: goal, calendar: gregorianUTC()),
+            1
+        )
+    }
 }
