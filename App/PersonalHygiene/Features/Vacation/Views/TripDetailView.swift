@@ -4,6 +4,13 @@ struct TripDetailView: View {
     @Bindable var viewModel: TripDetailViewModel
 
     @State private var milestoneSheet: MilestoneSheetState?
+    @State private var showingScanner = false
+    @State private var pendingDocumentBytes: PendingDocument?
+
+    private struct PendingDocument: Identifiable {
+        let id = UUID()
+        let bytes: Data
+    }
 
     private enum MilestoneSheetState: Identifiable {
         case create
@@ -101,6 +108,17 @@ struct TripDetailView: View {
                     }
                     .onDelete(perform: deleteDocuments)
                 }
+                if viewModel.documentStore != nil {
+                    Button {
+                        showingScanner = true
+                    } label: {
+                        Label {
+                            Text("trip.document.action.scan", bundle: .main)
+                        } icon: {
+                            Image(systemName: "doc.viewfinder")
+                        }
+                    }
+                }
             } header: {
                 Text("trip.detail.section.documents", bundle: .main)
             }
@@ -118,6 +136,28 @@ struct TripDetailView: View {
                 MilestoneEditorView(mode: .edit(milestone)) { title, days, isDone in
                     viewModel.updateMilestone(milestone, title: title, daysBefore: days, isComplete: isDone)
                 }
+            }
+        }
+        #if canImport(VisionKit)
+        .fullScreenCover(isPresented: $showingScanner) {
+            DocumentScannerView { result in
+                showingScanner = false
+                switch result {
+                case .success(let data):
+                    pendingDocumentBytes = PendingDocument(bytes: data)
+                case .failure(let error):
+                    viewModel.errorMessage = error.localizedDescription
+                case .cancelled:
+                    break
+                }
+            }
+            .ignoresSafeArea()
+        }
+        #endif
+        .sheet(item: $pendingDocumentBytes) { pending in
+            DocumentMetadataSheet(bytes: pending.bytes) { name, kind in
+                viewModel.addDocument(name: name, kind: kind, bytes: pending.bytes)
+                pendingDocumentBytes = nil
             }
         }
     }

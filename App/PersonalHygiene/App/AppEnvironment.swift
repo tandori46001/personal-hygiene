@@ -11,6 +11,7 @@ struct AppEnvironment {
     let hydrationService: any HydrationService
     let housekeepingService: any HousekeepingService
     let tripsRepository: any TripsRepository
+    let tripDocumentStore: TripDocumentStore
     let notificationService: any NotificationService
     let medicationService: any MedicationService
     let sleepService: any SleepService
@@ -19,10 +20,12 @@ struct AppEnvironment {
     let homeStore: HomeLocationStore
 
     init(modelContext: ModelContext) {
+        let trips = SwiftDataTripsRepository(context: modelContext)
         self.routineRepository = SwiftDataRoutineRepository(context: modelContext)
         self.hydrationService = SwiftDataHydrationService(context: modelContext)
         self.housekeepingService = SwiftDataHousekeepingService(context: modelContext)
-        self.tripsRepository = SwiftDataTripsRepository(context: modelContext)
+        self.tripsRepository = trips
+        self.tripDocumentStore = TripDocumentStore(repository: trips, keychain: SecKeychainStore())
         self.notificationService = UserNotificationsService()
         self.medicationService = HealthKitMedicationService()
         self.sleepService = HealthKitSleepService()

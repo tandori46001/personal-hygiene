@@ -856,6 +856,27 @@
     "trip.milestone.field.isComplete" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Done" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Hecho" } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Fait" } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Fait" } } } },
+
+    "trip.document.action.scan" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Scan document" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Escanear documento" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Scanner un document" } } } },
+    "trip.document.metadata.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Save document" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Guardar documento" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Enregistrer le document" } } } },
+    "trip.document.field.name" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Name" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Nombre" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Nom" } } } },
+    "trip.document.field.name.placeholder" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Passport, boarding pass…" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Pasaporte, tarjeta de embarque…" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Passeport, carte d'embarquement…" } } } },
+    "trip.document.field.kind" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Type" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Tipo" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Type" } } } }
   }
 }

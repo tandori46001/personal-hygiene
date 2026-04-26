@@ -47,6 +47,7 @@ targets:
         NSHealthShareUsageDescription: "personal-hygiene reads medication doses and sleep data from Health to schedule reminders and validate your routine."
         NSHealthUpdateUsageDescription: "personal-hygiene logs medication doses to Health when you confirm taking them."
         NSCalendarsUsageDescription: "personal-hygiene reads your medical and social appointments from Calendar to integrate them into your routine."
+        NSCameraUsageDescription: "personal-hygiene needs the camera to scan trip documents (passport, tickets, reservations). Scans are stored encrypted on this device only."
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.tandori46001.personalhygiene

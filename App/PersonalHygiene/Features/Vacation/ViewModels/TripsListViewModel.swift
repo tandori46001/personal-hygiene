@@ -6,12 +6,14 @@ import Observation
 final class TripsListViewModel {
 
     let repository: any TripsRepository
+    let documentStore: TripDocumentStore?
 
     var trips: [Trip] = []
     var errorMessage: String?
 
-    init(repository: any TripsRepository) {
+    init(repository: any TripsRepository, documentStore: TripDocumentStore? = nil) {
         self.repository = repository
+        self.documentStore = documentStore
     }
 
     func reload() {

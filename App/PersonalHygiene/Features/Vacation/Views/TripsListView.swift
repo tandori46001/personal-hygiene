@@ -32,7 +32,11 @@ struct TripsListView: View {
                     ForEach(viewModel.trips) { trip in
                         NavigationLink {
                             TripDetailView(
-                                viewModel: TripDetailViewModel(trip: trip, repository: viewModel.repository)
+                                viewModel: TripDetailViewModel(
+                                    trip: trip,
+                                    repository: viewModel.repository,
+                                    documentStore: viewModel.documentStore
+                                )
                             )
                         } label: {
                             TripRow(trip: trip)

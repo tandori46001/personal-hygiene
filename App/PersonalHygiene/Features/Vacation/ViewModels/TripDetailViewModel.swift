@@ -6,13 +6,15 @@ import Observation
 final class TripDetailViewModel {
 
     private let repository: any TripsRepository
+    let documentStore: TripDocumentStore?
 
     var trip: Trip
     var errorMessage: String?
 
-    init(trip: Trip, repository: any TripsRepository) {
+    init(trip: Trip, repository: any TripsRepository, documentStore: TripDocumentStore? = nil) {
         self.trip = trip
         self.repository = repository
+        self.documentStore = documentStore
     }
 
     var sortedMilestones: [TripMilestone] {
@@ -64,9 +66,25 @@ final class TripDetailViewModel {
         }
     }
 
+    func addDocument(name: String, kind: TripDocumentKind, bytes: Data) {
+        guard let store = documentStore else {
+            errorMessage = "Document storage unavailable."
+            return
+        }
+        do {
+            _ = try store.add(name: name, kind: kind, bytes: bytes, to: trip)
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
     func deleteDocument(_ document: TripDocument) {
         do {
-            try repository.deleteDocument(document)
+            if let store = documentStore {
+                try store.remove(document)
+            } else {
+                try repository.deleteDocument(document)
+            }
         } catch {
             errorMessage = error.localizedDescription
         }

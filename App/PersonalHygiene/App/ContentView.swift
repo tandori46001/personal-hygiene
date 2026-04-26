@@ -106,7 +106,10 @@ private struct MainTabs: View {
             }
 
             TripsListView(
-                viewModel: TripsListViewModel(repository: env.tripsRepository)
+                viewModel: TripsListViewModel(
+                    repository: env.tripsRepository,
+                    documentStore: env.tripDocumentStore
+                )
             )
             .tabItem {
                 Label {

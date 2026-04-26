@@ -22,6 +22,8 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>NSCalendarsUsageDescription</key>
 	<string>personal-hygiene reads your medical and social appointments from Calendar to integrate them into your routine.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>personal-hygiene needs the camera to scan trip documents (passport, tickets, reservations). Scans are stored encrypted on this device only.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>personal-hygiene reads birthdays and anniversaries from your contacts to add reminders to your routine. Read-only access.</string>
 	<key>NSHealthShareUsageDescription</key>
