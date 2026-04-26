@@ -85,3 +85,34 @@ public final class SwiftDataHousekeepingService: HousekeepingService {
         try context.save()
     }
 }
+
+/// In-memory test/preview implementation.
+@MainActor
+public final class InMemoryHousekeepingService: HousekeepingService {
+
+    public var tasks: [HousekeepingTask]
+
+    public init(tasks: [HousekeepingTask] = []) {
+        self.tasks = tasks
+    }
+
+    public func allTasks() throws -> [HousekeepingTask] {
+        tasks.sorted { $0.title < $1.title }
+    }
+
+    public func upsert(_ task: HousekeepingTask) throws {
+        if !tasks.contains(where: { $0.id == task.id }) {
+            tasks.append(task)
+        }
+    }
+
+    public func delete(_ task: HousekeepingTask) throws {
+        tasks.removeAll { $0.id == task.id }
+    }
+
+    public func markDone(_ task: HousekeepingTask, at completedAt: Date) throws {
+        if let idx = tasks.firstIndex(where: { $0.id == task.id }) {
+            tasks[idx].lastCompletedAt = completedAt
+        }
+    }
+}
