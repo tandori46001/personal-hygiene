@@ -12,7 +12,7 @@ struct TripDetailView: View {
         var id: String {
             switch self {
             case .create: "create"
-            case .edit(let m): m.id.uuidString
+            case .edit(let milestone): milestone.id.uuidString
             }
         }
     }
