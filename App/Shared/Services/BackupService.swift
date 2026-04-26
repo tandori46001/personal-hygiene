@@ -117,13 +117,15 @@ public enum BackupService {
     public static func encode(_ snapshot: BackupSnapshot) throws -> Data {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
-        encoder.dateEncodingStrategy = .iso8601
+        // `.iso8601` truncates fractional seconds, which breaks Equatable
+        // round-trips. `.secondsSince1970` is lossless to nanosecond level.
+        encoder.dateEncodingStrategy = .secondsSince1970
         return try encoder.encode(snapshot)
     }
 
     public static func decode(_ data: Data) throws -> BackupSnapshot {
         let decoder = JSONDecoder()
-        decoder.dateDecodingStrategy = .iso8601
+        decoder.dateDecodingStrategy = .secondsSince1970
         return try decoder.decode(BackupSnapshot.self, from: data)
     }
 
@@ -216,14 +218,20 @@ public enum BackupService {
     }
 
     private static func wipe(_ context: ModelContext) throws {
-        try context.delete(model: RoutineTemplate.self)
-        try context.delete(model: Block.self)
-        try context.delete(model: BlockCompletion.self)
-        try context.delete(model: HydrationLog.self)
-        try context.delete(model: HousekeepingTask.self)
-        try context.delete(model: TripMilestone.self)
-        try context.delete(model: TripDocument.self)
-        try context.delete(model: Trip.self)
+        // Use per-instance `context.delete(_:)` so SwiftData honours the
+        // cascading inverse relationships. The bulk `delete(model:)` form
+        // bypasses cascade triggers and trips
+        // "mandatory OTO nullify inverse" errors for `TripMilestone.trip`.
+        let templates = try context.fetch(FetchDescriptor<RoutineTemplate>())
+        templates.forEach(context.delete)
+        let trips = try context.fetch(FetchDescriptor<Trip>())
+        trips.forEach(context.delete)
+        let completions = try context.fetch(FetchDescriptor<BlockCompletion>())
+        completions.forEach(context.delete)
+        let hydration = try context.fetch(FetchDescriptor<HydrationLog>())
+        hydration.forEach(context.delete)
+        let housekeeping = try context.fetch(FetchDescriptor<HousekeepingTask>())
+        housekeeping.forEach(context.delete)
         try context.save()
     }
 
