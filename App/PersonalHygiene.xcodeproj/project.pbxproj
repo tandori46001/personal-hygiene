@@ -19,6 +19,7 @@
 		100CAA05B67A9FDF0CFDA7A9 /* NotificationFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = B086E91EEE6AEDB0F4E3EC2D /* NotificationFactory.swift */; };
 		16B154D4A460B3CDC628A4FF /* BedtimeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4325233FA9F02871FCDA344 /* BedtimeCalculator.swift */; };
 		182A3603E648640F5D2DA7EE /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = E73879E25833E6C0994E9F07 /* Localizable.xcstrings */; };
+		18CFD0344CE92399CAC6EBB0 /* HousekeepingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 304BB89FC3937D84FC4E539B /* HousekeepingListView.swift */; };
 		197BB847B9FF176068AD1459 /* BlockCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4606FE1130F7F17EBC7A28C /* BlockCategory.swift */; };
 		1D596014EE0C8B3B70E75409 /* NotificationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 685542340D132BBBD5D1B0F6 /* NotificationCoordinator.swift */; };
 		1E457D3CA846A04E1231607F /* HydrationNotificationFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CCDFE1032F58597D5ECC644 /* HydrationNotificationFactoryTests.swift */; };
@@ -96,6 +97,7 @@
 		BD15E9FBD65D4287E06E4B13 /* HydrationComplianceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F86510F75C6CA64C5BC6AA1C /* HydrationComplianceTests.swift */; };
 		BF53EF9222A65C343C7AFDD0 /* HydrationNotificationFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB64FF3083A5594BDDFDAA0 /* HydrationNotificationFactory.swift */; };
 		C1910B00DCCDC3B350817BC5 /* RoutineTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD16FF8317F205F6929F8F70 /* RoutineTemplate.swift */; };
+		C33E82E0B4AC99330C21CAF3 /* HousekeepingListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02FBB394A9114A6F84D83F8B /* HousekeepingListViewModel.swift */; };
 		C46DA119756B4A0604FC9BF2 /* PersonalHygieneWatchWidgets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A708BA2C28D4442A3FA8006 /* PersonalHygieneWatchWidgets.swift */; };
 		C5383F43A15F67A0C659AA72 /* RoutineTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD16FF8317F205F6929F8F70 /* RoutineTemplate.swift */; };
 		C89D5C3D112C1122B7366F14 /* NotificationFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D286C3CA04A9375E3768F117 /* NotificationFactoryTests.swift */; };
@@ -164,6 +166,7 @@
 /* Begin PBXFileReference section */
 		018597A028807D4803454994 /* DayType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DayType.swift; sourceTree = "<group>"; };
 		0188FB39F51C1FB6F2DC489D /* TodayView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayView.swift; sourceTree = "<group>"; };
+		02FBB394A9114A6F84D83F8B /* HousekeepingListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousekeepingListViewModel.swift; sourceTree = "<group>"; };
 		03B2F3900B8AA9251273F093 /* PersonalHygieneWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalHygieneWatchApp.swift; sourceTree = "<group>"; };
 		04C442826202995F6E163D01 /* HydrationGoal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HydrationGoal.swift; sourceTree = "<group>"; };
 		09F2C380F4A6452D827B3B69 /* BlockTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockTests.swift; sourceTree = "<group>"; };
@@ -172,6 +175,7 @@
 		2A42595C053FA63B9C86121A /* TravelTimeServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelTimeServiceTests.swift; sourceTree = "<group>"; };
 		2C8CD9EEBE4FA54D9CAB3487 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2F2E746124742819F23D63A4 /* MedicationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationService.swift; sourceTree = "<group>"; };
+		304BB89FC3937D84FC4E539B /* HousekeepingListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousekeepingListView.swift; sourceTree = "<group>"; };
 		30A35FD5EC0C90F1EB04FDDA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		32AE31DC6C703E1F542C8004 /* SleepDashboardViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SleepDashboardViewModel.swift; sourceTree = "<group>"; };
 		337B6DAD7C25B99941041664 /* BlockLocationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockLocationTests.swift; sourceTree = "<group>"; };
@@ -326,6 +330,15 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		344C5A5EF8A624F3E8860DCF /* Housekeeping */ = {
+			isa = PBXGroup;
+			children = (
+				6500322D21AF7FE29DF5C654 /* ViewModels */,
+				443F1711DAEDF29BFF4C8918 /* Views */,
+			);
+			path = Housekeeping;
+			sourceTree = "<group>";
+		};
 		373B4ADFAF73CB446F794716 /* App */ = {
 			isa = PBXGroup;
 			children = (
@@ -339,6 +352,14 @@
 			isa = PBXGroup;
 			children = (
 				57F86C0070A0F11D03F5A574 /* MedicationComplianceView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		443F1711DAEDF29BFF4C8918 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				304BB89FC3937D84FC4E539B /* HousekeepingListView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -402,6 +423,14 @@
 				547C7B5188C8F2E003FFF774 /* Views */,
 			);
 			path = Routine;
+			sourceTree = "<group>";
+		};
+		6500322D21AF7FE29DF5C654 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				02FBB394A9114A6F84D83F8B /* HousekeepingListViewModel.swift */,
+			);
+			path = ViewModels;
 			sourceTree = "<group>";
 		};
 		6B664E7C5798DC1EBE7569C3 /* Sleep */ = {
@@ -609,6 +638,7 @@
 		C8524E7BB2A1AA718104905E /* Features */ = {
 			isa = PBXGroup;
 			children = (
+				344C5A5EF8A624F3E8860DCF /* Housekeeping */,
 				C75BADBC5663DFF8A4CE72A3 /* Hydration */,
 				A2ABBE284C036A5E3643C83D /* Medication */,
 				B546F00FD2D6121E13EEB6FB /* Onboarding */,
@@ -893,6 +923,8 @@
 				55512E018BDB30A6773BFA91 /* DayType.swift in Sources */,
 				FA097D4CF1B4CB5A060C2635 /* ErrorBanner.swift in Sources */,
 				A0BB5D8B286A960EB2BF8E2F /* HomeLocationStore.swift in Sources */,
+				18CFD0344CE92399CAC6EBB0 /* HousekeepingListView.swift in Sources */,
+				C33E82E0B4AC99330C21CAF3 /* HousekeepingListViewModel.swift in Sources */,
 				A1D1B56B4AB83BA3BE2F2BA0 /* HousekeepingService.swift in Sources */,
 				03739048E90917C9C9BC19B6 /* HousekeepingTask.swift in Sources */,
 				45B42CCB8E6E3F3BEE67493A /* HydrationCompliance.swift in Sources */,

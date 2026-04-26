@@ -462,6 +462,86 @@
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Hydration" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Hidratación" } },
       "fr" : { "stringUnit" : { "state" : "translated", "value" : "Hydratation" } } } },
+    "tab.housekeeping" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Housekeeping" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Tareas casa" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ménage" } } } },
+    "housekeeping.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Housekeeping" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Tareas de casa" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ménage" } } } },
+    "housekeeping.empty.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "No tasks yet" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Sin tareas aún" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aucune tâche" } } } },
+    "housekeeping.empty.description" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Add a recurring task to get reminders when it's due." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Añade una tarea recurrente para recibir avisos cuando toque." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ajoutez une tâche récurrente pour être notifié à temps." } } } },
+    "housekeeping.action.add" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Add task" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Añadir tarea" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ajouter une tâche" } } } },
+    "housekeeping.action.complete" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Done" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hecho" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Fait" } } } },
+    "common.delete" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Eliminar" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Supprimer" } } } },
+    "housekeeping.new.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "New task" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Nueva tarea" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Nouvelle tâche" } } } },
+    "housekeeping.field.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Title" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Título" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Titre" } } } },
+    "housekeeping.field.title.placeholder" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Vacuum the living room" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Aspirar el salón" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aspirer le salon" } } } },
+    "housekeeping.field.recurrence" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Recurrence" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Recurrencia" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Récurrence" } } } },
+    "housekeeping.field.escalation" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Escalation after" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Escalado tras" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Escalade après" } } } },
+    "housekeeping.recurrence.daily" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Daily" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Diario" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Quotidien" } } } },
+    "housekeeping.recurrence.weekly" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Weekly" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Semanal" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Hebdomadaire" } } } },
+    "housekeeping.recurrence.biweekly" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Biweekly" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Quincenal" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Bimensuel" } } } },
+    "housekeeping.recurrence.monthly" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Monthly" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Mensual" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Mensuel" } } } },
+    "housekeeping.status.pending" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "New" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Nueva" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Nouvelle" } } } },
+    "housekeeping.status.ok" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Up to date" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Al día" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "À jour" } } } },
+    "housekeeping.status.dueToday" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Due today" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hoy" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aujourd'hui" } } } },
+    "housekeeping.status.overdue" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Overdue" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Atrasada" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "En retard" } } } },
     "hydration.title" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Hydration" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Hidratación" } },

@@ -8,10 +8,15 @@ struct ContentView: View {
     var body: some View {
         let repository = SwiftDataRoutineRepository(context: modelContext)
         let hydrationService = SwiftDataHydrationService(context: modelContext)
+        let housekeepingService = SwiftDataHousekeepingService(context: modelContext)
 
         Group {
             if hasCompletedOnboarding {
-                MainTabs(repository: repository, hydrationService: hydrationService)
+                MainTabs(
+                    repository: repository,
+                    hydrationService: hydrationService,
+                    housekeepingService: housekeepingService
+                )
             } else {
                 OnboardingView(
                     repository: repository,
@@ -25,6 +30,7 @@ struct ContentView: View {
 private struct MainTabs: View {
     let repository: any RoutineRepository
     let hydrationService: any HydrationService
+    let housekeepingService: any HousekeepingService
 
     private let notificationService = UserNotificationsService()
     private let medicationService = HealthKitMedicationService()
@@ -97,6 +103,17 @@ private struct MainTabs: View {
                     Text("tab.hydration", bundle: .main)
                 } icon: {
                     Image(systemName: "drop")
+                }
+            }
+
+            HousekeepingListView(
+                viewModel: HousekeepingListViewModel(service: housekeepingService)
+            )
+            .tabItem {
+                Label {
+                    Text("tab.housekeeping", bundle: .main)
+                } icon: {
+                    Image(systemName: "checklist")
                 }
             }
 
