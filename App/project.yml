@@ -64,6 +64,9 @@ targets:
     sources:
       - path: PersonalHygieneWatch
       - path: Shared
+    dependencies:
+      - target: PersonalHygieneWatchWidgets
+        embed: true
     info:
       path: PersonalHygieneWatch/Info.plist
       properties:
@@ -79,6 +82,28 @@ targets:
         DEVELOPMENT_TEAM: ""
         CODE_SIGN_STYLE: Automatic
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+
+  PersonalHygieneWatchWidgets:
+    type: app-extension
+    platform: watchOS
+    deploymentTarget: "11.0"
+    sources:
+      - path: PersonalHygieneWatchWidgets
+      - path: Shared
+    info:
+      path: PersonalHygieneWatchWidgets/Info.plist
+      properties:
+        CFBundleShortVersionString: "$(MARKETING_VERSION)"
+        CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
+        CFBundleDisplayName: personal-hygiene Widgets
+        NSExtension:
+          NSExtensionPointIdentifier: com.apple.widgetkit-extension
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.tandori46001.personalhygiene.watchkitapp.widgets
+        TARGETED_DEVICE_FAMILY: "4"
+        DEVELOPMENT_TEAM: ""
+        CODE_SIGN_STYLE: Automatic
 
   PersonalHygieneTests:
     type: bundle.unit-test

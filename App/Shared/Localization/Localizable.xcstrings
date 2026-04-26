@@ -441,6 +441,18 @@
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Open the iPhone app to set up a template." } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Abre la app del iPhone para crear una plantilla." } },
       "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ouvrez l'app iPhone pour créer un modèle." } } } },
+    "watch.complication.next.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Next block" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Próximo bloque" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Bloc suivant" } } } },
+    "watch.complication.next.description" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "The next scheduled block from today's routine." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "El próximo bloque programado de la rutina de hoy." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Le prochain bloc planifié de la routine du jour." } } } },
+    "watch.complication.next.empty" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Done" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Listo" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Terminé" } } } },
 
     "tab.medication" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Medication" } },
