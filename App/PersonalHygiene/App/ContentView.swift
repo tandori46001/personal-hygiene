@@ -7,10 +7,11 @@ struct ContentView: View {
 
     var body: some View {
         let repository = SwiftDataRoutineRepository(context: modelContext)
+        let hydrationService = SwiftDataHydrationService(context: modelContext)
 
         Group {
             if hasCompletedOnboarding {
-                MainTabs(repository: repository)
+                MainTabs(repository: repository, hydrationService: hydrationService)
             } else {
                 OnboardingView(
                     repository: repository,
@@ -23,6 +24,7 @@ struct ContentView: View {
 
 private struct MainTabs: View {
     let repository: any RoutineRepository
+    let hydrationService: any HydrationService
 
     private let notificationService = UserNotificationsService()
     private let medicationService = HealthKitMedicationService()
@@ -84,6 +86,17 @@ private struct MainTabs: View {
                     Text("tab.sleep", bundle: .main)
                 } icon: {
                     Image(systemName: "moon")
+                }
+            }
+
+            HydrationDashboardView(
+                viewModel: HydrationDashboardViewModel(service: hydrationService)
+            )
+            .tabItem {
+                Label {
+                    Text("tab.hydration", bundle: .main)
+                } icon: {
+                    Image(systemName: "drop")
                 }
             }
 

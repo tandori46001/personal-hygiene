@@ -458,6 +458,50 @@
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Medication" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Medicación" } },
       "fr" : { "stringUnit" : { "state" : "translated", "value" : "Médicament" } } } },
+    "tab.hydration" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Hydration" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hidratación" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Hydratation" } } } },
+    "hydration.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Hydration" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hidratación" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Hydratation" } } } },
+    "hydration.section.today" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Today" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hoy" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aujourd'hui" } } } },
+    "hydration.today.total" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Total" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Total" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Total" } } } },
+    "hydration.today.goal" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Goal" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Objetivo" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Objectif" } } } },
+    "hydration.section.quickLog" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Quick log" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Registrar rápido" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Journal rapide" } } } },
+    "hydration.action.add" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Add %lld ml" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Añadir %lld ml" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ajouter %lld ml" } } } },
+    "hydration.section.goal" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Daily goal" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Objetivo diario" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Objectif quotidien" } } } },
+    "hydration.goal.field" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Daily goal" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Objetivo diario" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Objectif quotidien" } } } },
+    "hydration.section.history" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Today's logs" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Registros de hoy" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Journal du jour" } } } },
+    "hydration.history.empty" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "No logs yet today" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Aún sin registros hoy" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aucun enregistrement aujourd'hui" } } } },
     "medication.title" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Medication" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Medicación" } },
