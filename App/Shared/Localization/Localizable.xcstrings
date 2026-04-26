@@ -877,6 +877,18 @@
     "trip.document.field.kind" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Type" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Tipo" } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Type" } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Type" } } } },
+    "trip.document.preview.error.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Couldn't open document" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "No se pudo abrir el documento" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Impossible d'ouvrir le document" } } } },
+    "trip.document.preview.unsupported.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Unsupported format" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Formato no compatible" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Format non pris en charge" } } } },
+    "trip.document.preview.unsupported.description" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Only PDF and image documents can be previewed in-app." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Solo se pueden previsualizar PDF e imágenes." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Seuls les documents PDF et image peuvent être prévisualisés." } } } }
   }
 }

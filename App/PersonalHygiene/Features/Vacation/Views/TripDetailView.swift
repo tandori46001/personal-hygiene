@@ -104,7 +104,15 @@ struct TripDetailView: View {
                         .foregroundStyle(.secondary)
                 } else {
                     ForEach(viewModel.sortedDocuments) { document in
-                        DocumentRow(document: document)
+                        if let store = viewModel.documentStore {
+                            NavigationLink {
+                                DocumentPreviewView(document: document, store: store)
+                            } label: {
+                                DocumentRow(document: document)
+                            }
+                        } else {
+                            DocumentRow(document: document)
+                        }
                     }
                     .onDelete(perform: deleteDocuments)
                 }
