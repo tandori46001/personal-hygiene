@@ -77,3 +77,23 @@ Mirror as a one-line entry in:
 **Where it was caught.** 2026-04-26, session 7 round 5 slice 13 — extending `BlockSnoozeStore` to record hydration + milestone snoozes revealed that the existing `BlockNotificationIdentifier.parse` only matched the routine prefix.
 
 **Interaction with other lessons.** None.
+
+---
+
+## L003 — Files in `App/Shared/` that use platform-specific APIs must be `#if`-guarded for the *non-supporting* platform
+
+**Trigger pattern.** A file lives in `App/Shared/` (compiled into iOS + watchOS + widget targets) but imports a framework or uses an API that exists on iOS but not watchOS (or vice versa). Common offenders: `UIGraphicsPDFRenderer`, `UIActivityViewController`, `MKDirections`, anything from `VisionKit`, `PhotosUI`, `CoreLocation` SignificantChange, full `UIKit` symbols not present on watch.
+
+**Symptom.** iOS builds and tests are green for ages because the shared file compiles fine into the iOS target. The first time someone builds a watchOS target (or watch widget extension), the compiler errors with `'UIGraphicsPDFRendererContext' is unavailable in watchOS` (or similar). Often shows up months after the file was written, when adding watch features touches the same scheme.
+
+**Root cause.** `Shared/` is compiled into every target. Apple's frameworks vary by platform; Swift surfaces this as `unavailable` errors only at compile time *for the offending target*. Without a watch build in CI, the error never trips.
+
+**Fix.**
+- Wrap iOS-only files in `#if canImport(UIKit) && !os(watchOS)` … `#endif` (or equivalent for the platform the file supports). Keeps a single source of truth, simply omits the file from non-supporting targets at compile time.
+- Alternative: move the file out of `Shared/` into the iOS-specific feature folder. Cleaner if no other platform will ever want it; less flexible.
+
+**Guard test.** `./scripts/deploy-watch.sh --no-install` (round 7) builds the `PersonalHygieneWatch` scheme. Running it after touching `App/Shared/` catches a regression immediately. CI is iOS-only today; consider adding a watchOS build job once Apple Developer Program lands and the Watch widgets settle.
+
+**Where it was caught.** 2026-04-26, session 9 watch deploy — `TripPDFExporter.swift` (uses `UIGraphicsPDFRenderer`) lived in `Shared/Services/` since session 4 (M9 vacation PDF export); first watch build attempt during round 7 deploy surfaced four `unavailable in watchOS` errors. Same fix applied: `#if canImport(UIKit) && !os(watchOS)`.
+
+**Interaction with other lessons.** None.
