@@ -98,6 +98,20 @@ struct TripDetailView: View {
                 Text("trip.detail.section.milestones", bundle: .main)
             }
 
+            if let generator = viewModel.itineraryGenerator {
+                Section {
+                    NavigationLink {
+                        ItineraryView(trip: viewModel.trip, generator: generator)
+                    } label: {
+                        Label {
+                            Text("trip.itinerary.title", bundle: .main)
+                        } icon: {
+                            Image(systemName: "wand.and.stars")
+                        }
+                    }
+                }
+            }
+
             Section {
                 if viewModel.sortedDocuments.isEmpty {
                     Text("trip.detail.documents.empty", bundle: .main)

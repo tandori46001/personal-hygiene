@@ -108,7 +108,8 @@ private struct MainTabs: View {
             TripsListView(
                 viewModel: TripsListViewModel(
                     repository: env.tripsRepository,
-                    documentStore: env.tripDocumentStore
+                    documentStore: env.tripDocumentStore,
+                    itineraryGenerator: env.itineraryGenerator
                 )
             )
             .tabItem {

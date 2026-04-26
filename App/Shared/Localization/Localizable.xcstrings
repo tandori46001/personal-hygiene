@@ -889,6 +889,27 @@
     "trip.document.preview.unsupported.description" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Only PDF and image documents can be previewed in-app." } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Solo se pueden previsualizar PDF e imágenes." } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Seuls les documents PDF et image peuvent être prévisualisés." } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Seuls les documents PDF et image peuvent être prévisualisés." } } } },
+
+    "trip.itinerary.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "AI itinerary" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Itinerario IA" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Itinéraire IA" } } } },
+    "trip.itinerary.empty.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "No itinerary yet" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Aún sin itinerario" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aucun itinéraire" } } } },
+    "trip.itinerary.empty.description" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Generate an on-device suggestion based on your trip's destination and dates." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Genera una propuesta en el dispositivo según destino y fechas." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Générez une proposition sur l'appareil selon la destination et les dates." } } } },
+    "trip.itinerary.action.generate" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Generate itinerary" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Generar itinerario" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Générer l'itinéraire" } } } },
+    "trip.itinerary.generating" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Generating itinerary…" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Generando itinerario…" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Génération de l'itinéraire…" } } } }
   }
 }

@@ -7,14 +7,21 @@ final class TripDetailViewModel {
 
     private let repository: any TripsRepository
     let documentStore: TripDocumentStore?
+    let itineraryGenerator: (any ItineraryGenerator)?
 
     var trip: Trip
     var errorMessage: String?
 
-    init(trip: Trip, repository: any TripsRepository, documentStore: TripDocumentStore? = nil) {
+    init(
+        trip: Trip,
+        repository: any TripsRepository,
+        documentStore: TripDocumentStore? = nil,
+        itineraryGenerator: (any ItineraryGenerator)? = nil
+    ) {
         self.trip = trip
         self.repository = repository
         self.documentStore = documentStore
+        self.itineraryGenerator = itineraryGenerator
     }
 
     var sortedMilestones: [TripMilestone] {

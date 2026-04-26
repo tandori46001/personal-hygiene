@@ -12,6 +12,7 @@ struct AppEnvironment {
     let housekeepingService: any HousekeepingService
     let tripsRepository: any TripsRepository
     let tripDocumentStore: TripDocumentStore
+    let itineraryGenerator: any ItineraryGenerator
     let notificationService: any NotificationService
     let medicationService: any MedicationService
     let sleepService: any SleepService
@@ -26,6 +27,7 @@ struct AppEnvironment {
         self.housekeepingService = SwiftDataHousekeepingService(context: modelContext)
         self.tripsRepository = trips
         self.tripDocumentStore = TripDocumentStore(repository: trips, keychain: SecKeychainStore())
+        self.itineraryGenerator = Self.makeItineraryGenerator()
         self.notificationService = UserNotificationsService()
         self.medicationService = HealthKitMedicationService()
         self.sleepService = HealthKitSleepService()
@@ -50,5 +52,14 @@ struct AppEnvironment {
             service: notificationService,
             calendar: calendar
         )
+    }
+
+    private static func makeItineraryGenerator() -> any ItineraryGenerator {
+        #if canImport(FoundationModels)
+        if #available(iOS 26.0, *) {
+            return FoundationModelsItineraryGenerator()
+        }
+        #endif
+        return StubItineraryGenerator()
     }
 }

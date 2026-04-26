@@ -7,13 +7,19 @@ final class TripsListViewModel {
 
     let repository: any TripsRepository
     let documentStore: TripDocumentStore?
+    let itineraryGenerator: (any ItineraryGenerator)?
 
     var trips: [Trip] = []
     var errorMessage: String?
 
-    init(repository: any TripsRepository, documentStore: TripDocumentStore? = nil) {
+    init(
+        repository: any TripsRepository,
+        documentStore: TripDocumentStore? = nil,
+        itineraryGenerator: (any ItineraryGenerator)? = nil
+    ) {
         self.repository = repository
         self.documentStore = documentStore
+        self.itineraryGenerator = itineraryGenerator
     }
 
     func reload() {
