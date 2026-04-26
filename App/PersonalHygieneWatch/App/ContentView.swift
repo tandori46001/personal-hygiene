@@ -6,12 +6,16 @@ struct ContentView: View {
 
     var body: some View {
         let repository = SwiftDataRoutineRepository(context: modelContext)
-        TodayWatchView(viewModel: TodayViewModel(repository: repository))
+        TodayWatchView(viewModel: TodayViewModel(repository: repository), repository: repository)
     }
 }
 
 struct TodayWatchView: View {
     @Bindable var viewModel: TodayViewModel
+    let repository: any RoutineRepository
+
+    @State private var doneBlockIDs: Set<UUID> = []
+    @State private var errorMessage: String?
 
     var body: some View {
         NavigationStack {
@@ -30,13 +34,13 @@ struct TodayWatchView: View {
                     List {
                         if let current = viewModel.currentBlock() {
                             Section {
-                                WatchBlockRow(block: current, highlighted: true)
+                                row(for: current, highlighted: true)
                             } header: {
                                 Text("today.now", bundle: .main)
                             }
                         } else if let next = viewModel.nextBlock() {
                             Section {
-                                WatchBlockRow(block: next, highlighted: true)
+                                row(for: next, highlighted: true)
                             } header: {
                                 Text("today.next", bundle: .main)
                             }
@@ -44,7 +48,7 @@ struct TodayWatchView: View {
 
                         Section {
                             ForEach(viewModel.blocks) { block in
-                                WatchBlockRow(block: block, highlighted: false)
+                                row(for: block, highlighted: false)
                             }
                         } header: {
                             Text("today.section.schedule", bundle: .main)
@@ -53,7 +57,47 @@ struct TodayWatchView: View {
                 }
             }
             .navigationTitle(Text("today.title", bundle: .main))
-            .onAppear { viewModel.reload() }
+            .onAppear {
+                viewModel.reload()
+                refreshDoneSet()
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func row(for block: Block, highlighted: Bool) -> some View {
+        Button {
+            toggleDone(block)
+        } label: {
+            WatchBlockRow(
+                block: block,
+                highlighted: highlighted,
+                isDone: doneBlockIDs.contains(block.id)
+            )
+        }
+        .buttonStyle(.plain)
+    }
+
+    private func refreshDoneSet() {
+        do {
+            let completions = try repository.completions(on: Date(), calendar: .autoupdatingCurrent)
+            doneBlockIDs = Set(completions.map(\.blockID))
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    private func toggleDone(_ block: Block) {
+        do {
+            if doneBlockIDs.contains(block.id) {
+                try repository.unmarkDone(block, on: Date(), calendar: .autoupdatingCurrent)
+                doneBlockIDs.remove(block.id)
+            } else {
+                try repository.markDone(block, on: Date(), calendar: .autoupdatingCurrent)
+                doneBlockIDs.insert(block.id)
+            }
+        } catch {
+            errorMessage = error.localizedDescription
         }
     }
 }
@@ -61,14 +105,18 @@ struct TodayWatchView: View {
 private struct WatchBlockRow: View {
     let block: Block
     let highlighted: Bool
+    let isDone: Bool
 
     var body: some View {
         HStack(spacing: 8) {
+            Image(systemName: isDone ? "checkmark.circle.fill" : "circle")
+                .foregroundStyle(isDone ? .green : .secondary)
             Text(formattedTime(minutes: block.startMinutesFromMidnight))
                 .font(.system(.caption, design: .monospaced))
                 .foregroundStyle(.secondary)
             Text(block.title)
                 .font(highlighted ? .headline : .body)
+                .strikethrough(isDone)
                 .lineLimit(2)
             Spacer(minLength: 0)
         }

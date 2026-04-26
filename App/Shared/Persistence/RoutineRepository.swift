@@ -14,6 +14,16 @@ public protocol RoutineRepository {
     func setActive(_ template: RoutineTemplate, for dayType: DayType) throws
     func upsert(_ block: Block, in template: RoutineTemplate) throws
     func delete(_ block: Block) throws
+
+    /// Mark `block` as done on the calendar day of `now`. Idempotent — if
+    /// a completion already exists for that block + day, this is a no-op.
+    func markDone(_ block: Block, on now: Date, calendar: Calendar) throws
+    /// Remove the completion for `block` on the calendar day of `now`, if any.
+    func unmarkDone(_ block: Block, on now: Date, calendar: Calendar) throws
+    /// Return `true` when a completion exists for `block` on the calendar day of `now`.
+    func isDone(_ block: Block, on now: Date, calendar: Calendar) throws -> Bool
+    /// All completion records on the calendar day of `now`, in insertion order.
+    func completions(on now: Date, calendar: Calendar) throws -> [BlockCompletion]
 }
 
 @MainActor
@@ -66,5 +76,52 @@ public final class SwiftDataRoutineRepository: RoutineRepository {
     public func delete(_ block: Block) throws {
         context.delete(block)
         try context.save()
+    }
+
+    public func markDone(_ block: Block, on now: Date = Date(), calendar: Calendar = .autoupdatingCurrent) throws {
+        let day = calendar.startOfDay(for: now)
+        let blockID = block.id
+        if let existing = try fetchCompletion(blockID: blockID, dayStart: day) {
+            _ = existing
+            return
+        }
+        let completion = BlockCompletion(blockID: blockID, dayStart: day, completedAt: now)
+        context.insert(completion)
+        try context.save()
+    }
+
+    public func unmarkDone(_ block: Block, on now: Date = Date(), calendar: Calendar = .autoupdatingCurrent) throws {
+        let day = calendar.startOfDay(for: now)
+        guard let existing = try fetchCompletion(blockID: block.id, dayStart: day) else { return }
+        context.delete(existing)
+        try context.save()
+    }
+
+    public func isDone(
+        _ block: Block,
+        on now: Date = Date(),
+        calendar: Calendar = .autoupdatingCurrent
+    ) throws -> Bool {
+        let day = calendar.startOfDay(for: now)
+        return try fetchCompletion(blockID: block.id, dayStart: day) != nil
+    }
+
+    public func completions(
+        on now: Date = Date(),
+        calendar: Calendar = .autoupdatingCurrent
+    ) throws -> [BlockCompletion] {
+        let day = calendar.startOfDay(for: now)
+        let descriptor = FetchDescriptor<BlockCompletion>(
+            predicate: #Predicate { $0.dayStart == day },
+            sortBy: [SortDescriptor(\.completedAt)]
+        )
+        return try context.fetch(descriptor)
+    }
+
+    private func fetchCompletion(blockID: UUID, dayStart: Date) throws -> BlockCompletion? {
+        let descriptor = FetchDescriptor<BlockCompletion>(
+            predicate: #Predicate { $0.blockID == blockID && $0.dayStart == dayStart }
+        )
+        return try context.fetch(descriptor).first
     }
 }

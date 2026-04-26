@@ -77,4 +77,70 @@ final class SwiftDataRoutineRepositoryTests: XCTestCase {
         XCTAssertTrue(try repo.allTemplates().isEmpty)
         XCTAssertTrue(try context.fetch(FetchDescriptor<Block>()).isEmpty)
     }
+
+    // MARK: - Block completions
+
+    private func gregorianUTC() -> Calendar {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(secondsFromGMT: 0)!
+        return cal
+    }
+
+    private func date(year: Int, month: Int, day: Int, hour: Int = 12) -> Date {
+        let cal = gregorianUTC()
+        return DateComponents(
+            calendar: cal, timeZone: cal.timeZone,
+            year: year, month: month, day: day, hour: hour
+        ).date!
+    }
+
+    func test_markDone_persistsCompletionForCalendarDay() throws {
+        let block = Block(title: "x", category: .hygiene, startMinutesFromMidnight: 7 * 60, durationMinutes: 30)
+        let template = RoutineTemplate(name: "T", dayType: .weekday, blocks: [block])
+        try repo.upsert(template)
+
+        let now = date(year: 2026, month: 4, day: 25)
+        try repo.markDone(block, on: now, calendar: gregorianUTC())
+
+        XCTAssertTrue(try repo.isDone(block, on: now, calendar: gregorianUTC()))
+        XCTAssertEqual(try repo.completions(on: now, calendar: gregorianUTC()).count, 1)
+    }
+
+    func test_markDone_isIdempotent() throws {
+        let block = Block(title: "x", category: .hygiene, startMinutesFromMidnight: 7 * 60, durationMinutes: 30)
+        let template = RoutineTemplate(name: "T", dayType: .weekday, blocks: [block])
+        try repo.upsert(template)
+
+        let now = date(year: 2026, month: 4, day: 25)
+        try repo.markDone(block, on: now, calendar: gregorianUTC())
+        try repo.markDone(block, on: now, calendar: gregorianUTC())
+
+        XCTAssertEqual(try repo.completions(on: now, calendar: gregorianUTC()).count, 1)
+    }
+
+    func test_unmarkDone_removesCompletion() throws {
+        let block = Block(title: "x", category: .hygiene, startMinutesFromMidnight: 7 * 60, durationMinutes: 30)
+        let template = RoutineTemplate(name: "T", dayType: .weekday, blocks: [block])
+        try repo.upsert(template)
+
+        let now = date(year: 2026, month: 4, day: 25)
+        try repo.markDone(block, on: now, calendar: gregorianUTC())
+        try repo.unmarkDone(block, on: now, calendar: gregorianUTC())
+
+        XCTAssertFalse(try repo.isDone(block, on: now, calendar: gregorianUTC()))
+        XCTAssertTrue(try repo.completions(on: now, calendar: gregorianUTC()).isEmpty)
+    }
+
+    func test_isDone_isPerCalendarDay() throws {
+        let block = Block(title: "x", category: .hygiene, startMinutesFromMidnight: 7 * 60, durationMinutes: 30)
+        let template = RoutineTemplate(name: "T", dayType: .weekday, blocks: [block])
+        try repo.upsert(template)
+
+        let monday = date(year: 2026, month: 4, day: 25)
+        let tuesday = date(year: 2026, month: 4, day: 26)
+        try repo.markDone(block, on: monday, calendar: gregorianUTC())
+
+        XCTAssertTrue(try repo.isDone(block, on: monday, calendar: gregorianUTC()))
+        XCTAssertFalse(try repo.isDone(block, on: tuesday, calendar: gregorianUTC()))
+    }
 }

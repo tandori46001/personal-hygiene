@@ -10,6 +10,7 @@ public enum AppModelContainer {
     public static let schema = Schema([
         Block.self,
         RoutineTemplate.self,
+        BlockCompletion.self,
     ])
 
     /// On-disk container used by the running app.
