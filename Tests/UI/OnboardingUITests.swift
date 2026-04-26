@@ -18,7 +18,10 @@ final class OnboardingUITests: XCTestCase {
             "Get started", "Empezar", "Commencer"
         )
         let getStarted = app.buttons.element(matching: getStartedPredicate)
-        XCTAssertTrue(getStarted.waitForExistence(timeout: 5), "Onboarding 'Get started' button should appear on fresh launch")
+        XCTAssertTrue(
+            getStarted.waitForExistence(timeout: 5),
+            "Onboarding 'Get started' button should appear on fresh launch"
+        )
 
         // Tap to seed templates.
         getStarted.tap()
