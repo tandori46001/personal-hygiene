@@ -6,6 +6,12 @@ struct TripDetailView: View {
     @State private var milestoneSheet: MilestoneSheetState?
     @State private var showingScanner = false
     @State private var pendingDocumentBytes: PendingDocument?
+    @State private var pendingExport: ExportPayload?
+
+    private struct ExportPayload: Identifiable {
+        let id = UUID()
+        let url: URL
+    }
 
     private struct PendingDocument: Identifiable {
         let id = UUID()
@@ -177,6 +183,16 @@ struct TripDetailView: View {
         }
         .navigationTitle(viewModel.trip.name)
         .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    exportPDF()
+                } label: {
+                    Image(systemName: "square.and.arrow.up")
+                }
+                .accessibilityLabel(Text("trip.action.share", bundle: .main))
+            }
+        }
         .onDisappear { viewModel.saveEdits() }
         .sheet(item: $milestoneSheet) { state in
             switch state {
@@ -211,6 +227,24 @@ struct TripDetailView: View {
                 viewModel.addDocument(name: name, kind: kind, bytes: pending.bytes)
                 pendingDocumentBytes = nil
             }
+        }
+        .sheet(item: $pendingExport) { payload in
+            ShareSheet(items: [payload.url])
+        }
+    }
+
+    private func exportPDF() {
+        let bytes = TripPDFExporter.render(trip: viewModel.trip)
+        let safeName = viewModel.trip.name
+            .replacingOccurrences(of: "/", with: "-")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        let filename = "\(safeName.isEmpty ? "Trip" : safeName).pdf"
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
+        do {
+            try bytes.write(to: url, options: .atomic)
+            pendingExport = ExportPayload(url: url)
+        } catch {
+            viewModel.errorMessage = error.localizedDescription
         }
     }
 

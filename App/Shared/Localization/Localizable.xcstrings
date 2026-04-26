@@ -989,6 +989,11 @@
     "trip.advisory.footer" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "The official advisory pages live on the Spanish foreign ministry's website. Search there by country for the latest guidance." } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "La página oficial de recomendaciones está en el Ministerio de Asuntos Exteriores. Busca tu destino para ver la guía más reciente." } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Les conseils officiels se trouvent sur le site du ministère espagnol des Affaires étrangères. Cherche ta destination pour les dernières informations." } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Les conseils officiels se trouvent sur le site du ministère espagnol des Affaires étrangères. Cherche ta destination pour les dernières informations." } } } },
+
+    "trip.action.share" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Share trip as PDF" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Compartir viaje como PDF" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Partager le voyage en PDF" } } } }
   }
 }
