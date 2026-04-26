@@ -105,7 +105,11 @@ targets:
         CFBundleVersion: "$(CURRENT_PROJECT_VERSION)"
         CFBundleDisplayName: personal-hygiene
         WKApplication: true
-        WKWatchOnly: false
+        # Standalone watch app — installs directly to the Watch via
+        # `xcrun devicectl`, doesn't depend on the iPhone host. We don't use
+        # WatchConnectivity for cross-device data flow (each app reads its own
+        # SwiftData store), so standalone is the simpler model.
+        WKWatchOnly: true
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.tandori46001.personalhygiene.watchkitapp
