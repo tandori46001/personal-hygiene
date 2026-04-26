@@ -114,6 +114,20 @@ struct TripDetailView: View {
 
             marineSection
 
+            if let currency = viewModel.currencyService {
+                Section {
+                    NavigationLink {
+                        CurrencyView(service: currency)
+                    } label: {
+                        Label {
+                            Text("trip.currency.title", bundle: .main)
+                        } icon: {
+                            Image(systemName: "dollarsign.arrow.circlepath")
+                        }
+                    }
+                }
+            }
+
             Section {
                 if viewModel.sortedDocuments.isEmpty {
                     Text("trip.detail.documents.empty", bundle: .main)

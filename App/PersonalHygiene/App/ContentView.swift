@@ -110,7 +110,8 @@ private struct MainTabs: View {
                     repository: env.tripsRepository,
                     documentStore: env.tripDocumentStore,
                     itineraryGenerator: env.itineraryGenerator,
-                    marineService: env.marineService
+                    marineService: env.marineService,
+                    currencyService: env.currencyService
                 )
             )
             .tabItem {

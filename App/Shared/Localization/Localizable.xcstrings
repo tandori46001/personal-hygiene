@@ -935,6 +935,39 @@
     "trip.marine.seaTemp" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Sea temperature" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Temperatura del mar" } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Température de la mer" } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Température de la mer" } } } },
+
+    "trip.currency.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Currency" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Divisas" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Devises" } } } },
+    "trip.currency.field.amount" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Amount" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Cantidad" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Montant" } } } },
+    "trip.currency.field.from" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "From" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "De" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "De" } } } },
+    "trip.currency.field.to" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "To" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "A" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Vers" } } } },
+    "trip.currency.action.convert" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Convert" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Convertir" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Convertir" } } } },
+    "trip.currency.action.converting" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Converting…" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Convirtiendo…" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Conversion…" } } } },
+    "trip.currency.label.converted" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Converted" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Convertido" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Converti" } } } },
+    "trip.currency.label.rate" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Rate" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Tasa" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Taux" } } } }
   }
 }
