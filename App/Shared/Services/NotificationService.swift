@@ -24,8 +24,27 @@ public enum NotificationAuthorizationStatus: Sendable {
 public protocol NotificationService {
     func authorizationStatus() async -> NotificationAuthorizationStatus
     func requestAuthorization(criticalAlerts: Bool) async throws -> Bool
-    func scheduleAll(_ notifications: [ScheduledNotification]) async throws
-    func cancelAll() async
+
+    /// Cancel pending notifications whose identifier starts with `prefix`, then
+    /// schedule the given notifications. Notifications with a different prefix
+    /// are left untouched, so block + milestone schedulers can coexist.
+    func scheduleAll(_ notifications: [ScheduledNotification], cancellingPrefix prefix: String) async throws
+
+    /// Cancel all pending notifications whose identifier starts with `prefix`.
+    func cancelAll(withPrefix prefix: String) async
+}
+
+extension NotificationService {
+
+    /// Convenience overload that cancels + reschedules using the routine block prefix.
+    public func scheduleAll(_ notifications: [ScheduledNotification]) async throws {
+        try await scheduleAll(notifications, cancellingPrefix: NotificationFactory.identifierPrefix)
+    }
+
+    /// Convenience overload that cancels every routine block notification.
+    public func cancelAll() async {
+        await cancelAll(withPrefix: NotificationFactory.identifierPrefix)
+    }
 }
 
 @MainActor
@@ -50,15 +69,18 @@ public final class UserNotificationsService: NotificationService {
         return try await center.requestAuthorization(options: options)
     }
 
-    public func cancelAll() async {
+    public func cancelAll(withPrefix prefix: String) async {
         let identifiers = await center.pendingNotificationRequests()
             .map(\.identifier)
-            .filter { $0.hasPrefix(NotificationFactory.identifierPrefix) }
+            .filter { $0.hasPrefix(prefix) }
         center.removePendingNotificationRequests(withIdentifiers: identifiers)
     }
 
-    public func scheduleAll(_ notifications: [ScheduledNotification]) async throws {
-        await cancelAll()
+    public func scheduleAll(
+        _ notifications: [ScheduledNotification],
+        cancellingPrefix prefix: String
+    ) async throws {
+        await cancelAll(withPrefix: prefix)
         for notification in notifications {
             let content = UNMutableNotificationContent()
             content.title = notification.title

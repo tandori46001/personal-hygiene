@@ -134,6 +134,7 @@ private struct MainTabs: View {
             // Best-effort refresh on launch; silently ignore errors here —
             // the user can retry from Settings if anything goes wrong.
             try? await env.makeNotificationCoordinator().refreshForToday()
+            try? await env.makeTripMilestoneScheduler().refresh()
         }
     }
 }

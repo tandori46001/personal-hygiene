@@ -40,4 +40,12 @@ struct AppEnvironment {
             calendar: calendar
         )
     }
+
+    func makeTripMilestoneScheduler(calendar: Calendar = .autoupdatingCurrent) -> TripMilestoneScheduler {
+        TripMilestoneScheduler(
+            repository: tripsRepository,
+            service: notificationService,
+            calendar: calendar
+        )
+    }
 }
