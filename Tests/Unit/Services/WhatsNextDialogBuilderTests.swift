@@ -68,4 +68,59 @@ final class WhatsNextDialogBuilderTests: XCTestCase {
         XCTAssertTrue(dialog.contains("Standup"))
         XCTAssertTrue(dialog.contains("09:00"))
     }
+
+    // MARK: - build(resolved:) overload (round 7 slice 7)
+
+    func test_resolvedOverload_currentBlock_phrasingMatchesTemplatePath() {
+        let block = Block(
+            title: "Hygiene",
+            category: .hygiene,
+            startMinutesFromMidnight: 7 * 60 + 30,
+            durationMinutes: 30
+        )
+        let resolved = NextBlockResolver.Result(
+            block: block,
+            isCurrent: true,
+            startMinutesFromMidnight: 7 * 60 + 30
+        )
+        let direct = WhatsNextDialogBuilder.build(resolved: resolved)
+        let viaTemplate = WhatsNextDialogBuilder.build(
+            template: makeTemplate(blocks: [block]),
+            at: date(hour: 7, minute: 45),
+            calendar: gregorianUTC()
+        )
+        XCTAssertEqual(direct, viaTemplate)
+    }
+
+    func test_resolvedOverload_upcomingBlock_phrasingMatchesTemplatePath() {
+        let block = Block(
+            title: "Standup",
+            category: .work,
+            startMinutesFromMidnight: 9 * 60,
+            durationMinutes: 15
+        )
+        let resolved = NextBlockResolver.Result(
+            block: block,
+            isCurrent: false,
+            startMinutesFromMidnight: 9 * 60
+        )
+        let direct = WhatsNextDialogBuilder.build(resolved: resolved)
+        let viaTemplate = WhatsNextDialogBuilder.build(
+            template: makeTemplate(blocks: [block]),
+            at: date(hour: 8, minute: 0),
+            calendar: gregorianUTC()
+        )
+        XCTAssertEqual(direct, viaTemplate)
+    }
+
+    func test_resolvedOverload_formatsTimeWithLeadingZero() {
+        let block = Block(title: "Early", category: .meal, startMinutesFromMidnight: 5, durationMinutes: 10)
+        let resolved = NextBlockResolver.Result(
+            block: block,
+            isCurrent: false,
+            startMinutesFromMidnight: 5
+        )
+        let dialog = WhatsNextDialogBuilder.build(resolved: resolved)
+        XCTAssertTrue(dialog.contains("00:05"))
+    }
 }

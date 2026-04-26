@@ -57,6 +57,19 @@ final class TodayViewModel {
         }
     }
 
+    /// Marks every not-yet-done, not-already-skipped block whose start time
+    /// is at or after `block.startMinutesFromMidnight` as skipped for today.
+    /// Used by the Today "Skip rest of today" swipe action — useful for sick
+    /// days / unexpected interruptions without having to swipe each row.
+    func skipRestOfToday(from block: Block, now: Date = Date()) {
+        guard let skipStore, let activeTemplate else { return }
+        let cutoff = block.startMinutesFromMidnight
+        for candidate in activeTemplate.sortedBlocks
+        where candidate.startMinutesFromMidnight >= cutoff {
+            skipStore.skip(blockID: candidate.id, on: now, calendar: calendar)
+        }
+    }
+
     func reload(now: Date = Date()) {
         todaysDayType = Self.dayType(for: now, in: calendar)
         do {

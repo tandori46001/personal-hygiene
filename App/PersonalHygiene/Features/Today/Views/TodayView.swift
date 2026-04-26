@@ -78,6 +78,18 @@ struct TodayView: View {
                                         }
                                     }
                                     .tint(.orange)
+                                    if !viewModel.isSkipped(block) {
+                                        Button {
+                                            viewModel.skipRestOfToday(from: block)
+                                        } label: {
+                                            Label {
+                                                Text("today.action.skipRest", bundle: .main)
+                                            } icon: {
+                                                Image(systemName: "forward.end")
+                                            }
+                                        }
+                                        .tint(.red)
+                                    }
                                 }
                             }
                         } header: {

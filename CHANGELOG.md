@@ -8,6 +8,28 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added — Session 9 ("haz todo" round 7, 22 slices: dev tools, medication follow-up, watch parity)
+
+- **Slices 1-4 — Diagnostics dev tools:** `DiagnosticsActions` closure-bag + four buttons in Settings → Diagnostics: schedule test notification (30s, real category), clear all pending, inject snooze badge on first block of today's template, reset skip + snooze stores + snooze duration. ContentView builds the actions from `AppEnvironment`.
+- **Slice 5 — Commit SHA injection:** `App/PersonalHygiene/Resources/CommitSHA.txt` (gitignored, default `"dev"`) is stamped at build time by `scripts/deploy-iphone.sh` (`git rev-parse --short HEAD`). `BuildInfo.commitSHA` reads it from the bundle.
+- **Slice 6 — `BuildInfoTests`:** 5 tests cover marketingVersion / bundleVersion / commitSHA non-empty + format of `shortDescriptor`.
+- **Slice 7 — `WhatsNextDialogBuilder.build(resolved:)` tests:** 3 tests verify the watch-share overload matches the template-path output for current + upcoming + leading-zero time formatting.
+- **Slice 8 — `HousekeepingNotificationFactory` + 5 tests:** new value-type builder fires at 09:00 local on `nextDueDate`; bumps to next day if already overdue; identifier stable per task ID; one notification per eligible task. Skips never-completed tasks.
+- **Slice 9 — `SettingsView` refactor:** extracted `WhatsNewSheet` + `HomeLocationSection` to dedicated files. Restored `swiftlint type_body_length.warning` from 400 → 300.
+- **Slice 10 — `MedicationFollowUpFactory`:** pure value-type that wraps a primary medication notification with a `+30 min` follow-up (configurable). Critical-alert level, identifier prefix `personal-hygiene.medication.followup.`, suffixed body. 6 tests cover non-medication blocks (nil), default + custom offset, identifier shape, primary-derived followUp.
+- **Slice 11 — `BlockSnoozeSource.medicationFollowUp` + parser update:** new fourth case (registry now: routine / hydration / milestone / medicationFollowUp). `BlockNotificationIdentifier.parseAny` recognizes the new prefix; the L002 guard test (`test_parse_recognizesAllKnownPrefixes`) iterates `allCases` and would have failed without the parser update.
+- **Slice 12 — Follow-up wired into `NotificationCoordinator.refreshForToday`:** every primary medication notification gains a +30 min follow-up. Pure helper `medicationFollowUps(primaries:blocks:now:calendar:)` matches by identifier suffix.
+- **Slice 13 — Today: "Skip rest of today" swipe action:** new red action on the trailing edge of any non-skipped row; `TodayViewModel.skipRestOfToday(from:)` marks every block at-or-after the swipe target as skipped for today.
+- **Slice 14 — Templates: duplicate template:** new leading-edge swipe action with `doc.on.doc` icon. `TemplateListViewModel.duplicate(_:)` deep-copies blocks (new UUIDs) into a new template suffixed `(copy)`. Never auto-activated.
+- **Slice 15 — BlockEditor: confirm-on-dismiss:** `BlockEditorViewModel.hasUnsavedChanges` (snapshots initial state); BlockEditorView shows a confirmationDialog + `interactiveDismissDisabled` when there are pending edits.
+- **Slice 16 — Hydration: swipe-to-delete log:** `HydrationService.delete(_:)` (SwiftData + InMemory impls); HydrationDashboardView gains a destructive trailing swipe action on each log row.
+- **Slice 17 — Trip detail: notified-milestone badge:** `MilestoneRow` accepts `hasFired: Bool`; TripDetailView computes it from `tripStart - daysBefore` at 09:00 local. Shows `bell.fill` next to milestones whose notification has already fired (and that aren't yet complete).
+- **Slice 18 — Watch complication: focus indicator:** `NextBlockSnapshot.isFocusActive` plumbed from `DeepFocusFilter.isFocusActive`; `NextBlockEntryView` shows a small `moon.zzz.fill` purple glyph beside the time when a Deep Focus window is in effect.
+- **Slice 19 — Watch app Today snooze badge:** `TodayWatchView` rows accept `isSnoozedToday`; `WatchBlockRow` shows the `alarm` glyph mirroring the iPhone Today list. ContentView passes `UserDefaultsBlockSnoozeStore()` into the watch's `TodayViewModel`.
+- **Slice 20 — `ARCHITECTURE.md` §21-§22 + PRD M3.2:** documents Diagnostics dev tools, MedicationFollowUpFactory, build-time `CommitSHA.txt`, watch focus indicator + snooze badge. Bumped version history to v0.4. PRD M3.5 bullet adds explicit M3.2 follow-up reminders shipped status.
+- **Slice 21 — finalize:** xcodegen + lint + i18n parity (390 × 3) + tests (~301 unit+UI) + commit + push.
+- **Slice 22 — re-deploy via `./scripts/deploy-iphone.sh`** + smoke-test on iPhone (CommitSHA footer should now show real short SHA, not `dev`).
+
 ### Added — Session 8 ("haz todo" round 6, 22 slices: on-device hardening + iPhone deploy automation)
 
 - **Slice 1 — `scripts/deploy-iphone.sh`:** one-command deploy. Auto-injects `DEVELOPMENT_TEAM`, regenerates project, builds with `-allowProvisioningUpdates`, strips macOS `._*` metadata, installs + launches via `xcrun devicectl`. Flags: `--clean`, `--no-launch`, `--no-install`. Defaults overridable via `DEVICE_UDID` / `TEAM_ID` env vars.

@@ -37,22 +37,84 @@ final class BlockEditorViewModel {
         self.latitudeText = ""
         self.longitudeText = ""
         self.editingBlockID = nil
+        self.initialTitle = ""
+        self.initialCategory = .hygiene
+        self.initialStartHour = 7
+        self.initialStartMinute = 0
+        self.initialDurationMinutes = 30
+        self.initialNotes = ""
+        self.initialNotificationLeadMinutes = 15
+        self.initialIsDeepFocus = false
+        self.initialLocationName = ""
+        self.initialLatitudeText = ""
+        self.initialLongitudeText = ""
     }
 
     init(editing block: Block) {
-        self.title = block.title
-        self.category = block.category
-        self.startHour = block.startMinutesFromMidnight / 60
-        self.startMinute = block.startMinutesFromMidnight % 60
-        self.durationMinutes = block.durationMinutes
-        self.notes = block.notes ?? ""
-        self.notificationLeadMinutes = block.notificationLeadMinutes
-        self.isDeepFocus = block.isDeepFocus
-        self.locationName = block.locationName ?? ""
-        self.latitudeText = block.latitude.map(Self.formatCoordinate) ?? ""
-        self.longitudeText = block.longitude.map(Self.formatCoordinate) ?? ""
+        let title = block.title
+        let category = block.category
+        let startHour = block.startMinutesFromMidnight / 60
+        let startMinute = block.startMinutesFromMidnight % 60
+        let durationMinutes = block.durationMinutes
+        let notes = block.notes ?? ""
+        let notificationLeadMinutes = block.notificationLeadMinutes
+        let isDeepFocus = block.isDeepFocus
+        let locationName = block.locationName ?? ""
+        let latitudeText = block.latitude.map(Self.formatCoordinate) ?? ""
+        let longitudeText = block.longitude.map(Self.formatCoordinate) ?? ""
+        self.title = title
+        self.category = category
+        self.startHour = startHour
+        self.startMinute = startMinute
+        self.durationMinutes = durationMinutes
+        self.notes = notes
+        self.notificationLeadMinutes = notificationLeadMinutes
+        self.isDeepFocus = isDeepFocus
+        self.locationName = locationName
+        self.latitudeText = latitudeText
+        self.longitudeText = longitudeText
         self.editingBlockID = block.id
+        self.initialTitle = title
+        self.initialCategory = category
+        self.initialStartHour = startHour
+        self.initialStartMinute = startMinute
+        self.initialDurationMinutes = durationMinutes
+        self.initialNotes = notes
+        self.initialNotificationLeadMinutes = notificationLeadMinutes
+        self.initialIsDeepFocus = isDeepFocus
+        self.initialLocationName = locationName
+        self.initialLatitudeText = latitudeText
+        self.initialLongitudeText = longitudeText
     }
+
+    /// Snapshot of the form fields at construction time. Used by
+    /// `BlockEditorView` to decide whether to show a confirm-on-dismiss
+    /// dialog when the user taps Cancel with unsaved changes.
+    var hasUnsavedChanges: Bool {
+        title != initialTitle
+            || category != initialCategory
+            || startHour != initialStartHour
+            || startMinute != initialStartMinute
+            || durationMinutes != initialDurationMinutes
+            || notes != initialNotes
+            || notificationLeadMinutes != initialNotificationLeadMinutes
+            || isDeepFocus != initialIsDeepFocus
+            || locationName != initialLocationName
+            || latitudeText != initialLatitudeText
+            || longitudeText != initialLongitudeText
+    }
+
+    private let initialTitle: String
+    private let initialCategory: BlockCategory
+    private let initialStartHour: Int
+    private let initialStartMinute: Int
+    private let initialDurationMinutes: Int
+    private let initialNotes: String
+    private let initialNotificationLeadMinutes: Int
+    private let initialIsDeepFocus: Bool
+    private let initialLocationName: String
+    private let initialLatitudeText: String
+    private let initialLongitudeText: String
 
     var isValid: Bool {
         guard

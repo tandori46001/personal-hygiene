@@ -89,6 +89,7 @@ struct TripDetailView: View {
                         } label: {
                             MilestoneRow(
                                 milestone: milestone,
+                                hasFired: hasFired(milestone),
                                 onToggle: { viewModel.toggleMilestoneCompletion(milestone) }
                             )
                         }
@@ -288,5 +289,20 @@ struct TripDetailView: View {
         for idx in offsets {
             viewModel.deleteDocument(viewModel.sortedDocuments[idx])
         }
+    }
+
+    /// A milestone "has fired" when its computed notification trigger date
+    /// (`tripStart - daysBefore` at 09:00 local) is in the past.
+    private func hasFired(_ milestone: TripMilestone) -> Bool {
+        let cal = Calendar.autoupdatingCurrent
+        let tripStart = viewModel.trip.startDate
+        guard let triggerDay = cal.date(byAdding: .day, value: -milestone.daysBefore, to: tripStart) else {
+            return false
+        }
+        let dayStart = cal.startOfDay(for: triggerDay)
+        guard let triggerAtNine = cal.date(byAdding: .hour, value: 9, to: dayStart) else {
+            return false
+        }
+        return triggerAtNine <= Date()
     }
 }

@@ -152,6 +152,8 @@ final class BlockSnoozeStoreTests: XCTestCase {
                 identifier = "\(HydrationNotificationFactory.identifierPrefix)2026-04-26.0"
             case .milestone:
                 identifier = "\(TripMilestoneNotificationFactory.identifierPrefix)\(UUID().uuidString)"
+            case .medicationFollowUp:
+                identifier = "\(MedicationFollowUpFactory.identifierPrefix)\(UUID().uuidString).2026-04-26"
             }
             let parsed = BlockNotificationIdentifier.parseAny(identifier)
             XCTAssertEqual(parsed?.source, source, "parseAny did not recognize the \(source.rawValue) prefix")

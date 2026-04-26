@@ -15,12 +15,18 @@ public enum BuildInfo {
         Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "0"
     }
 
-    /// Read from `PERSONAL_HYGIENE_COMMIT_SHA` Info.plist key, falling back to
-    /// "dev" when absent. To inject a real SHA at build time, add the key to
-    /// the iOS app target's Info.plist + an xcconfig assignment from
-    /// `$(PERSONAL_HYGIENE_COMMIT_SHA)` set by CI.
+    /// Read from a `CommitSHA.txt` resource baked into the app bundle.
+    /// `scripts/deploy-iphone.sh` writes the current `git rev-parse --short
+    /// HEAD` into the file before each build; the checked-in default is
+    /// `"dev"` so plain `xcodebuild` runs without the script still produce a
+    /// readable value.
     public static var commitSHA: String {
-        Bundle.main.infoDictionary?["PERSONAL_HYGIENE_COMMIT_SHA"] as? String ?? "dev"
+        guard let url = Bundle.main.url(forResource: "CommitSHA", withExtension: "txt"),
+              let data = try? String(contentsOf: url, encoding: .utf8) else {
+            return "dev"
+        }
+        let trimmed = data.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmed.isEmpty ? "dev" : trimmed
     }
 
     /// Compact "vX.Y.Z (build N) — sha" suitable for a footer label.

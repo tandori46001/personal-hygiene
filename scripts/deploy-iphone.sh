@@ -71,6 +71,12 @@ if [ "$CLEAN" = "1" ]; then
   rm -rf "$BUILD_DIR"
 fi
 
+# --- 2a. Stamp CommitSHA.txt resource --------------------------------------
+SHA_FILE="App/PersonalHygiene/Resources/CommitSHA.txt"
+GIT_SHA="${GIT_COMMIT_SHA:-$(git rev-parse --short HEAD 2>/dev/null || echo dev)}"
+echo "$GIT_SHA" > "$SHA_FILE"
+echo "==> stamped CommitSHA.txt with $GIT_SHA"
+
 # --- 3. Build ---------------------------------------------------------------
 echo "==> building for device $DEVICE_UDID"
 xcodebuild build \

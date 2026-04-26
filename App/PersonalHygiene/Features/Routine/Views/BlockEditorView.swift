@@ -6,6 +6,7 @@ struct BlockEditorView: View {
     let onCancel: () -> Void
 
     @Environment(\.dismiss) private var dismiss
+    @State private var showingDiscardConfirm = false
 
     var body: some View {
         NavigationStack {
@@ -142,8 +143,12 @@ struct BlockEditorView: View {
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button {
-                        onCancel()
-                        dismiss()
+                        if viewModel.hasUnsavedChanges {
+                            showingDiscardConfirm = true
+                        } else {
+                            onCancel()
+                            dismiss()
+                        }
                     } label: {
                         Text("common.cancel", bundle: .main)
                     }
@@ -158,6 +163,23 @@ struct BlockEditorView: View {
                     .disabled(!viewModel.isValid)
                 }
             }
+            .interactiveDismissDisabled(viewModel.hasUnsavedChanges)
+            .confirmationDialog(
+                Text("blockEditor.discardChanges.title", bundle: .main),
+                isPresented: $showingDiscardConfirm,
+                titleVisibility: .visible,
+                actions: {
+                    Button(role: .destructive) {
+                        onCancel()
+                        dismiss()
+                    } label: {
+                        Text("blockEditor.discardChanges.action", bundle: .main)
+                    }
+                    Button(role: .cancel) {} label: {
+                        Text("common.cancel", bundle: .main)
+                    }
+                }
+            )
         }
     }
 

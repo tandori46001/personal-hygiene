@@ -1,5 +1,6 @@
 import SwiftData
 import SwiftUI
+import UserNotifications
 
 enum AppTab: Hashable {
     case today, templates, medication, sleep, hydration, housekeeping, birthdays, trips, settings
@@ -159,7 +160,8 @@ private struct MainTabs: View {
                     service: env.notificationService,
                     coordinator: env.makeNotificationCoordinator()
                 ),
-                focusScheduleStore: env.focusScheduleStore
+                focusScheduleStore: env.focusScheduleStore,
+                diagnosticsActions: makeDiagnosticsActions()
             )
             .tag(AppTab.settings)
             .tabItem {
@@ -176,6 +178,73 @@ private struct MainTabs: View {
             try? await env.makeNotificationCoordinator().refreshForToday()
             try? await env.makeTripMilestoneScheduler().refresh()
         }
+    }
+
+    private func makeDiagnosticsActions() -> DiagnosticsActions {
+        let routineRepo = env.routineRepository
+        let snoozeStore = env.blockSnoozeStore
+        let skipStore = env.blockSkipStore
+        return DiagnosticsActions(
+            scheduleTestNotification: {
+                await Self.scheduleTestNotification()
+            },
+            clearAllPending: {
+                UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
+            },
+            injectSnoozeBadge: {
+                Self.injectFirstBlockSnoozeBadge(repository: routineRepo, store: snoozeStore)
+            },
+            resetDevStores: {
+                Self.resetDevStores(skipStore: skipStore, snoozeStore: snoozeStore)
+            }
+        )
+    }
+
+    @MainActor
+    private static func scheduleTestNotification() async {
+        let content = UNMutableNotificationContent()
+        content.title = String(localized: "settings.diagnostics.devTools.testNotif.title")
+        content.body = String(localized: "settings.diagnostics.devTools.testNotif.body")
+        content.sound = .default
+        content.categoryIdentifier = NotificationCategoryID.routineBlock
+        content.threadIdentifier = NotificationThreadID.routine
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 30, repeats: false)
+        let identifier = "\(NotificationFactory.identifierPrefix)\(UUID().uuidString).test"
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+        try? await UNUserNotificationCenter.current().add(request)
+    }
+
+    @MainActor
+    private static func injectFirstBlockSnoozeBadge(
+        repository: any RoutineRepository,
+        store: any BlockSnoozeStore
+    ) -> String? {
+        let cal = Calendar.autoupdatingCurrent
+        let dayType = TodayViewModel.dayType(for: Date(), in: cal)
+        guard let template = try? repository.activeTemplate(for: dayType),
+              let block = template.sortedBlocks.first
+        else { return nil }
+        let dayKey = String(
+            format: "%04d-%02d-%02d",
+            cal.component(.year, from: Date()),
+            cal.component(.month, from: Date()),
+            cal.component(.day, from: Date())
+        )
+        store.markSnoozed(blockID: block.id, dayKey: dayKey)
+        return block.title
+    }
+
+    @MainActor
+    private static func resetDevStores(
+        skipStore: any BlockSkipStore,
+        snoozeStore: any BlockSnoozeStore
+    ) {
+        let now = Date()
+        let cal = Calendar.autoupdatingCurrent
+        // Purging with keepLastDays: 0 wipes every entry (cutoff equals startOfDay(now)).
+        skipStore.purgeStale(before: now, calendar: cal, keepLastDays: 0)
+        snoozeStore.purgeStale(before: now, calendar: cal, keepLastDays: 0)
+        SnoozeDurationStore.set(SnoozeDurationStore.defaultMinutes, in: .standard)
     }
 }
 

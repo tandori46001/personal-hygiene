@@ -148,6 +148,11 @@ struct MarineSection: View {
 
 struct MilestoneRow: View {
     let milestone: TripMilestone
+    /// `true` when the milestone's notification trigger date is in the past
+    /// (computed from `tripStart - daysBefore`). Used to mark "already
+    /// notified" with a small bell glyph so the user can tell ahead-of-trip
+    /// reminders apart from upcoming ones at a glance.
+    var hasFired: Bool = false
     let onToggle: () -> Void
 
     var body: some View {
@@ -172,6 +177,11 @@ struct MilestoneRow: View {
             }
             .accessibilityElement(children: .combine)
             Spacer()
+            if hasFired && !milestone.isComplete {
+                Image(systemName: "bell.fill")
+                    .foregroundStyle(.blue)
+                    .accessibilityLabel(Text("trip.milestone.alreadyNotified", bundle: .main))
+            }
         }
     }
 }

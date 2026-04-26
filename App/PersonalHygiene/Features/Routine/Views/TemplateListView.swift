@@ -38,6 +38,18 @@ struct TemplateListView: View {
                             onActivate: { viewModel.setActive(template, for: template.dayType) }
                         )
                     }
+                    .swipeActions(edge: .leading) {
+                        Button {
+                            viewModel.duplicate(template)
+                        } label: {
+                            Label {
+                                Text("templateList.action.duplicate", bundle: .main)
+                            } icon: {
+                                Image(systemName: "doc.on.doc")
+                            }
+                        }
+                        .tint(.blue)
+                    }
                 }
                 .onDelete(perform: deleteTemplates)
             }

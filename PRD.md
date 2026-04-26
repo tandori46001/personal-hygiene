@@ -141,6 +141,7 @@ Diferenciador: no es un calendario más. Es un **planificador de rutina total** 
 - M3.3 Tracking de cumplimiento — única estadística persistente en la app.
 - M3.4 Dashboard semanal: días con 100% adherencia / días con alguna dosis omitida.
 - M3.5 **Sincronización Health → bloque M1.** La app observa cambios en HealthKit Medications mediante `HKObserverQuery` con background delivery habilitado. Cuando una dosis se marca como tomada/omitida en Health, el bloque correspondiente en M1 se actualiza automáticamente sin requerir abrir la app. La asociación bloque ↔ dosis se establece por `HKMedicationConcept` + ventana horaria (±30 min del horario del bloque). **Estado:** infraestructura compilada (`HealthKitMedicationService` placeholder + `MedicationCompliance` + `MedicationDoseLog`); validación con dispositivo real + entitlement HealthKit pendiente. Sin entitlement, todo el módulo funciona en modo `InMemoryMedicationService` (sin sincronización con Health).
+- **M3.2 follow-up reminders (shipped session 9, round 7):** mientras no exista el entitlement HealthKit, `MedicationFollowUpFactory` programa una notificación adicional a `triggerDate + 30 min` para cada bloque de medicación, con prefijo `personal-hygiene.medication.followup.` y nivel critical. Si Apple aprueba el entitlement Critical Alerts y se conecta `HKObserverQuery`, esta lógica se reemplaza por re-notificación basada en evento real (la dosis no se marcó tomada en Health).
 
 ### M4 — Sueño
 

@@ -41,6 +41,10 @@ struct NextBlockEntry: TimelineEntry {
 struct NextBlockSnapshot: Sendable, Hashable {
     let title: String
     let startMinutes: Int
+    /// `true` when a Deep Focus window is active right now (block-derived OR
+    /// scheduled). The complication shows a small `moon.zzz.fill` glyph when
+    /// this is true so the wearer knows non-critical alerts are suppressed.
+    var isFocusActive: Bool = false
 }
 
 struct NextBlockProvider: TimelineProvider {
@@ -79,7 +83,18 @@ struct NextBlockProvider: TimelineProvider {
         guard let next = template.sortedBlocks.first(where: { $0.startMinutesFromMidnight > nowMinutes }) else {
             return nil
         }
-        return NextBlockSnapshot(title: next.title, startMinutes: next.startMinutesFromMidnight)
+        let scheduled = UserDefaultsFocusScheduleStore.appGroupOrStandard().windows()
+        let focusActive = DeepFocusFilter.isFocusActive(
+            at: now,
+            in: template.sortedBlocks,
+            scheduledWindows: scheduled,
+            calendar: .autoupdatingCurrent
+        )
+        return NextBlockSnapshot(
+            title: next.title,
+            startMinutes: next.startMinutesFromMidnight,
+            isFocusActive: focusActive
+        )
     }
 }
 
@@ -89,8 +104,16 @@ struct NextBlockEntryView: View {
     var body: some View {
         if let block = entry.block {
             VStack(alignment: .leading, spacing: 2) {
-                Text(formattedTime(minutes: block.startMinutes))
-                    .font(.system(.headline, design: .monospaced))
+                HStack(spacing: 4) {
+                    Text(formattedTime(minutes: block.startMinutes))
+                        .font(.system(.headline, design: .monospaced))
+                    if block.isFocusActive {
+                        Image(systemName: "moon.zzz.fill")
+                            .foregroundStyle(.purple)
+                            .font(.caption2)
+                            .accessibilityHidden(true)
+                    }
+                }
                 Text(block.title)
                     .font(.caption)
                     .lineLimit(2)

@@ -265,8 +265,25 @@ dark for the unparsed kind (LESSONS L002).
 
 ---
 
+## 21. Dev tools + medication follow-up (round 7)
+
+- **`DiagnosticsActions`** — closure-bag passed into `DiagnosticsView` so the dev-only buttons (schedule test notification, clear all pending, inject snooze badge, reset stores) can act on live app stores without `DiagnosticsView` knowing about concrete types. `ContentView.makeDiagnosticsActions()` builds it from `AppEnvironment`.
+- **`Settings → Diagnostics → Dev tools`** section is dev-only. Production guard: lives behind the optional `diagnosticsActions:` SettingsView parameter; if not wired, the section is hidden.
+- **`MedicationFollowUpFactory`** — pure value-type that, given a primary medication notification, builds a +30 min follow-up `ScheduledNotification` with prefix `personal-hygiene.medication.followup.`. Wired into `NotificationCoordinator.refreshForToday` so every medication block fires twice. PRD M3.2 fallback for users without HealthKit `HKObserverQuery` entitlement.
+- **`BlockSnoozeSource.medicationFollowUp`** — fourth case in the registry (alongside routine / hydration / milestone). `BlockNotificationIdentifier.parseAny` recognizes the new prefix; the L002 guard test (`test_parse_recognizesAllKnownPrefixes`) iterates `allCases` and would fail without the parser update — the original goal of L002.
+- **Build identity**: `App/PersonalHygiene/Resources/CommitSHA.txt` is stamped at build time by `scripts/deploy-iphone.sh` (`git rev-parse --short HEAD`). Read by `BuildInfo.commitSHA`. Checked-in default is `"dev"` so plain `xcodebuild` runs without the script still produce a readable footer. The file is gitignored to avoid noise.
+- **`scripts/check-tests.sh` exit-65 filter** (round 6) keeps reading the test log for `Test Case '...' failed` lines; if zero, the DebuggerLLDB simulator glitch is treated as success.
+
+## 22. Watch parity (round 7)
+
+- **`NextBlockComplication`** now exposes `isFocusActive` in its snapshot; the entry view shows a small `moon.zzz.fill` glyph when a Deep Focus window is in effect. Focus state is computed via `DeepFocusFilter.isFocusActive(at:in:scheduledWindows:)` reading `UserDefaultsFocusScheduleStore.appGroupOrStandard()` — same store the iOS widget uses.
+- **`TodayWatchView` rows** show the `alarm` badge when `viewModel.isSnoozedToday(_:)` is true, mirroring the iPhone Today list. The watch app passes `UserDefaultsBlockSnoozeStore()` into `TodayViewModel` via `ContentView`; once an App Group entitlement lands, both targets can share the same `UserDefaults` suite.
+
+---
+
 **Version history:**
 
+- **v0.4 (2026-04-26)** — added §21-§22 reflecting session 9 (round 7): Diagnostics dev tools (`DiagnosticsActions`), `MedicationFollowUpFactory`, `BlockSnoozeSource.medicationFollowUp`, build-time `CommitSHA.txt` injection, watch complication focus indicator + watch app snooze badge.
 - **v0.3 (2026-04-26)** — added §18-§20 reflecting session 8 (round 6): cross-module shared services, notification-identifier registry pattern, diagnostics + deploy automation.
 - **v0.2 (2026-04-26)** — added §13-§17 reflecting session 5: widget extension target, value-type registry, service decorator convention, current notification architecture.
 - **v0.1 (2026-04-25)** — esqueleto inicial. Detalle a rellenar en Fase 0 (creación del proyecto Xcode + schema SwiftData concreto).

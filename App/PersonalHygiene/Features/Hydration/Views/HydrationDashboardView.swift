@@ -118,6 +118,17 @@ struct HydrationDashboardView: View {
                     } else {
                         ForEach(viewModel.todayLogs) { log in
                             HydrationLogRow(log: log)
+                                .swipeActions(edge: .trailing) {
+                                    Button(role: .destructive) {
+                                        viewModel.deleteLog(log)
+                                    } label: {
+                                        Label {
+                                            Text("hydration.action.deleteLog", bundle: .main)
+                                        } icon: {
+                                            Image(systemName: "trash")
+                                        }
+                                    }
+                                }
                         }
                     }
                 } header: {

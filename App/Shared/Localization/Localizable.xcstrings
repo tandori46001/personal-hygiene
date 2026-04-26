@@ -1508,6 +1508,109 @@
     "settings.pendingNotifications.source.unknown" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Other" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Otros" } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Autres" } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Autres" } } } },
+
+    "settings.diagnostics.section.devTools" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Dev tools" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Herramientas dev" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Outils dev" } } } },
+    "settings.diagnostics.section.devTools.footer" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "These actions exist for on-device QA. They are safe but skip normal flows." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Estas acciones son para QA en dispositivo. Son seguras pero saltan los flujos normales." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ces actions servent au QA sur appareil. Elles sont sûres mais court-circuitent les flux normaux." } } } },
+    "settings.diagnostics.devTools.testNotif" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Schedule test notification (30s)" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Programar notificación de prueba (30s)" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Planifier notification test (30s)" } } } },
+    "settings.diagnostics.devTools.testNotif.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Test block" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Bloque de prueba" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Bloc de test" } } } },
+    "settings.diagnostics.devTools.testNotif.body" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Long-press to try snooze + mark done." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Mantén pulsado para probar posponer + marcar hecho." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Appuyez longuement pour tester reporter + marquer fait." } } } },
+    "settings.diagnostics.devTools.testNotif.done" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Test notification scheduled in 30 seconds." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Notificación de prueba programada en 30 segundos." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Notification de test programmée dans 30 secondes." } } } },
+    "settings.diagnostics.devTools.clearPending" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Clear all pending notifications" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Borrar todas las notificaciones pendientes" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Effacer toutes les notifications en attente" } } } },
+    "settings.diagnostics.devTools.clearPending.done" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Pending notifications cleared." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Notificaciones pendientes borradas." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Notifications en attente effacées." } } } },
+    "settings.diagnostics.devTools.injectBadge" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Inject snooze badge on first block" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Inyectar marca de posposición en el primer bloque" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Injecter le badge reporté sur le premier bloc" } } } },
+    "settings.diagnostics.devTools.injectBadge.done %@" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Snooze badge injected on \"%@\"." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Marca de posposición inyectada en \"%@\"." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Badge reporté injecté sur \"%@\"." } } } },
+    "settings.diagnostics.devTools.injectBadge.empty" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "No active template — add one first." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "No hay plantilla activa — añade una primero." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aucun modèle actif — ajoutez-en un d'abord." } } } },
+    "settings.diagnostics.devTools.reset" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Reset all dev stores" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Restablecer todos los stores dev" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réinitialiser tous les stores dev" } } } },
+    "settings.diagnostics.devTools.reset.confirm.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Wipe skip + snooze stores + snooze duration?" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "¿Borrar stores de saltar + posponer + duración de posposición?" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Effacer les stores sauter + reporter + durée de report ?" } } } },
+    "settings.diagnostics.devTools.reset.action" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Reset" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Restablecer" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réinitialiser" } } } },
+    "settings.diagnostics.devTools.reset.done" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Dev stores reset to defaults." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Stores dev restablecidos a valores por defecto." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Stores dev réinitialisés aux valeurs par défaut." } } } },
+
+    "housekeeping.notification.body" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Time for this housekeeping task." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hora de esta tarea del hogar." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Il est temps de faire cette tâche ménagère." } } } },
+    "medication.notification.followup.suffix" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Follow-up reminder" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Recordatorio de seguimiento" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Rappel de suivi" } } } },
+
+    "today.action.skipRest" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Skip rest of today" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Saltar resto del día" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Sauter le reste de la journée" } } } },
+
+    "templateList.action.duplicate" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Duplicate" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Duplicar" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Dupliquer" } } } },
+    "templateList.action.duplicate.suffix" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "(copy)" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "(copia)" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "(copie)" } } } },
+
+    "blockEditor.discardChanges.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Discard unsaved changes?" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "¿Descartar cambios sin guardar?" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Annuler les modifications non enregistrées ?" } } } },
+    "blockEditor.discardChanges.action" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Discard" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Descartar" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Annuler" } } } },
+
+    "hydration.action.deleteLog" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Delete log" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Eliminar registro" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Supprimer l'entrée" } } } },
+
+    "trip.milestone.alreadyNotified" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Notification already fired" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Notificación ya enviada" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Notification déjà envoyée" } } } }
   }
 }

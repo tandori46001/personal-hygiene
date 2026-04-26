@@ -44,6 +44,8 @@ extension BlockSnoozeStore {
             markSnoozed(source: .hydration, key: String(index), dayKey: dayKey)
         case .milestone(let milestoneID):
             markSnoozed(source: .milestone, key: milestoneID.uuidString, dayKey: dayKey)
+        case .medicationFollowUp(let blockID, let storedDayKey):
+            markSnoozed(source: .medicationFollowUp, key: blockID.uuidString, dayKey: storedDayKey)
         }
     }
 
@@ -176,11 +178,13 @@ public final class InMemoryBlockSnoozeStore: BlockSnoozeStore, @unchecked Sendab
 }
 
 /// Source module that produced a notification — used by `BlockSnoozeStore` so
-/// per-module badges (routine / hydration / milestone) stay scoped.
+/// per-module badges (routine / hydration / milestone / medication-followup)
+/// stay scoped.
 public enum BlockSnoozeSource: String, CaseIterable, Sendable {
     case routine
     case hydration
     case milestone
+    case medicationFollowUp
 }
 
 /// Parsed shape of a notification identifier emitted by any of the app's
@@ -189,12 +193,14 @@ public enum ParsedNotificationIdentifier: Equatable, Sendable {
     case routine(blockID: UUID, dayKey: String)
     case hydration(dayKey: String, index: Int)
     case milestone(milestoneID: UUID)
+    case medicationFollowUp(blockID: UUID, dayKey: String)
 
     public var source: BlockSnoozeSource {
         switch self {
         case .routine: return .routine
         case .hydration: return .hydration
         case .milestone: return .milestone
+        case .medicationFollowUp: return .medicationFollowUp
         }
     }
 }
@@ -236,6 +242,10 @@ public enum BlockNotificationIdentifier {
                 if let parsed = parseMilestone(normalized) {
                     return parsed
                 }
+            case .medicationFollowUp:
+                if let parsed = parseMedicationFollowUp(normalized) {
+                    return parsed
+                }
             }
         }
         return nil
@@ -270,5 +280,17 @@ public enum BlockNotificationIdentifier {
         let trimmed = identifier.dropFirst(prefix.count)
         guard let uuid = UUID(uuidString: String(trimmed)) else { return nil }
         return .milestone(milestoneID: uuid)
+    }
+
+    private static func parseMedicationFollowUp(_ identifier: String) -> ParsedNotificationIdentifier? {
+        let prefix = MedicationFollowUpFactory.identifierPrefix
+        guard identifier.hasPrefix(prefix) else { return nil }
+        let trimmed = identifier.dropFirst(prefix.count)
+        // Format: "<UUID>.<dayKey>"
+        let parts = trimmed.split(separator: ".", maxSplits: 1, omittingEmptySubsequences: true)
+        guard parts.count == 2,
+              let uuid = UUID(uuidString: String(parts[0]))
+        else { return nil }
+        return .medicationFollowUp(blockID: uuid, dayKey: String(parts[1]))
     }
 }

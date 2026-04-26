@@ -72,6 +72,41 @@ public final class NotificationCoordinator {
             calendar: calendar
         )
         let filtered = DeepFocusFilter.suppressing(raw, focusWindows: focusWindows)
-        try await service.scheduleAll(filtered)
+        let withFollowUps = filtered + Self.medicationFollowUps(
+            primaries: filtered,
+            blocks: blocks,
+            now: now,
+            calendar: calendar
+        )
+        try await service.scheduleAll(withFollowUps)
+    }
+
+    /// PRD M3.2 fallback: every primary medication notification gains a +30
+    /// min follow-up so the user gets re-notified if they ignored the first
+    /// alert. Pure side-effect-free helper so tests can verify the pairing.
+    static func medicationFollowUps(
+        primaries: [ScheduledNotification],
+        blocks: [Block],
+        now: Date,
+        calendar: Calendar
+    ) -> [ScheduledNotification] {
+        let medicationBlocks = blocks.filter { $0.medicationConceptIdentifier != nil }
+        let dayKey = String(
+            format: "%04d-%02d-%02d",
+            calendar.component(.year, from: now),
+            calendar.component(.month, from: now),
+            calendar.component(.day, from: now)
+        )
+        return primaries.compactMap { primary -> ScheduledNotification? in
+            // Match the primary to its source block by identifier suffix.
+            guard let block = medicationBlocks.first(where: { primary.identifier.contains($0.id.uuidString) })
+            else { return nil }
+            return MedicationFollowUpFactory.followUp(
+                for: primary,
+                block: block,
+                dayKey: dayKey,
+                calendar: calendar
+            )
+        }
     }
 }

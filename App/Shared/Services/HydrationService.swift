@@ -8,6 +8,7 @@ public protocol HydrationService {
     func log(milliliters: Int, at drankAt: Date) throws
     func logs(between start: Date, and end: Date) throws -> [HydrationLog]
     func deleteAllLogs() throws
+    func delete(_ log: HydrationLog) throws
 }
 
 @MainActor
@@ -41,6 +42,11 @@ public final class SwiftDataHydrationService: HydrationService {
         }
         try context.save()
     }
+
+    public func delete(_ log: HydrationLog) throws {
+        context.delete(log)
+        try context.save()
+    }
 }
 
 /// In-memory test/preview implementation.
@@ -66,5 +72,9 @@ public final class InMemoryHydrationService: HydrationService {
 
     public func deleteAllLogs() throws {
         entries.removeAll()
+    }
+
+    public func delete(_ log: HydrationLog) throws {
+        entries.removeAll { $0.id == log.id }
     }
 }

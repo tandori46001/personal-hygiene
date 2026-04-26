@@ -4,13 +4,17 @@ import UserNotifications
 /// Settings → Diagnostics screen. Surfaces things you'd want to know when
 /// reporting a bug or verifying state on a real device: app version, commit,
 /// notification authorization status, last refresh, pending count, deep link
-/// into `PendingNotificationsView`.
+/// into `PendingNotificationsView`, plus a few dev-only buttons that fast-
+/// forward state for on-device QA.
 struct DiagnosticsView: View {
 
     let viewModel: SettingsViewModel
+    let actions: DiagnosticsActions
 
     @State private var pendingCount: Int?
     @State private var pendingError: String?
+    @State private var lastDevAction: String?
+    @State private var showingResetConfirm = false
 
     var body: some View {
         List {
@@ -49,11 +53,102 @@ struct DiagnosticsView: View {
             } header: {
                 Text("settings.diagnostics.section.notifications", bundle: .main)
             }
+
+            devToolsSection
+
+            if let lastDevAction {
+                Section {
+                    Text(verbatim: lastDevAction)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
         }
         .navigationTitle(Text("settings.diagnostics.title", bundle: .main))
         .navigationBarTitleDisplayMode(.inline)
         .task { await refreshPendingCount() }
         .refreshable { await refreshPendingCount() }
+        .confirmationDialog(
+            Text("settings.diagnostics.devTools.reset.confirm.title", bundle: .main),
+            isPresented: $showingResetConfirm,
+            titleVisibility: .visible,
+            actions: {
+                Button(role: .destructive) {
+                    actions.resetDevStores()
+                    lastDevAction = String(localized: "settings.diagnostics.devTools.reset.done")
+                } label: {
+                    Text("settings.diagnostics.devTools.reset.action", bundle: .main)
+                }
+                Button(role: .cancel) {} label: {
+                    Text("common.cancel", bundle: .main)
+                }
+            }
+        )
+    }
+
+    @ViewBuilder
+    private var devToolsSection: some View {
+        Section {
+            Button {
+                Task {
+                    await actions.scheduleTestNotification()
+                    lastDevAction = String(localized: "settings.diagnostics.devTools.testNotif.done")
+                    await refreshPendingCount()
+                }
+            } label: {
+                Label {
+                    Text("settings.diagnostics.devTools.testNotif", bundle: .main)
+                } icon: {
+                    Image(systemName: "bell.badge")
+                }
+            }
+
+            Button(role: .destructive) {
+                Task {
+                    await actions.clearAllPending()
+                    lastDevAction = String(localized: "settings.diagnostics.devTools.clearPending.done")
+                    await refreshPendingCount()
+                }
+            } label: {
+                Label {
+                    Text("settings.diagnostics.devTools.clearPending", bundle: .main)
+                } icon: {
+                    Image(systemName: "bell.slash")
+                }
+            }
+
+            Button {
+                if let title = actions.injectSnoozeBadge() {
+                    lastDevAction = String(
+                        localized: "settings.diagnostics.devTools.injectBadge.done \(title)"
+                    )
+                } else {
+                    lastDevAction = String(
+                        localized: "settings.diagnostics.devTools.injectBadge.empty"
+                    )
+                }
+            } label: {
+                Label {
+                    Text("settings.diagnostics.devTools.injectBadge", bundle: .main)
+                } icon: {
+                    Image(systemName: "alarm.waves.left.and.right")
+                }
+            }
+
+            Button(role: .destructive) {
+                showingResetConfirm = true
+            } label: {
+                Label {
+                    Text("settings.diagnostics.devTools.reset", bundle: .main)
+                } icon: {
+                    Image(systemName: "trash")
+                }
+            }
+        } header: {
+            Text("settings.diagnostics.section.devTools", bundle: .main)
+        } footer: {
+            Text("settings.diagnostics.section.devTools.footer", bundle: .main)
+        }
     }
 
     private func row(label: LocalizedStringKey, value: String) -> some View {

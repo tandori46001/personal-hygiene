@@ -6,7 +6,11 @@ struct ContentView: View {
 
     var body: some View {
         let repository = SwiftDataRoutineRepository(context: modelContext)
-        TodayWatchView(viewModel: TodayViewModel(repository: repository), repository: repository)
+        let snoozeStore = UserDefaultsBlockSnoozeStore()
+        TodayWatchView(
+            viewModel: TodayViewModel(repository: repository, snoozeStore: snoozeStore),
+            repository: repository
+        )
     }
 }
 
@@ -72,7 +76,8 @@ struct TodayWatchView: View {
             WatchBlockRow(
                 block: block,
                 highlighted: highlighted,
-                isDone: doneBlockIDs.contains(block.id)
+                isDone: doneBlockIDs.contains(block.id),
+                isSnoozedToday: viewModel.isSnoozedToday(block)
             )
         }
         .buttonStyle(.plain)
@@ -106,6 +111,7 @@ private struct WatchBlockRow: View {
     let block: Block
     let highlighted: Bool
     let isDone: Bool
+    var isSnoozedToday: Bool = false
 
     var body: some View {
         HStack(spacing: 8) {
@@ -119,6 +125,12 @@ private struct WatchBlockRow: View {
                 .strikethrough(isDone)
                 .lineLimit(2)
             Spacer(minLength: 0)
+            if isSnoozedToday {
+                Image(systemName: "alarm")
+                    .foregroundStyle(.blue)
+                    .font(.caption2)
+                    .accessibilityLabel(Text("today.snoozedToday", bundle: .main))
+            }
         }
         .accessibilityElement(children: .combine)
     }

@@ -53,6 +53,15 @@ final class HydrationDashboardViewModel {
         }
     }
 
+    func deleteLog(_ log: HydrationLog, now: Date = Date()) {
+        do {
+            try service.delete(log)
+            reload(now: now)
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
     var totalMilliliters: Int {
         HydrationCompliance.totalMilliliters(on: Date(), logs: todayLogs, calendar: calendar)
     }
