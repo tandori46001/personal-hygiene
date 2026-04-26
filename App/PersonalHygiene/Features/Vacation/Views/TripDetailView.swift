@@ -3,6 +3,20 @@ import SwiftUI
 struct TripDetailView: View {
     @Bindable var viewModel: TripDetailViewModel
 
+    @State private var milestoneSheet: MilestoneSheetState?
+
+    private enum MilestoneSheetState: Identifiable {
+        case create
+        case edit(TripMilestone)
+
+        var id: String {
+            switch self {
+            case .create: "create"
+            case .edit(let m): m.id.uuidString
+            }
+        }
+    }
+
     var body: some View {
         Form {
             if let error = viewModel.errorMessage {
@@ -52,9 +66,26 @@ struct TripDetailView: View {
                         .foregroundStyle(.secondary)
                 } else {
                     ForEach(viewModel.sortedMilestones) { milestone in
-                        MilestoneRow(milestone: milestone)
+                        Button {
+                            milestoneSheet = .edit(milestone)
+                        } label: {
+                            MilestoneRow(
+                                milestone: milestone,
+                                onToggle: { viewModel.toggleMilestoneCompletion(milestone) }
+                            )
+                        }
+                        .buttonStyle(.plain)
                     }
                     .onDelete(perform: deleteMilestones)
+                }
+                Button {
+                    milestoneSheet = .create
+                } label: {
+                    Label {
+                        Text("trip.milestone.action.add", bundle: .main)
+                    } icon: {
+                        Image(systemName: "plus.circle.fill")
+                    }
                 }
             } header: {
                 Text("trip.detail.section.milestones", bundle: .main)
@@ -77,6 +108,18 @@ struct TripDetailView: View {
         .navigationTitle(viewModel.trip.name)
         .navigationBarTitleDisplayMode(.inline)
         .onDisappear { viewModel.saveEdits() }
+        .sheet(item: $milestoneSheet) { state in
+            switch state {
+            case .create:
+                MilestoneEditorView(mode: .create) { title, days, _ in
+                    viewModel.addMilestone(title: title, daysBefore: days)
+                }
+            case .edit(let milestone):
+                MilestoneEditorView(mode: .edit(milestone)) { title, days, isDone in
+                    viewModel.updateMilestone(milestone, title: title, daysBefore: days, isComplete: isDone)
+                }
+            }
+        }
     }
 
     private func deleteMilestones(at offsets: IndexSet) {
@@ -94,12 +137,21 @@ struct TripDetailView: View {
 
 private struct MilestoneRow: View {
     let milestone: TripMilestone
+    let onToggle: () -> Void
 
     var body: some View {
         HStack {
-            Image(systemName: milestone.isComplete ? "checkmark.circle.fill" : "circle")
-                .foregroundStyle(milestone.isComplete ? Color.green : Color.secondary)
-                .accessibilityHidden(true)
+            Button(action: onToggle) {
+                Image(systemName: milestone.isComplete ? "checkmark.circle.fill" : "circle")
+                    .foregroundStyle(milestone.isComplete ? Color.green : Color.secondary)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(
+                milestone.isComplete
+                    ? Text("trip.milestone.action.unmarkDone", bundle: .main)
+                    : Text("trip.milestone.action.markDone", bundle: .main)
+            )
+
             VStack(alignment: .leading, spacing: 2) {
                 Text(milestone.title)
                     .font(.body)
@@ -107,8 +159,8 @@ private struct MilestoneRow: View {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
+            Spacer()
         }
-        .accessibilityElement(children: .combine)
     }
 }
 

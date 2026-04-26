@@ -69,4 +69,43 @@ final class TripDetailViewModelTests: XCTestCase {
         let trips = try fix.repo.allTrips()
         XCTAssertEqual(trips.first?.name, "Renombrado")
     }
+
+    func test_addMilestone_appendsTrimmedAndClampsDays() throws {
+        let fix = try makeFixture()
+        fix.viewModel.addMilestone(title: "  Pack  ", daysBefore: -3)
+
+        XCTAssertEqual(fix.trip.milestones.count, 1)
+        XCTAssertEqual(fix.trip.milestones.first?.title, "Pack")
+        XCTAssertEqual(fix.trip.milestones.first?.daysBefore, 0)
+    }
+
+    func test_addMilestone_blankTitleIsNoop() throws {
+        let fix = try makeFixture()
+        fix.viewModel.addMilestone(title: "   ", daysBefore: 5)
+        XCTAssertTrue(fix.trip.milestones.isEmpty)
+    }
+
+    func test_updateMilestone_appliesChanges() throws {
+        let fix = try makeFixture()
+        let milestone = TripMilestone(title: "Original", daysBefore: 3)
+        try fix.repo.addMilestone(milestone, to: fix.trip)
+
+        fix.viewModel.updateMilestone(milestone, title: "Updated", daysBefore: 14, isComplete: true)
+
+        XCTAssertEqual(milestone.title, "Updated")
+        XCTAssertEqual(milestone.daysBefore, 14)
+        XCTAssertTrue(milestone.isComplete)
+    }
+
+    func test_toggleMilestoneCompletion_flipsBool() throws {
+        let fix = try makeFixture()
+        let milestone = TripMilestone(title: "Pack", daysBefore: 1)
+        try fix.repo.addMilestone(milestone, to: fix.trip)
+
+        fix.viewModel.toggleMilestoneCompletion(milestone)
+        XCTAssertTrue(milestone.isComplete)
+
+        fix.viewModel.toggleMilestoneCompletion(milestone)
+        XCTAssertFalse(milestone.isComplete)
+    }
 }

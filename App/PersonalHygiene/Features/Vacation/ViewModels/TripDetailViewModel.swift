@@ -31,6 +31,31 @@ final class TripDetailViewModel {
         }
     }
 
+    func addMilestone(title: String, daysBefore: Int) {
+        let trimmed = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        do {
+            let milestone = TripMilestone(title: trimmed, daysBefore: max(0, daysBefore))
+            try repository.addMilestone(milestone, to: trip)
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    func updateMilestone(_ milestone: TripMilestone, title: String, daysBefore: Int, isComplete: Bool) {
+        let trimmed = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return }
+        milestone.title = trimmed
+        milestone.daysBefore = max(0, daysBefore)
+        milestone.isComplete = isComplete
+        saveEdits()
+    }
+
+    func toggleMilestoneCompletion(_ milestone: TripMilestone) {
+        milestone.isComplete.toggle()
+        saveEdits()
+    }
+
     func deleteMilestone(_ milestone: TripMilestone) {
         do {
             try repository.deleteMilestone(milestone)

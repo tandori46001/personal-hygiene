@@ -819,6 +819,43 @@
     "trip.document.kind.other" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Other" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Otro" } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Autre" } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Autre" } } } },
+
+    "trip.milestone.action.add" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Add milestone" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Añadir hito" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ajouter un jalon" } } } },
+    "trip.milestone.action.markDone" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Mark milestone done" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Marcar hito como hecho" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Marquer le jalon comme fait" } } } },
+    "trip.milestone.action.unmarkDone" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Mark milestone pending" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Marcar hito como pendiente" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Marquer le jalon en attente" } } } },
+    "trip.milestone.new.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "New milestone" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Nuevo hito" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Nouveau jalon" } } } },
+    "trip.milestone.edit.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Edit milestone" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Editar hito" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Modifier le jalon" } } } },
+    "trip.milestone.field.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Title" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Título" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Titre" } } } },
+    "trip.milestone.field.title.placeholder" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Buy currency, confirm hotel…" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Cambiar dinero, confirmar hotel…" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Changer de l'argent, confirmer l'hôtel…" } } } },
+    "trip.milestone.field.daysBefore" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Days before departure" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Días antes de salir" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Jours avant le départ" } } } },
+    "trip.milestone.field.isComplete" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Done" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hecho" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Fait" } } } }
   }
 }

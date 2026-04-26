@@ -95,6 +95,7 @@
 		77260F85608551C7D1D9999D /* HydrationDashboardViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BDC54A811B51A0036F6803B /* HydrationDashboardViewModelTests.swift */; };
 		7989AA017757180F433889C0 /* TodayViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 663722BBB35DB8492E87B16F /* TodayViewModelTests.swift */; };
 		7A31CE50AE0FBD7F26565ADE /* HydrationCompliance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63821CA8C548D983DE625643 /* HydrationCompliance.swift */; };
+		7C74D583AB2869F015113585 /* MilestoneEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 778E4E083674A6875D375C01 /* MilestoneEditorView.swift */; };
 		7D39144F9F0937DEB78AAB07 /* RoutineRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2C54C3BD0F8E70F3D7B226 /* RoutineRepository.swift */; };
 		7DDDA435DC36C77FED5EC9FA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FA729D9A2D577664E06AE28B /* Assets.xcassets */; };
 		802C99AA8D6647108D2D8A51 /* BlockEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C451104F3CD28FB1CDE85792 /* BlockEditorView.swift */; };
@@ -257,6 +258,7 @@
 		6EE9435A405AE37512198FC9 /* BedtimeCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BedtimeCalculatorTests.swift; sourceTree = "<group>"; };
 		6FA07D8B8356DF42718A24EC /* BirthdaysViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdaysViewModelTests.swift; sourceTree = "<group>"; };
 		7099FBF5BE60662DEC8B45D3 /* MedicationComplianceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationComplianceTests.swift; sourceTree = "<group>"; };
+		778E4E083674A6875D375C01 /* MilestoneEditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MilestoneEditorView.swift; sourceTree = "<group>"; };
 		7BCDD26F1F9BE6897C802F9D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7BE1F2759BBDB34451AB30BD /* UpcomingBirthdays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingBirthdays.swift; sourceTree = "<group>"; };
 		7C60BB97B3DF5358A08BB2E3 /* HydrationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HydrationServiceTests.swift; sourceTree = "<group>"; };
@@ -395,6 +397,7 @@
 		2817C0797946121C42AB8287 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				778E4E083674A6875D375C01 /* MilestoneEditorView.swift */,
 				CE81B3C2DA797C8029D30EFE /* TripDetailView.swift */,
 				8E00D497A61B140A78BEBC11 /* TripsListView.swift */,
 			);
@@ -1114,6 +1117,7 @@
 				B5B93C08D52435D705C86EE7 /* MedicationComplianceView.swift in Sources */,
 				F51DCDA108CFD308325E6DCE /* MedicationComplianceViewModel.swift in Sources */,
 				EE73AC4C89BAEC42F0C2EF88 /* MedicationService.swift in Sources */,
+				7C74D583AB2869F015113585 /* MilestoneEditorView.swift in Sources */,
 				EA6172A3F41984E15DDBDE1A /* NotificationCoordinator.swift in Sources */,
 				0FE34A7D9D26E0FA15F9F547 /* NotificationFactory.swift in Sources */,
 				B2F5FFB79A9469BEBB371F26 /* NotificationService.swift in Sources */,
