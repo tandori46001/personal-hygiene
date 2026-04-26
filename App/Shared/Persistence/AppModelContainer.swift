@@ -12,6 +12,7 @@ public enum AppModelContainer {
         RoutineTemplate.self,
         BlockCompletion.self,
         HydrationLog.self,
+        HousekeepingTask.self,
     ])
 
     /// On-disk container used by the running app.
