@@ -37,10 +37,11 @@ public final class NotificationCoordinator {
             return
         }
 
-        let notifications: [ScheduledNotification]
+        let blocks = template.sortedBlocks
+        let raw: [ScheduledNotification]
         if travelTimeService != nil, homeLocation != nil {
-            notifications = await NotificationFactory.notifications(
-                for: template.sortedBlocks,
+            raw = await NotificationFactory.notifications(
+                for: blocks,
                 on: now,
                 origin: homeLocation,
                 travelTimeService: travelTimeService,
@@ -48,12 +49,14 @@ public final class NotificationCoordinator {
                 calendar: calendar
             )
         } else {
-            notifications = NotificationFactory.notifications(
-                for: template.sortedBlocks,
+            raw = NotificationFactory.notifications(
+                for: blocks,
                 on: now,
                 calendar: calendar
             )
         }
-        try await service.scheduleAll(notifications)
+        let focusWindows = DeepFocusFilter.focusWindows(for: blocks, on: now, calendar: calendar)
+        let filtered = DeepFocusFilter.suppressing(raw, focusWindows: focusWindows)
+        try await service.scheduleAll(filtered)
     }
 }

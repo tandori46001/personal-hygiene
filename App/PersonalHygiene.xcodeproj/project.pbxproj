@@ -30,6 +30,7 @@
 		250031CFAF00CF1146907A67 /* SwiftDataRoutineRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB758833B5B3BA55E64050D2 /* SwiftDataRoutineRepositoryTests.swift */; };
 		250E5ADC3C7B95F1E380D32C /* HydrationLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF6DCB5D30BD8C57759C588D /* HydrationLog.swift */; };
 		26045A7515484060642A73A5 /* BlockCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57416A608867A6A25E96429 /* BlockCompletion.swift */; };
+		264A9C1DA014CC0E17E95B40 /* DeepFocusFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9FEB31CBE9708BAB03C30C /* DeepFocusFilter.swift */; };
 		26BFB024B8B0B94C8AB975D6 /* HydrationDashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D79F67E752A39055812B18DD /* HydrationDashboardViewModel.swift */; };
 		26D58ABFFB89540BD41A2144 /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15A10D5DE460A958A5D53E2 /* AppModelContainer.swift */; };
 		29029740613FDF033E8988E3 /* HydrationNotificationFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB64FF3083A5594BDDFDAA0 /* HydrationNotificationFactory.swift */; };
@@ -51,6 +52,7 @@
 		45B42CCB8E6E3F3BEE67493A /* HydrationCompliance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63821CA8C548D983DE625643 /* HydrationCompliance.swift */; };
 		4980AA996B959765FF256D11 /* UpcomingBirthdays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE1F2759BBDB34451AB30BD /* UpcomingBirthdays.swift */; };
 		4A3E9027497029BCC1103016 /* BlockLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498429D0D47787A663C6BD39 /* BlockLocation.swift */; };
+		4C7B66D9453EE7869DB1D75A /* DeepFocusFilterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AD448CC6DDECC5C5D628BA8 /* DeepFocusFilterTests.swift */; };
 		4DB7286E1C5B1846E9566883 /* HydrationLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF6DCB5D30BD8C57759C588D /* HydrationLog.swift */; };
 		4E280B974DC4D6CBD90302BB /* HydrationLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF6DCB5D30BD8C57759C588D /* HydrationLog.swift */; };
 		4E458E1A64DCB38CA68DE755 /* NotificationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 685542340D132BBBD5D1B0F6 /* NotificationCoordinator.swift */; };
@@ -98,6 +100,7 @@
 		A0BB5D8B286A960EB2BF8E2F /* HomeLocationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6E0FA22F887BB223629773 /* HomeLocationStore.swift */; };
 		A1D1B56B4AB83BA3BE2F2BA0 /* HousekeepingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7D6EB2189F2A13D70E79F9 /* HousekeepingService.swift */; };
 		A27B1F8370D2B70C50206E8C /* TravelTimeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6225759542A5B4D3E911E35A /* TravelTimeService.swift */; };
+		A74EE37BE73B4F33809C16C1 /* DeepFocusFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9FEB31CBE9708BAB03C30C /* DeepFocusFilter.swift */; };
 		ABDD9F80A4A0A76EDFFCB191 /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15A10D5DE460A958A5D53E2 /* AppModelContainer.swift */; };
 		ACAD329E1F644BCB590E52D7 /* TodayViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB3D1761E75135E071C56D6 /* TodayViewModel.swift */; };
 		AD764BD8263ED878C0B05673 /* SleepDashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 32AE31DC6C703E1F542C8004 /* SleepDashboardViewModel.swift */; };
@@ -138,6 +141,7 @@
 		F37DFA8232057D8FFE78368F /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = E73879E25833E6C0994E9F07 /* Localizable.xcstrings */; };
 		F51DCDA108CFD308325E6DCE /* MedicationComplianceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9671CFCAC1D7614EBAD1CFB6 /* MedicationComplianceViewModel.swift */; };
 		F8504E6345EBE253E6DF1CA0 /* MedicationCompliance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87CF274A384796487EFA71A4 /* MedicationCompliance.swift */; };
+		F953B00695617595C5CB3A6E /* DeepFocusFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9FEB31CBE9708BAB03C30C /* DeepFocusFilter.swift */; };
 		F96FA069404475767D5D87F5 /* HousekeepingServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D9ED449793E3F94C0C2F63D /* HousekeepingServiceTests.swift */; };
 		FA097D4CF1B4CB5A060C2635 /* ErrorBanner.swift in Sources */ = {isa = PBXBuildFile; fileRef = DAF8C3958E0B46A4FDCABDC6 /* ErrorBanner.swift */; };
 		FC0D4F42034DC4F3AF5A8ABB /* BedtimeCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE9435A405AE37512198FC9 /* BedtimeCalculatorTests.swift */; };
@@ -183,6 +187,7 @@
 		03B2F3900B8AA9251273F093 /* PersonalHygieneWatchApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalHygieneWatchApp.swift; sourceTree = "<group>"; };
 		04C442826202995F6E163D01 /* HydrationGoal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HydrationGoal.swift; sourceTree = "<group>"; };
 		09F2C380F4A6452D827B3B69 /* BlockTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockTests.swift; sourceTree = "<group>"; };
+		0AD448CC6DDECC5C5D628BA8 /* DeepFocusFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepFocusFilterTests.swift; sourceTree = "<group>"; };
 		0CCDFE1032F58597D5ECC644 /* HydrationNotificationFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HydrationNotificationFactoryTests.swift; sourceTree = "<group>"; };
 		170697D44D231992F769C84D /* TemplateEditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateEditorViewModel.swift; sourceTree = "<group>"; };
 		2A42595C053FA63B9C86121A /* TravelTimeServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelTimeServiceTests.swift; sourceTree = "<group>"; };
@@ -212,6 +217,7 @@
 		7BCDD26F1F9BE6897C802F9D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		7BE1F2759BBDB34451AB30BD /* UpcomingBirthdays.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingBirthdays.swift; sourceTree = "<group>"; };
 		7C60BB97B3DF5358A08BB2E3 /* HydrationServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HydrationServiceTests.swift; sourceTree = "<group>"; };
+		7D9FEB31CBE9708BAB03C30C /* DeepFocusFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepFocusFilter.swift; sourceTree = "<group>"; };
 		83B564307C0E98CEC05BE5E6 /* RoutineListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineListViewModel.swift; sourceTree = "<group>"; };
 		86B28C17FF4E3A4DA60C22B0 /* SettingsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
 		87CF274A384796487EFA71A4 /* MedicationCompliance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationCompliance.swift; sourceTree = "<group>"; };
@@ -484,6 +490,7 @@
 			children = (
 				D4325233FA9F02871FCDA344 /* BedtimeCalculator.swift */,
 				CC8AF1C127CD25DD6CBF1485 /* ContactsService.swift */,
+				7D9FEB31CBE9708BAB03C30C /* DeepFocusFilter.swift */,
 				DC6E0FA22F887BB223629773 /* HomeLocationStore.swift */,
 				8F7D6EB2189F2A13D70E79F9 /* HousekeepingService.swift */,
 				63821CA8C548D983DE625643 /* HydrationCompliance.swift */,
@@ -582,6 +589,7 @@
 			children = (
 				6EE9435A405AE37512198FC9 /* BedtimeCalculatorTests.swift */,
 				9B4B7C0C3656EBA46280D550 /* ContactsServiceTests.swift */,
+				0AD448CC6DDECC5C5D628BA8 /* DeepFocusFilterTests.swift */,
 				BFC05394EC5A6EB86F475464 /* HomeLocationStoreTests.swift */,
 				DDE650386CC56260C52C84E5 /* HousekeepingSchedulerTests.swift */,
 				5D9ED449793E3F94C0C2F63D /* HousekeepingServiceTests.swift */,
@@ -915,6 +923,7 @@
 				2A227F961B62938928F882B7 /* ContactsService.swift in Sources */,
 				72148BB53EEFC93362D896D1 /* ContentView.swift in Sources */,
 				5F0577EC49473FBE13718355 /* DayType.swift in Sources */,
+				A74EE37BE73B4F33809C16C1 /* DeepFocusFilter.swift in Sources */,
 				6C56A3BEFA8F7940D1251421 /* HomeLocationStore.swift in Sources */,
 				520DB9CCF89499E26F78A956 /* HousekeepingService.swift in Sources */,
 				8E6E9C0F4F6BE1778E9ADF2E /* HousekeepingTask.swift in Sources */,
@@ -947,6 +956,7 @@
 				CAE4CECF76EA420958B1DA42 /* BlockLocationTests.swift in Sources */,
 				FCFA2F8A993CE5F7821AC3EB /* BlockTests.swift in Sources */,
 				03CC3856A4A2116B7C4DF81F /* ContactsServiceTests.swift in Sources */,
+				4C7B66D9453EE7869DB1D75A /* DeepFocusFilterTests.swift in Sources */,
 				3639F36A6FAF277FBBC28E37 /* HomeLocationStoreTests.swift in Sources */,
 				6484A070450C3E967AA8C63F /* HousekeepingSchedulerTests.swift in Sources */,
 				F96FA069404475767D5D87F5 /* HousekeepingServiceTests.swift in Sources */,
@@ -981,6 +991,7 @@
 				17AF8D20C7788B7CAD931782 /* ContactsService.swift in Sources */,
 				640F0F42B7F296D84317AF76 /* ContentView.swift in Sources */,
 				55512E018BDB30A6773BFA91 /* DayType.swift in Sources */,
+				F953B00695617595C5CB3A6E /* DeepFocusFilter.swift in Sources */,
 				FA097D4CF1B4CB5A060C2635 /* ErrorBanner.swift in Sources */,
 				A0BB5D8B286A960EB2BF8E2F /* HomeLocationStore.swift in Sources */,
 				18CFD0344CE92399CAC6EBB0 /* HousekeepingListView.swift in Sources */,
@@ -1036,6 +1047,7 @@
 				0CF8BDD7F0CA4228EDA273D6 /* BlockLocation.swift in Sources */,
 				592758EFF5BFFBD7D59931C3 /* ContactsService.swift in Sources */,
 				D1262F4532A8ECACDF21A14B /* DayType.swift in Sources */,
+				264A9C1DA014CC0E17E95B40 /* DeepFocusFilter.swift in Sources */,
 				41EB1A2E96817B8F28ACE0CB /* HomeLocationStore.swift in Sources */,
 				DA86E3803D935DAFA1948319 /* HousekeepingService.swift in Sources */,
 				51A02500B6089A3E7F2AD773 /* HousekeepingTask.swift in Sources */,
