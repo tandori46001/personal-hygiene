@@ -63,6 +63,7 @@
 		53C230B7795BF75764BC4BE1 /* TravelTimeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6225759542A5B4D3E911E35A /* TravelTimeService.swift */; };
 		55512E018BDB30A6773BFA91 /* DayType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018597A028807D4803454994 /* DayType.swift */; };
 		592758EFF5BFFBD7D59931C3 /* ContactsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8AF1C127CD25DD6CBF1485 /* ContactsService.swift */; };
+		5A2BF345F89D9B92887071B7 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B1ADABFC9F8D9CE86300920 /* AppEnvironment.swift */; };
 		5C4C158A605F002079D5781D /* BlockCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4606FE1130F7F17EBC7A28C /* BlockCategory.swift */; };
 		5C66C8E9DFE956FFF0DA8F82 /* RoutineRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2C54C3BD0F8E70F3D7B226 /* RoutineRepository.swift */; };
 		5F0577EC49473FBE13718355 /* DayType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018597A028807D4803454994 /* DayType.swift */; };
@@ -191,6 +192,7 @@
 		0CCDFE1032F58597D5ECC644 /* HydrationNotificationFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HydrationNotificationFactoryTests.swift; sourceTree = "<group>"; };
 		170697D44D231992F769C84D /* TemplateEditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateEditorViewModel.swift; sourceTree = "<group>"; };
 		2A42595C053FA63B9C86121A /* TravelTimeServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelTimeServiceTests.swift; sourceTree = "<group>"; };
+		2B1ADABFC9F8D9CE86300920 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
 		2C8CD9EEBE4FA54D9CAB3487 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		2F2E746124742819F23D63A4 /* MedicationService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationService.swift; sourceTree = "<group>"; };
 		304BB89FC3937D84FC4E539B /* HousekeepingListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousekeepingListView.swift; sourceTree = "<group>"; };
@@ -724,6 +726,7 @@
 		D6FB3273019F1C5573C6E385 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				2B1ADABFC9F8D9CE86300920 /* AppEnvironment.swift */,
 				902DCDD24FE37E96168D6152 /* ContentView.swift */,
 				B45E12146599CB7B994CFF2A /* PersonalHygieneApp.swift */,
 			);
@@ -977,6 +980,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5A2BF345F89D9B92887071B7 /* AppEnvironment.swift in Sources */,
 				ABDD9F80A4A0A76EDFFCB191 /* AppModelContainer.swift in Sources */,
 				DC5818E1D58D2B5D49051124 /* BedtimeCalculator.swift in Sources */,
 				7678C99D9C12FB2EB4E1EEDB /* BirthdayContact.swift in Sources */,

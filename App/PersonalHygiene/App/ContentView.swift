@@ -6,22 +6,14 @@ struct ContentView: View {
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
 
     var body: some View {
-        let repository = SwiftDataRoutineRepository(context: modelContext)
-        let hydrationService = SwiftDataHydrationService(context: modelContext)
-        let housekeepingService = SwiftDataHousekeepingService(context: modelContext)
-        let contactsService = CNContactsService()
+        let env = AppEnvironment(modelContext: modelContext)
 
         Group {
             if hasCompletedOnboarding {
-                MainTabs(
-                    repository: repository,
-                    hydrationService: hydrationService,
-                    housekeepingService: housekeepingService,
-                    contactsService: contactsService
-                )
+                MainTabs(env: env)
             } else {
                 OnboardingView(
-                    repository: repository,
+                    repository: env.routineRepository,
                     onComplete: { hasCompletedOnboarding = true }
                 )
             }
@@ -30,29 +22,11 @@ struct ContentView: View {
 }
 
 private struct MainTabs: View {
-    let repository: any RoutineRepository
-    let hydrationService: any HydrationService
-    let housekeepingService: any HousekeepingService
-    let contactsService: any ContactsService
-
-    private let notificationService = UserNotificationsService()
-    private let medicationService = HealthKitMedicationService()
-    private let sleepService = HealthKitSleepService()
-    private let travelTimeService: any TravelTimeService = MKDirectionsTravelTimeService()
-    private let homeStore = HomeLocationStore()
-
-    private func makeCoordinator() -> NotificationCoordinator {
-        NotificationCoordinator(
-            repository: repository,
-            service: notificationService,
-            travelTimeService: travelTimeService,
-            homeLocation: homeStore.location
-        )
-    }
+    let env: AppEnvironment
 
     var body: some View {
         TabView {
-            TodayView(viewModel: TodayViewModel(repository: repository))
+            TodayView(viewModel: TodayViewModel(repository: env.routineRepository))
                 .tabItem {
                     Label {
                         Text("tab.today", bundle: .main)
@@ -62,8 +36,8 @@ private struct MainTabs: View {
                 }
 
             TemplateListView(
-                viewModel: TemplateListViewModel(repository: repository),
-                repository: repository
+                viewModel: TemplateListViewModel(repository: env.routineRepository),
+                repository: env.routineRepository
             )
             .tabItem {
                 Label {
@@ -75,8 +49,8 @@ private struct MainTabs: View {
 
             MedicationComplianceView(
                 viewModel: MedicationComplianceViewModel(
-                    service: medicationService,
-                    repository: repository
+                    service: env.medicationService,
+                    repository: env.routineRepository
                 )
             )
             .tabItem {
@@ -88,7 +62,7 @@ private struct MainTabs: View {
             }
 
             SleepDashboardView(
-                viewModel: SleepDashboardViewModel(service: sleepService)
+                viewModel: SleepDashboardViewModel(service: env.sleepService)
             )
             .tabItem {
                 Label {
@@ -99,7 +73,7 @@ private struct MainTabs: View {
             }
 
             HydrationDashboardView(
-                viewModel: HydrationDashboardViewModel(service: hydrationService)
+                viewModel: HydrationDashboardViewModel(service: env.hydrationService)
             )
             .tabItem {
                 Label {
@@ -110,7 +84,7 @@ private struct MainTabs: View {
             }
 
             HousekeepingListView(
-                viewModel: HousekeepingListViewModel(service: housekeepingService)
+                viewModel: HousekeepingListViewModel(service: env.housekeepingService)
             )
             .tabItem {
                 Label {
@@ -121,7 +95,7 @@ private struct MainTabs: View {
             }
 
             BirthdaysView(
-                viewModel: BirthdaysViewModel(service: contactsService)
+                viewModel: BirthdaysViewModel(service: env.contactsService)
             )
             .tabItem {
                 Label {
@@ -133,8 +107,8 @@ private struct MainTabs: View {
 
             SettingsView(
                 viewModel: SettingsViewModel(
-                    service: notificationService,
-                    coordinator: makeCoordinator()
+                    service: env.notificationService,
+                    coordinator: env.makeNotificationCoordinator()
                 )
             )
             .tabItem {
@@ -148,7 +122,7 @@ private struct MainTabs: View {
         .task {
             // Best-effort refresh on launch; silently ignore errors here —
             // the user can retry from Settings if anything goes wrong.
-            try? await makeCoordinator().refreshForToday()
+            try? await env.makeNotificationCoordinator().refreshForToday()
         }
     }
 }
