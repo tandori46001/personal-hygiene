@@ -52,3 +52,7 @@ fi
 
 echo
 echo "==> tests complete"
+
+echo
+echo "==> i18n parity check"
+python3 "$REPO_ROOT/scripts/check-i18n.py"

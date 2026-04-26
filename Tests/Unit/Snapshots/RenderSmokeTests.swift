@@ -115,4 +115,42 @@ final class RenderSmokeTests: XCTestCase {
         let image = render(TodayView(viewModel: viewModel))
         XCTAssertNotNil(image)
     }
+
+    // MARK: - Dynamic Type pass
+
+    /// Renders the major screens at the largest accessibility size so we catch
+    /// truncation / cropped icons / layout that breaks at AX5 *before* a real
+    /// user with the largest text setting sees it.
+    func test_today_render_atAccessibilityXXXL() throws {
+        let repo = SwiftDataRoutineRepository(context: container.mainContext)
+        let block = Block(
+            title: "Aseo",
+            category: .hygiene,
+            startMinutesFromMidnight: 7 * 60,
+            durationMinutes: 30
+        )
+        try repo.upsert(RoutineTemplate(name: "T", dayType: .weekday, blocks: [block], isActive: true))
+
+        let viewModel = TodayViewModel(repository: repo)
+        viewModel.reload()
+
+        let image = render(
+            TodayView(viewModel: viewModel)
+                .environment(\.dynamicTypeSize, .accessibility5)
+        )
+        XCTAssertNotNil(image)
+    }
+
+    func test_tripDetail_render_atAccessibilityXXXL() throws {
+        let tripsRepo = SwiftDataTripsRepository(context: container.mainContext)
+        let trip = tripFixture()
+        try tripsRepo.upsert(trip)
+
+        let viewModel = TripDetailViewModel(trip: trip, repository: tripsRepo)
+        let image = render(
+            NavigationStack { TripDetailView(viewModel: viewModel) }
+                .environment(\.dynamicTypeSize, .accessibility5)
+        )
+        XCTAssertNotNil(image)
+    }
 }
