@@ -111,7 +111,8 @@ private struct MainTabs: View {
                     documentStore: env.tripDocumentStore,
                     itineraryGenerator: env.itineraryGenerator,
                     marineService: env.marineService,
-                    currencyService: env.currencyService
+                    currencyService: env.currencyService,
+                    advisoryService: env.advisoryService
                 )
             )
             .tabItem {

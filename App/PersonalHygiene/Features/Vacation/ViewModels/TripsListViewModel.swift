@@ -10,6 +10,7 @@ final class TripsListViewModel {
     let itineraryGenerator: (any ItineraryGenerator)?
     let marineService: (any MarineWeatherService)?
     let currencyService: (any CurrencyService)?
+    let advisoryService: (any TravelAdvisoryService)?
 
     var trips: [Trip] = []
     var errorMessage: String?
@@ -19,13 +20,15 @@ final class TripsListViewModel {
         documentStore: TripDocumentStore? = nil,
         itineraryGenerator: (any ItineraryGenerator)? = nil,
         marineService: (any MarineWeatherService)? = nil,
-        currencyService: (any CurrencyService)? = nil
+        currencyService: (any CurrencyService)? = nil,
+        advisoryService: (any TravelAdvisoryService)? = nil
     ) {
         self.repository = repository
         self.documentStore = documentStore
         self.itineraryGenerator = itineraryGenerator
         self.marineService = marineService
         self.currencyService = currencyService
+        self.advisoryService = advisoryService
     }
 
     func reload() {

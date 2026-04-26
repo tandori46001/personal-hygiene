@@ -10,6 +10,7 @@ final class TripDetailViewModel {
     let itineraryGenerator: (any ItineraryGenerator)?
     let marineService: (any MarineWeatherService)?
     let currencyService: (any CurrencyService)?
+    let advisoryService: (any TravelAdvisoryService)?
 
     var trip: Trip
     var errorMessage: String?
@@ -20,7 +21,8 @@ final class TripDetailViewModel {
         documentStore: TripDocumentStore? = nil,
         itineraryGenerator: (any ItineraryGenerator)? = nil,
         marineService: (any MarineWeatherService)? = nil,
-        currencyService: (any CurrencyService)? = nil
+        currencyService: (any CurrencyService)? = nil,
+        advisoryService: (any TravelAdvisoryService)? = nil
     ) {
         self.trip = trip
         self.repository = repository
@@ -28,6 +30,11 @@ final class TripDetailViewModel {
         self.itineraryGenerator = itineraryGenerator
         self.marineService = marineService
         self.currencyService = currencyService
+        self.advisoryService = advisoryService
+    }
+
+    var advisoryLink: TravelAdvisoryLink? {
+        advisoryService?.advisory(forDestination: trip.destinationName)
     }
 
     var hasGeocodedDestination: Bool {

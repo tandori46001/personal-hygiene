@@ -38,7 +38,8 @@ struct TripsListView: View {
                                     documentStore: viewModel.documentStore,
                                     itineraryGenerator: viewModel.itineraryGenerator,
                                     marineService: viewModel.marineService,
-                                    currencyService: viewModel.currencyService
+                                    currencyService: viewModel.currencyService,
+                                    advisoryService: viewModel.advisoryService
                                 )
                             )
                         } label: {

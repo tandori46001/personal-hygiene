@@ -120,6 +120,7 @@
 		876226091BED9FBB52ACF09B /* RoutineListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C9016CA1F69F72664DB39DCF /* RoutineListView.swift */; };
 		8794AB537CE9CC2DECF97AD4 /* TripsRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3095C9D521F5A915E5613E68 /* TripsRepositoryTests.swift */; };
 		87D6221EB6E9BE29179A6EB6 /* BlockEditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE021253752FB8EB009B9D41 /* BlockEditorViewModel.swift */; };
+		890DC79428FC6CFD3EBFF9EC /* TravelAdvisoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5E0CE92F5EFC9375FAF899 /* TravelAdvisoryService.swift */; };
 		8A219BD00A7ACD8207AE25ED /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9375851F4D5F463754AC9DA /* KeychainStore.swift */; };
 		8B944E695A1EE08DC356DC4B /* MarineConditionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FAF9D9731F55E118D58DDF /* MarineConditionsView.swift */; };
 		8E6E9C0F4F6BE1778E9ADF2E /* HousekeepingTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BCB9A6E9C1AC234DD71A32D /* HousekeepingTask.swift */; };
@@ -136,6 +137,7 @@
 		A0BB5D8B286A960EB2BF8E2F /* HomeLocationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6E0FA22F887BB223629773 /* HomeLocationStore.swift */; };
 		A1D1B56B4AB83BA3BE2F2BA0 /* HousekeepingService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7D6EB2189F2A13D70E79F9 /* HousekeepingService.swift */; };
 		A27B1F8370D2B70C50206E8C /* TravelTimeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6225759542A5B4D3E911E35A /* TravelTimeService.swift */; };
+		A47E29A39D82F77E99EA229A /* TravelAdvisoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5E0CE92F5EFC9375FAF899 /* TravelAdvisoryService.swift */; };
 		A74EE37BE73B4F33809C16C1 /* DeepFocusFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9FEB31CBE9708BAB03C30C /* DeepFocusFilter.swift */; };
 		ABDD9F80A4A0A76EDFFCB191 /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15A10D5DE460A958A5D53E2 /* AppModelContainer.swift */; };
 		AC7751C8E761D38C470FBD0D /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9375851F4D5F463754AC9DA /* KeychainStore.swift */; };
@@ -165,6 +167,7 @@
 		C8D380261FF02ABD2149E83C /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D857E2973DD7DB00C327D6DD /* NotificationService.swift */; };
 		CAE4CECF76EA420958B1DA42 /* BlockLocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337B6DAD7C25B99941041664 /* BlockLocationTests.swift */; };
 		CB5409D0C60F104771EA3A0F /* BlockCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57416A608867A6A25E96429 /* BlockCompletion.swift */; };
+		CB603C4B67C346E176B37C08 /* TravelAdvisoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5E0CE92F5EFC9375FAF899 /* TravelAdvisoryService.swift */; };
 		CD69C07C74BF83FA402C2D30 /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C43B93323DA8D77A17E36E2 /* Trip.swift */; };
 		CE5EA2D79B93964D2C63F233 /* RoutineTemplateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3E9DD5A1125D33167C915BCF /* RoutineTemplateTests.swift */; };
 		CEF991870B88A8EF20833892 /* MedicationCompliance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87CF274A384796487EFA71A4 /* MedicationCompliance.swift */; };
@@ -182,6 +185,7 @@
 		E1FAC8A1DD3A7B7D9793F5B3 /* ItineraryGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31530A7E54A39B31CB44C245 /* ItineraryGenerator.swift */; };
 		E22943F6FF0797156673D181 /* RoutineRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2C54C3BD0F8E70F3D7B226 /* RoutineRepository.swift */; };
 		E3353CECC68A34060EDFE5E9 /* StubItineraryGeneratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC9E1C285492E9D01510846 /* StubItineraryGeneratorTests.swift */; };
+		E3C7CD304368F15F131AD2E7 /* AdvisoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7E7C7563CEBA234B7972CEB /* AdvisoryView.swift */; };
 		E4F9184F07297B58059B82AE /* SleepService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE3A907E81705697C917327 /* SleepService.swift */; };
 		E5E5E4E6D630B139AAC8DBA2 /* MarineWeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCF1F0A69A9DA870BFC49C9B /* MarineWeatherService.swift */; };
 		E670674061442BD4E55D67C8 /* UpcomingBirthdays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE1F2759BBDB34451AB30BD /* UpcomingBirthdays.swift */; };
@@ -206,6 +210,7 @@
 		FBB0AA6E0C4C733E3EB96B5A /* ItineraryGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31530A7E54A39B31CB44C245 /* ItineraryGenerator.swift */; };
 		FC0D4F42034DC4F3AF5A8ABB /* BedtimeCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6EE9435A405AE37512198FC9 /* BedtimeCalculatorTests.swift */; };
 		FCFA2F8A993CE5F7821AC3EB /* BlockTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F2C380F4A6452D827B3B69 /* BlockTests.swift */; };
+		FD253AAE8730128AD55CCBE0 /* TravelAdvisoryServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EED8E573F98679F9BF723F4E /* TravelAdvisoryServiceTests.swift */; };
 		FE1E51EB3B94FFFB6C0FBF60 /* TripDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4B9B6406D489CCF198CE9DA0 /* TripDocument.swift */; };
 		FECEE8891FEF195A8B31882A /* TripMilestoneScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 757F7B808F6ED88D37AFB308 /* TripMilestoneScheduler.swift */; };
 		FF4A505B0FFCCC2D201FBDFB /* MedicationCompliance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87CF274A384796487EFA71A4 /* MedicationCompliance.swift */; };
@@ -286,6 +291,7 @@
 		5B581EEDBA132781CB2F461F /* DocumentPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentPreviewView.swift; sourceTree = "<group>"; };
 		5C2F31840C148B9BB955A118 /* TripDetailViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripDetailViewModelTests.swift; sourceTree = "<group>"; };
 		5D9ED449793E3F94C0C2F63D /* HousekeepingServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousekeepingServiceTests.swift; sourceTree = "<group>"; };
+		5F5E0CE92F5EFC9375FAF899 /* TravelAdvisoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelAdvisoryService.swift; sourceTree = "<group>"; };
 		6225759542A5B4D3E911E35A /* TravelTimeService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelTimeService.swift; sourceTree = "<group>"; };
 		63821CA8C548D983DE625643 /* HydrationCompliance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HydrationCompliance.swift; sourceTree = "<group>"; };
 		65B5E443DB54BE2356D7C388 /* HousekeepingListViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousekeepingListViewModelTests.swift; sourceTree = "<group>"; };
@@ -331,6 +337,7 @@
 		C4606FE1130F7F17EBC7A28C /* BlockCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockCategory.swift; sourceTree = "<group>"; };
 		C58447287FB1755502148F87 /* FrankfurterCurrencyServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrankfurterCurrencyServiceTests.swift; sourceTree = "<group>"; };
 		C6667FC15B2416991F9DE600 /* UpcomingBirthdaysTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpcomingBirthdaysTests.swift; sourceTree = "<group>"; };
+		C7E7C7563CEBA234B7972CEB /* AdvisoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvisoryView.swift; sourceTree = "<group>"; };
 		C9016CA1F69F72664DB39DCF /* RoutineListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineListView.swift; sourceTree = "<group>"; };
 		CB4A3562E685E7DF57957B22 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CC8AF1C127CD25DD6CBF1485 /* ContactsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsService.swift; sourceTree = "<group>"; };
@@ -356,6 +363,7 @@
 		E9375851F4D5F463754AC9DA /* KeychainStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainStore.swift; sourceTree = "<group>"; };
 		E9A9AB6BF580BC0A5AA8F78E /* TemplateListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateListView.swift; sourceTree = "<group>"; };
 		EE021253752FB8EB009B9D41 /* BlockEditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockEditorViewModel.swift; sourceTree = "<group>"; };
+		EED8E573F98679F9BF723F4E /* TravelAdvisoryServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelAdvisoryServiceTests.swift; sourceTree = "<group>"; };
 		EF6DCB5D30BD8C57759C588D /* HydrationLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HydrationLog.swift; sourceTree = "<group>"; };
 		F1452EA6E8BFCF9CC4685916 /* HydrationDashboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HydrationDashboardView.swift; sourceTree = "<group>"; };
 		F448734951A6A88D0AEBEBBE /* TripDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripDetailViewModel.swift; sourceTree = "<group>"; };
@@ -445,6 +453,7 @@
 		2817C0797946121C42AB8287 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				C7E7C7563CEBA234B7972CEB /* AdvisoryView.swift */,
 				78282BEB856188E32419812A /* CurrencyView.swift */,
 				1C2F5C423AAB15CDF0D56BCE /* DocumentMetadataSheet.swift */,
 				5B581EEDBA132781CB2F461F /* DocumentPreviewView.swift */,
@@ -638,6 +647,7 @@
 				B086E91EEE6AEDB0F4E3EC2D /* NotificationFactory.swift */,
 				D857E2973DD7DB00C327D6DD /* NotificationService.swift */,
 				BDE3A907E81705697C917327 /* SleepService.swift */,
+				5F5E0CE92F5EFC9375FAF899 /* TravelAdvisoryService.swift */,
 				6225759542A5B4D3E911E35A /* TravelTimeService.swift */,
 				0C86859E08647D58470B18D1 /* TripDocumentStore.swift */,
 				5AF643DB2F814E7651D040F8 /* TripMilestoneNotificationFactory.swift */,
@@ -742,6 +752,7 @@
 				D286C3CA04A9375E3768F117 /* NotificationFactoryTests.swift */,
 				0EEDCF07757910F0B5CF4E3D /* OpenMeteoMarineServiceTests.swift */,
 				4CC9E1C285492E9D01510846 /* StubItineraryGeneratorTests.swift */,
+				EED8E573F98679F9BF723F4E /* TravelAdvisoryServiceTests.swift */,
 				2A42595C053FA63B9C86121A /* TravelTimeServiceTests.swift */,
 				35749025F0764A6347355475 /* TripDocumentStoreTests.swift */,
 				DD0CEB8A8F13D5728EADCBF4 /* TripMilestoneNotificationFactoryTests.swift */,
@@ -1105,6 +1116,7 @@
 				E863416DC18BBBA1CFF0A52A /* RoutineTemplate.swift in Sources */,
 				E4F9184F07297B58059B82AE /* SleepService.swift in Sources */,
 				BAE183942C30739AD54C0E6C /* TodayViewModel.swift in Sources */,
+				890DC79428FC6CFD3EBFF9EC /* TravelAdvisoryService.swift in Sources */,
 				A27B1F8370D2B70C50206E8C /* TravelTimeService.swift in Sources */,
 				666F54F39EFAA56B99958134 /* Trip.swift in Sources */,
 				9A855226A3086FA9EFD08141 /* TripDocument.swift in Sources */,
@@ -1146,6 +1158,7 @@
 				E3353CECC68A34060EDFE5E9 /* StubItineraryGeneratorTests.swift in Sources */,
 				250031CFAF00CF1146907A67 /* SwiftDataRoutineRepositoryTests.swift in Sources */,
 				7989AA017757180F433889C0 /* TodayViewModelTests.swift in Sources */,
+				FD253AAE8730128AD55CCBE0 /* TravelAdvisoryServiceTests.swift in Sources */,
 				D688419AEF95993CD4B48600 /* TravelTimeServiceTests.swift in Sources */,
 				058AC12BE5497BDCEB019EF6 /* TripDetailViewModelTests.swift in Sources */,
 				6D5B6751653A9E1B9EDDC2ED /* TripDocumentStoreTests.swift in Sources */,
@@ -1159,6 +1172,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E3C7CD304368F15F131AD2E7 /* AdvisoryView.swift in Sources */,
 				5A2BF345F89D9B92887071B7 /* AppEnvironment.swift in Sources */,
 				ABDD9F80A4A0A76EDFFCB191 /* AppModelContainer.swift in Sources */,
 				DC5818E1D58D2B5D49051124 /* BedtimeCalculator.swift in Sources */,
@@ -1224,6 +1238,7 @@
 				22C0FB4016F6323D125A9BB0 /* TemplateListViewModel.swift in Sources */,
 				06C853E6719CE72B66433DB6 /* TodayView.swift in Sources */,
 				ACAD329E1F644BCB590E52D7 /* TodayViewModel.swift in Sources */,
+				A47E29A39D82F77E99EA229A /* TravelAdvisoryService.swift in Sources */,
 				84863DFB7937FF683B0FF7F2 /* TravelTimeService.swift in Sources */,
 				CD69C07C74BF83FA402C2D30 /* Trip.swift in Sources */,
 				EE6B26F3024A279A38D5A220 /* TripDetailView.swift in Sources */,
@@ -1278,6 +1293,7 @@
 				C5383F43A15F67A0C659AA72 /* RoutineTemplate.swift in Sources */,
 				4096F1D76644BDD7E8D6BE3B /* SleepService.swift in Sources */,
 				6438CDA8DF913CE3DB834678 /* TodayViewModel.swift in Sources */,
+				CB603C4B67C346E176B37C08 /* TravelAdvisoryService.swift in Sources */,
 				53C230B7795BF75764BC4BE1 /* TravelTimeService.swift in Sources */,
 				F01CEB46587D4CADE328B2B3 /* Trip.swift in Sources */,
 				B6AD77EDF89B93F82BD0FF25 /* TripDocument.swift in Sources */,

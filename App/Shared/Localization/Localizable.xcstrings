@@ -968,6 +968,27 @@
     "trip.currency.label.rate" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Rate" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Tasa" } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Taux" } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Taux" } } } },
+
+    "trip.advisory.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Travel advisory" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Recomendaciones de viaje" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Conseils aux voyageurs" } } } },
+    "trip.advisory.label.destination" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Destination" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Destino" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Destination" } } } },
+    "trip.advisory.label.source" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Source" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Fuente" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Source" } } } },
+    "trip.advisory.action.open" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Open advisory page" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Abrir página oficial" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ouvrir la page officielle" } } } },
+    "trip.advisory.footer" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "The official advisory pages live on the Spanish foreign ministry's website. Search there by country for the latest guidance." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "La página oficial de recomendaciones está en el Ministerio de Asuntos Exteriores. Busca tu destino para ver la guía más reciente." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Les conseils officiels se trouvent sur le site du ministère espagnol des Affaires étrangères. Cherche ta destination pour les dernières informations." } } } }
   }
 }

@@ -128,6 +128,20 @@ struct TripDetailView: View {
                 }
             }
 
+            if let advisory = viewModel.advisoryLink {
+                Section {
+                    NavigationLink {
+                        AdvisoryView(link: advisory)
+                    } label: {
+                        Label {
+                            Text("trip.advisory.title", bundle: .main)
+                        } icon: {
+                            Image(systemName: "exclamationmark.shield")
+                        }
+                    }
+                }
+            }
+
             Section {
                 if viewModel.sortedDocuments.isEmpty {
                     Text("trip.detail.documents.empty", bundle: .main)

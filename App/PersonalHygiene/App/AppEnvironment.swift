@@ -15,6 +15,7 @@ struct AppEnvironment {
     let itineraryGenerator: any ItineraryGenerator
     let marineService: any MarineWeatherService
     let currencyService: any CurrencyService
+    let advisoryService: any TravelAdvisoryService
     let notificationService: any NotificationService
     let medicationService: any MedicationService
     let sleepService: any SleepService
@@ -32,6 +33,7 @@ struct AppEnvironment {
         self.itineraryGenerator = Self.makeItineraryGenerator()
         self.marineService = OpenMeteoMarineService()
         self.currencyService = FrankfurterCurrencyService()
+        self.advisoryService = ExterioresAdvisoryService()
         self.notificationService = UserNotificationsService()
         self.medicationService = HealthKitMedicationService()
         self.sleepService = HealthKitSleepService()
