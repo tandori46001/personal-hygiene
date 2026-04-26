@@ -132,6 +132,36 @@ final class TodayViewModelTests: XCTestCase {
         XCTAssertEqual(vm.doneCount, 0)
     }
 
+    func test_nextUpcoming_picksEarliestFutureTrip() {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(secondsFromGMT: 0)!
+        let now = date(weekday: 3, hour: 10)
+        let past = Trip(
+            name: "Past",
+            startDate: cal.date(byAdding: .day, value: -10, to: now)!,
+            endDate: cal.date(byAdding: .day, value: -3, to: now)!,
+            destinationName: "X"
+        )
+        let nearFuture = Trip(
+            name: "Near",
+            startDate: cal.date(byAdding: .day, value: 5, to: now)!,
+            endDate: cal.date(byAdding: .day, value: 12, to: now)!,
+            destinationName: "Y"
+        )
+        let farFuture = Trip(
+            name: "Far",
+            startDate: cal.date(byAdding: .day, value: 60, to: now)!,
+            endDate: cal.date(byAdding: .day, value: 70, to: now)!,
+            destinationName: "Z"
+        )
+        let result = TodayViewModel.nextUpcoming(
+            trips: [farFuture, past, nearFuture],
+            now: now,
+            calendar: cal
+        )
+        XCTAssertEqual(result?.name, "Near")
+    }
+
     func test_reload_rehydratesCompletionsForToday() throws {
         var cal = Calendar(identifier: .gregorian)
         cal.timeZone = TimeZone(secondsFromGMT: 0)!

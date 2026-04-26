@@ -3,6 +3,15 @@ import SwiftUI
 struct TodayView: View {
     @Bindable var viewModel: TodayViewModel
 
+    @ViewBuilder
+    private var tripCountdownSection: some View {
+        if let trip = viewModel.upcomingTrip, let days = viewModel.daysUntilUpcomingTrip() {
+            Section {
+                TripCountdownRow(trip: trip, daysUntil: days)
+            }
+        }
+    }
+
     var body: some View {
         NavigationStack {
             Group {
@@ -13,6 +22,7 @@ struct TodayView: View {
                                 FocusActiveBanner(window: focus)
                             }
                         }
+                        tripCountdownSection
                         if viewModel.totalCount > 0 {
                             Section {
                                 ProgressSummaryRow(
@@ -58,6 +68,37 @@ struct TodayView: View {
             .navigationTitle(Text("today.title", bundle: .main))
             .onAppear { viewModel.reload() }
         }
+    }
+}
+
+private struct TripCountdownRow: View {
+    let trip: Trip
+    let daysUntil: Int
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: "airplane")
+                .foregroundStyle(Color.accentColor)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(trip.name)
+                    .font(.headline)
+                if daysUntil == 0 {
+                    Text("today.trip.departingToday", bundle: .main)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                } else {
+                    Text("today.trip.daysUntil.\(daysUntil)", bundle: .main)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                }
+            }
+            Spacer()
+            Text(verbatim: trip.destinationName)
+                .font(.caption)
+                .foregroundStyle(.secondary)
+        }
+        .accessibilityElement(children: .combine)
     }
 }
 

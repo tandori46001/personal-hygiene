@@ -26,14 +26,19 @@ private struct MainTabs: View {
 
     var body: some View {
         TabView {
-            TodayView(viewModel: TodayViewModel(repository: env.routineRepository))
-                .tabItem {
-                    Label {
-                        Text("tab.today", bundle: .main)
-                    } icon: {
-                        Image(systemName: "sun.max")
-                    }
+            TodayView(
+                viewModel: TodayViewModel(
+                    repository: env.routineRepository,
+                    tripsRepository: env.tripsRepository
+                )
+            )
+            .tabItem {
+                Label {
+                    Text("tab.today", bundle: .main)
+                } icon: {
+                    Image(systemName: "sun.max")
                 }
+            }
 
             TemplateListView(
                 viewModel: TemplateListViewModel(repository: env.routineRepository),

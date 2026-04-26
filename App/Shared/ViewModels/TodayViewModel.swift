@@ -6,6 +6,7 @@ import Observation
 final class TodayViewModel {
 
     private let repository: any RoutineRepository
+    private let tripsRepository: (any TripsRepository)?
     private let calendar: Calendar
 
     var activeTemplate: RoutineTemplate?
@@ -14,9 +15,16 @@ final class TodayViewModel {
     /// Set of `Block.id`s already marked done today; cached so the row toggle
     /// is read synchronously from the view body.
     private(set) var completedBlockIDs: Set<UUID> = []
+    /// Next upcoming trip (sorted by start date) — used for the Today countdown card.
+    private(set) var upcomingTrip: Trip?
 
-    init(repository: any RoutineRepository, calendar: Calendar = .autoupdatingCurrent) {
+    init(
+        repository: any RoutineRepository,
+        tripsRepository: (any TripsRepository)? = nil,
+        calendar: Calendar = .autoupdatingCurrent
+    ) {
         self.repository = repository
+        self.tripsRepository = tripsRepository
         self.calendar = calendar
     }
 
@@ -29,6 +37,32 @@ final class TodayViewModel {
         } catch {
             errorMessage = error.localizedDescription
         }
+        if let tripsRepository {
+            do {
+                upcomingTrip = try Self.nextUpcoming(
+                    trips: tripsRepository.allTrips(),
+                    now: now,
+                    calendar: calendar
+                )
+            } catch {
+                errorMessage = error.localizedDescription
+            }
+        }
+    }
+
+    static func nextUpcoming(trips: [Trip], now: Date, calendar: Calendar) -> Trip? {
+        let today = calendar.startOfDay(for: now)
+        return
+            trips
+            .filter { calendar.startOfDay(for: $0.startDate) >= today }
+            .min { $0.startDate < $1.startDate }
+    }
+
+    func daysUntilUpcomingTrip(now: Date = Date()) -> Int? {
+        guard let trip = upcomingTrip else { return nil }
+        let today = calendar.startOfDay(for: now)
+        let target = calendar.startOfDay(for: trip.startDate)
+        return calendar.dateComponents([.day], from: today, to: target).day
     }
 
     func isDone(_ block: Block) -> Bool {

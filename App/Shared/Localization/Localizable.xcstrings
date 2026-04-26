@@ -69,6 +69,14 @@
       "en" : { "stringUnit" : { "state" : "translated", "value" : "%1$lld of %2$lld blocks done" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "%1$lld de %2$lld bloques hechos" } },
       "fr" : { "stringUnit" : { "state" : "translated", "value" : "%1$lld blocs sur %2$lld faits" } } } },
+    "today.trip.daysUntil.%lld" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Departs in %lld days" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Sales en %lld días" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Départ dans %lld jours" } } } },
+    "today.trip.departingToday" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Departing today" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Sales hoy" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Départ aujourd'hui" } } } },
     "today.empty.title" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "No active template" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Sin plantilla activa" } },
