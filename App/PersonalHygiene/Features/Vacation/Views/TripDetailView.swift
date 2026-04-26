@@ -112,21 +112,7 @@ struct TripDetailView: View {
                 }
             }
 
-            if let marine = viewModel.marineService,
-                let lat = viewModel.trip.destinationLatitude,
-                let lon = viewModel.trip.destinationLongitude {
-                Section {
-                    NavigationLink {
-                        MarineConditionsView(latitude: lat, longitude: lon, service: marine)
-                    } label: {
-                        Label {
-                            Text("trip.marine.title", bundle: .main)
-                        } icon: {
-                            Image(systemName: "water.waves")
-                        }
-                    }
-                }
-            }
+            marineSection
 
             Section {
                 if viewModel.sortedDocuments.isEmpty {
@@ -198,6 +184,42 @@ struct TripDetailView: View {
                 pendingDocumentBytes = nil
             }
         }
+    }
+
+    @ViewBuilder
+    private var marineSection: some View {
+        if let payload = marinePayload {
+            Section {
+                NavigationLink {
+                    MarineConditionsView(
+                        latitude: payload.latitude,
+                        longitude: payload.longitude,
+                        service: payload.service
+                    )
+                } label: {
+                    Label {
+                        Text("trip.marine.title", bundle: .main)
+                    } icon: {
+                        Image(systemName: "water.waves")
+                    }
+                }
+            }
+        }
+    }
+
+    private struct MarinePayload {
+        let service: any MarineWeatherService
+        let latitude: Double
+        let longitude: Double
+    }
+
+    private var marinePayload: MarinePayload? {
+        guard
+            let service = viewModel.marineService,
+            let lat = viewModel.trip.destinationLatitude,
+            let lon = viewModel.trip.destinationLongitude
+        else { return nil }
+        return MarinePayload(service: service, latitude: lat, longitude: lon)
     }
 
     private func deleteMilestones(at offsets: IndexSet) {

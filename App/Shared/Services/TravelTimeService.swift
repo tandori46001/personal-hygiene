@@ -1,4 +1,5 @@
 import Foundation
+
 #if canImport(MapKit)
 import MapKit
 #endif
