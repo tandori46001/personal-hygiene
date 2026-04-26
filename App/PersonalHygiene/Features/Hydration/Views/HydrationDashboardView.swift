@@ -6,6 +6,7 @@ struct HydrationDashboardView: View {
     @AppStorage("hydration.goal.ml") private var goalMilliliters: Int = HydrationGoal.default.dailyMilliliters
 
     private static let quickAmounts = [150, 250, 330, 500]
+    private static let goalPresets = [2000, 2500, 3000]
 
     var body: some View {
         NavigationStack {
@@ -86,6 +87,11 @@ struct HydrationDashboardView: View {
                 }
 
                 Section {
+                    HStack {
+                        ForEach(Self.goalPresets, id: \.self) { preset in
+                            presetButton(preset)
+                        }
+                    }
                     Stepper(
                         value: $goalMilliliters,
                         in: 500...5000,
@@ -131,6 +137,31 @@ struct HydrationDashboardView: View {
         case 0.99...: return .green
         case 0.5..<0.99: return .blue
         default: return .orange
+        }
+    }
+
+    private func presetLabel(_ ml: Int) -> String {
+        let liters = Double(ml) / 1000
+        return String(format: "%.1fL", liters)
+    }
+
+    @ViewBuilder
+    private func presetButton(_ preset: Int) -> some View {
+        let label = Text(verbatim: presetLabel(preset))
+            .frame(maxWidth: .infinity)
+        let a11y = Text(LocalizedStringResource("hydration.goal.preset \(preset)"))
+        if goalMilliliters == preset {
+            Button {
+                goalMilliliters = preset
+            } label: { label }
+                .buttonStyle(.borderedProminent)
+                .accessibilityLabel(a11y)
+        } else {
+            Button {
+                goalMilliliters = preset
+            } label: { label }
+                .buttonStyle(.bordered)
+                .accessibilityLabel(a11y)
         }
     }
 }

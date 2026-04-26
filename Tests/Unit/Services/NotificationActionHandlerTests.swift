@@ -98,4 +98,35 @@ final class NotificationActionHandlerTests: XCTestCase {
         SnoozeDurationStore.set(99, in: defaults)  // ignored
         XCTAssertEqual(SnoozeDurationStore.minutes(defaults: defaults), 10)
     }
+
+    // MARK: - Boundary value coverage (slice 9)
+
+    func test_snoozeDuration_setterAcceptsFiveExplicitly() {
+        let defaults = cleanDefaults(SnoozeDurationStore.key)
+        SnoozeDurationStore.set(10, in: defaults)
+        SnoozeDurationStore.set(5, in: defaults)
+        XCTAssertEqual(SnoozeDurationStore.minutes(defaults: defaults), 5)
+        XCTAssertEqual(SnoozeDurationStore.seconds(defaults: defaults), 300)
+    }
+
+    func test_snoozeDuration_zeroAndNegativeAreRejected() {
+        let defaults = cleanDefaults(SnoozeDurationStore.key)
+        SnoozeDurationStore.set(15, in: defaults)
+        SnoozeDurationStore.set(0, in: defaults)
+        XCTAssertEqual(SnoozeDurationStore.minutes(defaults: defaults), 15)
+        SnoozeDurationStore.set(-5, in: defaults)
+        XCTAssertEqual(SnoozeDurationStore.minutes(defaults: defaults), 15)
+    }
+
+    func test_snoozeDuration_secondsMatchesMinutesTimes60ForEachAllowedValue() {
+        let defaults = cleanDefaults(SnoozeDurationStore.key)
+        for minutes in SnoozeDurationStore.allowedMinutes {
+            SnoozeDurationStore.set(minutes, in: defaults)
+            XCTAssertEqual(SnoozeDurationStore.seconds(defaults: defaults), TimeInterval(minutes * 60))
+        }
+    }
+
+    func test_snoozeDuration_allowedMinutesContains_5_10_15() {
+        XCTAssertEqual(Set(SnoozeDurationStore.allowedMinutes), [5, 10, 15])
+    }
 }

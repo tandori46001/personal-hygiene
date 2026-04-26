@@ -14,7 +14,7 @@ struct PersonalHygieneApp: App {
         self.notificationDelegate = NotificationActionHandler(
             snoozeIntervalProvider: { SnoozeDurationStore.seconds() },
             nowProvider: { Date() },
-            snoozeRecorder: { blockID, dayKey in snooze.markSnoozed(blockID: blockID, dayKey: dayKey) }
+            snoozeRecorder: { parsed in snooze.markSnoozed(parsed: parsed, on: Date()) }
         )
         // UI tests pass `-uiTestReset` to launch on a clean in-memory container,
         // so flows like onboarding can be exercised deterministically without

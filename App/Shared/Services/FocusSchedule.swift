@@ -75,8 +75,22 @@ public final class UserDefaultsFocusScheduleStore: FocusScheduleStore, @unchecke
     private let defaults: UserDefaults
     private let lock = NSLock()
 
+    /// Default initializer uses `UserDefaults.standard`. Pass an
+    /// `AppGroup`-scoped suite (`UserDefaults(suiteName: AppGroup.suiteName)`)
+    /// when both the app and its widget extension need to read the schedule
+    /// from a shared sandbox; once the app group entitlement is added this is
+    /// the only line the widget needs to flip.
     public init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
+    }
+
+    /// Convenience that reads from the app-group container if the suite can be
+    /// constructed (entitlement is present), falling back to `.standard`.
+    public static func appGroupOrStandard() -> UserDefaultsFocusScheduleStore {
+        if let suite = UserDefaults(suiteName: AppGroup.suiteName) {
+            return UserDefaultsFocusScheduleStore(defaults: suite)
+        }
+        return UserDefaultsFocusScheduleStore()
     }
 
     public func windows() -> [ScheduledFocusWindow] {

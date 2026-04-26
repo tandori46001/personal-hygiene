@@ -217,4 +217,71 @@ final class RenderSmokeTests: XCTestCase {
         let image = render(TripsListView(viewModel: viewModel))
         XCTAssertNotNil(image)
     }
+
+    // MARK: - Dynamic Type round-2 (session 7 a11y polish)
+
+    func test_birthdaysView_render_atAccessibilityXXXL() async {
+        let contacts = [
+            BirthdayContact(identifier: "1", displayName: "Ana", month: 6, day: 15, year: 1980),
+            BirthdayContact(identifier: "2", displayName: "Ben", month: 12, day: 24, year: nil),
+        ]
+        let service = InMemoryContactsService(contacts: contacts, status: .authorized)
+        let viewModel = BirthdaysViewModel(service: service)
+        viewModel.reloadStatus()
+        await viewModel.reload()
+
+        let image = render(
+            BirthdaysView(viewModel: viewModel)
+                .environment(\.dynamicTypeSize, .accessibility5)
+        )
+        XCTAssertNotNil(image)
+    }
+
+    func test_focusScheduleView_render_atAccessibilityXXXL() {
+        let store = InMemoryFocusScheduleStore()
+        store.upsert(
+            ScheduledFocusWindow(
+                label: "Workday focus",
+                weekdays: [2, 3, 4, 5, 6],
+                startMinutesFromMidnight: 9 * 60,
+                endMinutesFromMidnight: 12 * 60
+            )
+        )
+        store.upsert(
+            ScheduledFocusWindow(
+                label: "Evening wind-down",
+                weekdays: [1, 7],
+                startMinutesFromMidnight: 21 * 60 + 30,
+                endMinutesFromMidnight: 23 * 60
+            )
+        )
+
+        let image = render(
+            NavigationStack { FocusScheduleView(store: store) }
+                .environment(\.dynamicTypeSize, .accessibility5)
+        )
+        XCTAssertNotNil(image)
+    }
+
+    func test_settingsView_render_atAccessibilityXXXL() {
+        let service = StubRenderNotificationService()
+        let repo = SwiftDataRoutineRepository(context: container.mainContext)
+        let coordinator = NotificationCoordinator(repository: repo, service: service)
+        let viewModel = SettingsViewModel(service: service, coordinator: coordinator)
+
+        let image = render(
+            SettingsView(viewModel: viewModel, focusScheduleStore: InMemoryFocusScheduleStore())
+                .modelContainer(container)
+                .environment(\.dynamicTypeSize, .accessibility5)
+        )
+        XCTAssertNotNil(image)
+    }
+}
+
+@MainActor
+private final class StubRenderNotificationService: NotificationService {
+    func authorizationStatus() async -> NotificationAuthorizationStatus { .notDetermined }
+    func requestAuthorization(criticalAlerts _: Bool) async throws -> Bool { false }
+    func scheduleAll(_: [ScheduledNotification], cancellingPrefix _: String) async throws {}
+    func cancelAll(withPrefix _: String) async {}
 }

@@ -95,6 +95,8 @@ struct NextBlockEntryView: View {
                     .font(.caption)
                     .lineLimit(2)
             }
+            .accessibilityElement(children: .combine)
+            .accessibilityLabel(Text(verbatim: voiceOverPhrase(for: block)))
         } else {
             Text("watch.complication.next.empty", bundle: .main)
                 .font(.caption)
@@ -103,5 +105,12 @@ struct NextBlockEntryView: View {
 
     private func formattedTime(minutes: Int) -> String {
         String(format: "%02d:%02d", minutes / 60, minutes % 60)
+    }
+
+    /// Reuses the iOS Siri dialog phrasing so "next block" reads identically
+    /// across the watch complication and Siri shortcut.
+    private func voiceOverPhrase(for block: NextBlockSnapshot) -> String {
+        let format = String(localized: "intent.whatsNext.upcoming.format")
+        return String(format: format, block.title, formattedTime(minutes: block.startMinutes))
     }
 }

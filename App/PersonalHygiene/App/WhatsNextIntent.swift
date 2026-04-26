@@ -30,32 +30,6 @@ struct WhatsNextIntent: AppIntent {
     }
 }
 
-/// Pure helper extracted for unit testing — the intent itself can't run inside
-/// XCTest because it needs the production container, so we test this builder
-/// instead with stub templates.
-enum WhatsNextDialogBuilder {
-
-    static func build(template: RoutineTemplate?, at now: Date, calendar: Calendar) -> String {
-        guard let template else {
-            return String(localized: "intent.whatsNext.noTemplate")
-        }
-        guard let resolved = NextBlockResolver.resolve(in: template, at: now, calendar: calendar) else {
-            return String(localized: "intent.whatsNext.noMore")
-        }
-        let timeString = String(
-            format: "%02d:%02d",
-            resolved.startMinutesFromMidnight / 60,
-            resolved.startMinutesFromMidnight % 60
-        )
-        let format = String(
-            localized: resolved.isCurrent
-                ? "intent.whatsNext.current.format"
-                : "intent.whatsNext.upcoming.format"
-        )
-        return String(format: format, resolved.block.title, timeString)
-    }
-}
-
 struct PersonalHygieneShortcuts: AppShortcutsProvider {
 
     static var appShortcuts: [AppShortcut] {

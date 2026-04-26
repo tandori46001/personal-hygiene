@@ -4,6 +4,8 @@ struct TodayView: View {
     @Bindable var viewModel: TodayViewModel
     var onCreateTemplate: (() -> Void)?
 
+    @State private var showingProgressDetail = false
+
     @ViewBuilder
     private var tripCountdownSection: some View {
         if let trip = viewModel.upcomingTrip, let days = viewModel.daysUntilUpcomingTrip() {
@@ -26,10 +28,16 @@ struct TodayView: View {
                         tripCountdownSection
                         if viewModel.totalCount > 0 {
                             Section {
-                                ProgressSummaryRow(
-                                    done: viewModel.doneCount,
-                                    total: viewModel.totalCount
-                                )
+                                Button {
+                                    showingProgressDetail = true
+                                } label: {
+                                    ProgressSummaryRow(
+                                        done: viewModel.doneCount,
+                                        total: viewModel.totalCount
+                                    )
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityHint(Text("today.summary.tapHint", bundle: .main))
                             }
                         }
                         if let current = viewModel.currentBlock() {
@@ -101,7 +109,55 @@ struct TodayView: View {
             }
             .navigationTitle(Text("today.title", bundle: .main))
             .onAppear { viewModel.reload() }
+            .sheet(isPresented: $showingProgressDetail) {
+                if let template = viewModel.activeTemplate {
+                    ProgressDetailSheet(blocks: template.sortedBlocks, isDone: viewModel.isDone)
+                }
+            }
         }
+    }
+}
+
+private struct ProgressDetailSheet: View {
+
+    let blocks: [Block]
+    let isDone: (Block) -> Bool
+
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            List(blocks) { block in
+                HStack {
+                    Image(systemName: isDone(block) ? "checkmark.circle.fill" : "circle")
+                        .foregroundStyle(isDone(block) ? Color.green : Color.secondary)
+                        .accessibilityHidden(true)
+                    Text(block.title)
+                        .strikethrough(isDone(block), color: .secondary)
+                        .foregroundStyle(isDone(block) ? .secondary : .primary)
+                    Spacer()
+                    Text(formattedTime(minutes: block.startMinutesFromMidnight))
+                        .font(.caption.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                }
+                .accessibilityElement(children: .combine)
+            }
+            .navigationTitle(Text("today.summary.detail.title", bundle: .main))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Text("common.done", bundle: .main)
+                    }
+                }
+            }
+        }
+    }
+
+    private func formattedTime(minutes: Int) -> String {
+        String(format: "%02d:%02d", minutes / 60, minutes % 60)
     }
 }
 

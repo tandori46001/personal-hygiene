@@ -159,4 +159,41 @@ final class BackupServiceTests: XCTestCase {
         XCTAssertEqual(restored.count, 1)
         XCTAssertTrue(restored.first?.packingItems.isEmpty ?? false)
     }
+
+    // MARK: - v1.1 → v1 downgrade safety (slice 12)
+
+    /// Guards that a v1.1 backup can have its `packingItems` field stripped
+    /// (simulating an older v1-era importer) without losing any of the v1-era
+    /// data: templates, hydration, housekeeping, trips, milestones,
+    /// completions. Catches regressions where new fields accidentally take
+    /// load-bearing duties.
+    func test_v11Backup_strippedToV1_keepsEveryUserVisibleItem() throws {
+        try seedSampleData()
+        let context = container.mainContext
+        let trip = try context.fetch(FetchDescriptor<Trip>()).first
+        trip?.packingItems = [
+            PackingItem(title: "Pasaporte", isPacked: false),
+            PackingItem(title: "Crema solar", isPacked: true),
+        ]
+        try context.save()
+
+        let v11 = try BackupService.export(from: context)
+        var json = try JSONSerialization.jsonObject(with: BackupService.encode(v11)) as? [String: Any] ?? [:]
+        if var trips = json["trips"] as? [[String: Any]] {
+            for index in trips.indices {
+                trips[index].removeValue(forKey: "packingItems")
+            }
+            json["trips"] = trips
+        }
+        let downgraded = try JSONSerialization.data(withJSONObject: json)
+
+        let decoded = try BackupService.decode(downgraded)
+        XCTAssertEqual(decoded.templates.count, v11.templates.count)
+        XCTAssertEqual(decoded.templates.first?.blocks.count, v11.templates.first?.blocks.count)
+        XCTAssertEqual(decoded.hydration.count, v11.hydration.count)
+        XCTAssertEqual(decoded.housekeeping.count, v11.housekeeping.count)
+        XCTAssertEqual(decoded.trips.count, v11.trips.count)
+        XCTAssertEqual(decoded.trips.first?.milestones.count, v11.trips.first?.milestones.count)
+        XCTAssertNil(decoded.trips.first?.packingItems)
+    }
 }

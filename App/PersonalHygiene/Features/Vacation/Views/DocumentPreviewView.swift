@@ -27,6 +27,7 @@ struct DocumentPreviewView: View {
                 content(for: bytes)
             } else {
                 ProgressView()
+                    .accessibilityLabel(Text("trip.document.preview.loading", bundle: .main))
             }
         }
         .navigationTitle(document.name)
@@ -39,11 +40,17 @@ struct DocumentPreviewView: View {
         if let pdf = PDFDocument(data: bytes) {
             PDFKitView(pdf: pdf)
                 .ignoresSafeArea(edges: .bottom)
+                .accessibilityLabel(
+                    Text("trip.document.preview.pdf.\(pdf.pageCount).\(document.name)", bundle: .main)
+                )
         } else if let image = UIImage(data: bytes) {
             ScrollView([.horizontal, .vertical]) {
                 Image(uiImage: image)
                     .resizable()
                     .scaledToFit()
+                    .accessibilityLabel(
+                        Text("trip.document.preview.image.\(document.name)", bundle: .main)
+                    )
             }
         } else {
             ContentUnavailableView {

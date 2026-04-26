@@ -56,3 +56,24 @@ Mirror as a one-line entry in:
 **Where it was caught.** 2026-04-25, Phase 1 Slice 1+3 — bringing up `SwiftDataRoutineRepository` with a `makeSubject() -> (Repo, Context)` helper that dropped the container.
 
 **Interaction with other lessons.** None yet — first L0NN.
+
+---
+
+## L002 — Notification-identifier parsers must enumerate every module's prefix
+
+**Trigger pattern.** A central helper parses a notification identifier produced by *one* feature (e.g. routine blocks) and returns a domain ID. A second feature later starts producing notifications with a *different* prefix (hydration, trip milestones, medication). The parser silently returns `nil` for the new prefix, so any UI that depends on the parser (snooze badges, completion tracking, deep-link routing) goes dark for the new feature without compiling-time error.
+
+**Symptom.** No crash, no warning. The new feature appears to "work" because the notification fires + actions still respond — but downstream state (snooze badge, last-fired timestamps, etc.) is silently never recorded. The bug is found only when a user reports "I snoozed it but no badge."
+
+**Root cause.** The parser hard-codes a single `identifierPrefix` constant. Adding a new prefix requires editing the parser; nothing in the type system or lint enforces that.
+
+**Fix.**
+- Treat the identifier prefix as an *enumeration* (`enum NotificationKind { case routine, hydration, milestone, medication }`), not a string constant.
+- The parser returns the kind alongside the parsed payload so callers can branch.
+- When a new module is added, the parser's switch is non-exhaustive → compile error.
+
+**Guard test.** `BlockNotificationIdentifierTests.test_parse_recognizesAllKnownPrefixes` enumerates every kind via `NotificationKind.allCases` and asserts that `parse` round-trips an identifier built for that kind. Adding a kind without updating `parse` fails the test.
+
+**Where it was caught.** 2026-04-26, session 7 round 5 slice 13 — extending `BlockSnoozeStore` to record hydration + milestone snoozes revealed that the existing `BlockNotificationIdentifier.parse` only matched the routine prefix.
+
+**Interaction with other lessons.** None.

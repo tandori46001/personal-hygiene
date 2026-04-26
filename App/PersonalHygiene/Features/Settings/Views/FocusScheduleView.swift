@@ -83,9 +83,10 @@ private struct FocusWindowRow: View {
             Text(verbatim: window.label.isEmpty ? "—" : window.label)
                 .font(.body)
             HStack(spacing: 6) {
-                Text(verbatim: timeString(minutes: window.startMinutesFromMidnight))
+                Text(startDate, format: .dateTime.hour().minute())
                 Text(verbatim: "→")
-                Text(verbatim: timeString(minutes: window.endMinutesFromMidnight))
+                    .accessibilityHidden(true)
+                Text(endDate, format: .dateTime.hour().minute())
             }
             .font(.caption.monospacedDigit())
             .foregroundStyle(.secondary)
@@ -94,10 +95,35 @@ private struct FocusWindowRow: View {
                 .foregroundStyle(.secondary)
         }
         .accessibilityElement(children: .combine)
+        .accessibilityLabel(combinedLabel)
     }
 
-    private func timeString(minutes: Int) -> String {
-        String(format: "%02d:%02d", minutes / 60, minutes % 60)
+    private var startDate: Date {
+        dateAt(minutes: window.startMinutesFromMidnight)
+    }
+
+    private var endDate: Date {
+        dateAt(minutes: window.endMinutesFromMidnight)
+    }
+
+    private func dateAt(minutes: Int) -> Date {
+        let cal = Calendar.autoupdatingCurrent
+        let dayStart = cal.startOfDay(for: Date())
+        return cal.date(byAdding: .minute, value: minutes, to: dayStart) ?? dayStart
+    }
+
+    private var combinedLabel: Text {
+        let title = window.label.isEmpty
+            ? Text("settings.focus.row.untitled", bundle: .main)
+            : Text(verbatim: window.label)
+        let startStr = startDate.formatted(date: .omitted, time: .shortened)
+        let endStr = endDate.formatted(date: .omitted, time: .shortened)
+        let timeRange = Text(
+            "settings.focus.row.timeRange \(startStr) \(endStr)",
+            bundle: .main
+        )
+        let days = Text(verbatim: weekdaySummary(window.weekdays))
+        return title + Text(verbatim: ", ") + timeRange + Text(verbatim: ", ") + days
     }
 
     private func weekdaySummary(_ weekdays: Set<Int>) -> String {

@@ -204,9 +204,10 @@ public final class NotificationActionHandler: NSObject, UNUserNotificationCenter
 
     private let snoozeIntervalProvider: @Sendable () -> TimeInterval
     private let nowProvider: @Sendable () -> Date
-    /// Optional callback invoked with `(blockID, dayKey)` when a routine-block
-    /// notification is snoozed — used by Today UI to show a "snoozed once" badge.
-    private let snoozeRecorder: (@Sendable (UUID, String) -> Void)?
+    /// Optional callback invoked with the parsed identifier of any notification
+    /// kind (routine / hydration / milestone) when its snooze action is fired —
+    /// used by per-module UI surfaces to show a "snoozed once" badge.
+    private let snoozeRecorder: (@Sendable (ParsedNotificationIdentifier) -> Void)?
 
     /// Default initializer reads the user's chosen snooze duration from
     /// `SnoozeDurationStore` (UserDefaults-backed) and uses `Date()` as `now`.
@@ -221,7 +222,7 @@ public final class NotificationActionHandler: NSObject, UNUserNotificationCenter
     public init(
         snoozeIntervalProvider: @escaping @Sendable () -> TimeInterval,
         nowProvider: @escaping @Sendable () -> Date = { Date() },
-        snoozeRecorder: (@Sendable (UUID, String) -> Void)? = nil
+        snoozeRecorder: (@Sendable (ParsedNotificationIdentifier) -> Void)? = nil
     ) {
         self.snoozeIntervalProvider = snoozeIntervalProvider
         self.nowProvider = nowProvider
@@ -245,8 +246,8 @@ public final class NotificationActionHandler: NSObject, UNUserNotificationCenter
         switch response.actionIdentifier {
         case NotificationActionID.snooze5min:
             let originalRequest = response.notification.request
-            if let parsed = BlockNotificationIdentifier.parse(originalRequest.identifier) {
-                snoozeRecorder?(parsed.blockID, parsed.dayKey)
+            if let parsed = BlockNotificationIdentifier.parseAny(originalRequest.identifier) {
+                snoozeRecorder?(parsed)
             }
             let request = Self.makeSnoozeRequest(
                 from: originalRequest,

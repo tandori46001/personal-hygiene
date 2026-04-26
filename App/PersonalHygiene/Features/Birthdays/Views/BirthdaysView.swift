@@ -158,7 +158,10 @@ private struct BirthdayLeadEditorSheet: View {
                             Text("birthdays.lead.\(draft)", bundle: .main)
                                 .foregroundStyle(.secondary)
                         }
+                        .accessibilityElement(children: .combine)
                     }
+                    .accessibilityLabel(Text("a11y.birthdays.leadStepper", bundle: .main))
+                    .accessibilityValue(Text("birthdays.lead.\(draft)", bundle: .main))
                 } footer: {
                     Text("birthdays.lead.footer.\(viewModel.defaultLeadDays)", bundle: .main)
                 }

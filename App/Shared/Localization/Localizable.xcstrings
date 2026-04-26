@@ -1362,6 +1362,78 @@
     "onboarding.tip.notifications.body" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Reminders fire 15 minutes before each block. Snooze or mark done from the lock screen." } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Los avisos suenan 15 minutos antes de cada bloque. Pospón o marca como hecho desde la pantalla bloqueada." } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Les rappels arrivent 15 minutes avant chaque bloc. Reportez ou marquez fait depuis l’écran verrouillé." } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Les rappels arrivent 15 minutes avant chaque bloc. Reportez ou marquez fait depuis l’écran verrouillé." } } } },
+
+    "common.done" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Done" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hecho" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "OK" } } } },
+
+    "a11y.birthdays.leadStepper" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Birthdays lead time" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Antelación de cumpleaños" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Délai d'anticipation des anniversaires" } } } },
+
+    "settings.focus.row.untitled" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Untitled focus window" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Ventana de enfoque sin nombre" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Fenêtre de concentration sans nom" } } } },
+    "settings.focus.row.timeRange %@ %@" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "from %@ to %@" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "de %@ a %@" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "de %@ à %@" } } } },
+
+    "trip.document.preview.loading" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Loading document" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Cargando documento" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Chargement du document" } } } },
+    "trip.document.preview.pdf.%lld.%@" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "PDF document, %lld pages, %@" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Documento PDF, %lld páginas, %@" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Document PDF, %lld pages, %@" } } } },
+    "trip.document.preview.image.%@" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Scanned document image, %@" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Imagen de documento escaneado, %@" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Image de document scanné, %@" } } } },
+
+    "today.summary.tapHint" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Tap to see each block's status" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Toca para ver el estado de cada bloque" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Touchez pour voir l'état de chaque bloc" } } } },
+    "today.summary.detail.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Today's progress" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Progreso de hoy" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Progression du jour" } } } },
+
+    "hydration.goal.preset %lld" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Set goal to %lld milliliters" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Fijar objetivo en %lld mililitros" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Fixer l'objectif à %lld millilitres" } } } },
+
+    "trip.itinerary.action.share" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Share itinerary as text" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Compartir itinerario como texto" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Partager l'itinéraire en texte" } } } },
+
+    "settings.section.about" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "About" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Acerca de" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "À propos" } } } },
+    "settings.about.whatsNew" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "What's new" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Novedades" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Nouveautés" } } } },
+    "settings.onboarding.restart" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Show onboarding again" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Volver a mostrar la introducción" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Revoir l'introduction" } } } },
+    "settings.onboarding.restart.confirm.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Replay the welcome flow next launch?" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "¿Volver a mostrar la introducción al iniciar?" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Rejouer l'introduction au prochain démarrage ?" } } } },
+    "settings.onboarding.restart.confirm.action" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Show again" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Volver a mostrar" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Afficher à nouveau" } } } }
   }
 }

@@ -21,6 +21,8 @@ struct SettingsView: View {
     @State private var backupExport: BackupExport?
     @State private var showingImporter = false
     @State private var backupError: String?
+    @State private var showingWhatsNew = false
+    @State private var showingOnboardingRestartConfirm = false
 
     private struct BackupExport: Identifiable {
         let id = UUID()
@@ -35,58 +37,8 @@ struct SettingsView: View {
                         ErrorBanner(message: error, onDismiss: { viewModel.lastError = nil })
                     }
                 }
-                Section {
-                    HStack {
-                        Text("settings.notifications.status", bundle: .main)
-                        Spacer()
-                        Text(localizedStatus(viewModel.status))
-                            .foregroundStyle(.secondary)
-                    }
-                    .accessibilityElement(children: .combine)
-                    if viewModel.status == .notDetermined {
-                        Button {
-                            Task { await viewModel.requestPermission() }
-                        } label: {
-                            Text("settings.notifications.action.request", bundle: .main)
-                        }
-                    } else if viewModel.status == .denied {
-                        Link(destination: URL(string: UIApplication.openSettingsURLString)!) {
-                            Text("settings.notifications.action.openSettings", bundle: .main)
-                        }
-                    }
-                } header: {
-                    Text("settings.section.notifications", bundle: .main)
-                }
-
-                Section {
-                    Button {
-                        Task { await viewModel.refreshNotifications() }
-                    } label: {
-                        Text("settings.notifications.action.refresh", bundle: .main)
-                    }
-                    .disabled(viewModel.status != .authorized && viewModel.status != .provisional)
-
-                    if let last = viewModel.lastRefreshAt {
-                        Text(
-                            LocalizedStringResource(
-                                "settings.notifications.lastRefresh \(last.formatted(date: .omitted, time: .shortened))"
-                            )
-                        )
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                    }
-
-                    Picker(selection: $snoozeMinutes) {
-                        ForEach(SnoozeDurationStore.allowedMinutes, id: \.self) { minutes in
-                            Text(LocalizedStringResource("settings.snooze.duration.\(minutes)"))
-                                .tag(minutes)
-                        }
-                    } label: {
-                        Text("settings.snooze.duration.label", bundle: .main)
-                    }
-                } header: {
-                    Text("settings.section.scheduling", bundle: .main)
-                }
+                notificationsSection
+                schedulingSection
 
                 homeSection
                 if let focusScheduleStore {
@@ -104,6 +56,7 @@ struct SettingsView: View {
                         Text("settings.section.focus", bundle: .main)
                     }
                 }
+                aboutSection
                 backupSection
             }
             .navigationTitle(Text("settings.title", bundle: .main))
@@ -112,6 +65,15 @@ struct SettingsView: View {
             .sheet(item: $backupExport) { exp in
                 ShareSheet(items: [exp.url])
             }
+            .sheet(isPresented: $showingWhatsNew) {
+                WhatsNewSheet()
+            }
+            .confirmationDialog(
+                Text("settings.onboarding.restart.confirm.title", bundle: .main),
+                isPresented: $showingOnboardingRestartConfirm,
+                titleVisibility: .visible,
+                actions: { onboardingRestartActions }
+            )
             .fileImporter(
                 isPresented: $showingImporter,
                 allowedContentTypes: [.json],
@@ -119,6 +81,103 @@ struct SettingsView: View {
             ) { result in
                 handleImport(result)
             }
+        }
+    }
+
+    @ViewBuilder
+    private var onboardingRestartActions: some View {
+        Button(role: .destructive) {
+            OnboardingFlagStore.reset()
+        } label: {
+            Text("settings.onboarding.restart.confirm.action", bundle: .main)
+        }
+        Button(role: .cancel) {} label: {
+            Text("common.cancel", bundle: .main)
+        }
+    }
+
+    @ViewBuilder
+    private var notificationsSection: some View {
+        Section {
+            HStack {
+                Text("settings.notifications.status", bundle: .main)
+                Spacer()
+                Text(localizedStatus(viewModel.status))
+                    .foregroundStyle(.secondary)
+            }
+            .accessibilityElement(children: .combine)
+            if viewModel.status == .notDetermined {
+                Button {
+                    Task { await viewModel.requestPermission() }
+                } label: {
+                    Text("settings.notifications.action.request", bundle: .main)
+                }
+            } else if viewModel.status == .denied {
+                Link(destination: URL(string: UIApplication.openSettingsURLString)!) {
+                    Text("settings.notifications.action.openSettings", bundle: .main)
+                }
+            }
+        } header: {
+            Text("settings.section.notifications", bundle: .main)
+        }
+    }
+
+    @ViewBuilder
+    private var schedulingSection: some View {
+        Section {
+            Button {
+                Task { await viewModel.refreshNotifications() }
+            } label: {
+                Text("settings.notifications.action.refresh", bundle: .main)
+            }
+            .disabled(viewModel.status != .authorized && viewModel.status != .provisional)
+
+            if let last = viewModel.lastRefreshAt {
+                Text(
+                    LocalizedStringResource(
+                        "settings.notifications.lastRefresh \(last.formatted(date: .omitted, time: .shortened))"
+                    )
+                )
+                .font(.caption)
+                .foregroundStyle(.secondary)
+            }
+
+            Picker(selection: $snoozeMinutes) {
+                ForEach(SnoozeDurationStore.allowedMinutes, id: \.self) { minutes in
+                    Text(LocalizedStringResource("settings.snooze.duration.\(minutes)"))
+                        .tag(minutes)
+                }
+            } label: {
+                Text("settings.snooze.duration.label", bundle: .main)
+            }
+        } header: {
+            Text("settings.section.scheduling", bundle: .main)
+        }
+    }
+
+    @ViewBuilder
+    private var aboutSection: some View {
+        Section {
+            Button {
+                showingWhatsNew = true
+            } label: {
+                Label {
+                    Text("settings.about.whatsNew", bundle: .main)
+                } icon: {
+                    Image(systemName: "sparkles")
+                }
+            }
+            Button {
+                showingOnboardingRestartConfirm = true
+            } label: {
+                Label {
+                    Text("settings.onboarding.restart", bundle: .main)
+                } icon: {
+                    Image(systemName: "arrow.counterclockwise")
+                }
+            }
+        } header: {
+            Text("settings.section.about", bundle: .main)
         }
     }
 
@@ -280,5 +339,62 @@ struct SettingsView: View {
         case .ephemeral: return "settings.notifications.status.ephemeral"
         case .notDetermined: return "settings.notifications.status.notDetermined"
         }
+    }
+}
+
+private struct WhatsNewSheet: View {
+
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        NavigationStack {
+            List {
+                tip(
+                    systemImage: "rectangle.stack.badge.plus",
+                    title: "onboarding.tip.widget.title",
+                    body: "onboarding.tip.widget.body"
+                )
+                tip(
+                    systemImage: "mic.fill",
+                    title: "onboarding.tip.siri.title",
+                    body: "onboarding.tip.siri.body"
+                )
+                tip(
+                    systemImage: "bell.badge.fill",
+                    title: "onboarding.tip.notifications.title",
+                    body: "onboarding.tip.notifications.body"
+                )
+            }
+            .navigationTitle(Text("settings.about.whatsNew", bundle: .main))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .confirmationAction) {
+                    Button {
+                        dismiss()
+                    } label: {
+                        Text("common.done", bundle: .main)
+                    }
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private func tip(systemImage: String, title: LocalizedStringKey, body: LocalizedStringKey) -> some View {
+        HStack(alignment: .top, spacing: 12) {
+            Image(systemName: systemImage)
+                .font(.title3)
+                .foregroundStyle(.tint)
+                .frame(width: 32)
+                .accessibilityHidden(true)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title, bundle: .main)
+                    .font(.headline)
+                Text(body, bundle: .main)
+                    .font(.subheadline)
+                    .foregroundStyle(.secondary)
+            }
+        }
+        .accessibilityElement(children: .combine)
     }
 }

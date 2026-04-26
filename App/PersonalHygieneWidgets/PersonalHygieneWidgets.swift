@@ -235,7 +235,7 @@ struct DeepFocusHomeProvider: TimelineProvider {
             return .idle
         }
 
-        let scheduledStore = UserDefaultsFocusScheduleStore()
+        let scheduledStore = UserDefaultsFocusScheduleStore.appGroupOrStandard()
         let scheduled = scheduledStore.windows()
         if let active = DeepFocusFilter.activeWindow(
             at: now,

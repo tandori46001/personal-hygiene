@@ -49,6 +49,8 @@
 Modules: M1 (templates) · M2 (notifications) · M3 (medication) · M4 (sleep).
 
 > **Session 5 polish (2026-04-26):** Today empty-state CTA, block skip-today + notification exclusion, snooze-5-min action, notification grouping (thread/category), `WhatsNextIntent` Siri shortcut, `PersonalHygieneWidgets` (small + medium "next block"), VoiceOver pass on time-only rows, scheduled focus windows (DeepFocusFilter merges block + schedule). Remaining work is non-code: real-device validation + paid Apple Developer Program.
+>
+> **Session 6 polish (2026-04-26):** snooze-once badge on Today rows (`BlockSnoozeStore` + `BlockNotificationIdentifier.parse`), custom snooze duration picker (5/10/15 via `SnoozeDurationStore`), Templates / Settings / Hydration / Trips a11y combine, `WhatsNextDialogBuilder` extracted for testing, `DeepFocusHomeWidget` (small) shipped, hydration best-streak trophy, Birthdays auto-refresh on scenePhase, Housekeeping room picker, onboarding tips.
 
 | Acceptance | Status |
 |---|---|

@@ -162,4 +162,53 @@ final class HydrationComplianceTests: XCTestCase {
             1
         )
     }
+
+    // MARK: - bestStreakDays edge cases (slice 11)
+
+    func test_bestStreakDays_currentEqualsBestWhenOnlyOneRun() {
+        let goal = HydrationGoal(dailyMilliliters: 2000)
+        let now = date(year: 2026, month: 4, day: 25)
+        let logs = [
+            HydrationLog(milliliters: 2100, drankAt: date(year: 2026, month: 4, day: 23)),
+            HydrationLog(milliliters: 2100, drankAt: date(year: 2026, month: 4, day: 24)),
+            HydrationLog(milliliters: 2100, drankAt: date(year: 2026, month: 4, day: 25)),
+        ]
+        let cal = gregorianUTC()
+        let best = HydrationCompliance.bestStreakDays(on: now, logs: logs, goal: goal, calendar: cal)
+        let current = HydrationCompliance.currentStreakDays(on: now, logs: logs, goal: goal, calendar: cal)
+        XCTAssertEqual(best, 3)
+        XCTAssertEqual(best, current)
+    }
+
+    func test_bestStreakDays_singleDayGapResetsRun() {
+        let goal = HydrationGoal(dailyMilliliters: 2000)
+        let now = date(year: 2026, month: 4, day: 25)
+        let cal = gregorianUTC()
+        let logs = [
+            HydrationLog(milliliters: 2100, drankAt: date(year: 2026, month: 4, day: 20)),
+            HydrationLog(milliliters: 2100, drankAt: date(year: 2026, month: 4, day: 21)),
+            // Apr 22 — explicit miss (below goal)
+            HydrationLog(milliliters: 1000, drankAt: date(year: 2026, month: 4, day: 22)),
+            HydrationLog(milliliters: 2100, drankAt: date(year: 2026, month: 4, day: 23)),
+            HydrationLog(milliliters: 2100, drankAt: date(year: 2026, month: 4, day: 24)),
+            HydrationLog(milliliters: 2100, drankAt: date(year: 2026, month: 4, day: 25)),
+        ]
+        XCTAssertEqual(
+            HydrationCompliance.bestStreakDays(on: now, logs: logs, goal: goal, calendar: cal),
+            3
+        )
+    }
+
+    func test_bestStreakDays_zeroWhenNoDayMeetsGoal() {
+        let goal = HydrationGoal(dailyMilliliters: 2000)
+        let now = date(year: 2026, month: 4, day: 25)
+        let logs = [
+            HydrationLog(milliliters: 500, drankAt: date(year: 2026, month: 4, day: 24)),
+            HydrationLog(milliliters: 1500, drankAt: date(year: 2026, month: 4, day: 25)),
+        ]
+        XCTAssertEqual(
+            HydrationCompliance.bestStreakDays(on: now, logs: logs, goal: goal, calendar: gregorianUTC()),
+            0
+        )
+    }
 }

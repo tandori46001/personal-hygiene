@@ -8,6 +8,29 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added — Session 7 ("haz todo" round 5, 20 slices: dependabot triage + a11y completeness + tests + cross-module polish)
+
+- **Slice 1 — Dependabot triage:** bumped `actions/checkout` → v6, `actions/cache` → v5, `actions/upload-artifact` → v7 in `.github/workflows/ci.yml`. Open dependabot PRs (#1, #2, #3) auto-close on next dependabot run.
+- **Slice 2 — ROADMAP session-6 polish note + CHANGELOG round-5 entries:** documented round 4's a11y/UX/widget shipments under Phase 1.
+- **Slice 3 — LESSONS.md L002:** captured the `BlockNotificationIdentifier.parse` cross-module identifier collision risk + guard test.
+- **Slice 4 — Birthdays editor a11y:** `BirthdayLeadEditorView` form rows combine into single VoiceOver elements, lead-time stepper has explicit accessibility label.
+- **Slice 5 — Deep Focus schedule editor a11y:** `FocusScheduleEditorView` window rows group title + day-of-week + time range; weekday toggle pills get spoken state.
+- **Slice 6 — Document scanner a11y:** `DocumentScannerView` post-scan preview labels each page; thumbnail row groups page index + delete control.
+- **Slice 7 — AX5 round-2 smoke tests:** added `test_birthdayLeadEditor_render_atAccessibilityXXXL`, `test_focusScheduleEditor_render_atAccessibilityXXXL`, `test_settings_render_atAccessibilityXXXL`.
+- **Slice 8 — `BlockNotificationIdentifier.parse` exhaustive table tests:** round-trip + malformed identifiers + non-routine prefixes all covered.
+- **Slice 9 — `SnoozeDurationStore` boundary tests:** 5/10/15 boundary values + invalid persisted value falls back to 5.
+- **Slice 10 — `DeepFocusFilter.activeWindow` tests:** schedule beats block, no-overlap returns nil, midnight-spanning windows.
+- **Slice 11 — `HydrationCompliance.bestStreakDays` edge tests:** empty history, current-equals-best, gap resets streak.
+- **Slice 12 — Backup v1.1 → v1 downgrade-safety test:** v1.1 backup re-decoded by v1 path keeps every user-visible item.
+- **Slice 13 — `BlockSnoozeStore` cross-module:** new `BlockSnoozeSource` enum (routine / hydration / milestone) so per-source badges scope cleanly; `BlockNotificationIdentifier.parse` recognizes all three prefixes.
+- **Slice 14 — `DeepFocusHomeWidget` app-group prep:** `AppGroup.suiteName` constant introduced; `UserDefaultsFocusScheduleStore` accepts an injected suite name (defaults to `.standard`).
+- **Slice 15 — `WhatsNextDialogBuilder` watch share:** pure formatting helper moved to `App/Shared/Intents/`; iOS intent + watch widget now use the same dialog phrasing.
+- **Slice 16 — Settings → "What's new" sheet:** lists widget + Siri + snooze indicator; reuses onboarding tip strings.
+- **Slice 17 — Today X-of-N tap-to-expand:** summary card now shows a `Popover`/`Sheet` listing each block with done state.
+- **Slice 18 — Hydration goal preset chooser:** Settings → Hydration adds 2.0 / 2.5 / 3.0 L quick-tap row above the custom field.
+- **Slice 19 — Trip itinerary plain-text Share:** `TripDetailView` adds a "Copy / Share itinerary as text" action that builds a plain-text rendering and presents `UIActivityViewController`.
+- **Slice 20 — Onboarding skip/restart in Settings:** `OnboardingFlagStore` exposes `reset()`; Settings adds a "Show onboarding again" entry.
+
 ### Added — Session 6 ("haz todo" round 4, 20 slices: docs hygiene + a11y + tests + UX polish)
 
 - **Slice 1 — ROADMAP refresh:** Phase 1 → ✅ ~98%, Phase 2 → ✅ ~95%, Phase 3 → ✅, with session-5 polish notes added under Phase 1 and Phase 5.
