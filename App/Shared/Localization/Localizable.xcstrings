@@ -57,6 +57,14 @@
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Today's schedule" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Horario de hoy" } },
       "fr" : { "stringUnit" : { "state" : "translated", "value" : "Programme du jour" } } } },
+    "today.action.markDone" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Mark block done" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Marcar bloque hecho" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Marquer le bloc fait" } } } },
+    "today.action.unmarkDone" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Mark block pending" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Marcar bloque pendiente" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Marquer le bloc en attente" } } } },
     "today.empty.title" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "No active template" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Sin plantilla activa" } },

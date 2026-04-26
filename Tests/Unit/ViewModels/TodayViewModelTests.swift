@@ -105,4 +105,50 @@ final class TodayViewModelTests: XCTestCase {
 
         XCTAssertEqual(vm.nextBlock(after: date(weekday: 3, hour: 8))?.title, "Lunch")
     }
+
+    func test_toggleDone_marksAndUnmarksOnSameBlock() throws {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(secondsFromGMT: 0)!
+        let block = Block(
+            title: "Hygiene",
+            category: .hygiene,
+            startMinutesFromMidnight: 7 * 60,
+            durationMinutes: 30
+        )
+        let template = RoutineTemplate(name: "T", dayType: .weekday, blocks: [block], isActive: true)
+        try repo.upsert(template)
+
+        let vm = TodayViewModel(repository: repo, calendar: cal)
+        let now = date(weekday: 3, hour: 9)
+        vm.reload(now: now)
+
+        XCTAssertFalse(vm.isDone(block))
+        vm.toggleDone(block, now: now)
+        XCTAssertTrue(vm.isDone(block))
+        XCTAssertEqual(vm.doneCount, 1)
+
+        vm.toggleDone(block, now: now)
+        XCTAssertFalse(vm.isDone(block))
+        XCTAssertEqual(vm.doneCount, 0)
+    }
+
+    func test_reload_rehydratesCompletionsForToday() throws {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(secondsFromGMT: 0)!
+        let block = Block(
+            title: "Hygiene",
+            category: .hygiene,
+            startMinutesFromMidnight: 7 * 60,
+            durationMinutes: 30
+        )
+        let template = RoutineTemplate(name: "T", dayType: .weekday, blocks: [block], isActive: true)
+        try repo.upsert(template)
+        let now = date(weekday: 3, hour: 9)
+        try repo.markDone(block, on: now, calendar: cal)
+
+        let vm = TodayViewModel(repository: repo, calendar: cal)
+        vm.reload(now: now)
+
+        XCTAssertTrue(vm.isDone(block))
+    }
 }

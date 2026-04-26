@@ -25,7 +25,11 @@ struct TodayView: View {
 
                         Section {
                             ForEach(template.sortedBlocks) { block in
-                                BlockTimelineRow(block: block)
+                                BlockTimelineRow(
+                                    block: block,
+                                    isDone: viewModel.isDone(block),
+                                    onToggle: { viewModel.toggleDone(block) }
+                                )
                             }
                         } header: {
                             Text("today.section.schedule", bundle: .main)
@@ -106,9 +110,23 @@ private struct BlockNowRow: View {
 
 private struct BlockTimelineRow: View {
     let block: Block
+    let isDone: Bool
+    let onToggle: () -> Void
 
     var body: some View {
         HStack {
+            Button(action: onToggle) {
+                Image(systemName: isDone ? "checkmark.circle.fill" : "circle")
+                    .foregroundStyle(isDone ? Color.green : Color.secondary)
+                    .font(.title3)
+            }
+            .buttonStyle(.plain)
+            .accessibilityLabel(
+                isDone
+                    ? Text("today.action.unmarkDone", bundle: .main)
+                    : Text("today.action.markDone", bundle: .main)
+            )
+
             Text(formattedTime(minutes: block.startMinutesFromMidnight))
                 .font(.system(.body, design: .monospaced))
                 .foregroundStyle(.secondary)
@@ -116,6 +134,7 @@ private struct BlockTimelineRow: View {
             VStack(alignment: .leading, spacing: 1) {
                 Text(block.title)
                     .font(.body)
+                    .strikethrough(isDone, color: .secondary)
                 Text(LocalizedStringKey("category.\(block.category.rawValue)"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -131,7 +150,6 @@ private struct BlockTimelineRow: View {
                 .foregroundStyle(.secondary)
         }
         .padding(.vertical, 2)
-        .accessibilityElement(children: .combine)
     }
 
     private func formattedTime(minutes: Int) -> String {
