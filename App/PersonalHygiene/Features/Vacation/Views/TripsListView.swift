@@ -36,7 +36,8 @@ struct TripsListView: View {
                                     trip: trip,
                                     repository: viewModel.repository,
                                     documentStore: viewModel.documentStore,
-                                    itineraryGenerator: viewModel.itineraryGenerator
+                                    itineraryGenerator: viewModel.itineraryGenerator,
+                                    marineService: viewModel.marineService
                                 )
                             )
                         } label: {

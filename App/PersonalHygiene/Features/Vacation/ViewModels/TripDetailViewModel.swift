@@ -8,6 +8,7 @@ final class TripDetailViewModel {
     private let repository: any TripsRepository
     let documentStore: TripDocumentStore?
     let itineraryGenerator: (any ItineraryGenerator)?
+    let marineService: (any MarineWeatherService)?
 
     var trip: Trip
     var errorMessage: String?
@@ -16,12 +17,18 @@ final class TripDetailViewModel {
         trip: Trip,
         repository: any TripsRepository,
         documentStore: TripDocumentStore? = nil,
-        itineraryGenerator: (any ItineraryGenerator)? = nil
+        itineraryGenerator: (any ItineraryGenerator)? = nil,
+        marineService: (any MarineWeatherService)? = nil
     ) {
         self.trip = trip
         self.repository = repository
         self.documentStore = documentStore
         self.itineraryGenerator = itineraryGenerator
+        self.marineService = marineService
+    }
+
+    var hasGeocodedDestination: Bool {
+        trip.destinationLatitude != nil && trip.destinationLongitude != nil
     }
 
     var sortedMilestones: [TripMilestone] {

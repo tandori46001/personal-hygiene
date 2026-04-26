@@ -13,6 +13,7 @@ struct AppEnvironment {
     let tripsRepository: any TripsRepository
     let tripDocumentStore: TripDocumentStore
     let itineraryGenerator: any ItineraryGenerator
+    let marineService: any MarineWeatherService
     let notificationService: any NotificationService
     let medicationService: any MedicationService
     let sleepService: any SleepService
@@ -28,6 +29,7 @@ struct AppEnvironment {
         self.tripsRepository = trips
         self.tripDocumentStore = TripDocumentStore(repository: trips, keychain: SecKeychainStore())
         self.itineraryGenerator = Self.makeItineraryGenerator()
+        self.marineService = OpenMeteoMarineService()
         self.notificationService = UserNotificationsService()
         self.medicationService = HealthKitMedicationService()
         self.sleepService = HealthKitSleepService()

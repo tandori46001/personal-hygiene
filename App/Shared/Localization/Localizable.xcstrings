@@ -910,6 +910,31 @@
     "trip.itinerary.generating" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Generating itinerary…" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Generando itinerario…" } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Génération de l'itinéraire…" } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Génération de l'itinéraire…" } } } },
+
+    "trip.marine.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Marine conditions" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Condiciones marinas" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Conditions maritimes" } } } },
+    "trip.marine.loading" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Loading marine data…" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Cargando datos marinos…" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Chargement des données maritimes…" } } } },
+    "trip.marine.waveHeight" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Wave height" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Altura de ola" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Hauteur des vagues" } } } },
+    "trip.marine.wavePeriod" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Wave period" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Período de ola" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Période des vagues" } } } },
+    "trip.marine.waveDirection" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Wave direction" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Dirección de ola" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Direction des vagues" } } } },
+    "trip.marine.seaTemp" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Sea temperature" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Temperatura del mar" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Température de la mer" } } } }
   }
 }

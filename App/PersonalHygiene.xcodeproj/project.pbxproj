@@ -10,6 +10,7 @@
 		007450CBF761A40ED1118A7A /* HydrationGoal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 04C442826202995F6E163D01 /* HydrationGoal.swift */; };
 		00C3CEA1C8A1B0737B22A6CD /* SleepDashboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A89B34922E3306EEFFDF709A /* SleepDashboardView.swift */; };
 		00E3D9364D8E98A29380AB3D /* TemplateEditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6126279A32AD79122C97619 /* TemplateEditorView.swift */; };
+		01C73F3FBD1A83B992264586 /* OpenMeteoMarineServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0EEDCF07757910F0B5CF4E3D /* OpenMeteoMarineServiceTests.swift */; };
 		03739048E90917C9C9BC19B6 /* HousekeepingTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BCB9A6E9C1AC234DD71A32D /* HousekeepingTask.swift */; };
 		03CC3856A4A2116B7C4DF81F /* ContactsServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4B7C0C3656EBA46280D550 /* ContactsServiceTests.swift */; };
 		058AC12BE5497BDCEB019EF6 /* TripDetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2F31840C148B9BB955A118 /* TripDetailViewModelTests.swift */; };
@@ -38,6 +39,7 @@
 		264A9C1DA014CC0E17E95B40 /* DeepFocusFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D9FEB31CBE9708BAB03C30C /* DeepFocusFilter.swift */; };
 		26BFB024B8B0B94C8AB975D6 /* HydrationDashboardViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = D79F67E752A39055812B18DD /* HydrationDashboardViewModel.swift */; };
 		26D58ABFFB89540BD41A2144 /* AppModelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D15A10D5DE460A958A5D53E2 /* AppModelContainer.swift */; };
+		2843756C93767398F8622D0A /* MarineWeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCF1F0A69A9DA870BFC49C9B /* MarineWeatherService.swift */; };
 		2851414B1FE1FEEDF194BA22 /* FoundationModelsItineraryGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830CE2EED13F4D5045D82195 /* FoundationModelsItineraryGenerator.swift */; };
 		29029740613FDF033E8988E3 /* HydrationNotificationFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB64FF3083A5594BDDFDAA0 /* HydrationNotificationFactory.swift */; };
 		2A227F961B62938928F882B7 /* ContactsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8AF1C127CD25DD6CBF1485 /* ContactsService.swift */; };
@@ -116,9 +118,11 @@
 		8794AB537CE9CC2DECF97AD4 /* TripsRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3095C9D521F5A915E5613E68 /* TripsRepositoryTests.swift */; };
 		87D6221EB6E9BE29179A6EB6 /* BlockEditorViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE021253752FB8EB009B9D41 /* BlockEditorViewModel.swift */; };
 		8A219BD00A7ACD8207AE25ED /* KeychainStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E9375851F4D5F463754AC9DA /* KeychainStore.swift */; };
+		8B944E695A1EE08DC356DC4B /* MarineConditionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51FAF9D9731F55E118D58DDF /* MarineConditionsView.swift */; };
 		8E6E9C0F4F6BE1778E9ADF2E /* HousekeepingTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3BCB9A6E9C1AC234DD71A32D /* HousekeepingTask.swift */; };
 		8E947E86CCC93D4BD5D23D1A /* KeychainStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 09F8AE9540D160CC2EA41DC1 /* KeychainStoreTests.swift */; };
 		8EC43BFE174188B77A66C341 /* TripDocumentStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C86859E08647D58470B18D1 /* TripDocumentStore.swift */; };
+		8ED7D4B3DA4D8B74137F22B5 /* MarineWeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCF1F0A69A9DA870BFC49C9B /* MarineWeatherService.swift */; };
 		9055F831A75308CB44735BE2 /* RoutineListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B564307C0E98CEC05BE5E6 /* RoutineListViewModel.swift */; };
 		913E7910B858F41D75ABD103 /* DocumentMetadataSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C2F5C423AAB15CDF0D56BCE /* DocumentMetadataSheet.swift */; };
 		926BAC851B1C882652DE48B1 /* HydrationNotificationFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB64FF3083A5594BDDFDAA0 /* HydrationNotificationFactory.swift */; };
@@ -175,6 +179,7 @@
 		E22943F6FF0797156673D181 /* RoutineRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB2C54C3BD0F8E70F3D7B226 /* RoutineRepository.swift */; };
 		E3353CECC68A34060EDFE5E9 /* StubItineraryGeneratorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC9E1C285492E9D01510846 /* StubItineraryGeneratorTests.swift */; };
 		E4F9184F07297B58059B82AE /* SleepService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE3A907E81705697C917327 /* SleepService.swift */; };
+		E5E5E4E6D630B139AAC8DBA2 /* MarineWeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCF1F0A69A9DA870BFC49C9B /* MarineWeatherService.swift */; };
 		E670674061442BD4E55D67C8 /* UpcomingBirthdays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE1F2759BBDB34451AB30BD /* UpcomingBirthdays.swift */; };
 		E863416DC18BBBA1CFF0A52A /* RoutineTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD16FF8317F205F6929F8F70 /* RoutineTemplate.swift */; };
 		E9F73E17E5AB2305643C5C6C /* HydrationCompliance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63821CA8C548D983DE625643 /* HydrationCompliance.swift */; };
@@ -244,6 +249,7 @@
 		0C86859E08647D58470B18D1 /* TripDocumentStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripDocumentStore.swift; sourceTree = "<group>"; };
 		0CCDFE1032F58597D5ECC644 /* HydrationNotificationFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HydrationNotificationFactoryTests.swift; sourceTree = "<group>"; };
 		0CEACE10A5D2310E5A11B00F /* TripsListViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripsListViewModel.swift; sourceTree = "<group>"; };
+		0EEDCF07757910F0B5CF4E3D /* OpenMeteoMarineServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenMeteoMarineServiceTests.swift; sourceTree = "<group>"; };
 		170697D44D231992F769C84D /* TemplateEditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateEditorViewModel.swift; sourceTree = "<group>"; };
 		1C2F5C423AAB15CDF0D56BCE /* DocumentMetadataSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentMetadataSheet.swift; sourceTree = "<group>"; };
 		20900B3D6A28B3B0903C5D2D /* ItineraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItineraryView.swift; sourceTree = "<group>"; };
@@ -268,6 +274,7 @@
 		4BE1D8CDA189133B95EB97D9 /* BirthdayContact.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayContact.swift; sourceTree = "<group>"; };
 		4CC9E1C285492E9D01510846 /* StubItineraryGeneratorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubItineraryGeneratorTests.swift; sourceTree = "<group>"; };
 		504DC37DA7DFB28CB886230A /* BirthdaysViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdaysViewModel.swift; sourceTree = "<group>"; };
+		51FAF9D9731F55E118D58DDF /* MarineConditionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarineConditionsView.swift; sourceTree = "<group>"; };
 		5273E32D9DF4C1E6D733D961 /* TripsRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripsRepository.swift; sourceTree = "<group>"; };
 		57F86C0070A0F11D03F5A574 /* MedicationComplianceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationComplianceView.swift; sourceTree = "<group>"; };
 		5AF643DB2F814E7651D040F8 /* TripMilestoneNotificationFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripMilestoneNotificationFactory.swift; sourceTree = "<group>"; };
@@ -320,6 +327,7 @@
 		C9016CA1F69F72664DB39DCF /* RoutineListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineListView.swift; sourceTree = "<group>"; };
 		CB4A3562E685E7DF57957B22 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CC8AF1C127CD25DD6CBF1485 /* ContactsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsService.swift; sourceTree = "<group>"; };
+		CCF1F0A69A9DA870BFC49C9B /* MarineWeatherService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarineWeatherService.swift; sourceTree = "<group>"; };
 		CD16FF8317F205F6929F8F70 /* RoutineTemplate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineTemplate.swift; sourceTree = "<group>"; };
 		CE81B3C2DA797C8029D30EFE /* TripDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripDetailView.swift; sourceTree = "<group>"; };
 		D15A10D5DE460A958A5D53E2 /* AppModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModelContainer.swift; sourceTree = "<group>"; };
@@ -433,6 +441,7 @@
 				5B581EEDBA132781CB2F461F /* DocumentPreviewView.swift */,
 				FEA915DEB37925F7846F2C40 /* DocumentScannerView.swift */,
 				20900B3D6A28B3B0903C5D2D /* ItineraryView.swift */,
+				51FAF9D9731F55E118D58DDF /* MarineConditionsView.swift */,
 				778E4E083674A6875D375C01 /* MilestoneEditorView.swift */,
 				CE81B3C2DA797C8029D30EFE /* TripDetailView.swift */,
 				8E00D497A61B140A78BEBC11 /* TripsListView.swift */,
@@ -612,6 +621,7 @@
 				6AEA6CA266446873BEA7D333 /* HydrationService.swift */,
 				31530A7E54A39B31CB44C245 /* ItineraryGenerator.swift */,
 				E9375851F4D5F463754AC9DA /* KeychainStore.swift */,
+				CCF1F0A69A9DA870BFC49C9B /* MarineWeatherService.swift */,
 				87CF274A384796487EFA71A4 /* MedicationCompliance.swift */,
 				2F2E746124742819F23D63A4 /* MedicationService.swift */,
 				685542340D132BBBD5D1B0F6 /* NotificationCoordinator.swift */,
@@ -719,6 +729,7 @@
 				09F8AE9540D160CC2EA41DC1 /* KeychainStoreTests.swift */,
 				7099FBF5BE60662DEC8B45D3 /* MedicationComplianceTests.swift */,
 				D286C3CA04A9375E3768F117 /* NotificationFactoryTests.swift */,
+				0EEDCF07757910F0B5CF4E3D /* OpenMeteoMarineServiceTests.swift */,
 				4CC9E1C285492E9D01510846 /* StubItineraryGeneratorTests.swift */,
 				2A42595C053FA63B9C86121A /* TravelTimeServiceTests.swift */,
 				35749025F0764A6347355475 /* TripDocumentStoreTests.swift */,
@@ -1071,6 +1082,7 @@
 				53A1552B0EEF12C672361740 /* HydrationService.swift in Sources */,
 				E1FAC8A1DD3A7B7D9793F5B3 /* ItineraryGenerator.swift in Sources */,
 				8A219BD00A7ACD8207AE25ED /* KeychainStore.swift in Sources */,
+				E5E5E4E6D630B139AAC8DBA2 /* MarineWeatherService.swift in Sources */,
 				FF4A505B0FFCCC2D201FBDFB /* MedicationCompliance.swift in Sources */,
 				305594EE6B02A986E180BF72 /* MedicationService.swift in Sources */,
 				4E458E1A64DCB38CA68DE755 /* NotificationCoordinator.swift in Sources */,
@@ -1116,6 +1128,7 @@
 				8E947E86CCC93D4BD5D23D1A /* KeychainStoreTests.swift in Sources */,
 				6303D3C468F0D1E4C2DA1A1E /* MedicationComplianceTests.swift in Sources */,
 				C89D5C3D112C1122B7366F14 /* NotificationFactoryTests.swift in Sources */,
+				01C73F3FBD1A83B992264586 /* OpenMeteoMarineServiceTests.swift in Sources */,
 				CE5EA2D79B93964D2C63F233 /* RoutineTemplateTests.swift in Sources */,
 				E3353CECC68A34060EDFE5E9 /* StubItineraryGeneratorTests.swift in Sources */,
 				250031CFAF00CF1146907A67 /* SwiftDataRoutineRepositoryTests.swift in Sources */,
@@ -1169,6 +1182,8 @@
 				FBB0AA6E0C4C733E3EB96B5A /* ItineraryGenerator.swift in Sources */,
 				4D35A051171D5DD9779DB3D3 /* ItineraryView.swift in Sources */,
 				5DBB7A3EC65F6DE18A767A1A /* KeychainStore.swift in Sources */,
+				8B944E695A1EE08DC356DC4B /* MarineConditionsView.swift in Sources */,
+				2843756C93767398F8622D0A /* MarineWeatherService.swift in Sources */,
 				CEF991870B88A8EF20833892 /* MedicationCompliance.swift in Sources */,
 				B5B93C08D52435D705C86EE7 /* MedicationComplianceView.swift in Sources */,
 				F51DCDA108CFD308325E6DCE /* MedicationComplianceViewModel.swift in Sources */,
@@ -1236,6 +1251,7 @@
 				D9B25A28FD9A14CE5FB7422F /* HydrationService.swift in Sources */,
 				30DA72703431506E4EE3EF6E /* ItineraryGenerator.swift in Sources */,
 				AC7751C8E761D38C470FBD0D /* KeychainStore.swift in Sources */,
+				8ED7D4B3DA4D8B74137F22B5 /* MarineWeatherService.swift in Sources */,
 				F8504E6345EBE253E6DF1CA0 /* MedicationCompliance.swift in Sources */,
 				412712B2AC558BE963D51D06 /* MedicationService.swift in Sources */,
 				1D596014EE0C8B3B70E75409 /* NotificationCoordinator.swift in Sources */,

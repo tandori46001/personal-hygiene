@@ -112,6 +112,22 @@ struct TripDetailView: View {
                 }
             }
 
+            if let marine = viewModel.marineService,
+                let lat = viewModel.trip.destinationLatitude,
+                let lon = viewModel.trip.destinationLongitude {
+                Section {
+                    NavigationLink {
+                        MarineConditionsView(latitude: lat, longitude: lon, service: marine)
+                    } label: {
+                        Label {
+                            Text("trip.marine.title", bundle: .main)
+                        } icon: {
+                            Image(systemName: "water.waves")
+                        }
+                    }
+                }
+            }
+
             Section {
                 if viewModel.sortedDocuments.isEmpty {
                     Text("trip.detail.documents.empty", bundle: .main)
