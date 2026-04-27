@@ -1483,3 +1483,87 @@ None — purely build-time guard.
 ### Manual verification
 1. Settings → Notification categories → enable "Bedtime auto-mute".
 2. With a sleep block defined in the active template, refresh notifications → hydration reminders that would fire inside the sleep window (±15 min buffer) are not scheduled. Medication primaries + follow-ups remain regardless.
+
+## [T-106] — Trip emergency contacts + per-currency expense totals (round 14)
+
+**Module:** trips · **Shipped in:** round 14
+
+### Manual verification
+1. Open trip detail → scroll to "Emergency contacts". Add (label "Embassy", phone "+1 555 1234"). Long-press the phone → copy works.
+2. Swipe a contact left → Delete confirms.
+3. In the Expenses section, add 2+ expenses with mixed currencies (USD 100 hotel, EUR 30 cab). After the second, a per-currency "Total" row appears for each currency.
+
+## [T-107] — Quiet hours store + bedtime auto-mute interplay (round 14)
+
+**Module:** notifications · **Shipped in:** round 14
+
+### Manual verification
+1. Settings → Notification categories → enable Bedtime auto-mute (round 13 wire).
+2. (Quiet hours UI is deferred to round 17 — store works but no toggle yet.) Verify via Diagnostics that medication notifications still fire even with bedtime mute on; hydration ones inside the sleep window don't.
+
+## [T-108] — Template duration footer + milestone bundle one-tap (round 15)
+
+**Module:** templates / trips · **Shipped in:** round 15
+
+### Manual verification
+1. Templates → open any template with blocks. Footer reads "Total: Xh Ym · N blocks" and updates as you add/remove.
+2. Open a trip with no milestones. Empty state shows "Add 6m / 3m / 1m / 1w defaults" button. Tap once → 4 milestones appear (180/90/30/7 days). Tap again → idempotent, no duplicates.
+
+## [T-109] — Hydration weekly average caption (round 15)
+
+**Module:** hydration · **Shipped in:** round 15
+
+### Manual verification
+1. Hydration tab → with at least 1 day of logged data in the trailing 7 days, a "Weekly average: X ml/day" caption appears below the chart (rounded to nearest 10 ml).
+2. With zero data → caption is hidden.
+
+## [T-110] — Birthdays relationship filter chips (round 15)
+
+**Module:** birthdays · **Shipped in:** round 15
+
+### Manual verification
+1. Birthdays tab → above the contact list, chip row shows All / Family / Friends / Coworkers / Other.
+2. Tap a chip → list filters to contacts with that relationship tag (set via the lead-edit sheet — round 13 store).
+3. "All" restores the full list.
+
+## [T-111] — Medication dose history view (round 16)
+
+**Module:** medication · **Shipped in:** round 16
+
+### Manual verification
+1. Mark a medication block as done from Today.
+2. (Round 17 will add a NavigationLink from MedicationView → DoseHistoryView.) The list shows the dose with title + concept identifier (text-selectable, truncate-middle) + completion timestamp.
+3. Empty state appears when no doses recorded in last 30 days.
+
+## [T-112] — Trip carbon footprint section (round 16)
+
+**Module:** trips · **Shipped in:** round 16
+
+### Manual verification
+1. Settings → Home location: set lat/lon (e.g., Madrid 40.4168, -3.7038).
+2. Open a trip whose destination is geocoded (lat + lon set). The "Estimated round-trip CO₂" section appears at the top with a kg figure (e.g., Tokyo round-trip ~5,500 kg).
+3. Open a trip without geocode → section is hidden silently.
+4. Footer reads "Rough economy-class average. Set home location in Settings."
+
+## [T-113] — Housekeeping room icons store (round 16)
+
+**Module:** housekeeping · **Shipped in:** round 16
+
+### Manual verification
+1. (UI picker deferred to round 17.) Verify the store works via Diagnostics or UserDefaults — palette has 8 SF Symbols (bedroom / kitchen / bathroom / living / laundry / storage / house / outdoor).
+
+## [T-114] — Focus filter preview helper (round 16)
+
+**Module:** focus · **Shipped in:** round 16
+
+### Manual verification
+1. (UI surface deferred to round 17.) Helper is unit-tested. Once round-17 UI lands, it'll show "Currently silenced: X blocks" while a Focus window is active.
+
+## [T-115] — Snapshot history + auth timeline + network activity (round 13 surfaces, validation pending)
+
+**Module:** settings/diagnostics · **Shipped in:** round 13
+
+### Manual verification
+1. Settings → Diagnostics → Advanced → expand. Tap "Export diagnostics snapshot" twice → "Snapshot history" disclosure shows 2 entries with build SHA + pending count + widget reload count.
+2. Toggle notification permission off in iOS Settings, back to app → "Auth timeline" section shows the change with timestamp.
+3. Use Currency convert (with network) → "Network activity" section count for `frankfurter` goes up by 1. Cache hits don't increment.

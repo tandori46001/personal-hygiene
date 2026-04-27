@@ -8,7 +8,24 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
-### Added — Session 14 ("haz todo" round 14, infrastructure-heavy: trip carbon + emergency contacts + quiet hours + template presets + pending grouping)
+### Added — Session 14 round 16 (`61c0a1a`): DoseHistoryView + TripCarbonSection + HousekeepingRoomIcons + FocusFilterPreview
+
+- **Medication:** new `DoseHistoryView` reads from `MedicationDoseHistory` aggregator (round 15) — 30-day medication-only completion list, text-selectable concept identifier, empty state. (NavigationLink wire from MedicationView deferred to round 17.)
+- **Trips:** new `TripCarbonSection` renders inline on TripDetail when destination is geocoded + home location is set. Surfaces `TripCarbonEstimate.roundTripKgCO2(...)` (round 14) as "Estimated round-trip CO₂: X kg". Footer disclaims it's an economy-class average.
+- **Housekeeping:** `HousekeepingRoomIcons.palette` (8 SF Symbols: bedroom / kitchen / bathroom / living / laundry / storage / house / outdoor) + `HousekeepingRoomIconStore` (UserDefaults JSON dict keyed on room name). UI picker deferred to round 17.
+- **Focus:** new `FocusFilterPreview.preview(at:in:scheduledWindows:calendar:)` returns `(activeBlock?, silencedBlocks)` — pure helper that answers "given current Focus state, which blocks would be silenced now?". UI surface deferred to round 17.
+- **Tests:** 3 new test files (`HousekeepingRoomIconsTests`, `FocusFilterPreviewTests`, `DoseHistoryViewIntegrationTests`). 533 total (+9 vs round 15). +13 i18n keys × 3 = 626 total.
+
+### Added — Session 14 round 15 (`fd88a46`): deferred UI close-out
+
+- **Hydration:** weekly average caption ("Weekly average: %@ ml/day") under the chart, backed by `HydrationWeeklyAverage` (round 14 helper).
+- **Trips:** "Add 6m / 3m / 1m / 1w defaults" button on milestone empty-state (`MilestoneDefaultBundle.standard` + `addStandardMilestoneBundle()` view-model action; idempotent against existing daysBefore).
+- **Templates:** TemplateEditor footer now shows `Total: Xh Ym · N blocks` via new `TemplateDurationCalculator`.
+- **Birthdays:** relationship-tag filter chips (All / Family / Friends / Coworkers / Other) backed by `BirthdayRelationshipStore` (round 12).
+- **Medication:** new `MedicationDoseHistory` helper aggregates completion records into a 30-day medication-only history (UI in round 16).
+- **Tests:** 3 new test files (`MilestoneDefaultBundleTests`, `TemplateDurationCalculatorTests`, `MedicationDoseHistoryTests`). 524 total (+13 vs round 14). +8 i18n keys × 3 = 613 total.
+
+### Added — Session 14 round 14 (`226bf35`): infrastructure-heavy — trip carbon + emergency contacts + quiet hours + template presets + pending grouping
 
 - **Trip module:** `TripCarbonEstimate` (haversine distance + 0.255 kg CO₂ per passenger·km factor for rough round-trip flight estimate). `TripEmergencyContact` value type + `Trip.emergencyContactsJSON` field. New `TripEmergencyContactsSection` UI with phone-pad input. `TripExpensesSection` now shows per-currency totals when ≥2 expenses present. View-model: `expensesByCurrency`, `addEmergencyContact`, `deleteEmergencyContact`, `roundTripCO2Kg(home:)`.
 - **Notifications:** `QuietHoursStore` recurring-window mute (default 22:00 → 07:00, wrap-around aware). Distinct from `PauseNotificationsStore` (one-shot, time-bounded).

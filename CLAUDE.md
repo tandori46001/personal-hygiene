@@ -128,14 +128,14 @@ See [LESSONS.md](LESSONS.md) for full text. Quick table:
 | Phase | Status | Acceptance |
 |---|---|---|
 | 0 — Bootstrap | ✅ Done | Repo + tooling ready · Xcode project · CI green |
-| 1 — MVP daily routine | 🟡 ~99.6% | M1+M2+M3+M4 code-complete; round-12 polish in (per-block followup, pause, theme, per-category mute). Remaining: real-device validation + paid Apple Developer Program. |
-| 2 — Apple Watch | ✅ ~97% | Today list + NextBlock complication + mark-done shipped. Real-device validated standalone deploy session 9. |
-| 3 — Secondary modules | ✅ Done | M5 hydration (+ hot-weather), M6 housekeeping, M7 birthdays (+ re-sync), M8 deep focus (+ right-now + conflict detector). |
+| 1 — MVP daily routine | 🟡 ~99.7% | M1+M2+M3+M4 code-complete; rounds 12-16 polish layer in (per-block followup, pause, theme, per-category mute, bedtime auto-mute, quiet hours store, dose history). Remaining: real-device validation + paid Apple Developer Program. |
+| 2 — Apple Watch | ✅ ~97% | Today list + NextBlock complication + mark-done shipped. Rounds 12-16 added zero watch surfaces — watch still on `39e0c5b`. |
+| 3 — Secondary modules | ✅ Done | M5 hydration (+ hot-weather + weekly avg), M6 housekeeping (+ streak + room-icon palette), M7 birthdays (+ re-sync + relationship/idea stores + filter chips), M8 deep focus (+ right-now + conflict + filter-preview helper). |
 | 4 — TestFlight beta | 🔒 Blocked | Needs paid Apple Developer Program ($99/yr). |
-| 5 — Vacation module | ✅ Feature-complete | M9 closed: trips + milestones + reminders + scanner + AI itinerary + marine + currency + advisory (5 sources) + PDF export + notes (Markdown) + archive. Real-trip validation pending. |
+| 5 — Vacation module | ✅ Feature-complete | M9 closed: trips + milestones + reminders + scanner + AI itinerary + marine + currency + 5-source advisory + PDF + notes (Markdown) + archive + cost log + Markdown share + carbon estimate + emergency contacts + duplicate-with-shifted-dates + milestone-defaults bundle. Real-trip validation pending. |
 | 6 — App Store | ⬜ | Submission + listing in 3 languages. |
 
-> Source of truth for phase progress — must match `memory/project_status.md` and `ROADMAP.md § Phases`. Last synced: round 12 (`fc9a99d`).
+> Source of truth for phase progress — must match `memory/project_status.md` and `ROADMAP.md § Phases`. Last synced: round 16 (`61c0a1a`).
 
 ---
 
