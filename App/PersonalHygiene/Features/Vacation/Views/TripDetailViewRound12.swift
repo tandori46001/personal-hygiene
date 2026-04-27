@@ -134,6 +134,35 @@ struct TripNotesSection: View {
     }
 }
 
+/// Round-16: trip carbon footprint estimate when geocoded + home location set.
+struct TripCarbonSection: View {
+    let viewModel: TripDetailViewModel
+    let homeLocation: BlockLocation?
+
+    var body: some View {
+        if let kg = viewModel.roundTripCO2Kg(home: homeLocation) {
+            Section {
+                HStack(spacing: 10) {
+                    Image(systemName: "leaf.fill")
+                        .foregroundStyle(.green)
+                        .accessibilityHidden(true)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("trip.carbon.title", bundle: .main)
+                            .font(.body.bold())
+                        Text(verbatim: String(format: "%.0f kg CO₂", kg))
+                            .font(.caption.monospacedDigit())
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                }
+                .accessibilityElement(children: .combine)
+            } footer: {
+                Text("trip.carbon.footer", bundle: .main)
+            }
+        }
+    }
+}
+
 /// Round-14 slice 14: emergency contacts section.
 struct TripEmergencyContactsSection: View {
     @Bindable var viewModel: TripDetailViewModel

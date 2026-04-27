@@ -2546,6 +2546,59 @@
     "birthdays.relationship.other" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Other" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Otros" } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Autre" } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Autre" } } } },
+
+    "trip.carbon.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Estimated round-trip CO₂" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "CO₂ estimado ida y vuelta" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "CO₂ estimé aller-retour" } } } },
+    "trip.carbon.footer" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Rough economy-class average. Set home location in Settings." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Estimación aproximada en clase turista. Configura tu ubicación en Ajustes." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Estimation classe éco. Configurez votre lieu d'origine dans Réglages." } } } },
+    "medication.dose.history.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Dose history" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Historial de dosis" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Historique des doses" } } } },
+    "medication.dose.history.empty.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "No dose recorded yet" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Ninguna dosis registrada" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aucune dose enregistrée" } } } },
+    "medication.dose.history.empty.description" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Mark a medication block done — it'll appear here for 30 days." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Marca un bloque de medicación como hecho y aparecerá aquí 30 días." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Marque un bloc médicament comme fait — il apparaîtra ici 30 jours." } } } },
+    "housekeeping.icon.bedroom" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Bedroom" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Dormitorio" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Chambre" } } } },
+    "housekeeping.icon.kitchen" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Kitchen" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Cocina" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Cuisine" } } } },
+    "housekeeping.icon.bathroom" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Bathroom" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Baño" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Salle de bain" } } } },
+    "housekeeping.icon.living" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Living room" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Salón" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Salon" } } } },
+    "housekeeping.icon.laundry" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Laundry" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Lavadero" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Buanderie" } } } },
+    "housekeeping.icon.storage" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Storage" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Almacenaje" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Rangement" } } } },
+    "housekeeping.icon.house" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "House" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Casa" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Maison" } } } },
+    "housekeeping.icon.outdoor" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Outdoor" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Exterior" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Extérieur" } } } }
   }
 }

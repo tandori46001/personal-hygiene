@@ -47,6 +47,7 @@ struct TripDetailView: View {
             CoverPhotoSection(viewModel: viewModel, pickerItem: $coverPickerItem)
             NextMilestoneSection(viewModel: viewModel)
             TripCompletionSection(viewModel: viewModel)
+            TripCarbonSection(viewModel: viewModel, homeLocation: HomeLocationStore().location)
 
             Section {
                 TextField(
