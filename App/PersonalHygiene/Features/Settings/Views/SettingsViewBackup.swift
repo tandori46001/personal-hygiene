@@ -5,6 +5,57 @@ import SwiftUI
 extension SettingsView {
 
     @ViewBuilder
+    var aboutSection: some View {
+        Section {
+            Button {
+                showingWhatsNew = true
+            } label: {
+                Label {
+                    Text("settings.about.whatsNew", bundle: .main)
+                } icon: {
+                    Image(systemName: "sparkles")
+                }
+            }
+            Button {
+                showingOnboardingRestartConfirm = true
+            } label: {
+                Label {
+                    Text("settings.onboarding.restart", bundle: .main)
+                } icon: {
+                    Image(systemName: "arrow.counterclockwise")
+                }
+            }
+            Button(role: .destructive) {
+                showingResetCustomizationsConfirm = true
+            } label: {
+                Label {
+                    Text("settings.reset.allCustomizations", bundle: .main)
+                } icon: {
+                    Image(systemName: "arrow.counterclockwise.circle")
+                }
+            }
+            if let diagnosticsActions {
+                NavigationLink {
+                    DiagnosticsView(viewModel: viewModel, actions: diagnosticsActions)
+                } label: {
+                    Label {
+                        Text("settings.diagnostics.title", bundle: .main)
+                    } icon: {
+                        Image(systemName: "stethoscope")
+                    }
+                }
+            }
+        } header: {
+            Text("settings.section.about", bundle: .main)
+        } footer: {
+            Text(verbatim: BuildInfo.shortDescriptor)
+                .font(.caption2.monospacedDigit())
+                .foregroundStyle(.secondary)
+                .textSelection(.enabled)
+        }
+    }
+
+    @ViewBuilder
     var backupSection: some View {
         Section {
             Button {

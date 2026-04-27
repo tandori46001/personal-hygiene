@@ -352,10 +352,45 @@ The `TravelAdvisoryService` protocol grew an `advisories(forDestination:)` metho
 
 `scripts/check-tests.sh` previously treated *every* exit-65 with zero `Test Case 'X' failed` lines as the harmless DebuggerLLDB glitch and returned 0. Round 9's `TripsListViewModelArchiveTests` flake (an L001 regression — orphan `ModelContainer` deallocating mid-test) fired exactly that pattern: process-level crash, no failed-test-method line. Round 10 adds a separate count of `Restarting after unexpected exit, crash, or test timeout|signal trap|Encountered an error \(Crash:` matches; the success branch now requires *both* the failure count and the crash count to be zero. See `LESSONS.md` L005.
 
+## 27. Round 11 — caveat closure + observability export + Today/trip polish
+
+### Schedule-health Δ filtered to routine prefixes
+
+Round 10's diff between `pendingNotificationRequests().count` and `coordinator.buildTodayNotifications().count` always read non-zero whenever any trip-milestone or hydration notification was pending — the `expected` side only counts routine + medication-followup. Round 11 filters the `pending` side to those same two prefixes (`NotificationFactory.identifierPrefix` + `MedicationFollowUpFactory.identifierPrefix`) so Δ reflects real drift only.
+
+### `DestinationSlug` + `PreferredAdvisorySourceStore`
+
+`DestinationSlug` centralizes URL slug generation: `auto(_:)` for the default (lowercase + hyphen), plus `ukFCDO(_:)` and `canada(_:)` overrides for destinations whose canonical slug differs from the auto form (e.g. gov.uk uses `the-united-states-of-america`). `PreferredAdvisorySourceStore` (UserDefaults, `AdvisorySource` enum) lets the user pick a lead source for the advisory list; `TripDetailViewModel.advisoryLinks` reorders accordingly via `PreferredAdvisorySourceStore.reorder(_:preferred:)`.
+
+### `RecentConversionsStore` + `convertAll`
+
+`RecentConversionsStore` is a UserDefaults-backed JSON array (capacity 5, dedupe by `(from, to, amount)`). `CurrencyView` shows the recents as tap-to-restore rows. `CurrencyService.convertAll(amount:from:to:)` is a new protocol method (default impl loops `convert(_:from:to:)`); `FrankfurterCurrencyService` overrides with a single round-trip — Frankfurter accepts `to=USD,GBP,…` — so the "Convert to all 7" button doesn't fan out to seven HTTP requests. `CachedCurrencyService` populates per-target rates after a multi-target call.
+
+### Diagnostics: snapshot export + uptime + bytes + Advanced disclosure
+
+`ProcessLaunchTimer` captures process launch time via the `let launchedAt = Date()` static idiom; DiagnosticsView surfaces it + uptime via `DateComponentsFormatter`. `DiagnosticsSnapshot` is a `Codable` value type that captures every diagnostics surface (build identity, pending/delivered counts, refresh trace, observer state, trip docs, pending notification identifiers + trigger dates) — body is *structural only* (no notification titles/bodies) so a leaked snapshot doesn't expose private medication identifiers. `DiagnosticsActions.exportSnapshot` writes the snapshot to a temp `.json` file; the view binds to a `sheet(item:)` that opens `ShareSheet`. New `tripDocumentByteFootprint` walks every trip → every document → reads via `TripDocumentStore.bytes(for:)` and sums byte length — gives a real Keychain occupancy number (formatted via `ByteCountFormatter`). The new round-10 sections (Schedule health, Recent refreshes, Observability, Snapshot export) all live under one "Advanced" `DisclosureGroup` (collapsed by default) so the Diagnostics view stays scannable for non-developer users.
+
+### Trip module: search + next-milestone card + packing bulk + duplicate-with-name
+
+`TripsListView` attaches `.searchable` only when the user has 5+ trips (`TripsSearchModifier` view modifier); `TripsListViewModel.filtered(_:)` is a pure helper exposed for tests. `TripDetailViewModel.nextDueMilestone(now:calendar:)` computes the next-due, still-incomplete milestone (skipping past-due that should already be marked complete) — surfaced as a prominent card at the top of TripDetailView. `markAllPacked()` / `resetAllPacking()` are new bulk actions exposed via a `Menu` in the packing-section header. `TripsListViewModel.duplicate(_:name:)` takes an optional explicit name; `TripsListView` presents a confirm-with-editable-name `.alert` with default `Copy of <source.name>`. `TripPDFExporter` gained packing-list + recent-currency-snapshot sections (the latter reads `RecentConversionsStore.recent()` so no service injection is needed).
+
+### Today: block detail sheet + "in N min" caption + compact mode
+
+`BlockDetailSheet` (presented via `sheet(item: $detailBlock)`) shows the full block info — start, duration, category, optional medication concept identifier (text-selectable for copy/paste), focus indicator — plus Mark-done + Skip-today actions. Triggered by tap-on-block (full-row `contentShape` + `onTapGesture`). `BlockNowRow` for the next block now shows a "in N min" / "in 1h N min" / "starting now" caption via `BlockNowRow.untilCaption(minutes:)` (returns a `LocalizedStringKey` so the formatting can vary per locale). `@AppStorage("today.compactMode")` toggle in the Today toolbar makes `BlockTimelineRow` hide the category dot, the category caption, and the duration text — useful when the schedule grows long.
+
+### Reset-all-customizations
+
+Settings → Diagnostics gained a destructive "Reset all customizations" button that goes through a confirm dialog. Resets snooze duration + medication follow-up delay + preferred advisory source + home location + focus schedule windows in one go. Backup snapshot data + completed templates are NOT touched — only user-tunable preferences.
+
+### What's-new auto-popup
+
+`ContentView.task` reads `BuildInfo.commitSHA` and compares it against the `whatsNew.lastSeenCommitSHA` `@AppStorage` key. If they differ (and the user has completed onboarding), `WhatsNewSheet()` auto-presents. Dismissing the sheet writes the current commit SHA back so the popup only fires once per build.
+
 ---
 
 **Version history:**
 
+- **v0.8 (2026-04-26)** — added §27 reflecting round 11: Schedule-health Δ filtered to routine-prefix only; `DestinationSlug` + `PreferredAdvisorySourceStore` for multi-source advisory; `RecentConversionsStore` + `convertAll(amount:from:to:)` (single Frankfurter round-trip for the seven supported currencies); `ProcessLaunchTimer` + `DiagnosticsSnapshot` (JSON export to share sheet); `tripDocumentByteFootprint` (real Keychain bytes); Diagnostics Advanced disclosure group; trips searchable + duplicate-with-name + next-milestone card + packing bulk actions; Today block-detail bottom sheet + "in N min" caption + compact mode.
 - **v0.7 (2026-04-26)** — added §26 reflecting round 10: process-local diagnostics surfaces (`RefreshTraceLog`, `WidgetReloadCounter`, observer status), multi-source travel advisory, schedule-health diff in DiagnosticsView, configurable medication follow-up delay, currency quick-pick chips, trip duplication + countdown badge + PDF cover photo, L005 (signal-trap detection in `check-tests.sh`).
 - **v0.6 (2026-04-26)** — added §25 reflecting round 9: `MedicationObserving` scaffolding (entitlement-gated), `NotificationCoordinator.rescheduleToday(shiftedByMinutes:)`, `WidgetCenter` reload wiring in `NotificationActionHandler`, watch `BlockDetailWatchView` + `SettingsGlanceWatchView`, L004 propagated to Trips, Today timeline now-line, drag-to-reorder for blocks, Hydration weekly chart.
 - **v0.5 (2026-04-26)** — added §23 (build identity pipeline) + §24 (CI watchOS guard) reflecting session 10 (round 8). Robust medication follow-up matching via `BlockNotificationIdentifier.parseAny`; `RecentlyDeliveredNotificationsView` + `DeliveredNotificationsGrouper`; `removeAll()` on snooze/skip stores.

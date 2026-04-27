@@ -86,9 +86,14 @@ final class TripDetailViewModel {
 
     /// Multi-source advisory list (round 10): every authoritative foreign-
     /// affairs source returns one entry. Empty when no advisory service is
-    /// configured (e.g. previews / certain tests).
+    /// configured (e.g. previews / certain tests). Round 11: respects the
+    /// user's preferred lead source from `PreferredAdvisorySourceStore`.
     var advisoryLinks: [TravelAdvisoryLink] {
-        advisoryService?.advisories(forDestination: trip.destinationName) ?? []
+        let raw = advisoryService?.advisories(forDestination: trip.destinationName) ?? []
+        return PreferredAdvisorySourceStore.reorder(
+            raw,
+            preferred: PreferredAdvisorySourceStore.preferred()
+        )
     }
 
     var hasGeocodedDestination: Bool {
@@ -97,6 +102,30 @@ final class TripDetailViewModel {
 
     var sortedMilestones: [TripMilestone] {
         trip.milestones.sorted { $0.daysBefore > $1.daysBefore }
+    }
+
+    /// Round-11: surface the next-due, still-incomplete milestone for the
+    /// detail-view's prominent header card. Returns `nil` when every
+    /// milestone is complete or there are none. "Next" = the milestone with
+    /// the *smallest* `daysBefore` among those whose trigger day is still in
+    /// the future (or today) — that's the one closest to firing. Past-due
+    /// milestones are skipped because they should already be marked complete.
+    func nextDueMilestone(now: Date = Date(), calendar: Calendar = .autoupdatingCurrent) -> TripMilestone? {
+        let today = calendar.startOfDay(for: now)
+        let tripStart = calendar.startOfDay(for: trip.startDate)
+        let candidates = trip.milestones.filter { milestone in
+            guard !milestone.isComplete else { return false }
+            guard let triggerDay = calendar.date(
+                byAdding: .day,
+                value: -milestone.daysBefore,
+                to: tripStart
+            ) else { return false }
+            return calendar.startOfDay(for: triggerDay) >= today
+        }
+        // Smallest daysBefore = closest to the trip start = soonest to fire.
+        return candidates.min { lhs, rhs in
+            lhs.daysBefore < rhs.daysBefore
+        }
     }
 
     var sortedDocuments: [TripDocument] {
@@ -212,6 +241,26 @@ final class TripDetailViewModel {
 
     func deletePackingItem(_ item: PackingItem) {
         trip.packingItems.removeAll { $0.id == item.id }
+        saveEdits()
+    }
+
+    /// Round-11 bulk action: mark every packing item as packed. No-op when
+    /// the list is empty.
+    func markAllPacked() {
+        guard !trip.packingItems.isEmpty else { return }
+        for index in trip.packingItems.indices {
+            trip.packingItems[index].isPacked = true
+        }
+        saveEdits()
+    }
+
+    /// Round-11 bulk action: reset every packing item to unpacked. Useful
+    /// when reusing a packing template across trips.
+    func resetAllPacking() {
+        guard !trip.packingItems.isEmpty else { return }
+        for index in trip.packingItems.indices {
+            trip.packingItems[index].isPacked = false
+        }
         saveEdits()
     }
 }

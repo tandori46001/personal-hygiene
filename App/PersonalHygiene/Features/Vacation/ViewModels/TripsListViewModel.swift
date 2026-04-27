@@ -16,6 +16,12 @@ final class TripsListViewModel {
     var trips: [Trip] = []
     var errorMessage: String?
 
+    /// Free-form search term applied to `name` + `destinationName` (case-
+    /// insensitive). Empty string disables filtering. Round-11 surface in
+    /// `TripsListView` only renders the `searchable` modifier when there
+    /// are 5+ trips so the bar doesn't clutter early on.
+    var searchQuery: String = ""
+
     init(
         repository: any TripsRepository,
         documentStore: TripDocumentStore? = nil,
@@ -38,14 +44,26 @@ final class TripsListViewModel {
     /// Used by `TripsListView` to split active vs past archive.
     func upcomingTrips(now: Date = Date(), calendar: Calendar = .autoupdatingCurrent) -> [Trip] {
         let today = calendar.startOfDay(for: now)
-        return trips.filter { calendar.startOfDay(for: $0.endDate) >= today }
+        return filtered(trips.filter { calendar.startOfDay(for: $0.endDate) >= today })
     }
 
     func pastTrips(now: Date = Date(), calendar: Calendar = .autoupdatingCurrent) -> [Trip] {
         let today = calendar.startOfDay(for: now)
-        return trips
+        return filtered(trips
             .filter { calendar.startOfDay(for: $0.endDate) < today }
-            .sorted { $0.endDate > $1.endDate }
+            .sorted { $0.endDate > $1.endDate })
+    }
+
+    /// Pure filter helper exposed for tests. Returns `trips` unchanged when
+    /// `searchQuery` is empty, otherwise keeps trips whose `name` or
+    /// `destinationName` contains the trimmed query (case-insensitive).
+    func filtered(_ trips: [Trip]) -> [Trip] {
+        let query = searchQuery.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !query.isEmpty else { return trips }
+        return trips.filter { trip in
+            trip.name.localizedCaseInsensitiveContains(query)
+                || trip.destinationName.localizedCaseInsensitiveContains(query)
+        }
     }
 
     func reload() {
@@ -94,9 +112,13 @@ final class TripsListViewModel {
     /// duplicated by value, dates left unchanged for the user to adjust. The
     /// caller must `upsert` the returned trip; the duplicate isn't persisted
     /// until then so `Cancel` from the editor leaves no orphan row behind.
-    static func duplicate(_ source: Trip, namePrefix: String = "Copy of ") -> Trip {
+    /// Round 11: the explicit `name` parameter lets the duplicate-confirm
+    /// alert pass a user-edited name; falls back to `Copy of <source.name>`.
+    static func duplicate(_ source: Trip, name: String? = nil) -> Trip {
+        let resolvedName = name?.trimmingCharacters(in: .whitespacesAndNewlines).nonEmpty
+            ?? "Copy of \(source.name)"
         let copy = Trip(
-            name: namePrefix + source.name,
+            name: resolvedName,
             startDate: source.startDate,
             endDate: source.endDate,
             destinationName: source.destinationName
@@ -108,9 +130,9 @@ final class TripsListViewModel {
         return copy
     }
 
-    func duplicate(_ source: Trip) {
+    func duplicate(_ source: Trip, name: String? = nil) {
         do {
-            let copy = Self.duplicate(source)
+            let copy = Self.duplicate(source, name: name)
             try repository.upsert(copy)
             for milestone in source.milestones.sorted(by: { $0.daysBefore > $1.daysBefore }) {
                 let cloned = TripMilestone(
@@ -125,4 +147,8 @@ final class TripsListViewModel {
             errorMessage = error.localizedDescription
         }
     }
+}
+
+private extension String {
+    var nonEmpty: String? { isEmpty ? nil : self }
 }

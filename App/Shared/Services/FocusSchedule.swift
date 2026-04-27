@@ -66,6 +66,12 @@ extension FocusScheduleStore {
     public func delete(id: UUID) {
         setWindows(windows().filter { $0.id != id })
     }
+
+    /// Round 11: convenience for "Reset all customizations" in Settings.
+    /// Wipes every persisted focus window.
+    public func removeAll() {
+        setWindows([])
+    }
 }
 
 public final class UserDefaultsFocusScheduleStore: FocusScheduleStore, @unchecked Sendable {

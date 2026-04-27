@@ -19,8 +19,64 @@ public enum TripPDFExporter {
             context.beginPage()
             var cursor = drawCover(trip: trip, in: pageSize, calendar: calendar)
             cursor = drawMilestones(trip: trip, in: pageSize, startingAt: cursor, context: context)
+            cursor = drawPackingList(trip: trip, in: pageSize, startingAt: cursor, context: context)
+            cursor = drawCurrencySnapshot(in: pageSize, startingAt: cursor, context: context)
             _ = drawDocuments(trip: trip, in: pageSize, startingAt: cursor, context: context)
         }
+    }
+
+    private static func drawPackingList(
+        trip: Trip,
+        in pageSize: CGSize,
+        startingAt initialY: CGFloat,
+        context: UIGraphicsPDFRendererContext
+    ) -> CGFloat {
+        guard !trip.packingItems.isEmpty else { return initialY }
+        var cursor = initialY
+        cursor = drawHeader("Packing list", at: cursor, pageSize: pageSize, context: context)
+        for item in trip.packingItems.sorted(by: { lhs, rhs in
+            if lhs.isPacked == rhs.isPacked {
+                return lhs.title.localizedCaseInsensitiveCompare(rhs.title) == .orderedAscending
+            }
+            return !lhs.isPacked && rhs.isPacked
+        }) {
+            cursor = newPageIfNeeded(cursor: cursor, pageSize: pageSize, context: context)
+            let mark = item.isPacked ? "[x]" : "[ ]"
+            ("\(mark) \(item.title)" as NSString).draw(
+                at: CGPoint(x: margin, y: cursor),
+                withAttributes: bodyAttributes
+            )
+            cursor += 22
+        }
+        return cursor + 16
+    }
+
+    /// Round 11: snapshot of the most recent in-app conversions stored by
+    /// `RecentConversionsStore`. Read from UserDefaults at PDF render time —
+    /// no network call needed, no service injection. Skipped silently when
+    /// no recent conversions exist.
+    private static func drawCurrencySnapshot(
+        in pageSize: CGSize,
+        startingAt initialY: CGFloat,
+        context: UIGraphicsPDFRendererContext
+    ) -> CGFloat {
+        let recents = RecentConversionsStore.recent()
+        guard !recents.isEmpty else { return initialY }
+        var cursor = initialY
+        cursor = drawHeader("Currency rates (recent)", at: cursor, pageSize: pageSize, context: context)
+        for entry in recents {
+            cursor = newPageIfNeeded(cursor: cursor, pageSize: pageSize, context: context)
+            let line = String(
+                format: "%.2f %@ → %.2f %@  (rate %.4f)",
+                entry.amount, entry.from, entry.amountConverted, entry.to, entry.rate
+            )
+            (line as NSString).draw(
+                at: CGPoint(x: margin, y: cursor),
+                withAttributes: bodyAttributes
+            )
+            cursor += 22
+        }
+        return cursor + 16
     }
 
     // MARK: - Sections

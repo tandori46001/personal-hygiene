@@ -63,4 +63,19 @@ struct DiagnosticsActions {
     /// Count of trip documents stored across all trips — proxy for
     /// "Keychain footprint" until we add real byte-size accounting.
     let tripDocumentCount: @MainActor () -> Int
+
+    /// Round-11: total Keychain bytes across all trip documents (approximate;
+    /// reads each blob via the `KeychainStore` to measure actual byte length).
+    /// Returns `nil` when `KeychainStore.read` fails for any blob — UI then
+    /// falls back to the document count row.
+    let tripDocumentByteFootprint: @MainActor () -> Int?
+
+    /// Process uptime in seconds. Reset to 0 on relaunch — useful to detect
+    /// silent OS-driven restarts (low-memory kills, system updates).
+    let processUptimeSeconds: @MainActor () -> TimeInterval
+
+    /// Builds a JSON snapshot of the current diagnostics state suitable for
+    /// sharing via `UIActivityViewController`. Returns the temporary file URL
+    /// the share sheet can then consume.
+    let exportSnapshot: @MainActor () async throws -> URL
 }

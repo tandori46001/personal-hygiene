@@ -6,6 +6,12 @@ import UserNotifications
 /// notification authorization status, last refresh, pending count, deep link
 /// into `PendingNotificationsView`, plus a few dev-only buttons that fast-
 /// forward state for on-device QA.
+/// Identifiable wrapper so the snapshot URL can drive a `sheet(item:)`.
+struct ExportURL: Identifiable {
+    let id = UUID()
+    let url: URL
+}
+
 struct DiagnosticsView: View {
 
     let viewModel: SettingsViewModel
@@ -24,6 +30,11 @@ struct DiagnosticsView: View {
     @State var widgetReloadCount: Int = 0
     @State var observerSnapshot: (available: Bool, identifiers: [String]) = (false, [])
     @State var tripDocumentCount: Int = 0
+    @State var tripDocumentBytes: Int?
+    @State var processUptime: TimeInterval = 0
+    @State var snapshotExportURL: URL?
+    @State var exportingSnapshot = false
+    @State var advancedExpanded = false
 
     var body: some View {
         List {
@@ -80,9 +91,8 @@ struct DiagnosticsView: View {
                 Text("settings.diagnostics.section.notifications", bundle: .main)
             }
 
-            scheduleHealthSection
-            refreshTraceSection
-            observabilitySection
+            uptimeSection
+            advancedDisclosureSection
 
             devToolsSection
 
@@ -98,6 +108,12 @@ struct DiagnosticsView: View {
         .navigationBarTitleDisplayMode(.inline)
         .task { await refreshCounts() }
         .refreshable { await refreshCounts() }
+        .sheet(item: Binding(
+            get: { snapshotExportURL.map { ExportURL(url: $0) } },
+            set: { _ in snapshotExportURL = nil }
+        )) { wrapper in
+            ShareSheet(items: [wrapper.url])
+        }
         .confirmationDialog(
             Text("settings.diagnostics.devTools.reset.confirm.title", bundle: .main),
             isPresented: $showingResetConfirm,
@@ -268,6 +284,8 @@ struct DiagnosticsView: View {
         widgetReloadCount = actions.widgetReloadCount()
         observerSnapshot = actions.medicationObserverSnapshot()
         tripDocumentCount = actions.tripDocumentCount()
+        tripDocumentBytes = actions.tripDocumentByteFootprint()
+        processUptime = actions.processUptimeSeconds()
         scheduleDiff = try? await actions.scheduleDiff()
     }
 

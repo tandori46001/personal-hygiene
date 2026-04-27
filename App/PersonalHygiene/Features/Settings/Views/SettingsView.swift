@@ -16,10 +16,11 @@ struct SettingsView: View {
     @State private var backupExport: BackupExport?
     @State var showingImporter = false
     @State var backupError: String?
-    @State private var showingWhatsNew = false
-    @State private var showingOnboardingRestartConfirm = false
+    @State var showingWhatsNew = false
+    @State var showingOnboardingRestartConfirm = false
     @State private var rescheduleShiftMinutes: Int = 30
     @State private var showingRescheduleConfirm = false
+    @State var showingResetCustomizationsConfirm = false
 
     private struct BackupExport: Identifiable {
         let id = UUID()
@@ -75,6 +76,22 @@ struct SettingsView: View {
             titleVisibility: .visible,
             actions: { onboardingRestartActions }
         )
+        .confirmationDialog(
+            Text("settings.reset.allCustomizations.confirm.title", bundle: .main),
+            isPresented: $showingResetCustomizationsConfirm,
+            titleVisibility: .visible
+        ) {
+            Button(role: .destructive) {
+                resetAllCustomizations()
+            } label: {
+                Text("settings.reset.allCustomizations.confirm.action", bundle: .main)
+            }
+            Button(role: .cancel) {} label: {
+                Text("common.cancel", bundle: .main)
+            }
+        } message: {
+            Text("settings.reset.allCustomizations.confirm.message", bundle: .main)
+        }
         .confirmationDialog(
             Text("settings.reschedule.confirm.title \(rescheduleShiftMinutes)", bundle: .main),
             isPresented: $showingRescheduleConfirm,
@@ -222,46 +239,17 @@ struct SettingsView: View {
         }
     }
 
-    @ViewBuilder
-    private var aboutSection: some View {
-        Section {
-            Button {
-                showingWhatsNew = true
-            } label: {
-                Label {
-                    Text("settings.about.whatsNew", bundle: .main)
-                } icon: {
-                    Image(systemName: "sparkles")
-                }
-            }
-            Button {
-                showingOnboardingRestartConfirm = true
-            } label: {
-                Label {
-                    Text("settings.onboarding.restart", bundle: .main)
-                } icon: {
-                    Image(systemName: "arrow.counterclockwise")
-                }
-            }
-            if let diagnosticsActions {
-                NavigationLink {
-                    DiagnosticsView(viewModel: viewModel, actions: diagnosticsActions)
-                } label: {
-                    Label {
-                        Text("settings.diagnostics.title", bundle: .main)
-                    } icon: {
-                        Image(systemName: "stethoscope")
-                    }
-                }
-            }
-        } header: {
-            Text("settings.section.about", bundle: .main)
-        } footer: {
-            Text(verbatim: BuildInfo.shortDescriptor)
-                .font(.caption2.monospacedDigit())
-                .foregroundStyle(.secondary)
-                .textSelection(.enabled)
-        }
+    private func resetAllCustomizations() {
+        SnoozeDurationStore.set(SnoozeDurationStore.defaultMinutes, in: .standard)
+        MedicationFollowUpDelayStore.set(MedicationFollowUpDelayStore.defaultMinutes, in: .standard)
+        snoozeMinutes = SnoozeDurationStore.defaultMinutes
+        followUpMinutes = MedicationFollowUpDelayStore.defaultMinutes
+        UserDefaults.standard.removeObject(forKey: PreferredAdvisorySourceStore.key)
+        UserDefaults.standard.removeObject(forKey: HomeLocationStore.isSetKey)
+        UserDefaults.standard.removeObject(forKey: HomeLocationStore.latitudeKey)
+        UserDefaults.standard.removeObject(forKey: HomeLocationStore.longitudeKey)
+        UserDefaults.standard.removeObject(forKey: HomeLocationStore.nameKey)
+        focusScheduleStore?.removeAll()
     }
 
     func exportBackup() {

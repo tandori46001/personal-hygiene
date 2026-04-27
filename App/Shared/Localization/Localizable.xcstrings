@@ -1938,6 +1938,158 @@
     "trip.currency.quickPick.label %@" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Use %@" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Usar %@" } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Utiliser %@" } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Utiliser %@" } } } },
+
+    "trip.currency.action.convertAll" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Convert to all 7" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Convertir a las 7 monedas" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Convertir vers les 7 devises" } } } },
+    "trip.currency.action.convertAll.footer" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "One round-trip — every supported currency at once." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Un solo viaje — cada moneda soportada a la vez." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Une seule requête — toutes les devises à la fois." } } } },
+    "trip.currency.section.allRates" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "All rates" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Todas las tasas" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Tous les taux" } } } },
+    "trip.currency.section.recents" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Recent" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Recientes" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Récentes" } } } },
+    "trip.currency.recents.clear" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Clear recent" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Borrar recientes" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Effacer l'historique" } } } },
+
+    "trips.search.prompt" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Search trips" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Buscar viajes" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Rechercher des voyages" } } } },
+    "trips.duplicate.alert.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Duplicate trip" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Duplicar viaje" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Dupliquer le voyage" } } } },
+    "trips.duplicate.alert.namePlaceholder" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "New trip name" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Nombre del nuevo viaje" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Nom du nouveau voyage" } } } },
+    "trips.duplicate.alert.confirm" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Duplicate" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Duplicar" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Dupliquer" } } } },
+    "trips.duplicate.alert.message %@" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Clones %@'s packing list (reset to unpacked) and milestones (reset to incomplete)." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Clona la lista de equipaje de %@ (reseteada) y los hitos (incompletos)." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Clone la liste de bagages de %@ (réinitialisée) et les jalons (incomplets)." } } } },
+
+    "trip.detail.nextMilestone.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Next milestone" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Próximo hito" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Prochain jalon" } } } },
+    "trip.detail.nextMilestone.daysBefore.%lld" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "%lld days before departure" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "%lld días antes de la salida" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "%lld jours avant le départ" } } } },
+
+    "trip.packing.action.menu" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Packing list actions" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Acciones de equipaje" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Actions de bagages" } } } },
+    "trip.packing.action.markAllPacked" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Mark all as packed" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Marcar todo como empacado" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Tout marquer comme prêt" } } } },
+    "trip.packing.action.resetAll" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Reset all" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Restablecer todo" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Tout réinitialiser" } } } },
+
+    "settings.reset.allCustomizations" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Reset all customizations" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Restablecer todas las personalizaciones" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réinitialiser toutes les personnalisations" } } } },
+    "settings.reset.allCustomizations.confirm.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Reset all customizations?" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "¿Restablecer todas las personalizaciones?" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réinitialiser toutes les personnalisations ?" } } } },
+    "settings.reset.allCustomizations.confirm.action" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Reset" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Restablecer" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réinitialiser" } } } },
+    "settings.reset.allCustomizations.confirm.message" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Wipes snooze, follow-up, advisory preference, home, focus schedules. Templates and history are kept." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Borra snooze, seguimiento, preferencia de avisos, casa, ventanas de focus. Plantillas e historial se conservan." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Efface le snooze, le rappel, la préférence d'avis, l'adresse, les fenêtres focus. Les modèles et l'historique sont conservés." } } } },
+
+    "settings.diagnostics.section.uptime" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Process" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Proceso" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Processus" } } } },
+    "settings.diagnostics.uptime.launchedAt" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Launched at" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Lanzado a las" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Lancé à" } } } },
+    "settings.diagnostics.uptime.elapsed" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Uptime" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Tiempo activo" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Temps écoulé" } } } },
+    "settings.diagnostics.section.advanced" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Advanced" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Avanzado" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Avancé" } } } },
+    "settings.diagnostics.snapshot.export" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Export diagnostics snapshot" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Exportar snapshot de diagnóstico" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Exporter l'instantané de diagnostic" } } } },
+    "settings.diagnostics.snapshot.exporting" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Exporting…" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Exportando…" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Export en cours…" } } } },
+    "settings.diagnostics.observ.tripDocBytes" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Trip docs (Keychain bytes)" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Docs de viaje (bytes en Keychain)" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Docs voyage (octets Keychain)" } } } },
+
+    "today.next.startingNow" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "starting now" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "empieza ahora" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "commence maintenant" } } } },
+    "today.next.inMinutes.%lld" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "in %lld min" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "en %lld min" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "dans %lld min" } } } },
+    "today.next.inHours.%lld" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "in %lld h" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "en %lld h" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "dans %lld h" } } } },
+    "today.next.inHoursAndMinutes %lld %lld" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "in %lld h %lld min" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "en %lld h %lld min" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "dans %lld h %lld min" } } } },
+    "today.compact.enable" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Enable compact mode" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Activar modo compacto" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Activer le mode compact" } } } },
+    "today.compact.disable" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Disable compact mode" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Desactivar modo compacto" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Désactiver le mode compact" } } } },
+
+    "blockDetail.label.start" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Start" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Inicio" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Début" } } } },
+    "blockDetail.label.duration" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Duration" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Duración" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Durée" } } } },
+    "blockDetail.label.category" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Category" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Categoría" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Catégorie" } } } },
+    "blockDetail.label.medicationConcept" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Medication concept" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Concepto de medicación" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Concept médicament" } } } }
   }
 }

@@ -1340,3 +1340,53 @@ None — purely build-time guard.
 2. Run `./scripts/check-tests.sh`.
 3. Script must exit non-zero AND print "==> N test-process crash(es) detected (signal trap / unexpected exit) … See L005 in LESSONS.md."
 4. Remove the injected crash. Re-run → script returns zero.
+
+## [T-091] — Trips: search bar appears at 5+ trips (round 11)
+
+**Module:** trips · **Shipped in:** round 11 (Tier B)
+
+### Manual verification (iPhone)
+1. With 4 or fewer trips: Trips tab does NOT show a search bar at the top.
+2. Add a 5th trip → search bar appears at the top of the list.
+3. Type a query that matches a trip name OR destination → list filters live, case-insensitive.
+4. Clear the query → all trips return.
+
+## [T-092] — Trips: duplicate-with-name confirmation alert (round 11)
+
+**Module:** trips · **Shipped in:** round 11 (Tier B)
+
+### Manual verification
+1. Swipe a trip from the leading edge → tap "Duplicate" → an alert appears with a TextField pre-filled "Copy of <name>".
+2. Edit the name (or leave default) → tap Duplicate → a new trip appears with that name. Packing items reset to unpacked, milestones cloned but incomplete.
+3. Tap Cancel → no duplicate created.
+
+## [T-093] — Currency: "Convert to all 7" + recent conversions (round 11)
+
+**Module:** trips/currency · **Shipped in:** round 11 (Tier A)
+
+### Manual verification
+1. Trip detail → Currency. Enter 100, From=EUR. Tap "Convert to all 7" → a section "All rates" lists USD/GBP/CAD/CHF/AUD/JPY converted amounts (one network round-trip).
+2. Tap regular Convert (single from→to) → the conversion appears under "Recent" with timestamp.
+3. Repeat with different amounts/pairs → up to 5 most recent appear, dedupe by `(from, to, amount)`.
+4. Tap a recent row → the form re-fills with that amount/from/to.
+5. Tap "Clear recent" → list empties.
+
+## [T-094] — Diagnostics: snapshot export + uptime + Advanced disclosure (round 11)
+
+**Module:** settings/diagnostics · **Shipped in:** round 11 (Tier C)
+
+### Manual verification
+1. Settings → Diagnostics. The new "Recent refreshes / Schedule health / Observability / Snapshot export" sections live under a single "Advanced" disclosure (collapsed by default).
+2. Above it, the new "Uptime" section shows launch timestamp + elapsed time (e.g. "12m 34s").
+3. Expand Advanced → tap "Export diagnostics snapshot" → a share sheet opens with a `personal-hygiene-diagnostics-<ts>.json` file. Save to Files → opens as readable JSON containing build, refresh trace, pending notification identifiers (no titles/bodies).
+4. Schedule health Δ now reads `✓` when only routine notifications are scheduled (not inflated by trip milestones).
+
+## [T-095] — Today: block detail sheet + "in N min" + compact mode (round 11)
+
+**Module:** today · **Shipped in:** round 11 (Tier D)
+
+### Manual verification
+1. Tap on any block in the schedule list → a bottom-sheet (medium detent) opens with start, duration, category, focus indicator, and (if a medication concept is set) the concept identifier as selectable text.
+2. Sheet's "Mark done" / "Skip today" buttons act on the block + dismiss.
+3. The "Next" row at the top of the schedule shows a colored caption like "in 12 min" / "in 1h 30 min" / "starting now".
+4. Top-right toolbar has a list-icon toggle. Tap → schedule rows hide category dot, category text, and duration min. Tap again → restored. State persists across launches.

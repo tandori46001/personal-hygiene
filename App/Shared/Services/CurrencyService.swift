@@ -30,6 +30,26 @@ public enum CurrencyError: Error, Equatable, LocalizedError {
 
 public protocol CurrencyService: Sendable {
     func convert(amount: Double, from: String, to: String) async throws -> CurrencyConversion
+
+    /// Round-11: convert `amount` from `from` into every code in `targets` in
+    /// one upstream call. Default impl falls back to `convert(amount:from:to:)`
+    /// per target so existing implementations keep working — `FrankfurterCurrencyService`
+    /// overrides this with a single round-trip.
+    func convertAll(amount: Double, from: String, to targets: [String]) async throws -> [CurrencyConversion]
+}
+
+extension CurrencyService {
+    public func convertAll(
+        amount: Double,
+        from: String,
+        to targets: [String]
+    ) async throws -> [CurrencyConversion] {
+        var results: [CurrencyConversion] = []
+        for target in targets {
+            results.append(try await convert(amount: amount, from: from, to: target))
+        }
+        return results
+    }
 }
 
 /// Frankfurter exchange-rate client. Free, key-less, ECB-sourced JSON. The
@@ -55,6 +75,51 @@ public struct FrankfurterCurrencyService: CurrencyService {
             throw CurrencyError.invalidResponse
         }
         return try Self.parse(data, amount: amount, from: from, to: to)
+    }
+
+    /// Frankfurter accepts a comma-separated `to=USD,GBP,…` list and returns
+    /// every rate in one response. Cuts the round-11 "convert to all 7"
+    /// surface from 7 round-trips to 1.
+    public func convertAll(
+        amount: Double,
+        from: String,
+        to targets: [String]
+    ) async throws -> [CurrencyConversion] {
+        let cleaned = Array(Set(targets.map { $0.uppercased() })).sorted()
+            .filter { $0 != from.uppercased() }
+        guard !cleaned.isEmpty else { return [] }
+        var components = URLComponents(string: "https://api.frankfurter.app/latest")!
+        components.queryItems = [
+            URLQueryItem(name: "amount", value: String(amount)),
+            URLQueryItem(name: "from", value: from),
+            URLQueryItem(name: "to", value: cleaned.joined(separator: ",")),
+        ]
+        guard let url = components.url else { throw CurrencyError.invalidResponse }
+        let (data, response) = try await session.data(from: url)
+        guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
+            throw CurrencyError.invalidResponse
+        }
+        return try Self.parseAll(data, amount: amount, from: from)
+    }
+
+    static func parseAll(_ data: Data, amount: Double, from: String) throws -> [CurrencyConversion] {
+        let payload: FrankfurterPayload
+        do {
+            payload = try JSONDecoder().decode(FrankfurterPayload.self, from: data)
+        } catch {
+            throw CurrencyError.decodingFailed
+        }
+        return payload.rates
+            .sorted { $0.key < $1.key }
+            .map { code, converted in
+                let rate = amount > 0 ? converted / amount : converted
+                return CurrencyConversion(
+                    from: from.uppercased(),
+                    to: code.uppercased(),
+                    rate: rate,
+                    amountConverted: converted
+                )
+            }
     }
 
     static func parse(

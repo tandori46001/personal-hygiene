@@ -68,6 +68,41 @@ struct CoverPhotoSection: View {
     }
 }
 
+struct NextMilestoneSection: View {
+    let viewModel: TripDetailViewModel
+
+    var body: some View {
+        if let next = viewModel.nextDueMilestone() {
+            Section {
+                HStack(spacing: 10) {
+                    Image(systemName: "flag.checkered")
+                        .foregroundStyle(.tint)
+                        .accessibilityHidden(true)
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text("trip.detail.nextMilestone.title", bundle: .main)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        Text(next.title)
+                            .font(.headline)
+                        Text("trip.detail.nextMilestone.daysBefore.\(next.daysBefore)", bundle: .main)
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                    }
+                    Spacer()
+                    Button {
+                        viewModel.toggleMilestoneCompletion(next)
+                    } label: {
+                        Image(systemName: "checkmark.circle")
+                    }
+                    .buttonStyle(.borderless)
+                    .accessibilityLabel(Text("today.action.markDone", bundle: .main))
+                }
+                .accessibilityElement(children: .combine)
+            }
+        }
+    }
+}
+
 struct PackingListSection: View {
     @Bindable var viewModel: TripDetailViewModel
     @Binding var newItemTitle: String
@@ -112,7 +147,36 @@ struct PackingListSection: View {
                 .disabled(newItemTitle.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
             }
         } header: {
-            Text("trip.detail.section.packing", bundle: .main)
+            HStack {
+                Text("trip.detail.section.packing", bundle: .main)
+                Spacer()
+                if !viewModel.trip.packingItems.isEmpty {
+                    Menu {
+                        Button {
+                            viewModel.markAllPacked()
+                        } label: {
+                            Label {
+                                Text("trip.packing.action.markAllPacked", bundle: .main)
+                            } icon: {
+                                Image(systemName: "checkmark.square")
+                            }
+                        }
+                        Button(role: .destructive) {
+                            viewModel.resetAllPacking()
+                        } label: {
+                            Label {
+                                Text("trip.packing.action.resetAll", bundle: .main)
+                            } icon: {
+                                Image(systemName: "arrow.uturn.backward.square")
+                            }
+                        }
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
+                            .foregroundStyle(.tint)
+                    }
+                    .accessibilityLabel(Text("trip.packing.action.menu", bundle: .main))
+                }
+            }
         } footer: {
             if !viewModel.trip.packingItems.isEmpty {
                 Text(

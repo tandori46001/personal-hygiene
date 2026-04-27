@@ -42,6 +42,7 @@ struct TripDetailView: View {
             }
 
             CoverPhotoSection(viewModel: viewModel, pickerItem: $coverPickerItem)
+            NextMilestoneSection(viewModel: viewModel)
 
             Section {
                 TextField(

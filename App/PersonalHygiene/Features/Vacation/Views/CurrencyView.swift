@@ -14,8 +14,10 @@ struct CurrencyView: View {
     @AppStorage("currencyToCode") private var toCode = "USD"
     @State private var amountText = "100"
     @State private var conversion: CurrencyConversion?
+    @State private var allConversions: [CurrencyConversion] = []
     @State private var errorMessage: String?
     @State private var isLoading = false
+    @State private var recents: [RecentConversionsStore.Entry] = []
 
     var body: some View {
         Form {
@@ -61,6 +63,15 @@ struct CurrencyView: View {
                     }
                 }
                 .disabled(isLoading || Double(amountText) == nil)
+
+                Button {
+                    Task { await convertAll() }
+                } label: {
+                    Text("trip.currency.action.convertAll", bundle: .main)
+                }
+                .disabled(isLoading || Double(amountText) == nil)
+            } footer: {
+                Text("trip.currency.action.convertAll.footer", bundle: .main)
             }
 
             if let errorMessage {
@@ -83,9 +94,55 @@ struct CurrencyView: View {
                     }
                 }
             }
+
+            if !allConversions.isEmpty {
+                Section {
+                    ForEach(allConversions, id: \.to) { conv in
+                        LabeledContent {
+                            Text(verbatim: String(format: "%.2f %@", conv.amountConverted, conv.to))
+                                .font(.system(.body, design: .monospaced))
+                        } label: {
+                            Text(verbatim: conv.to)
+                        }
+                    }
+                } header: {
+                    Text("trip.currency.section.allRates", bundle: .main)
+                }
+            }
+
+            if !recents.isEmpty {
+                Section {
+                    ForEach(recents) { entry in
+                        Button {
+                            amountText = String(entry.amount)
+                            fromCode = entry.from
+                            toCode = entry.to
+                        } label: {
+                            HStack {
+                                Text(verbatim: String(format: "%.2f %@ → %@", entry.amount, entry.from, entry.to))
+                                    .font(.callout)
+                                Spacer()
+                                Text(verbatim: String(format: "%.2f", entry.amountConverted))
+                                    .font(.caption.monospacedDigit())
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    Button(role: .destructive) {
+                        RecentConversionsStore.clear()
+                        recents = []
+                    } label: {
+                        Text("trip.currency.recents.clear", bundle: .main)
+                    }
+                } header: {
+                    Text("trip.currency.section.recents", bundle: .main)
+                }
+            }
         }
         .navigationTitle(Text("trip.currency.title", bundle: .main))
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear { recents = RecentConversionsStore.recent() }
     }
 
     @ViewBuilder
@@ -121,8 +178,26 @@ struct CurrencyView: View {
         guard let amount = Double(amountText) else { return }
         isLoading = true
         errorMessage = nil
+        allConversions = []
         do {
-            conversion = try await service.convert(amount: amount, from: fromCode, to: toCode)
+            let result = try await service.convert(amount: amount, from: fromCode, to: toCode)
+            conversion = result
+            RecentConversionsStore.record(result, amount: amount)
+            recents = RecentConversionsStore.recent()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+        isLoading = false
+    }
+
+    private func convertAll() async {
+        guard let amount = Double(amountText) else { return }
+        isLoading = true
+        errorMessage = nil
+        conversion = nil
+        do {
+            let targets = Self.supportedCodes.filter { $0 != fromCode.uppercased() }
+            allConversions = try await service.convertAll(amount: amount, from: fromCode, to: targets)
         } catch {
             errorMessage = error.localizedDescription
         }

@@ -9,6 +9,9 @@ struct TripsListView: View {
     @State private var newStart = Date()
     @State private var newEnd = Date().addingTimeInterval(7 * 24 * 60 * 60)
 
+    @State private var pendingDuplicateSource: Trip?
+    @State private var duplicateNameDraft: String = ""
+
     var body: some View {
         // L004: no inner `NavigationStack` here. This view lives inside the
         // iOS 18 TabView "More" overflow, which already wraps content in its
@@ -42,7 +45,8 @@ struct TripsListView: View {
                             tripLink(for: trip, nearestID: nearestID)
                                 .swipeActions(edge: .leading) {
                                     Button {
-                                        viewModel.duplicate(trip)
+                                        pendingDuplicateSource = trip
+                                        duplicateNameDraft = "Copy of \(trip.name)"
                                     } label: {
                                         Label {
                                             Text("trips.action.duplicate", bundle: .main)
@@ -66,7 +70,8 @@ struct TripsListView: View {
                                 .foregroundStyle(.secondary)
                                 .swipeActions(edge: .leading) {
                                     Button {
-                                        viewModel.duplicate(trip)
+                                        pendingDuplicateSource = trip
+                                        duplicateNameDraft = "Copy of \(trip.name)"
                                     } label: {
                                         Label {
                                             Text("trips.action.duplicate", bundle: .main)
@@ -95,9 +100,40 @@ struct TripsListView: View {
                 .accessibilityLabel(Text("trips.action.add", bundle: .main))
             }
         }
+        .modifier(TripsSearchModifier(viewModel: viewModel))
         .onAppear { viewModel.reload() }
         .sheet(isPresented: $showingNewSheet) {
             newTripSheet
+        }
+        .alert(
+            Text("trips.duplicate.alert.title", bundle: .main),
+            isPresented: Binding(
+                get: { pendingDuplicateSource != nil },
+                set: { if !$0 { pendingDuplicateSource = nil } }
+            ),
+            presenting: pendingDuplicateSource
+        ) { _ in
+            TextField(
+                LocalizedStringKey("trips.duplicate.alert.namePlaceholder"),
+                text: $duplicateNameDraft
+            )
+            Button {
+                if let source = pendingDuplicateSource {
+                    let trimmed = duplicateNameDraft.trimmingCharacters(in: .whitespacesAndNewlines)
+                    let finalName = trimmed.isEmpty ? "Copy of \(source.name)" : trimmed
+                    viewModel.duplicate(source, name: finalName)
+                }
+                pendingDuplicateSource = nil
+            } label: {
+                Text("trips.duplicate.alert.confirm", bundle: .main)
+            }
+            Button(role: .cancel) {
+                pendingDuplicateSource = nil
+            } label: {
+                Text("common.cancel", bundle: .main)
+            }
+        } message: { source in
+            Text("trips.duplicate.alert.message \(source.name)", bundle: .main)
         }
     }
 
@@ -184,6 +220,24 @@ struct TripsListView: View {
                 isNearest: nearestID == trip.id,
                 daysUntilStart: nearestID == trip.id ? viewModel.daysUntilNearest()?.1 : nil
             )
+        }
+    }
+}
+
+/// Round 11: only attach `.searchable` once the user has 5+ trips so the
+/// search bar doesn't take screen real-estate during early use. Wrapping in
+/// a `ViewModifier` keeps `TripsListView`'s body small.
+private struct TripsSearchModifier: ViewModifier {
+    @Bindable var viewModel: TripsListViewModel
+
+    func body(content: Content) -> some View {
+        if viewModel.trips.count >= 5 {
+            content.searchable(
+                text: $viewModel.searchQuery,
+                prompt: Text("trips.search.prompt", bundle: .main)
+            )
+        } else {
+            content
         }
     }
 }

@@ -112,12 +112,7 @@ public struct CanadaTravelAdvisoryService: TravelAdvisoryService {
                 source: "travel.gc.ca"
             )
         }
-        // The site uses lowercase-hyphenated slugs (`/destinations/spain`).
-        let slug = trimmed
-            .lowercased()
-            .components(separatedBy: CharacterSet.alphanumerics.inverted)
-            .filter { !$0.isEmpty }
-            .joined(separator: "-")
+        let slug = DestinationSlug.canada(trimmed)
         let url = URL(string: "https://travel.gc.ca/destinations/\(slug)") ?? Self.indexURL
         return TravelAdvisoryLink(
             displayName: trimmed,
@@ -146,11 +141,7 @@ public struct UKFCDOAdvisoryService: TravelAdvisoryService {
                 source: "gov.uk · FCDO"
             )
         }
-        let slug = trimmed
-            .lowercased()
-            .components(separatedBy: CharacterSet.alphanumerics.inverted)
-            .filter { !$0.isEmpty }
-            .joined(separator: "-")
+        let slug = DestinationSlug.ukFCDO(trimmed)
         let url = URL(string: "https://www.gov.uk/foreign-travel-advice/\(slug)") ?? Self.indexURL
         return TravelAdvisoryLink(
             displayName: trimmed,

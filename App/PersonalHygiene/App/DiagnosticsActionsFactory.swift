@@ -11,12 +11,9 @@ enum DiagnosticsActionsFactory {
     // MARK: - Make
 
     static func make(env: AppEnvironment) -> DiagnosticsActions {
-        let routineRepo = env.routineRepository
-        let snoozeStore = env.blockSnoozeStore
-        let skipStore = env.blockSkipStore
-        let coordinator = env.makeNotificationCoordinator()
         let observer = env.medicationObserver
         let tripsRepo = env.tripsRepository
+        let docStore = env.tripDocumentStore
 
         return DiagnosticsActions(
             scheduleTestNotification: { await Self.scheduleTestNotification() },
@@ -24,39 +21,116 @@ enum DiagnosticsActionsFactory {
                 UNUserNotificationCenter.current().removeAllPendingNotificationRequests()
             },
             injectSnoozeBadge: {
-                Self.injectFirstBlockSnoozeBadge(repository: routineRepo, store: snoozeStore)
+                Self.injectFirstBlockSnoozeBadge(
+                    repository: env.routineRepository,
+                    store: env.blockSnoozeStore
+                )
             },
             resetDevStores: {
-                Self.resetDevStores(skipStore: skipStore, snoozeStore: snoozeStore)
+                Self.resetDevStores(
+                    skipStore: env.blockSkipStore,
+                    snoozeStore: env.blockSnoozeStore
+                )
             },
             replayLastDelivered: { await Self.replayLastDelivered() },
             scheduleMedicationTest: { await Self.scheduleMedicationTest() },
-            requestAuthorization: {
-                _ = try? await UNUserNotificationCenter.current().requestAuthorization(
-                    options: [.alert, .sound, .badge]
-                )
-            },
+            requestAuthorization: { await Self.requestAuthorization() },
             refreshTrace: { RefreshTraceLog.shared.newestFirst },
-            scheduleDiff: {
-                let pending = await UNUserNotificationCenter.current()
-                    .pendingNotificationRequests().count
-                let expected = try await coordinator.buildTodayNotifications().count
-                return (pending: pending, expected: expected)
-            },
+            scheduleDiff: { try await Self.scheduleDiff(env: env) },
             widgetReloadCount: { WidgetReloadCounter.shared.count },
-            medicationObserverSnapshot: {
-                let identifiers: [String]
-                if let svc = observer as? MedicationObserverService {
-                    identifiers = svc.registeredIdentifiers
-                } else {
-                    identifiers = []
-                }
-                return (available: observer.isAvailable, identifiers: identifiers)
+            medicationObserverSnapshot: { Self.observerSnapshot(observer) },
+            tripDocumentCount: { Self.tripDocCount(tripsRepo: tripsRepo) },
+            tripDocumentByteFootprint: {
+                Self.tripDocByteFootprint(tripsRepo: tripsRepo, docStore: docStore)
             },
-            tripDocumentCount: {
-                (try? tripsRepo.allTrips())?.reduce(0) { $0 + $1.documents.count } ?? 0
+            processUptimeSeconds: { ProcessLaunchTimer.uptimeSeconds() },
+            exportSnapshot: {
+                try await Self.exportSnapshot(
+                    observer: observer,
+                    tripsRepo: tripsRepo,
+                    docStore: docStore
+                )
             }
         )
+    }
+
+    // MARK: - Closure backers (factored out to keep `make` under SwiftLint's body cap)
+
+    static func requestAuthorization() async {
+        _ = try? await UNUserNotificationCenter.current().requestAuthorization(
+            options: [.alert, .sound, .badge]
+        )
+    }
+
+    static func scheduleDiff(env: AppEnvironment) async throws -> (pending: Int, expected: Int) {
+        // Round-11 fix: compare like-with-like. The coordinator's
+        // buildTodayNotifications() only emits routine + medication
+        // follow-ups, so we filter pending requests by the same prefixes;
+        // trip-milestone + hydration pending notifs no longer inflate Δ.
+        let coordinator = env.makeNotificationCoordinator()
+        let allPending = await UNUserNotificationCenter.current()
+            .pendingNotificationRequests()
+        let routinePending = allPending.filter { req in
+            req.identifier.hasPrefix(NotificationFactory.identifierPrefix)
+                || req.identifier.hasPrefix(MedicationFollowUpFactory.identifierPrefix)
+        }
+        let expected = try await coordinator.buildTodayNotifications().count
+        return (pending: routinePending.count, expected: expected)
+    }
+
+    static func observerSnapshot(_ observer: any MedicationObserving) -> (available: Bool, identifiers: [String]) {
+        let identifiers = (observer as? MedicationObserverService)?.registeredIdentifiers ?? []
+        return (available: observer.isAvailable, identifiers: identifiers)
+    }
+
+    static func tripDocCount(tripsRepo: any TripsRepository) -> Int {
+        (try? tripsRepo.allTrips())?.reduce(0) { $0 + $1.documents.count } ?? 0
+    }
+
+    static func tripDocByteFootprint(tripsRepo: any TripsRepository, docStore: TripDocumentStore) -> Int? {
+        guard let trips = try? tripsRepo.allTrips() else { return nil }
+        var total = 0
+        for trip in trips {
+            for doc in trip.documents {
+                guard let bytes = try? docStore.bytes(for: doc) else { return nil }
+                total += bytes.count
+            }
+        }
+        return total
+    }
+
+    static func exportSnapshot(
+        observer: any MedicationObserving,
+        tripsRepo: any TripsRepository,
+        docStore: TripDocumentStore
+    ) async throws -> URL {
+        let snap = observerSnapshot(observer)
+        let docCount = tripDocCount(tripsRepo: tripsRepo)
+        let docBytes = await computeDocFootprint(tripsRepo: tripsRepo, docStore: docStore)
+        let snapshot = await DiagnosticsSnapshot.capture(
+            widgetReloadCount: WidgetReloadCounter.shared.count,
+            observerAvailable: snap.available,
+            observerIdentifiers: snap.identifiers,
+            tripDocumentCount: docCount,
+            tripDocumentByteFootprint: docBytes
+        )
+        return try snapshot.writeToTemporaryFile()
+    }
+
+    @MainActor
+    private static func computeDocFootprint(
+        tripsRepo: any TripsRepository,
+        docStore: TripDocumentStore
+    ) async -> Int? {
+        guard let trips = try? tripsRepo.allTrips() else { return nil }
+        var total = 0
+        for trip in trips {
+            for doc in trip.documents {
+                guard let bytes = try? docStore.bytes(for: doc) else { return nil }
+                total += bytes.count
+            }
+        }
+        return total
     }
 
     // MARK: - Helpers

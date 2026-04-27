@@ -9,6 +9,8 @@ enum AppTab: Hashable {
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+    @AppStorage("whatsNew.lastSeenCommitSHA") private var lastSeenCommitSHA = ""
+    @State private var showingWhatsNewAuto = false
 
     var body: some View {
         let env = AppEnvironment(modelContext: modelContext)
@@ -23,6 +25,22 @@ struct ContentView: View {
                 )
             }
         }
+        .task {
+            // Round 11: auto-popup "What's new" the first time the app
+            // launches with a commit SHA the user hasn't acknowledged. We
+            // gate on `hasCompletedOnboarding` so the very first install
+            // doesn't double up with the onboarding flow.
+            guard hasCompletedOnboarding else { return }
+            let current = BuildInfo.commitSHA
+            if !current.isEmpty, current != "dev", current != lastSeenCommitSHA {
+                showingWhatsNewAuto = true
+            }
+        }
+        .sheet(
+            isPresented: $showingWhatsNewAuto,
+            onDismiss: { lastSeenCommitSHA = BuildInfo.commitSHA },
+            content: { WhatsNewSheet() }
+        )
     }
 }
 

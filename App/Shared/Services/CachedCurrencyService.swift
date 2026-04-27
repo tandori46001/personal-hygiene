@@ -44,6 +44,22 @@ public final class CachedCurrencyService: CurrencyService, @unchecked Sendable {
         return result
     }
 
+    /// Round-11: pass-through to upstream + populate per-target cache. We
+    /// always hit the network for the multi-target call (single round-trip is
+    /// cheap; partial cache hits would require recomposing the response).
+    public func convertAll(
+        amount: Double,
+        from: String,
+        to targets: [String]
+    ) async throws -> [CurrencyConversion] {
+        let results = try await upstream.convertAll(amount: amount, from: from, to: targets)
+        let timestamp = now()
+        for result in results {
+            store(rate: result.rate, key: Self.cacheKey(from: result.from, to: result.to), at: timestamp)
+        }
+        return results
+    }
+
     private func lookup(key: String, at instant: Date) -> Double? {
         lock.lock(); defer { lock.unlock() }
         guard let entry = cache[key] else { return nil }

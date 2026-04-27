@@ -84,8 +84,83 @@ extension DiagnosticsView {
                 label: "settings.diagnostics.observ.tripDocs",
                 value: String(tripDocumentCount)
             )
+            row(
+                label: "settings.diagnostics.observ.tripDocBytes",
+                value: tripDocumentBytes.map { Self.formatBytes($0) } ?? "—"
+            )
         } header: {
             Text("settings.diagnostics.section.observability", bundle: .main)
         }
+    }
+
+    @ViewBuilder
+    var uptimeSection: some View {
+        Section {
+            row(
+                label: "settings.diagnostics.uptime.launchedAt",
+                value: ProcessLaunchTimer.launchedAt.formatted(date: .abbreviated, time: .standard)
+            )
+            row(
+                label: "settings.diagnostics.uptime.elapsed",
+                value: Self.formatUptime(processUptime)
+            )
+        } header: {
+            Text("settings.diagnostics.section.uptime", bundle: .main)
+        }
+    }
+
+    @ViewBuilder
+    var advancedDisclosureSection: some View {
+        Section {
+            DisclosureGroup(isExpanded: $advancedExpanded) {
+                scheduleHealthSection
+                refreshTraceSection
+                observabilitySection
+                Section {
+                    Button {
+                        Task {
+                            exportingSnapshot = true
+                            snapshotExportURL = try? await actions.exportSnapshot()
+                            exportingSnapshot = false
+                        }
+                    } label: {
+                        if exportingSnapshot {
+                            HStack {
+                                ProgressView()
+                                Text("settings.diagnostics.snapshot.exporting", bundle: .main)
+                            }
+                        } else {
+                            Label {
+                                Text("settings.diagnostics.snapshot.export", bundle: .main)
+                            } icon: {
+                                Image(systemName: "square.and.arrow.up.on.square")
+                            }
+                        }
+                    }
+                    .disabled(exportingSnapshot)
+                }
+            } label: {
+                Label {
+                    Text("settings.diagnostics.section.advanced", bundle: .main)
+                } icon: {
+                    Image(systemName: "wrench.and.screwdriver")
+                }
+            }
+        }
+    }
+
+    static func formatBytes(_ count: Int) -> String {
+        let formatter = ByteCountFormatter()
+        formatter.allowedUnits = [.useKB, .useMB]
+        formatter.countStyle = .file
+        return formatter.string(fromByteCount: Int64(count))
+    }
+
+    static func formatUptime(_ interval: TimeInterval) -> String {
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.hour, .minute, .second]
+        formatter.unitsStyle = .abbreviated
+        formatter.maximumUnitCount = 2
+        return formatter.string(from: max(0, interval)) ?? "0s"
     }
 }
