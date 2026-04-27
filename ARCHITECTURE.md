@@ -388,8 +388,45 @@ Settings → Diagnostics gained a destructive "Reset all customizations" button 
 
 ---
 
+## 28. Round 12 — pending-by-category drift, trip notes/archive, theme override, pause notifications
+
+### Pending-by-category drift
+
+`PendingNotificationsByCategory` (value type) classifies a list of identifiers by their factory prefix (`personal-hygiene.block.`, `.medication.followup.`, `.hydration.`, `.trip-milestone.`, `.housekeeping.`, plus "other"). DiagnosticsView's Advanced disclosure now expands a per-category breakdown; round-11 closed only the routine drift, so milestone/housekeeping/hydration drift was previously silent. The classifier matches the follow-up prefix first since it shares a parent with `personal-hygiene.medication.` — same idea as L002 (model the prefix as a typed enum so adding a new kind without updating the classifier is a compile error).
+
+### Trip lifecycle: notes + archive + currency snapshot
+
+`Trip` gained `notes: String` (Markdown via `Text(LocalizedStringKey)`) and `currencySnapshotJSON: String?`. The Trip detail toolbar `…` menu offers "Archive trip" — confirm-gated, shifts `endDate` to yesterday so the trip falls into Past Trips, and persists `RecentConversionsStore.recent()` as JSON onto the trip itself so the printable record survives even when the user later clears the recents store. `PackingItem.category` (optional, defaults to `.other`) drives horizontal filter chips on the packing list and a per-item icon. `TripCompletionSection` shows a single combined "Trip readiness" % over packing + milestones at the top of the detail screen.
+
+### Pause + theme + per-category mute
+
+`PauseNotificationsStore` (UserDefaults, single key `notifications.pausedUntil` with absolute Date). `NotificationCoordinator.refreshForToday` short-circuits while `isPaused(now:) == true` — it cancels everything previously scheduled and records a `RefreshTraceLog.shared.record(scheduledCount: 0, kind: .refresh, ...)` so the gap is auditable. `@AppStorage("settings.theme")` ("system" / "light" / "dark") applied at app root via `.preferredColorScheme(_:)`. `NotificationCategoryMuteStore` (per-category boolean toggles) — `medicationFollowUps` short-circuits to an empty array when `.medication` is muted; the rest is hooked at the factory layer where applicable.
+
+### Per-block follow-up override
+
+`PerBlockFollowUpOverrideStore` (UserDefaults, single JSON dict keyed on `blockUUID`) lets a single block override the global medication follow-up delay. `NotificationCoordinator.medicationFollowUps` reads the override before falling back to `MedicationFollowUpDelayStore.minutes()`. Allowed-value enforcement happens at the store boundary; only 15/30/45/60 are accepted.
+
+### Diagnostics v2 — health badge + snapshot diff + launch history
+
+`ObservabilityHealthCheck.status(...)` collapses schedule drift / observer state / widget reloads / auth status into a green/yellow/red enum that DiagnosticsView shows as a top-of-screen badge. `DiagnosticsSnapshot.diff(from:to:)` returns scalar deltas (pending / delivered / widget reloads / trip-doc count) plus observer-id additions/removals + a `buildChanged` flag. `ProcessLaunchHistoryStore` is a 10-entry ring buffer of `(launchedAt, previousDurationSeconds)` so the user can detect silent OS-driven restarts. `WhatsNewHistoryStore` keeps the last 5 commit SHAs the auto-popup acknowledged on this device.
+
+### MarineForecastFreshnessStore
+
+`MarineForecastFreshnessStore.allowedHours = [6, 24, 24*7]` controls the TTL fed into `CachedMarineWeatherService(upstream:defaults:)`. Default jumped from 30 min to 24 h so marine forecasts stay readable offline mid-trip.
+
+### TemplateBackup
+
+`TemplateBackup.encode(_:)` / `decode(_:)` round-trips a single template through a versioned JSON envelope (`Payload` → `TemplateDTO` → `[BlockDTO]`). Decoupled from `BackupService` so a user can share a single template via copy/paste without the entire app state.
+
+### L004 audit script
+
+`scripts/check-tabroots.py` reads a fixed list of tab-root view files and flags any that contain both an inner `NavigationStack` and a `NavigationLink` (the second condition is what makes the double-back-arrow visible). Sheet- and preview-helper contexts are excluded via a 30-line look-back for `private struct` / `private var` / `.sheet` / `.fullScreenCover`. Caught a real regression in `TemplateListView`.
+
+---
+
 **Version history:**
 
+- **v0.9 (2026-04-27)** — added §28 reflecting round 12: pending-by-category drift, trip notes/archive/packing categories, pause notifications, theme override, per-category mute toggles, per-block follow-up override, ObservabilityHealthCheck + snapshot diff + launch history, MarineForecastFreshnessStore, TemplateBackup, L004 audit script.
 - **v0.8 (2026-04-26)** — added §27 reflecting round 11: Schedule-health Δ filtered to routine-prefix only; `DestinationSlug` + `PreferredAdvisorySourceStore` for multi-source advisory; `RecentConversionsStore` + `convertAll(amount:from:to:)` (single Frankfurter round-trip for the seven supported currencies); `ProcessLaunchTimer` + `DiagnosticsSnapshot` (JSON export to share sheet); `tripDocumentByteFootprint` (real Keychain bytes); Diagnostics Advanced disclosure group; trips searchable + duplicate-with-name + next-milestone card + packing bulk actions; Today block-detail bottom sheet + "in N min" caption + compact mode.
 - **v0.7 (2026-04-26)** — added §26 reflecting round 10: process-local diagnostics surfaces (`RefreshTraceLog`, `WidgetReloadCounter`, observer status), multi-source travel advisory, schedule-health diff in DiagnosticsView, configurable medication follow-up delay, currency quick-pick chips, trip duplication + countdown badge + PDF cover photo, L005 (signal-trap detection in `check-tests.sh`).
 - **v0.6 (2026-04-26)** — added §25 reflecting round 9: `MedicationObserving` scaffolding (entitlement-gated), `NotificationCoordinator.rescheduleToday(shiftedByMinutes:)`, `WidgetCenter` reload wiring in `NotificationActionHandler`, watch `BlockDetailWatchView` + `SettingsGlanceWatchView`, L004 propagated to Trips, Today timeline now-line, drag-to-reorder for blocks, Hydration weekly chart.

@@ -7,14 +7,11 @@ struct TripDetailView: View {
     @State private var milestoneSheet: MilestoneSheetState?
     @State private var showingScanner = false
     @State private var pendingDocumentBytes: PendingDocument?
-    @State private var pendingExport: ExportPayload?
+    @State var pendingExport: TripDetailExportPayload?
     @State private var coverPickerItem: PhotosPickerItem?
     @State private var newPackingItemTitle: String = ""
-
-    private struct ExportPayload: Identifiable {
-        let id = UUID()
-        let url: URL
-    }
+    @State private var newPackingItemCategory: PackingCategory = .other
+    @State var showingArchiveConfirm = false
 
     private struct PendingDocument: Identifiable {
         let id = UUID()
@@ -43,6 +40,7 @@ struct TripDetailView: View {
 
             CoverPhotoSection(viewModel: viewModel, pickerItem: $coverPickerItem)
             NextMilestoneSection(viewModel: viewModel)
+            TripCompletionSection(viewModel: viewModel)
 
             Section {
                 TextField(
@@ -162,7 +160,13 @@ struct TripDetailView: View {
                 }
             }
 
-            PackingListSection(viewModel: viewModel, newItemTitle: $newPackingItemTitle)
+            PackingListSection(
+                viewModel: viewModel,
+                newItemTitle: $newPackingItemTitle,
+                newItemCategory: $newPackingItemCategory
+            )
+
+            TripNotesSection(viewModel: viewModel)
 
             Section {
                 if viewModel.sortedDocuments.isEmpty {
@@ -224,13 +228,24 @@ struct TripDetailView: View {
                 }
             }
             ToolbarItem(placement: .primaryAction) {
-                Button {
-                    exportPDF()
-                } label: {
-                    Image(systemName: "square.and.arrow.up")
-                }
-                .accessibilityLabel(Text("trip.action.share", bundle: .main))
+                tripActionMenu
             }
+        }
+        .confirmationDialog(
+            Text("trip.archive.confirm.title", bundle: .main),
+            isPresented: $showingArchiveConfirm,
+            titleVisibility: .visible
+        ) {
+            Button(role: .destructive) {
+                viewModel.archiveNow()
+            } label: {
+                Text("trip.archive.confirm.action", bundle: .main)
+            }
+            Button(role: .cancel) {} label: {
+                Text("common.cancel", bundle: .main)
+            }
+        } message: {
+            Text("trip.archive.confirm.message", bundle: .main)
         }
         .sheet(item: $milestoneSheet) { state in
             switch state {
@@ -271,45 +286,4 @@ struct TripDetailView: View {
         }
     }
 
-    private func exportPDF() {
-        let bytes = TripPDFExporter.render(trip: viewModel.trip)
-        let safeName = viewModel.trip.name
-            .replacingOccurrences(of: "/", with: "-")
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-        let filename = "\(safeName.isEmpty ? "Trip" : safeName).pdf"
-        let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
-        do {
-            try bytes.write(to: url, options: .atomic)
-            pendingExport = ExportPayload(url: url)
-        } catch {
-            viewModel.errorMessage = error.localizedDescription
-        }
-    }
-
-    private func deleteMilestones(at offsets: IndexSet) {
-        for idx in offsets {
-            viewModel.deleteMilestone(viewModel.sortedMilestones[idx])
-        }
-    }
-
-    private func deleteDocuments(at offsets: IndexSet) {
-        for idx in offsets {
-            viewModel.deleteDocument(viewModel.sortedDocuments[idx])
-        }
-    }
-
-    /// A milestone "has fired" when its computed notification trigger date
-    /// (`tripStart - daysBefore` at 09:00 local) is in the past.
-    private func hasFired(_ milestone: TripMilestone) -> Bool {
-        let cal = Calendar.autoupdatingCurrent
-        let tripStart = viewModel.trip.startDate
-        guard let triggerDay = cal.date(byAdding: .day, value: -milestone.daysBefore, to: tripStart) else {
-            return false
-        }
-        let dayStart = cal.startOfDay(for: triggerDay)
-        guard let triggerAtNine = cal.date(byAdding: .hour, value: 9, to: dayStart) else {
-            return false
-        }
-        return triggerAtNine <= Date()
-    }
 }

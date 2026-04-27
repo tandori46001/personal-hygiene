@@ -42,7 +42,7 @@
 
 ---
 
-### Phase 1 — MVP daily routine (iOS only) ✅ feature-complete (~99.5%)
+### Phase 1 — MVP daily routine (iOS only) ✅ feature-complete (~99.6%)
 
 **Goal:** end user follows full daily routine on iPhone for 14 consecutive days using only this app's notifications.
 
@@ -55,6 +55,8 @@ Modules: M1 (templates) · M2 (notifications) · M3 (medication) · M4 (sleep).
 > **Session 10 polish (2026-04-26 round 8):** robust medication follow-up matching via `BlockNotificationIdentifier.parseAny` (no more substring-contains); `RecentlyDeliveredNotificationsView` companion to Pending; xcodegen `preBuildScript` stamps `CommitSHA.txt` on every build; Today summary preview-line shows next block; Templates confirm-on-delete with block count; Hydration undo toast on log delete; BlockEditor footer reflects per-firing notification count.
 >
 > **Session 11 polish (2026-04-26 round 9):** Today now-line indicator (red "Now · HH:MM" between schedule rows, refreshes on scenePhase active); Templates drag-to-reorder via `.onMove` + EditButton (slot start times stay invariant; durations follow blocks); Hydration weekly bar chart (Swift Charts, trailing 7 days, goal RuleMark); Settings reschedule-today by ±N min (`NotificationCoordinator.rescheduleToday(shiftedByMinutes:)`); iPhone `NextBlockHomeWidget` reload after mark-done via injectable `widgetReloader` on `NotificationActionHandler`; Diagnostics replay-last-delivered + medication-test scheduler + re-request authorization + Critical Alerts row; HKObserverQuery scaffolding (`MedicationObserving` + `MockMedicationObserver` + entitlement-gated `MedicationObserverService`); L004 propagated to `TripsListView`. **Hotfix `4770ee0`:** Today hour wrap fix (lineLimit/fixedSize) + TripDetail back-arrow restored (Cancel/Save toolbar items hidden when `!hasChanges`).
+>
+> **Session 14 polish (2026-04-27 round 12, 55 slices):** per-category notification drift (`PendingNotificationsByCategory`); trip notes (Markdown) + archive flow + packing categories + completion bar; theme override (system/light/dark) at app root via `.preferredColorScheme(_:)`; pause notifications (1h/4h/24h, coordinator short-circuits); per-category notification mute; per-block medication follow-up override; ObservabilityHealthCheck traffic-light badge; DiagnosticsSnapshot v2 + diff API; configurable marine forecast TTL (6h/24h/7d, default 24h); AustraliaAdvisoryService folded into multi-source standard (5 sources now); LastConversionStore preserves currency state across navigations; TemplateBackup JSON import/export; Today context menu + filter chips + reset day + pull-to-refresh; Birthdays re-sync + lead-date preview; Focus right-now quick-toggle + conflict-overlap detector; `scripts/check-tabroots.py` audit caught + fixed real `TemplateListView` L004 violation. **+77 i18n keys × 3 locales = 580 total.**
 
 | Acceptance | Status |
 |---|---|

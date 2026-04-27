@@ -164,15 +164,16 @@ public struct MultiSourceAdvisoryService: TravelAdvisoryService {
         self.upstreams = upstreams
     }
 
-    /// Default lineup: ES → US → CA → UK. Single-user app, so there's no need
-    /// to make this dynamic per-user yet; revisit if other locales become
-    /// primary.
+    /// Default lineup: ES → US → CA → UK → AU. Single-user app, so there's
+    /// no need to make this dynamic per-user yet; revisit if other locales
+    /// become primary.
     public static func standard() -> Self {
         Self(upstreams: [
             ExterioresAdvisoryService(),
             StateDepartmentAdvisoryService(),
             CanadaTravelAdvisoryService(),
             UKFCDOAdvisoryService(),
+            AustraliaAdvisoryService(),
         ])
     }
 

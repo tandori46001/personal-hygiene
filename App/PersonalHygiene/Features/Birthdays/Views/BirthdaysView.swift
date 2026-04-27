@@ -84,23 +84,41 @@ struct BirthdaysView: View {
                 Text("birthdays.empty.description", bundle: .main)
             }
         } else {
-            List(viewModel.upcoming, id: \.contact.identifier) { entry in
-                BirthdayRow(
-                    entry: entry,
-                    leadDays: viewModel.leadDays(for: entry.contact),
-                    hasOverride: viewModel.hasOverride(entry.contact)
-                )
-                .swipeActions(edge: .trailing) {
+            List {
+                Section {
                     Button {
-                        leadEditing = entry.contact
+                        // Round-12 slice 35: pull a fresh copy from Contacts
+                        // so newly-added contacts surface without forcing
+                        // the user to wait for a scenePhase change.
+                        Task { await viewModel.reload() }
                     } label: {
                         Label {
-                            Text("birthdays.action.editLead", bundle: .main)
+                            Text("birthdays.action.resync", bundle: .main)
                         } icon: {
-                            Image(systemName: "bell")
+                            Image(systemName: "arrow.clockwise")
                         }
                     }
-                    .tint(.blue)
+                }
+                Section {
+                    ForEach(viewModel.upcoming, id: \.contact.identifier) { entry in
+                        BirthdayRow(
+                            entry: entry,
+                            leadDays: viewModel.leadDays(for: entry.contact),
+                            hasOverride: viewModel.hasOverride(entry.contact)
+                        )
+                        .swipeActions(edge: .trailing) {
+                            Button {
+                                leadEditing = entry.contact
+                            } label: {
+                                Label {
+                                    Text("birthdays.action.editLead", bundle: .main)
+                                } icon: {
+                                    Image(systemName: "bell")
+                                }
+                            }
+                            .tint(.blue)
+                        }
+                    }
                 }
             }
         }
@@ -111,6 +129,14 @@ private struct BirthdayRow: View {
     let entry: UpcomingBirthdays.Upcoming
     let leadDays: Int
     let hasOverride: Bool
+
+    private var leadNotificationDate: Date? {
+        Calendar.autoupdatingCurrent.date(
+            byAdding: .day,
+            value: -leadDays,
+            to: entry.nextOccurrence
+        )
+    }
 
     var body: some View {
         HStack {
@@ -125,6 +151,27 @@ private struct BirthdayRow: View {
                 }
                 .font(.caption)
                 .foregroundStyle(.secondary)
+                // Round-12 slice 36: per-contact lead notification preview.
+                if let leadDate = leadNotificationDate {
+                    HStack(spacing: 4) {
+                        Image(systemName: "bell.fill")
+                            .font(.caption2)
+                            .foregroundStyle(.tint)
+                            .accessibilityHidden(true)
+                        Text(
+                            "birthdays.lead.preview \(leadDate.formatted(date: .abbreviated, time: .omitted))",
+                            bundle: .main
+                        )
+                        .font(.caption2)
+                        .foregroundStyle(.tint)
+                    }
+                    .accessibilityLabel(
+                        Text(
+                            "a11y.birthdays.leadPreview \(leadDate.formatted(date: .abbreviated, time: .omitted))",
+                            bundle: .main
+                        )
+                    )
+                }
             }
             Spacer()
             Text(LocalizedStringResource("birthdays.daysUntil \(entry.daysUntil)"))

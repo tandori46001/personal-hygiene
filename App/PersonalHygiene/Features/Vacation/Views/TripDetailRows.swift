@@ -106,16 +106,53 @@ struct NextMilestoneSection: View {
 struct PackingListSection: View {
     @Bindable var viewModel: TripDetailViewModel
     @Binding var newItemTitle: String
+    @Binding var newItemCategory: PackingCategory
 
     var body: some View {
         Section {
-            ForEach(viewModel.sortedPackingItems) { item in
+            // Round-12 slice 7: category filter chips. Always visible (even
+            // empty list) so the user can pick "Toiletries" before adding.
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 6) {
+                    Button {
+                        viewModel.packingCategoryFilter = nil
+                    } label: {
+                        Text("trip.packing.filter.all", bundle: .main)
+                            .font(.caption.bold())
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 4)
+                    }
+                    .buttonStyle(.bordered)
+                    .tint(viewModel.packingCategoryFilter == nil ? .accentColor : .secondary)
+                    ForEach(PackingCategory.allCases, id: \.self) { cat in
+                        Button {
+                            viewModel.packingCategoryFilter = cat
+                        } label: {
+                            Label {
+                                Text(LocalizedStringKey("trip.packing.category.\(cat.rawValue)"))
+                                    .font(.caption.bold())
+                            } icon: {
+                                Image(systemName: cat.systemImage)
+                            }
+                            .padding(.horizontal, 10)
+                            .padding(.vertical, 4)
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(viewModel.packingCategoryFilter == cat ? .accentColor : .secondary)
+                    }
+                }
+            }
+
+            ForEach(viewModel.filteredSortedPackingItems) { item in
                 Button {
                     viewModel.togglePackingItem(item)
                 } label: {
                     HStack {
                         Image(systemName: item.isPacked ? "checkmark.circle.fill" : "circle")
                             .foregroundStyle(item.isPacked ? Color.green : Color.secondary)
+                            .accessibilityHidden(true)
+                        Image(systemName: item.category.systemImage)
+                            .foregroundStyle(.secondary)
                             .accessibilityHidden(true)
                         Text(item.title)
                             .strikethrough(item.isPacked, color: .secondary)
@@ -126,7 +163,7 @@ struct PackingListSection: View {
             }
             .onDelete { offsets in
                 for idx in offsets {
-                    viewModel.deletePackingItem(viewModel.sortedPackingItems[idx])
+                    viewModel.deletePackingItem(viewModel.filteredSortedPackingItems[idx])
                 }
             }
 
@@ -137,8 +174,29 @@ struct PackingListSection: View {
                 ) {
                     Text("trip.packing.field.label", bundle: .main)
                 }
+                Picker(selection: $newItemCategory) {
+                    ForEach(PackingCategory.allCases, id: \.self) { cat in
+                        Label {
+                            Text(LocalizedStringKey("trip.packing.category.\(cat.rawValue)"))
+                        } icon: {
+                            Image(systemName: cat.systemImage)
+                        }
+                        .tag(cat)
+                    }
+                } label: {
+                    Text("trip.packing.field.category", bundle: .main)
+                }
+                .labelsHidden()
+                .pickerStyle(.menu)
                 Button {
-                    viewModel.addPackingItem(title: newItemTitle)
+                    let item = PackingItem(
+                        title: newItemTitle.trimmingCharacters(in: .whitespacesAndNewlines),
+                        category: newItemCategory
+                    )
+                    if !item.title.isEmpty {
+                        viewModel.trip.packingItems.append(item)
+                        viewModel.saveEdits()
+                    }
                     newItemTitle = ""
                 } label: {
                     Image(systemName: "plus.circle.fill")
@@ -183,6 +241,39 @@ struct PackingListSection: View {
                     "trip.packing.summary.\(viewModel.packedCount).\(viewModel.trip.packingItems.count)",
                     bundle: .main
                 )
+            }
+        }
+    }
+}
+
+/// Round-12 slice 11: prominent overall completion bar (packing + milestones).
+struct TripCompletionSection: View {
+    let viewModel: TripDetailViewModel
+
+    var body: some View {
+        if let pct = viewModel.completionFraction() {
+            Section {
+                VStack(alignment: .leading, spacing: 6) {
+                    HStack {
+                        Image(systemName: "chart.bar.fill")
+                            .foregroundStyle(.tint)
+                            .accessibilityHidden(true)
+                        Text("trip.detail.completion.title", bundle: .main)
+                            .font(.body.bold())
+                        Spacer()
+                        Text(verbatim: "\(Int(pct * 100))%")
+                            .font(.body.monospacedDigit())
+                            .foregroundStyle(.secondary)
+                    }
+                    ProgressView(value: pct)
+                        .tint(pct >= 1.0 ? .green : .accentColor)
+                        .accessibilityLabel(
+                            Text(LocalizedStringResource(
+                                "a11y.trip.completion \(Int(pct * 100))"
+                            ))
+                        )
+                }
+                .accessibilityElement(children: .combine)
             }
         }
     }

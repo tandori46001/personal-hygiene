@@ -10,9 +10,12 @@ public enum AdvisorySource: String, CaseIterable, Sendable {
     case stateDept = "travel.state.gov"
     case canada = "travel.gc.ca"
     case ukFCDO = "gov.uk · FCDO"
+    case australia = "smartraveller.gov.au"
 
     /// Default lineup matches `MultiSourceAdvisoryService.standard()` order.
-    public static let defaultOrder: [Self] = [.exteriores, .stateDept, .canada, .ukFCDO]
+    public static let defaultOrder: [Self] = [
+        .exteriores, .stateDept, .canada, .ukFCDO, .australia,
+    ]
 }
 
 public enum PreferredAdvisorySourceStore {

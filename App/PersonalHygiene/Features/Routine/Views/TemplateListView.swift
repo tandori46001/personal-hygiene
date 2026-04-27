@@ -14,103 +14,106 @@ struct TemplateListView: View {
     @State private var pendingDelete: RoutineTemplate?
 
     var body: some View {
-        NavigationStack {
-            List {
-                if viewModel.templates.isEmpty {
-                    ContentUnavailableView {
-                        Label {
-                            Text("templateList.empty.title", bundle: .main)
-                        } icon: {
-                            Image(systemName: "calendar.badge.plus")
-                        }
-                    } description: {
-                        Text("templateList.empty.description", bundle: .main)
+        // L004: no inner `NavigationStack`. This view is a tab-root inside
+        // iOS 18 TabView's "More" overflow, which already wraps its content
+        // in a stack — adding a second one produced two stacked back chevrons
+        // on every push into TemplateEditorView. Round-12 slice 6 captured
+        // this regression via the new `scripts/check-tabroots.py` audit.
+        List {
+            if viewModel.templates.isEmpty {
+                ContentUnavailableView {
+                    Label {
+                        Text("templateList.empty.title", bundle: .main)
+                    } icon: {
+                        Image(systemName: "calendar.badge.plus")
                     }
+                } description: {
+                    Text("templateList.empty.description", bundle: .main)
                 }
+            }
 
-                ForEach(viewModel.templates) { template in
-                    NavigationLink {
-                        TemplateEditorView(
-                            viewModel: TemplateEditorViewModel(template: template, repository: repository)
-                        )
-                    } label: {
-                        TemplateRow(
-                            template: template,
-                            onActivate: { viewModel.setActive(template, for: template.dayType) }
-                        )
-                    }
-                    .swipeActions(edge: .leading) {
-                        Button {
-                            viewModel.duplicate(template)
-                        } label: {
-                            Label {
-                                Text("templateList.action.duplicate", bundle: .main)
-                            } icon: {
-                                Image(systemName: "doc.on.doc")
-                            }
-                        }
-                        .tint(.blue)
-                    }
+            ForEach(viewModel.templates) { template in
+                NavigationLink {
+                    TemplateEditorView(
+                        viewModel: TemplateEditorViewModel(template: template, repository: repository)
+                    )
+                } label: {
+                    TemplateRow(
+                        template: template,
+                        onActivate: { viewModel.setActive(template, for: template.dayType) }
+                    )
                 }
-                .onDelete(perform: deleteTemplates)
-            }
-            .navigationTitle(Text("templateList.title", bundle: .main))
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
+                .swipeActions(edge: .leading) {
                     Button {
-                        showingNewTemplateSheet = true
+                        viewModel.duplicate(template)
                     } label: {
                         Label {
-                            Text("a11y.action.addTemplate", bundle: .main)
+                            Text("templateList.action.duplicate", bundle: .main)
                         } icon: {
-                            Image(systemName: "plus")
+                            Image(systemName: "doc.on.doc")
                         }
-                        .labelStyle(.iconOnly)
                     }
-                    .accessibilityLabel(Text("a11y.action.addTemplate", bundle: .main))
+                    .tint(.blue)
                 }
             }
-            .onAppear {
-                viewModel.reload()
-                if autoPresentNewTemplate?.wrappedValue == true {
+            .onDelete(perform: deleteTemplates)
+        }
+        .navigationTitle(Text("templateList.title", bundle: .main))
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
                     showingNewTemplateSheet = true
-                    autoPresentNewTemplate?.wrappedValue = false
-                }
-            }
-            .onChange(of: autoPresentNewTemplate?.wrappedValue ?? false) { _, newValue in
-                if newValue {
-                    showingNewTemplateSheet = true
-                    autoPresentNewTemplate?.wrappedValue = false
-                }
-            }
-            .sheet(isPresented: $showingNewTemplateSheet) {
-                NewTemplateSheet(
-                    name: $newTemplateName,
-                    dayType: $newTemplateDayType,
-                    onCreate: createTemplate,
-                    onCancel: { showingNewTemplateSheet = false }
-                )
-            }
-            .confirmationDialog(
-                Text(deleteConfirmKey, bundle: .main),
-                isPresented: Binding(
-                    get: { pendingDelete != nil },
-                    set: { if !$0 { pendingDelete = nil } }
-                ),
-                titleVisibility: .visible,
-                presenting: pendingDelete
-            ) { template in
-                Button(role: .destructive) {
-                    viewModel.delete(template)
-                    pendingDelete = nil
                 } label: {
-                    Text("common.delete", bundle: .main)
+                    Label {
+                        Text("a11y.action.addTemplate", bundle: .main)
+                    } icon: {
+                        Image(systemName: "plus")
+                    }
+                    .labelStyle(.iconOnly)
                 }
-                Button(role: .cancel) {
-                    pendingDelete = nil
-                } label: {
-                    Text("common.cancel", bundle: .main)
-                }
+                .accessibilityLabel(Text("a11y.action.addTemplate", bundle: .main))
+            }
+        }
+        .onAppear {
+            viewModel.reload()
+            if autoPresentNewTemplate?.wrappedValue == true {
+                showingNewTemplateSheet = true
+                autoPresentNewTemplate?.wrappedValue = false
+            }
+        }
+        .onChange(of: autoPresentNewTemplate?.wrappedValue ?? false) { _, newValue in
+            if newValue {
+                showingNewTemplateSheet = true
+                autoPresentNewTemplate?.wrappedValue = false
+            }
+        }
+        .sheet(isPresented: $showingNewTemplateSheet) {
+            NewTemplateSheet(
+                name: $newTemplateName,
+                dayType: $newTemplateDayType,
+                onCreate: createTemplate,
+                onCancel: { showingNewTemplateSheet = false }
+            )
+        }
+        .confirmationDialog(
+            Text(deleteConfirmKey, bundle: .main),
+            isPresented: Binding(
+                get: { pendingDelete != nil },
+                set: { if !$0 { pendingDelete = nil } }
+            ),
+            titleVisibility: .visible,
+            presenting: pendingDelete
+        ) { template in
+            Button(role: .destructive) {
+                viewModel.delete(template)
+                pendingDelete = nil
+            } label: {
+                Text("common.delete", bundle: .main)
+            }
+            Button(role: .cancel) {
+                pendingDelete = nil
+            } label: {
+                Text("common.cancel", bundle: .main)
             }
         }
     }

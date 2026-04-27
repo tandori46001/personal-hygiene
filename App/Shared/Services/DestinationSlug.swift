@@ -59,4 +59,21 @@ public enum DestinationSlug {
             return auto(name)
         }
     }
+
+    /// Round-12 slice 5: smartraveller.gov.au uses lowercase-hyphenated
+    /// slugs at `/destinations/<slug>`. Few overrides matter; the auto-slug
+    /// covers most country pages.
+    public static func australia(_ name: String) -> String {
+        let key = name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        switch key {
+        case "usa", "us", "united states", "america":
+            return "united-states-america"
+        case "uk", "united kingdom", "britain", "great britain":
+            return "united-kingdom"
+        case "uae", "u.a.e.":
+            return "united-arab-emirates"
+        default:
+            return auto(name)
+        }
+    }
 }

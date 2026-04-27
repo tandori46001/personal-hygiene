@@ -111,6 +111,19 @@ final class TodayViewModel {
         completedBlockIDs.contains(block.id)
     }
 
+    /// Round-12 slice 25: clear today's completions + skips so the user can
+    /// "start over" after a Reset Day confirmation. Per-day snoozes roll off
+    /// at midnight so we leave them alone.
+    func resetDay(now: Date = Date()) {
+        for block in blocks where completedBlockIDs.contains(block.id) {
+            try? repository.unmarkDone(block, on: now, calendar: calendar)
+        }
+        completedBlockIDs.removeAll()
+        for block in blocks {
+            skipStore?.unskip(blockID: block.id, on: now, calendar: calendar)
+        }
+    }
+
     func toggleDone(_ block: Block, now: Date = Date()) {
         do {
             if completedBlockIDs.contains(block.id) {

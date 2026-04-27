@@ -1390,3 +1390,54 @@ None — purely build-time guard.
 2. Sheet's "Mark done" / "Skip today" buttons act on the block + dismiss.
 3. The "Next" row at the top of the schedule shows a colored caption like "in 12 min" / "in 1h 30 min" / "starting now".
 4. Top-right toolbar has a list-icon toggle. Tap → schedule rows hide category dot, category text, and duration min. Tap again → restored. State persists across launches.
+
+## [T-096] — Diagnostics: pending-by-category breakdown (round 12)
+
+**Module:** settings/diagnostics · **Shipped in:** round 12 (Tier A)
+
+### Manual verification
+1. Settings → Diagnostics → expand Advanced. New "Pending by category" disclosure shows a per-prefix count (Routine / Medication follow-up / Hydration / Trip milestones / Housekeeping / Other).
+2. The total at the right matches `pending` from the Schedule-health section.
+3. Schedule a Trip with a milestone in the past → the milestones row goes up by one without inflating the routine drift.
+
+## [T-097] — Today: context menu + filter chips + reset day + pull-to-refresh (round 12)
+
+**Module:** today · **Shipped in:** round 12 (Tier D)
+
+### Manual verification
+1. Long-press a block row → context menu shows Mark done, Skip today, Details. All three commit + dismiss the menu.
+2. Above the schedule there's a horizontal chip row. Default is "All" highlighted. Tap a category chip → schedule filters to blocks in that category. Tap "All" → restored.
+3. Top-right toolbar `…` menu → Reset day. Confirms via dialog → completions + skips for today disappear; the schedule itself stays put.
+4. Pull the schedule list down → "Refreshed" toast appears for ~1.5s, schedule is reloaded.
+
+## [T-098] — Settings: pause notifications + theme + per-category mute (round 12)
+
+**Module:** settings · **Shipped in:** round 12 (Tier D)
+
+### Manual verification
+1. Settings → "Pause notifications" → "Pause for…" → choose "1 hour". The section now shows "Paused until HH:MM" + a Resume button.
+2. While paused, run `Refresh notifications`. Pending count drops to 0 in Diagnostics.
+3. Tap Resume. Refresh notifications again — pending count climbs back up.
+4. Settings → Appearance → Theme. Toggle Light / Dark / System. The whole app honors the override across navigation.
+5. Settings → Notification categories → toggle Hydration off. New hydration notifications stop being scheduled.
+
+## [T-099] — Trips: notes + completion bar + archive + packing categories (round 12)
+
+**Module:** trips · **Shipped in:** round 12 (Tier B)
+
+### Manual verification
+1. Open a trip with at least one packing item + one milestone. The new "Trip readiness" card at the top shows a percentage that updates as items get checked.
+2. Scroll to the "Notes" section. Type some Markdown (`**bold** [link](https://example.com)`) — after saving, the rendered version appears below the field.
+3. The Trip detail toolbar `…` menu shows "Share" and (if the trip is still active) "Archive trip". Tap Archive → confirm. The trip moves to the Past Trips section.
+4. Trip detail Packing list now shows category filter chips (All / Clothing / Electronics / Documents / Toiletries / Medication / Other). Add a new item with the Picker set to a category — it appears with the category icon.
+5. The TripsListView row shows a `packed/total` badge for any trip with a packing list (e.g. `🧳 3/12`).
+
+## [T-100] — Hydration: hot weather mode + Birthdays re-sync + Focus right now (round 12)
+
+**Module:** hydration / birthdays / settings · **Shipped in:** round 12 (Tier E)
+
+### Manual verification
+1. Hydration → Goal section. Toggle "Hot weather mode" on → an orange "Effective goal: 2500 ml" caption appears. Progress recalculates against the bumped goal.
+2. Birthdays → tap "Re-sync from Contacts" — even if the system permission was already granted, the list reloads. Each row shows a "Reminder on Mon, Apr 27" caption from the per-contact lead days.
+3. Settings → Focus schedule → top "Focus right now (60 min)" — taps creates a one-day window starting at the current time. Returning to the list shows the new window.
+4. Add an overlapping window on the same day → a yellow warning section appears at the top.

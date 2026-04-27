@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(HealthKit) && !os(watchOS)
+import HealthKit
+#endif
 
 /// Production-side `MedicationObserving` shell. Returns `isAvailable == false`
 /// until the `health.records.medications` HealthKit entitlement ships with
@@ -13,9 +16,23 @@ import Foundation
 @MainActor
 public final class MedicationObserverService: MedicationObserving {
 
-    /// Always `false` until the entitlement + HealthKit sample type wiring
-    /// land. Gate any caller logic on this flag.
-    public var isAvailable: Bool { false }
+    /// Round-12 slice 4: runtime-aware availability. We still gate on the
+    /// (not-yet-shipped) `health.records.medications` entitlement, but at
+    /// least surface whether the device itself has HealthKit data available
+    /// — that flips an additional row in DiagnosticsView and lets future
+    /// wiring honor the OS-level capability check.
+    public var isAvailable: Bool {
+        guard isEntitlementGranted else { return false }
+        #if canImport(HealthKit) && !os(watchOS)
+        return HKHealthStore.isHealthDataAvailable()
+        #else
+        return false
+        #endif
+    }
+
+    /// Lifted to a stored property so the test double + future entitlement
+    /// path can override it without touching framework state.
+    public var isEntitlementGranted: Bool = false
 
     private var registered: Set<String> = []
 

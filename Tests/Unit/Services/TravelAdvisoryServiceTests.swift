@@ -52,11 +52,13 @@ final class TravelAdvisoryServiceTests: XCTestCase {
     func test_multiSource_returnsOneEntryPerUpstream_inOrder() {
         let svc = MultiSourceAdvisoryService.standard()
         let links = svc.advisories(forDestination: "Spain")
+        // Round-12 slice 5: smartraveller.gov.au added as fifth source.
         XCTAssertEqual(links.map(\.source), [
             "exteriores.gob.es",
             "travel.state.gov",
             "travel.gc.ca",
             "gov.uk · FCDO",
+            "smartraveller.gov.au",
         ])
     }
 

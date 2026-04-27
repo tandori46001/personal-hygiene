@@ -18,6 +18,7 @@ struct CurrencyView: View {
     @State private var errorMessage: String?
     @State private var isLoading = false
     @State private var recents: [RecentConversionsStore.Entry] = []
+    @State private var lastConversion: LastConversionStore.Entry?
 
     var body: some View {
         Form {
@@ -142,7 +143,24 @@ struct CurrencyView: View {
         }
         .navigationTitle(Text("trip.currency.title", bundle: .main))
         .navigationBarTitleDisplayMode(.inline)
-        .onAppear { recents = RecentConversionsStore.recent() }
+        .onAppear {
+            recents = RecentConversionsStore.recent()
+            // Round-12 slice 3: rehydrate last conversion so the rate panel
+            // keeps showing data after navigating away and back without forcing
+            // a fresh network call.
+            if conversion == nil, let last = LastConversionStore.load() {
+                lastConversion = last
+                amountText = String(last.amount)
+                fromCode = last.from
+                toCode = last.to
+                conversion = CurrencyConversion(
+                    from: last.from,
+                    to: last.to,
+                    rate: last.rate,
+                    amountConverted: last.amountConverted
+                )
+            }
+        }
     }
 
     @ViewBuilder
@@ -183,6 +201,7 @@ struct CurrencyView: View {
             let result = try await service.convert(amount: amount, from: fromCode, to: toCode)
             conversion = result
             RecentConversionsStore.record(result, amount: amount)
+            LastConversionStore.save(result, amount: amount)
             recents = RecentConversionsStore.recent()
         } catch {
             errorMessage = error.localizedDescription

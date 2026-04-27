@@ -50,8 +50,34 @@ enum DiagnosticsActionsFactory {
                     tripsRepo: tripsRepo,
                     docStore: docStore
                 )
-            }
+            },
+            pendingByCategory: { await Self.pendingByCategory() },
+            tripDocumentDetails: {
+                Self.tripDocDetails(tripsRepo: tripsRepo, docStore: docStore)
+            },
+            launchHistory: { ProcessLaunchHistoryStore.history() },
+            whatsNewHistory: { WhatsNewHistoryStore.history() }
         )
+    }
+
+    static func pendingByCategory() async -> PendingNotificationsByCategory {
+        let pending = await UNUserNotificationCenter.current().pendingNotificationRequests()
+        return PendingNotificationsByCategory.fromPending(pending)
+    }
+
+    static func tripDocDetails(
+        tripsRepo: any TripsRepository,
+        docStore: TripDocumentStore
+    ) -> [(name: String, bytes: Int)] {
+        guard let trips = try? tripsRepo.allTrips() else { return [] }
+        var output: [(name: String, bytes: Int)] = []
+        for trip in trips {
+            for doc in trip.documents {
+                let size = (try? docStore.bytes(for: doc).count) ?? 0
+                output.append((name: doc.name, bytes: size))
+            }
+        }
+        return output
     }
 
     // MARK: - Closure backers (factored out to keep `make` under SwiftLint's body cap)

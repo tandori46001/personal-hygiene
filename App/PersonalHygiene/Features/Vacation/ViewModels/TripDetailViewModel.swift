@@ -23,6 +23,14 @@ final class TripDetailViewModel {
     var draftDestination: String
     var draftStartDate: Date
     var draftEndDate: Date
+    /// Round-12 slice 9: editable notes draft. Round-trips like the other
+    /// scalar fields — Cancel reverts, Save writes back through
+    /// `TripsRepository.upsert` via `commitDraft()`.
+    var draftNotes: String
+    /// Round-12 slice 7: filter applied to the packing list. `nil` shows all
+    /// items; otherwise filters by category. Stored on the view model so the
+    /// pick survives a sheet dismissal.
+    var packingCategoryFilter: PackingCategory?
 
     var errorMessage: String?
 
@@ -48,6 +56,7 @@ final class TripDetailViewModel {
         self.draftDestination = trip.destinationName
         self.draftStartDate = trip.startDate
         self.draftEndDate = trip.endDate
+        self.draftNotes = trip.notes
     }
 
     var hasChanges: Bool {
@@ -55,6 +64,7 @@ final class TripDetailViewModel {
             || draftDestination != trip.destinationName
             || draftStartDate != trip.startDate
             || draftEndDate != trip.endDate
+            || draftNotes != trip.notes
     }
 
     func revertDraft() {
@@ -62,6 +72,7 @@ final class TripDetailViewModel {
         draftDestination = trip.destinationName
         draftStartDate = trip.startDate
         draftEndDate = trip.endDate
+        draftNotes = trip.notes
     }
 
     func commitDraft() {
@@ -72,12 +83,64 @@ final class TripDetailViewModel {
         trip.destinationName = trimmedDest
         trip.startDate = draftStartDate
         trip.endDate = max(draftStartDate, draftEndDate)
+        trip.notes = draftNotes
         // Reflect the trimmed values + clamped end date back into the draft so
         // `hasChanges` is false right after a commit.
         draftName = trimmedName
         draftDestination = trimmedDest
         draftEndDate = trip.endDate
         saveEdits()
+    }
+
+    // MARK: - Round 12 helpers
+
+    /// Round-12 slice 7: packing items filtered by the optional `packingCategoryFilter`.
+    var filteredSortedPackingItems: [PackingItem] {
+        guard let filter = packingCategoryFilter else { return sortedPackingItems }
+        return sortedPackingItems.filter { $0.category == filter }
+    }
+
+    /// Round-12 slice 11: completion across packing + milestones, normalized
+    /// to 0...1. Returns `nil` when the trip has nothing to track yet.
+    func completionFraction() -> Double? {
+        let packTotal = trip.packingItems.count
+        let msTotal = trip.milestones.count
+        let denominator = packTotal + msTotal
+        guard denominator > 0 else { return nil }
+        let packed = trip.packingItems.filter(\.isPacked).count
+        let msDone = trip.milestones.filter(\.isComplete).count
+        return Double(packed + msDone) / Double(denominator)
+    }
+
+    /// Round-12 slice 10: capture the user's most-recent currency conversions
+    /// onto the trip itself, so when archived the trip carries a printable
+    /// snapshot. No-op when the recents store is empty.
+    func captureCurrencySnapshot() {
+        let recents = RecentConversionsStore.recent()
+        guard !recents.isEmpty else { return }
+        let payload = try? JSONEncoder().encode(recents)
+        guard let data = payload, let str = String(data: data, encoding: .utf8) else { return }
+        trip.currencySnapshotJSON = str
+        saveEdits()
+    }
+
+    /// Round-12 slice 14: archive the trip — convenience for "Trip done".
+    /// Shifts `endDate` to yesterday so it falls into the Past Trips section,
+    /// captures the currency snapshot, and saves.
+    func archiveNow(now: Date = Date(), calendar: Calendar = .autoupdatingCurrent) {
+        let yesterday = calendar.date(byAdding: .day, value: -1, to: calendar.startOfDay(for: now))
+            ?? now
+        if trip.endDate >= calendar.startOfDay(for: now) {
+            trip.endDate = yesterday
+            draftEndDate = yesterday
+        }
+        captureCurrencySnapshot()
+    }
+
+    /// Round-12 slice 14: whether the trip is still upcoming/active (vs already
+    /// past). Drives the visibility of the "Archive now" toolbar action.
+    func isStillActive(now: Date = Date(), calendar: Calendar = .autoupdatingCurrent) -> Bool {
+        calendar.startOfDay(for: trip.endDate) >= calendar.startOfDay(for: now)
     }
 
     var advisoryLink: TravelAdvisoryLink? {

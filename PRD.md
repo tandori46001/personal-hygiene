@@ -145,6 +145,8 @@ Diferenciador: no es un calendario más. Es un **planificador de rutina total** 
 - **M3.2 hardening (round 8, session 10):** el matching primary→bloque dentro de `NotificationCoordinator.medicationFollowUps` se hizo a través de `BlockNotificationIdentifier.parseAny` en vez de `String.contains` para que un cambio futuro en el shape del identifier rompa parser/test en lugar de silenciar el follow-up. Cubierto por `NotificationCoordinatorFollowUpTests` (3 casos: 1-medicación, no-medicación filtrado, identifier desconocido).
 - **M3.2 observer scaffolding (round 9, session 11):** `MedicationObserving` (`@MainActor` protocol) + `MedicationObserverService` (entitlement-gated, `isAvailable: false` hasta el entitlement) + `MockMedicationObserver` (test double con `simulateChange(for:)`). El protocolo abstrae lo que un día llamará `HKObserverQuery`; mientras tanto `start(_:onChange:)` registra el identifier pero no dispara callback. Cuando el entitlement caiga, `MedicationObserverService` se cablea sobre `HKObserverQuery` por concept identifier y el push-reminder fallback se condiciona en `observerService.isAvailable == false`.
 - **M3.2 follow-up delay configurable (round 10, session 12):** `MedicationFollowUpDelayStore` (UserDefaults, valores permitidos 15/30/45/60, default 30) deja al usuario elegir el offset desde Settings → Scheduling. `NotificationCoordinator.medicationFollowUps` lo lee por defecto. Nuevos helpers: `MedicationFollowUpFactory.identifier(blockID:dayKey:)` + `cancelFollowUps(for:in:)` para que el futuro path observer-driven pueda silenciar el recordatorio cuando la dosis se registre en Health.
+- **M3.2 per-block override (round 12, session 14):** `PerBlockFollowUpOverrideStore` (UserDefaults JSON dict, keyed por `blockUUID`) permite que un bloque concreto sobrescriba el delay global. `NotificationCoordinator.medicationFollowUps` consulta el override antes de caer al store global. Útil para medicaciones con ventanas estrictas distintas (p.ej. anticonvulsivante a 15min vs vitamina a 60min).
+- **M3.x category mute (round 12):** `NotificationCategoryMuteStore` añade un toggle por categoría (hydration / housekeeping / birthdays / milestones / medication). `NotificationCoordinator.medicationFollowUps` short-circuit cuando `.medication` está silenciada — útil para hospitalizaciones / cambios de tratamiento.
 
 ### M4 — Sueño
 
@@ -162,6 +164,7 @@ Diferenciador: no es un calendario más. Es un **planificador de rutina total** 
 - M5.1 Recordatorios espaciados durante el día (cada 2h por defecto, configurable).
 - M5.2 No notificar durante bloques de sueño ni durante Deep Focus salvo si el usuario lo activa.
 - M5.3 Tracking opcional (sin presión) — vasos consumidos / objetivo. Sin gráficos.
+- **M5.4 Hot weather mode (round 12, session 14):** toggle manual en Hydration → Goal section. Cuando activo, suma `HotWeatherStore.bumpMilliliters()` (default +500ml) al objetivo diario. Decisión: NO auto-detectar temperatura via WeatherKit en esta versión — hace mucho desplazamiento entre Madrid / costa / fuera de servicio mid-trip y los falsos positivos serían molestos. Toggle manual.
 
 ### M6 — Tareas domésticas recurrentes
 

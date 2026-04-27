@@ -175,7 +175,8 @@ public enum NotificationCategoryRegistrar {
 public enum SnoozeDurationStore {
 
     public static let key = "notifications.snooze.minutes"
-    public static let allowedMinutes: [Int] = [5, 10, 15]
+    /// Round-12 slice 39: added 30-min option for "I'll deal with this after lunch".
+    public static let allowedMinutes: [Int] = [5, 10, 15, 30]
     public static let defaultMinutes = 5
 
     public static func minutes(defaults: UserDefaults = .standard) -> Int {

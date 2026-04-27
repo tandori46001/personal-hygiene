@@ -7,8 +7,65 @@ struct FocusScheduleView: View {
     @State private var windows: [ScheduledFocusWindow] = []
     @State private var editingWindow: ScheduledFocusWindow?
 
+    /// Round-12 slice 37: detect overlapping windows that share at least one
+    /// weekday. Returns the set of conflicting IDs so we can highlight rows.
+    private var conflictingIDs: Set<UUID> {
+        var result: Set<UUID> = []
+        for (idx, lhs) in windows.enumerated() {
+            for rhs in windows.dropFirst(idx + 1) {
+                let sharesDay = !lhs.weekdays.isDisjoint(with: rhs.weekdays)
+                let overlapStart = max(lhs.startMinutesFromMidnight, rhs.startMinutesFromMidnight)
+                let overlapEnd = min(lhs.endMinutesFromMidnight, rhs.endMinutesFromMidnight)
+                if sharesDay, overlapStart < overlapEnd {
+                    result.insert(lhs.id)
+                    result.insert(rhs.id)
+                }
+            }
+        }
+        return result
+    }
+
     var body: some View {
         List {
+            // Round-12 slice 38: "Right now" 60-min window from current time.
+            Section {
+                Button {
+                    let cal = Calendar.autoupdatingCurrent
+                    let now = Date()
+                    let startMin = cal.component(.hour, from: now) * 60 + cal.component(.minute, from: now)
+                    let endMin = min(24 * 60 - 1, startMin + 60)
+                    let weekday = cal.component(.weekday, from: now)
+                    let window = ScheduledFocusWindow(
+                        label: String(localized: "settings.focus.rightNow.label"),
+                        weekdays: [weekday],
+                        startMinutesFromMidnight: startMin,
+                        endMinutesFromMidnight: endMin
+                    )
+                    store.upsert(window)
+                    reload()
+                } label: {
+                    Label {
+                        Text("settings.focus.rightNow", bundle: .main)
+                    } icon: {
+                        Image(systemName: "moon.zzz.fill")
+                    }
+                }
+            }
+
+            if !conflictingIDs.isEmpty {
+                Section {
+                    HStack(spacing: 8) {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundStyle(.orange)
+                            .accessibilityHidden(true)
+                        Text("settings.focus.conflict.warning", bundle: .main)
+                            .font(.caption)
+                            .foregroundStyle(.orange)
+                    }
+                    .accessibilityElement(children: .combine)
+                }
+            }
+
             if windows.isEmpty {
                 ContentUnavailableView {
                     Label {

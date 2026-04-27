@@ -78,4 +78,22 @@ struct DiagnosticsActions {
     /// sharing via `UIActivityViewController`. Returns the temporary file URL
     /// the share sheet can then consume.
     let exportSnapshot: @MainActor () async throws -> URL
+
+    /// Round-12 slice 1: per-category breakdown of pending notifications so
+    /// drift in milestone/hydration/housekeeping schedules surfaces just
+    /// like routine drift does. Replaces the single-number `Δ` reporting.
+    let pendingByCategory: @MainActor () async -> PendingNotificationsByCategory
+
+    /// Round-12 slice 2: per-document byte size for the trip docs section.
+    /// Returns `[(name, bytes)]`. Empty when no docs / unable to read.
+    let tripDocumentDetails: @MainActor () -> [(name: String, bytes: Int)]
+
+    /// Round-12 slice 19: rolling launch history (last N launches with
+    /// previous-launch duration so silent OS restarts surface).
+    let launchHistory: @MainActor () -> [ProcessLaunchHistoryStore.Entry]
+
+    /// Round-12 slice 18: rolling history of "What's new" commits the auto
+    /// popup has shown — useful to verify the user actually saw a given
+    /// release on this device.
+    let whatsNewHistory: @MainActor () -> [WhatsNewHistoryStore.Entry]
 }

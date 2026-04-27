@@ -35,6 +35,31 @@ public struct DiagnosticsSnapshot: Codable, Sendable {
     public let pendingSummary: [PendingNotificationSummary]
     public let snapshotAt: Date
 
+    /// Round-12 slice 15: app build settings captured for cross-device debug.
+    public let localeIdentifier: String?
+    public let calendarIdentifier: String?
+    public let timeZoneIdentifier: String?
+    /// Round-12 slice 1: per-category pending breakdown.
+    public let pendingByCategory: PendingByCategoryDTO?
+
+    public struct PendingByCategoryDTO: Codable, Sendable {
+        public let routine: Int
+        public let medicationFollowUp: Int
+        public let hydration: Int
+        public let milestones: Int
+        public let housekeeping: Int
+        public let other: Int
+
+        public init(_ counts: PendingNotificationsByCategory) {
+            self.routine = counts.routine
+            self.medicationFollowUp = counts.medicationFollowUp
+            self.hydration = counts.hydration
+            self.milestones = counts.milestones
+            self.housekeeping = counts.housekeeping
+            self.other = counts.other
+        }
+    }
+
     @MainActor
     public static func capture(
         widgetReloadCount: Int,
@@ -61,6 +86,7 @@ public struct DiagnosticsSnapshot: Codable, Sendable {
                 triggerDate: triggerDate
             )
         }
+        let counts = PendingNotificationsByCategory.fromPending(pending)
         return Self(
             buildVersion: BuildInfo.marketingVersion,
             bundleVersion: BuildInfo.bundleVersion,
@@ -76,7 +102,37 @@ public struct DiagnosticsSnapshot: Codable, Sendable {
             tripDocumentByteFootprint: tripDocumentByteFootprint,
             refreshTrace: trace,
             pendingSummary: pendingSummary,
-            snapshotAt: Date()
+            snapshotAt: Date(),
+            localeIdentifier: Locale.current.identifier,
+            calendarIdentifier: Calendar.current.identifier.debugDescription,
+            timeZoneIdentifier: TimeZone.current.identifier,
+            pendingByCategory: PendingByCategoryDTO(counts)
+        )
+    }
+
+    /// Round-12 slice 16: pure delta between two snapshots — used by the
+    /// "Compare with last snapshot" button to surface scalar changes.
+    public struct Diff: Equatable, Sendable {
+        public let pendingDelta: Int
+        public let deliveredDelta: Int
+        public let widgetReloadDelta: Int
+        public let tripDocCountDelta: Int
+        public let observerIdentifierAdditions: [String]
+        public let observerIdentifierRemovals: [String]
+        public let buildChanged: Bool
+    }
+
+    public static func diff(from older: Self, to newer: Self) -> Diff {
+        let oldIDs = Set(older.medicationObserverIdentifiers)
+        let newIDs = Set(newer.medicationObserverIdentifiers)
+        return Diff(
+            pendingDelta: newer.pendingCount - older.pendingCount,
+            deliveredDelta: newer.deliveredCount - older.deliveredCount,
+            widgetReloadDelta: newer.widgetReloadCount - older.widgetReloadCount,
+            tripDocCountDelta: newer.tripDocumentCount - older.tripDocumentCount,
+            observerIdentifierAdditions: Array(newIDs.subtracting(oldIDs)).sorted(),
+            observerIdentifierRemovals: Array(oldIDs.subtracting(newIDs)).sorted(),
+            buildChanged: older.commitSHA != newer.commitSHA
         )
     }
 

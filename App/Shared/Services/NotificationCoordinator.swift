@@ -36,7 +36,15 @@ public final class NotificationCoordinator {
 
     /// Schedule notifications for today's active template based on the user's
     /// current day-type. Cancels any previously scheduled `personal-hygiene` notifications first.
+    /// Round-12 slice 26: short-circuits while the user has notifications
+    /// paused via `PauseNotificationsStore`. We still cancel anything already
+    /// scheduled so a long pause doesn't leak past notifications.
     public func refreshForToday(_ now: Date = Date()) async throws {
+        if PauseNotificationsStore.isPaused(now: now) {
+            await service.cancelAll()
+            RefreshTraceLog.shared.record(scheduledCount: 0, kind: .refresh, at: now)
+            return
+        }
         let built = try await buildTodayNotifications(now: now)
         try await service.scheduleAll(built)
         RefreshTraceLog.shared.record(scheduledCount: built.count, kind: .refresh, at: now)
@@ -138,6 +146,10 @@ public final class NotificationCoordinator {
         calendar: Calendar,
         offsetMinutes: Int = MedicationFollowUpDelayStore.minutes()
     ) -> [ScheduledNotification] {
+        // Round-12 slice 28: respect the user's per-category mute toggle.
+        if NotificationCategoryMuteStore.isMuted(.medication) {
+            return []
+        }
         let medicationBlocks = Dictionary(
             uniqueKeysWithValues: blocks
                 .filter { $0.medicationConceptIdentifier != nil }
@@ -147,13 +159,23 @@ public final class NotificationCoordinator {
             guard case let .routine(blockID, dayKey) = BlockNotificationIdentifier.parseAny(primary.identifier),
                   let block = medicationBlocks[blockID]
             else { return nil }
+            // Round-12 slice 40: per-block override on the follow-up delay.
+            let perBlockOverride = PerBlockFollowUpOverrideStore.minutes(for: blockID)
+            let resolvedOffset = perBlockOverride ?? offsetMinutes
             return MedicationFollowUpFactory.followUp(
                 for: primary,
                 block: block,
-                offsetMinutes: offsetMinutes,
+                offsetMinutes: resolvedOffset,
                 dayKey: dayKey,
                 calendar: calendar
             )
         }
+    }
+
+    /// Round-12 slice 42: dry-run mode returns the schedule that *would* fire
+    /// today without persisting it. Used by Diagnostics to surface the build
+    /// pipeline output without touching `UNUserNotificationCenter`.
+    public func dryRunToday(now: Date = Date()) async throws -> [ScheduledNotification] {
+        try await buildTodayNotifications(now: now)
     }
 }

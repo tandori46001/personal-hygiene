@@ -2,10 +2,12 @@ import Foundation
 
 /// Caches `MarineWeatherService` responses per (lat, lon) for `ttl` seconds so
 /// repeatedly opening the marine view doesn't re-hit Open-Meteo on every appear.
-/// Marine conditions change slowly enough that a 30-minute TTL is plenty.
+/// Round-12 slice 12: TTL is configurable via `MarineForecastFreshnessStore`
+/// (default 24h, allowed values 6h / 24h / 7d). Pre-round-12 default was 30min;
+/// the longer default keeps marine forecasts available offline mid-trip.
 public final class CachedMarineWeatherService: MarineWeatherService, @unchecked Sendable {
 
-    public static let defaultTTL: TimeInterval = 30 * 60
+    public static let defaultTTL: TimeInterval = 24 * 60 * 60
 
     private struct Entry {
         let conditions: MarineConditions
@@ -26,6 +28,19 @@ public final class CachedMarineWeatherService: MarineWeatherService, @unchecked 
         self.upstream = upstream
         self.ttl = ttl
         self.now = now
+    }
+
+    /// Convenience initializer that sources TTL from `MarineForecastFreshnessStore`.
+    public convenience init(
+        upstream: any MarineWeatherService,
+        defaults: UserDefaults,
+        now: @escaping @Sendable () -> Date = { Date() }
+    ) {
+        self.init(
+            upstream: upstream,
+            ttl: MarineForecastFreshnessStore.ttlSeconds(defaults: defaults),
+            now: now
+        )
     }
 
     public func current(at latitude: Double, longitude: Double) async throws -> MarineConditions {

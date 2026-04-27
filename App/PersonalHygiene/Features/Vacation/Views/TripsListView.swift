@@ -262,6 +262,22 @@ private struct TripRow: View {
                 Text(trip.destinationName)
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                if !trip.packingItems.isEmpty {
+                    let packed = trip.packingItems.filter(\.isPacked).count
+                    let total = trip.packingItems.count
+                    HStack(spacing: 4) {
+                        Image(systemName: "suitcase")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                            .accessibilityHidden(true)
+                        Text(verbatim: "\(packed)/\(total)")
+                            .font(.caption2.monospacedDigit())
+                            .foregroundStyle(.secondary)
+                    }
+                    .accessibilityLabel(
+                        Text(LocalizedStringResource("a11y.trip.packing \(packed) \(total)"))
+                    )
+                }
             }
             Spacer()
             VStack(alignment: .trailing, spacing: 2) {

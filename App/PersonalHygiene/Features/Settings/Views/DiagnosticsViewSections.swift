@@ -41,7 +41,21 @@ extension DiagnosticsView {
                     .font(.caption)
                     .foregroundStyle(.secondary)
             } else {
-                ForEach(Array(refreshTrace.enumerated()), id: \.offset) { _, entry in
+                let filtered = refreshTrace.filter {
+                    refreshTraceFilter == nil || $0.kind == refreshTraceFilter
+                }
+                Picker(selection: $refreshTraceFilter) {
+                    Text("settings.diagnostics.refreshTrace.filter.all", bundle: .main)
+                        .tag(RefreshTraceKind?.none)
+                    Text("settings.diagnostics.refreshTrace.filter.refresh", bundle: .main)
+                        .tag(RefreshTraceKind?.some(.refresh))
+                    Text("settings.diagnostics.refreshTrace.filter.reschedule", bundle: .main)
+                        .tag(RefreshTraceKind?.some(.reschedule))
+                } label: {
+                    Text("settings.diagnostics.refreshTrace.filter", bundle: .main)
+                }
+                .pickerStyle(.segmented)
+                ForEach(Array(filtered.enumerated()), id: \.offset) { _, entry in
                     HStack {
                         Image(
                             systemName: entry.kind == RefreshTraceKind.reschedule
@@ -114,8 +128,12 @@ extension DiagnosticsView {
         Section {
             DisclosureGroup(isExpanded: $advancedExpanded) {
                 scheduleHealthSection
+                pendingByCategorySection
                 refreshTraceSection
                 observabilitySection
+                tripDocsDetailSection
+                launchHistorySection
+                whatsNewHistorySection
                 Section {
                     Button {
                         Task {

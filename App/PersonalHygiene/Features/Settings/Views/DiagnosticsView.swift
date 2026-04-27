@@ -31,10 +31,17 @@ struct DiagnosticsView: View {
     @State var observerSnapshot: (available: Bool, identifiers: [String]) = (false, [])
     @State var tripDocumentCount: Int = 0
     @State var tripDocumentBytes: Int?
+    @State var tripDocumentDetails: [(name: String, bytes: Int)] = []
     @State var processUptime: TimeInterval = 0
     @State var snapshotExportURL: URL?
     @State var exportingSnapshot = false
     @State var advancedExpanded = false
+    @State var pendingByCategory: PendingNotificationsByCategory?
+    @State var launchHistory: [ProcessLaunchHistoryStore.Entry] = []
+    @State var whatsNewHistory: [WhatsNewHistoryStore.Entry] = []
+    @State var refreshTraceFilter: RefreshTraceKind?
+    @State var pendingByCategoryExpanded = false
+    @State var tripDocsExpanded = false
 
     var body: some View {
         List {
@@ -91,6 +98,7 @@ struct DiagnosticsView: View {
                 Text("settings.diagnostics.section.notifications", bundle: .main)
             }
 
+            healthBadgeSection
             uptimeSection
             advancedDisclosureSection
 
@@ -285,8 +293,12 @@ struct DiagnosticsView: View {
         observerSnapshot = actions.medicationObserverSnapshot()
         tripDocumentCount = actions.tripDocumentCount()
         tripDocumentBytes = actions.tripDocumentByteFootprint()
+        tripDocumentDetails = actions.tripDocumentDetails()
         processUptime = actions.processUptimeSeconds()
         scheduleDiff = try? await actions.scheduleDiff()
+        pendingByCategory = await actions.pendingByCategory()
+        launchHistory = actions.launchHistory()
+        whatsNewHistory = actions.whatsNewHistory()
     }
 
     private func localizedStatus(_ status: NotificationAuthorizationStatus) -> LocalizedStringKey {

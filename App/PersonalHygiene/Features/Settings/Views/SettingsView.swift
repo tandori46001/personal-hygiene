@@ -12,6 +12,10 @@ struct SettingsView: View {
     @AppStorage(SnoozeDurationStore.key) private var snoozeMinutes = SnoozeDurationStore.defaultMinutes
     @AppStorage(MedicationFollowUpDelayStore.key)
     private var followUpMinutes = MedicationFollowUpDelayStore.defaultMinutes
+    @AppStorage("settings.theme") var themeOverride: String = "system"
+    @AppStorage(MarineForecastFreshnessStore.key)
+    var marineHours = MarineForecastFreshnessStore.defaultHours
+    @State private var showingPauseSheet = false
 
     @State private var backupExport: BackupExport?
     @State var showingImporter = false
@@ -43,6 +47,9 @@ struct SettingsView: View {
             notificationsSection
             schedulingSection
 
+            categoryMuteSection
+            pauseSection
+            themeSection
             HomeLocationSection()
             if let focusScheduleStore {
                 Section {
@@ -239,16 +246,24 @@ struct SettingsView: View {
         }
     }
 
-    private func resetAllCustomizations() {
+    func resetAllCustomizations() {
         SnoozeDurationStore.set(SnoozeDurationStore.defaultMinutes, in: .standard)
         MedicationFollowUpDelayStore.set(MedicationFollowUpDelayStore.defaultMinutes, in: .standard)
         snoozeMinutes = SnoozeDurationStore.defaultMinutes
         followUpMinutes = MedicationFollowUpDelayStore.defaultMinutes
+        themeOverride = "system"
+        marineHours = MarineForecastFreshnessStore.defaultHours
         UserDefaults.standard.removeObject(forKey: PreferredAdvisorySourceStore.key)
         UserDefaults.standard.removeObject(forKey: HomeLocationStore.isSetKey)
         UserDefaults.standard.removeObject(forKey: HomeLocationStore.latitudeKey)
         UserDefaults.standard.removeObject(forKey: HomeLocationStore.longitudeKey)
         UserDefaults.standard.removeObject(forKey: HomeLocationStore.nameKey)
+        UserDefaults.standard.removeObject(forKey: PauseNotificationsStore.key)
+        UserDefaults.standard.removeObject(forKey: HotWeatherStore.enabledKey)
+        UserDefaults.standard.removeObject(forKey: HotWeatherStore.bumpKey)
+        UserDefaults.standard.removeObject(forKey: MarineForecastFreshnessStore.key)
+        NotificationCategoryMuteStore.clearAll()
+        PerBlockFollowUpOverrideStore.clearAll()
         focusScheduleStore?.removeAll()
     }
 

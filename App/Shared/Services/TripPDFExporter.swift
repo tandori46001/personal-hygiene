@@ -18,11 +18,68 @@ public enum TripPDFExporter {
         return renderer.pdfData { context in
             context.beginPage()
             var cursor = drawCover(trip: trip, in: pageSize, calendar: calendar)
+            cursor = drawNotes(trip: trip, in: pageSize, startingAt: cursor, context: context)
             cursor = drawMilestones(trip: trip, in: pageSize, startingAt: cursor, context: context)
             cursor = drawPackingList(trip: trip, in: pageSize, startingAt: cursor, context: context)
             cursor = drawCurrencySnapshot(in: pageSize, startingAt: cursor, context: context)
+            cursor = drawAdvisorySnapshot(
+                trip: trip,
+                in: pageSize,
+                startingAt: cursor,
+                context: context
+            )
             _ = drawDocuments(trip: trip, in: pageSize, startingAt: cursor, context: context)
         }
+    }
+
+    /// Round-12 slice 13: trip notes (free-form Markdown) folded into the PDF
+    /// after the cover so anything the user typed locally goes wherever the
+    /// PDF goes.
+    private static func drawNotes(
+        trip: Trip,
+        in pageSize: CGSize,
+        startingAt initialY: CGFloat,
+        context: UIGraphicsPDFRendererContext
+    ) -> CGFloat {
+        let trimmed = trip.notes.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return initialY }
+        var cursor = initialY
+        cursor = drawHeader("Notes", at: cursor, pageSize: pageSize, context: context)
+        for line in trimmed.split(separator: "\n", omittingEmptySubsequences: false) {
+            cursor = newPageIfNeeded(cursor: cursor, pageSize: pageSize, context: context)
+            (String(line) as NSString).draw(
+                at: CGPoint(x: margin, y: cursor),
+                withAttributes: bodyAttributes
+            )
+            cursor += 18
+        }
+        return cursor + 16
+    }
+
+    /// Round-12 slice 13: snapshot of the user-preferred travel advisory URL
+    /// at PDF render time, captured as a printable line per source so the
+    /// printout still works offline.
+    private static func drawAdvisorySnapshot(
+        trip: Trip,
+        in pageSize: CGSize,
+        startingAt initialY: CGFloat,
+        context: UIGraphicsPDFRendererContext
+    ) -> CGFloat {
+        let advisory = MultiSourceAdvisoryService.standard()
+            .advisories(forDestination: trip.destinationName)
+        guard !advisory.isEmpty else { return initialY }
+        var cursor = initialY
+        cursor = drawHeader("Travel advisory", at: cursor, pageSize: pageSize, context: context)
+        for entry in advisory {
+            cursor = newPageIfNeeded(cursor: cursor, pageSize: pageSize, context: context)
+            let line = "\(entry.source): \(entry.url.absoluteString)"
+            (line as NSString).draw(
+                at: CGPoint(x: margin, y: cursor),
+                withAttributes: bodyAttributes
+            )
+            cursor += 22
+        }
+        return cursor + 16
     }
 
     private static func drawPackingList(

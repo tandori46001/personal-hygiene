@@ -126,8 +126,9 @@ final class NotificationActionHandlerTests: XCTestCase {
         }
     }
 
-    func test_snoozeDuration_allowedMinutesContains_5_10_15() {
-        XCTAssertEqual(Set(SnoozeDurationStore.allowedMinutes), [5, 10, 15])
+    func test_snoozeDuration_allowedMinutesContains_5_10_15_30() {
+        // Round-12 slice 39: 30 was added for "I'll deal with this after lunch".
+        XCTAssertEqual(Set(SnoozeDurationStore.allowedMinutes), [5, 10, 15, 30])
     }
 
     // MARK: - markDone integration (round 6 slice 9)

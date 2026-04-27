@@ -10,7 +10,17 @@ struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @AppStorage("whatsNew.lastSeenCommitSHA") private var lastSeenCommitSHA = ""
+    @AppStorage("settings.theme") private var themeOverride: String = "system"
     @State private var showingWhatsNewAuto = false
+
+    /// Round-12 slice 27: optional dark/light override applied at app root.
+    private var preferredColorScheme: ColorScheme? {
+        switch themeOverride {
+        case "light": .light
+        case "dark": .dark
+        default: nil
+        }
+    }
 
     var body: some View {
         let env = AppEnvironment(modelContext: modelContext)
@@ -25,7 +35,10 @@ struct ContentView: View {
                 )
             }
         }
+        .preferredColorScheme(preferredColorScheme)
         .task {
+            // Round-12 slice 19: record this launch in the rolling history.
+            ProcessLaunchHistoryStore.recordLaunch()
             // Round 11: auto-popup "What's new" the first time the app
             // launches with a commit SHA the user hasn't acknowledged. We
             // gate on `hasCompletedOnboarding` so the very first install
@@ -38,7 +51,13 @@ struct ContentView: View {
         }
         .sheet(
             isPresented: $showingWhatsNewAuto,
-            onDismiss: { lastSeenCommitSHA = BuildInfo.commitSHA },
+            onDismiss: {
+                lastSeenCommitSHA = BuildInfo.commitSHA
+                // Round-12 slice 18: persist the seen SHA into the rolling
+                // history so DiagnosticsView can show the last few releases
+                // the device acknowledged.
+                WhatsNewHistoryStore.record(commitSHA: BuildInfo.commitSHA)
+            },
             content: { WhatsNewSheet() }
         )
     }

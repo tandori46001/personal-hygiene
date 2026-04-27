@@ -5,9 +5,17 @@ struct HydrationDashboardView: View {
     @Bindable var viewModel: HydrationDashboardViewModel
 
     @AppStorage("hydration.goal.ml") private var goalMilliliters: Int = HydrationGoal.default.dailyMilliliters
+    @AppStorage(HotWeatherStore.enabledKey) private var hotWeatherMode: Bool = false
 
     private static let quickAmounts = [150, 250, 330, 500]
     private static let goalPresets = [2000, 2500, 3000]
+
+    /// Round-12 slice 31: when hot-weather mode is on, the effective goal is
+    /// `base + bumpMilliliters`. Tracks the AppStorage flag so the View
+    /// re-renders when the toggle flips.
+    private var effectiveGoalMilliliters: Int {
+        HotWeatherStore.adjusted(base: goalMilliliters)
+    }
 
     var body: some View {
         NavigationStack {
@@ -136,7 +144,32 @@ struct HydrationDashboardView: View {
                         }
                     }
                     .onChange(of: goalMilliliters) { _, new in
-                        viewModel.goal = HydrationGoal(dailyMilliliters: new)
+                        viewModel.goal = HydrationGoal(dailyMilliliters: effectiveGoalMilliliters)
+                        _ = new
+                    }
+                    Toggle(isOn: $hotWeatherMode) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("hydration.hotWeather.label", bundle: .main)
+                            Text(
+                                "hydration.hotWeather.bump.\(HotWeatherStore.bumpMilliliters())",
+                                bundle: .main
+                            )
+                            .font(.caption)
+                            .foregroundStyle(.secondary)
+                        }
+                    }
+                    .onChange(of: hotWeatherMode) { _, _ in
+                        viewModel.goal = HydrationGoal(dailyMilliliters: effectiveGoalMilliliters)
+                    }
+                    if hotWeatherMode {
+                        HStack {
+                            Image(systemName: "thermometer.sun")
+                                .foregroundStyle(.orange)
+                                .accessibilityHidden(true)
+                            Text("hydration.goal.effective \(effectiveGoalMilliliters)", bundle: .main)
+                                .font(.caption)
+                                .foregroundStyle(.orange)
+                        }
                     }
                 } header: {
                     Text("hydration.section.goal", bundle: .main)
@@ -177,7 +210,7 @@ struct HydrationDashboardView: View {
             }
             .navigationTitle(Text("hydration.title", bundle: .main))
             .onAppear {
-                viewModel.goal = HydrationGoal(dailyMilliliters: goalMilliliters)
+                viewModel.goal = HydrationGoal(dailyMilliliters: effectiveGoalMilliliters)
                 viewModel.reload()
             }
         }

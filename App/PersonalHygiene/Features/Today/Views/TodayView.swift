@@ -7,8 +7,18 @@ struct TodayView: View {
     @State private var showingProgressDetail = false
     @State private var nowMinutes: Int = Self.currentMinutesFromMidnight()
     @State private var detailBlock: Block?
+    @State private var categoryFilter: BlockCategory?
+    @State private var showingResetDayConfirm = false
+    @State private var refreshToast: String?
     @AppStorage("today.compactMode") private var compactMode = false
     @Environment(\.scenePhase) private var scenePhase
+
+    /// Round-12 slice 23: filter shown blocks by the selected category. `nil`
+    /// shows everything (default).
+    private func visibleBlocks(_ blocks: [Block]) -> [Block] {
+        guard let categoryFilter else { return blocks }
+        return blocks.filter { $0.category == categoryFilter }
+    }
 
     static func currentMinutesFromMidnight(
         now: Date = Date(),
@@ -85,8 +95,14 @@ struct TodayView: View {
                             }
                         }
 
+                        if !template.sortedBlocks.isEmpty {
+                            Section {
+                                CategoryFilterChips(selected: $categoryFilter, blocks: template.sortedBlocks)
+                            }
+                        }
+
                         Section {
-                            ForEach(template.sortedBlocks) { block in
+                            ForEach(visibleBlocks(template.sortedBlocks)) { block in
                                 if shouldInsertNowMarker(before: block, in: template.sortedBlocks) {
                                     NowMarkerRow(nowMinutes: nowMinutes)
                                 }
@@ -101,6 +117,45 @@ struct TodayView: View {
                                 .contentShape(Rectangle())
                                 .onTapGesture {
                                     detailBlock = block
+                                }
+                                .contextMenu {
+                                    Button {
+                                        viewModel.toggleDone(block)
+                                    } label: {
+                                        Label {
+                                            Text(
+                                                viewModel.isDone(block)
+                                                    ? "today.action.markUndone"
+                                                    : "today.action.markDone",
+                                                bundle: .main
+                                            )
+                                        } icon: {
+                                            Image(systemName: "checkmark.circle")
+                                        }
+                                    }
+                                    Button {
+                                        viewModel.toggleSkippedToday(block)
+                                    } label: {
+                                        Label {
+                                            Text(
+                                                viewModel.isSkipped(block)
+                                                    ? "today.action.unskipToday"
+                                                    : "today.action.skipToday",
+                                                bundle: .main
+                                            )
+                                        } icon: {
+                                            Image(systemName: "moon.zzz")
+                                        }
+                                    }
+                                    Button {
+                                        detailBlock = block
+                                    } label: {
+                                        Label {
+                                            Text("today.action.details", bundle: .main)
+                                        } icon: {
+                                            Image(systemName: "info.circle")
+                                        }
+                                    }
                                 }
                                 .swipeActions(edge: .trailing) {
                                     Button {
@@ -165,15 +220,67 @@ struct TodayView: View {
             .navigationTitle(Text("today.title", bundle: .main))
             .toolbar {
                 ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        compactMode.toggle()
+                    Menu {
+                        Button {
+                            compactMode.toggle()
+                        } label: {
+                            Label {
+                                Text(
+                                    compactMode ? "today.compact.disable" : "today.compact.enable",
+                                    bundle: .main
+                                )
+                            } icon: {
+                                Image(systemName: compactMode
+                                    ? "list.bullet.rectangle.fill"
+                                    : "list.bullet.rectangle")
+                            }
+                        }
+                        Button(role: .destructive) {
+                            showingResetDayConfirm = true
+                        } label: {
+                            Label {
+                                Text("today.action.resetDay", bundle: .main)
+                            } icon: {
+                                Image(systemName: "arrow.counterclockwise")
+                            }
+                        }
                     } label: {
-                        Image(systemName: compactMode ? "list.bullet.rectangle.fill" : "list.bullet.rectangle")
+                        Image(systemName: "ellipsis.circle")
                     }
-                    .accessibilityLabel(Text(
-                        compactMode ? "today.compact.disable" : "today.compact.enable",
-                        bundle: .main
-                    ))
+                    .accessibilityLabel(Text("today.action.menu", bundle: .main))
+                }
+            }
+            .refreshable {
+                viewModel.reload()
+                nowMinutes = Self.currentMinutesFromMidnight()
+                refreshToast = String(localized: "today.refresh.done")
+                try? await Task.sleep(nanoseconds: 1_500_000_000)
+                refreshToast = nil
+            }
+            .confirmationDialog(
+                Text("today.resetDay.confirm.title", bundle: .main),
+                isPresented: $showingResetDayConfirm,
+                titleVisibility: .visible
+            ) {
+                Button(role: .destructive) {
+                    viewModel.resetDay()
+                } label: {
+                    Text("today.resetDay.confirm.action", bundle: .main)
+                }
+                Button(role: .cancel) {} label: {
+                    Text("common.cancel", bundle: .main)
+                }
+            } message: {
+                Text("today.resetDay.confirm.message", bundle: .main)
+            }
+            .overlay(alignment: .top) {
+                if let toast = refreshToast {
+                    Text(verbatim: toast)
+                        .font(.caption)
+                        .padding(.horizontal, 12)
+                        .padding(.vertical, 6)
+                        .background(.thinMaterial, in: Capsule())
+                        .padding(.top, 8)
                 }
             }
             .onAppear {
@@ -201,203 +308,5 @@ struct TodayView: View {
                 )
             }
         }
-    }
-}
-
-private struct ProgressDetailSheet: View {
-
-    let blocks: [Block]
-    let isDone: (Block) -> Bool
-
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        NavigationStack {
-            List(blocks) { block in
-                HStack {
-                    Image(systemName: isDone(block) ? "checkmark.circle.fill" : "circle")
-                        .foregroundStyle(isDone(block) ? Color.green : Color.secondary)
-                        .accessibilityHidden(true)
-                    Text(block.title)
-                        .strikethrough(isDone(block), color: .secondary)
-                        .foregroundStyle(isDone(block) ? .secondary : .primary)
-                    Spacer()
-                    Text(formattedTime(minutes: block.startMinutesFromMidnight))
-                        .font(.caption.monospacedDigit())
-                        .foregroundStyle(.secondary)
-                }
-                .accessibilityElement(children: .combine)
-            }
-            .navigationTitle(Text("today.summary.detail.title", bundle: .main))
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .confirmationAction) {
-                    Button {
-                        dismiss()
-                    } label: {
-                        Text("common.done", bundle: .main)
-                    }
-                }
-            }
-        }
-    }
-
-    private func formattedTime(minutes: Int) -> String {
-        String(format: "%02d:%02d", minutes / 60, minutes % 60)
-    }
-}
-
-private struct TripCountdownRow: View {
-    let trip: Trip
-    let daysUntil: Int
-
-    var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: "airplane")
-                .foregroundStyle(Color.accentColor)
-                .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 2) {
-                Text(trip.name)
-                    .font(.headline)
-                if daysUntil == 0 {
-                    Text("today.trip.departingToday", bundle: .main)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                } else {
-                    Text("today.trip.daysUntil.\(daysUntil)", bundle: .main)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                }
-            }
-            Spacer()
-            Text(verbatim: trip.destinationName)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-        }
-        .accessibilityElement(children: .combine)
-    }
-}
-
-private struct ProgressSummaryRow: View {
-    let done: Int
-    let total: Int
-    let nextBlock: Block?
-
-    var body: some View {
-        HStack(spacing: 12) {
-            Image(systemName: done == total ? "checkmark.circle.fill" : "circle.dotted")
-                .foregroundStyle(done == total ? Color.green : Color.accentColor)
-                .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 2) {
-                Text("today.summary.title.\(done).\(total)", bundle: .main)
-                    .font(.headline)
-                ProgressView(value: Double(done), total: Double(max(total, 1)))
-                    .progressViewStyle(.linear)
-                if let nextBlock {
-                    Text("today.summary.nextPreview \(formattedTime(nextBlock)) \(nextBlock.title)", bundle: .main)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                } else {
-                    Text("today.summary.dayDone", bundle: .main)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                        .lineLimit(1)
-                }
-            }
-        }
-        .accessibilityElement(children: .combine)
-    }
-
-    private func formattedTime(_ block: Block) -> String {
-        let hour = block.startMinutesFromMidnight / 60
-        let minute = block.startMinutesFromMidnight % 60
-        return String(format: "%02d:%02d", hour, minute)
-    }
-}
-
-private struct FocusActiveBanner: View {
-    let window: DeepFocusFilter.FocusWindow
-
-    var body: some View {
-        HStack(spacing: 8) {
-            Image(systemName: "moon.zzz.fill")
-                .foregroundStyle(.purple)
-                .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 2) {
-                Text("today.focus.active", bundle: .main)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Text(window.blockTitle)
-                    .font(.headline)
-            }
-            Spacer()
-            Text(window.end, format: .dateTime.hour().minute())
-                .font(.caption.bold())
-                .foregroundStyle(.secondary)
-        }
-        .accessibilityElement(children: .combine)
-    }
-}
-
-private struct BlockNowRow: View {
-    let block: Block
-    let label: Text
-    let minutesUntilStart: Int?
-
-    var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 2) {
-                label
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                Text(block.title)
-                    .font(.title3)
-                    .bold()
-                Text(LocalizedStringKey("category.\(block.category.rawValue)"))
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-                if let until = minutesUntilStart {
-                    Text(Self.untilCaption(minutes: until), bundle: .main)
-                        .font(.caption2.bold())
-                        .foregroundStyle(Color.accentColor)
-                }
-            }
-            Spacer()
-            Text(formattedTime(minutes: block.startMinutesFromMidnight))
-                .font(.system(.title2, design: .monospaced))
-                .accessibilityLabel(spokenTime(minutes: block.startMinutesFromMidnight))
-        }
-        .accessibilityElement(children: .combine)
-    }
-
-    /// Round-11: human-friendly "in N min" / "in 1h N min" / "now" caption
-    /// for the upcoming block. Returns a localization key with `%lld` slots
-    /// so EN/ES/FR formats can vary independently.
-    static func untilCaption(minutes: Int) -> LocalizedStringKey {
-        if minutes <= 0 { return "today.next.startingNow" }
-        if minutes < 60 { return "today.next.inMinutes.\(minutes)" }
-        let hours = minutes / 60
-        let rem = minutes % 60
-        if rem == 0 { return "today.next.inHours.\(hours)" }
-        return "today.next.inHoursAndMinutes \(hours) \(rem)"
-    }
-
-    private func formattedTime(minutes: Int) -> String {
-        let hour = minutes / 60
-        let minute = minutes % 60
-        return String(format: "%02d:%02d", hour, minute)
-    }
-
-    private func spokenTime(minutes: Int) -> Text {
-        let hour = minutes / 60
-        let minute = minutes % 60
-        var components = DateComponents()
-        components.hour = hour
-        components.minute = minute
-        if let date = Calendar.autoupdatingCurrent.date(from: components) {
-            return Text(date, format: .dateTime.hour().minute())
-        }
-        return Text(verbatim: formattedTime(minutes: minutes))
     }
 }

@@ -2090,6 +2090,324 @@
     "blockDetail.label.medicationConcept" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Medication concept" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Concepto de medicación" } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Concept médicament" } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Concept médicament" } } } },
+
+    "settings.diagnostics.section.pendingByCat" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Pending by category" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Pendientes por categoría" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Notifications en attente" } } } },
+    "settings.diagnostics.pendingByCat.routine" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Routine" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Rutina" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Routine" } } } },
+    "settings.diagnostics.pendingByCat.medFu" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Medication follow-up" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Seguimiento medicación" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Rappel médicament" } } } },
+    "settings.diagnostics.pendingByCat.hydration" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Hydration" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hidratación" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Hydratation" } } } },
+    "settings.diagnostics.pendingByCat.milestones" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Trip milestones" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hitos de viaje" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Étapes de voyage" } } } },
+    "settings.diagnostics.pendingByCat.housekeeping" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Housekeeping" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Tareas del hogar" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ménage" } } } },
+    "settings.diagnostics.pendingByCat.other" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Other" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Otros" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Autre" } } } },
+    "settings.diagnostics.section.tripDocsDetail" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Trip docs (per file)" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Docs de viaje (por archivo)" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Documents (par fichier)" } } } },
+    "settings.diagnostics.section.launchHistory" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Launch history" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Historial de lanzamientos" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Historique des lancements" } } } },
+    "settings.diagnostics.section.whatsNewHistory" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "What's new history" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Historial de novedades" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Historique nouveautés" } } } },
+    "settings.diagnostics.health.title.green" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "All systems green" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Todo funciona bien" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Tout fonctionne" } } } },
+    "settings.diagnostics.health.title.yellow" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Minor drift detected" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Se detectó un desvío menor" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Léger écart détecté" } } } },
+    "settings.diagnostics.health.title.red" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Action required" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Acción requerida" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Action requise" } } } },
+    "settings.diagnostics.health.subtitle.green" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Schedule, observers, and auth all OK." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Calendario, observadores y permisos correctos." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Planning, observateurs et autorisations OK." } } } },
+    "settings.diagnostics.health.subtitle.yellow" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Pending count drifted from expected." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hay diferencias entre lo programado y lo pendiente." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Écart entre prévu et en attente." } } } },
+    "settings.diagnostics.health.subtitle.red" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Authorization missing or significant drift." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Faltan permisos o hay un desvío grande." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Autorisation manquante ou écart important." } } } },
+    "settings.diagnostics.refreshTrace.filter" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Filter" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Filtro" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Filtre" } } } },
+    "settings.diagnostics.refreshTrace.filter.all" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "All" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Todo" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Tous" } } } },
+    "settings.diagnostics.refreshTrace.filter.refresh" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Refresh" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Refrescar" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Actualiser" } } } },
+    "settings.diagnostics.refreshTrace.filter.reschedule" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Reschedule" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Reprogramar" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Replanifier" } } } },
+
+    "settings.section.mute" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Notification categories" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Categorías de notificaciones" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Catégories de notifications" } } } },
+    "settings.section.mute.footer" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Turn a category off to stop those reminders without deleting them." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Desactiva una categoría para silenciar esas alertas sin borrarlas." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Désactive une catégorie pour la silencer sans supprimer les rappels." } } } },
+    "settings.mute.hydration" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Hydration" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hidratación" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Hydratation" } } } },
+    "settings.mute.housekeeping" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Housekeeping" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Tareas del hogar" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ménage" } } } },
+    "settings.mute.birthdays" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Birthdays" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Cumpleaños" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Anniversaires" } } } },
+    "settings.mute.milestones" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Trip milestones" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hitos de viaje" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Étapes de voyage" } } } },
+    "settings.mute.medication" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Medication follow-ups" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Seguimiento medicación" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Rappels médicament" } } } },
+
+    "settings.section.pause" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Pause notifications" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Pausar notificaciones" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Mettre en pause" } } } },
+    "settings.section.pause.footer" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Pauses every routine + medication notification until the chosen time." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Pausa cada notificación de rutina y medicación hasta el momento elegido." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Met en pause toutes les notifications jusqu'à l'heure choisie." } } } },
+    "settings.pause.action" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Pause for…" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Pausar durante…" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Mettre en pause…" } } } },
+    "settings.pause.choice.1h" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "1 hour" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "1 hora" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "1 heure" } } } },
+    "settings.pause.choice.4h" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "4 hours" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "4 horas" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "4 heures" } } } },
+    "settings.pause.choice.24h" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Until tomorrow" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hasta mañana" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Jusqu'à demain" } } } },
+    "settings.pause.activeUntil" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Paused until %@" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "En pausa hasta %@" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "En pause jusqu'à %@" } } } },
+    "settings.pause.resume" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Resume" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Reanudar" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Reprendre" } } } },
+
+    "settings.section.appearance" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Appearance" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Apariencia" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Apparence" } } } },
+    "settings.theme.label" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Theme" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Tema" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Thème" } } } },
+    "settings.theme.system" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "System" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Sistema" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Système" } } } },
+    "settings.theme.light" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Light" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Claro" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Clair" } } } },
+    "settings.theme.dark" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Dark" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Oscuro" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Sombre" } } } },
+    "settings.marine.freshness.label" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Marine forecast freshness" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Frescura del pronóstico marino" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Fraîcheur prévision marine" } } } },
+    "settings.marine.freshness.6" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "6h" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "6h" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "6h" } } } },
+    "settings.marine.freshness.24" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "24h" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "24h" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "24h" } } } },
+    "settings.marine.freshness.168" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "7 days" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "7 días" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "7 jours" } } } },
+
+    "settings.snooze.duration.30" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "30 minutes" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "30 minutos" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "30 minutes" } } } },
+
+    "today.action.menu" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "More actions" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Más acciones" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Plus d'actions" } } } },
+    "today.action.markUndone" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Mark as not done" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Marcar como no hecho" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Annuler comme fait" } } } },
+    "today.action.details" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Details" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Detalles" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Détails" } } } },
+    "today.action.resetDay" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Reset day" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Reiniciar día" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réinitialiser le jour" } } } },
+    "today.resetDay.confirm.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Reset today?" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "¿Reiniciar hoy?" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réinitialiser aujourd'hui ?" } } } },
+    "today.resetDay.confirm.action" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Reset" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Reiniciar" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réinitialiser" } } } },
+    "today.resetDay.confirm.message" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "This clears today's checks and skips. The schedule itself stays put." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Borra los marcados y omitidos de hoy. El horario en sí no cambia." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Supprime les coches et les sauts d'aujourd'hui. Le programme reste." } } } },
+    "today.refresh.done" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Refreshed" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Actualizado" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Actualisé" } } } },
+    "today.filter.all" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "All" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Todas" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Tous" } } } },
+
+    "trip.detail.section.notes" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Notes" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Notas" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Notes" } } } },
+    "trip.detail.section.notes.footer" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Markdown is rendered below the field once saved." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "El Markdown se muestra debajo del campo al guardar." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Le Markdown s'affiche après enregistrement." } } } },
+    "trip.notes.label" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Trip notes" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Notas del viaje" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Notes du voyage" } } } },
+    "trip.notes.placeholder" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Reservation codes, contacts, anything." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Códigos de reserva, contactos, cualquier cosa." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Codes de réservation, contacts, tout." } } } },
+    "trip.detail.completion.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Trip readiness" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Preparación del viaje" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Préparation du voyage" } } } },
+    "trip.action.menu" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "More actions" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Más acciones" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Plus d'actions" } } } },
+    "trip.action.archive" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Archive trip" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Archivar viaje" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Archiver le voyage" } } } },
+    "trip.archive.confirm.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Archive this trip?" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "¿Archivar este viaje?" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Archiver ce voyage ?" } } } },
+    "trip.archive.confirm.action" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Archive" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Archivar" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Archiver" } } } },
+    "trip.archive.confirm.message" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Captures a currency snapshot and moves the trip to Past Trips." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Captura una instantánea de divisas y mueve el viaje a Pasados." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Capture un instantané des devises et déplace le voyage." } } } },
+    "trip.packing.filter.all" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "All" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Todo" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Tout" } } } },
+    "trip.packing.field.category" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Category" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Categoría" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Catégorie" } } } },
+    "trip.packing.category.clothing" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Clothing" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Ropa" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Vêtements" } } } },
+    "trip.packing.category.electronics" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Electronics" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Electrónica" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Électronique" } } } },
+    "trip.packing.category.documents" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Documents" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Documentos" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Documents" } } } },
+    "trip.packing.category.toiletries" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Toiletries" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Aseo" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Toilette" } } } },
+    "trip.packing.category.medication" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Medication" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Medicación" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Médicaments" } } } },
+    "trip.packing.category.other" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Other" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Otros" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Autre" } } } },
+
+    "hydration.hotWeather.label" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Hot weather mode" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Modo calor" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Mode canicule" } } } },
+
+    "birthdays.action.resync" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Re-sync from Contacts" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Resincronizar desde Contactos" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Resynchroniser depuis Contacts" } } } },
+
+    "settings.focus.rightNow" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Focus right now (60 min)" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Enfoque ahora (60 min)" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Focus maintenant (60 min)" } } } },
+    "settings.focus.rightNow.label" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Right now" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Ahora" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Maintenant" } } } },
+    "settings.focus.conflict.warning" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Two windows overlap on the same weekday." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Dos ventanas se solapan el mismo día." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Deux fenêtres se chevauchent le même jour." } } } }
   }
 }

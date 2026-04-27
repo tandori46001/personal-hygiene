@@ -20,6 +20,16 @@ public final class Trip {
     /// array so we can persist without introducing a new @Model.
     public var packingItems: [PackingItem]
 
+    /// Round-12 slice 9: free-form Markdown notes attached to the trip.
+    /// Rendered via `Text(LocalizedStringKey)` so basic Markdown (bold, links)
+    /// works without a third-party renderer.
+    public var notes: String = ""
+
+    /// Round-12 slice 10: snapshot of the user's recent currency conversions
+    /// captured at trip end. Stored as JSON string of `RecentConversionsStore.Entry`
+    /// array so we don't need a new schema migration. `nil` until set.
+    public var currencySnapshotJSON: String?
+
     @Relationship(deleteRule: .cascade, inverse: \TripMilestone.trip)
     public var milestones: [TripMilestone]
 
@@ -37,7 +47,9 @@ public final class Trip {
         coverPhotoData: Data? = nil,
         packingItems: [PackingItem] = [],
         milestones: [TripMilestone] = [],
-        documents: [TripDocument] = []
+        documents: [TripDocument] = [],
+        notes: String = "",
+        currencySnapshotJSON: String? = nil
     ) {
         self.id = id
         self.name = name
@@ -50,6 +62,31 @@ public final class Trip {
         self.packingItems = packingItems
         self.milestones = milestones
         self.documents = documents
+        self.notes = notes
+        self.currencySnapshotJSON = currencySnapshotJSON
+    }
+}
+
+/// Round-12 slice 7: packing categories so the user can filter the list by
+/// type while packing (clothing, electronics, docs, toiletries, other).
+/// Optional with a default of `.other` so existing items deserialize cleanly.
+public enum PackingCategory: String, Codable, CaseIterable, Sendable {
+    case clothing
+    case electronics
+    case documents
+    case toiletries
+    case medication
+    case other
+
+    public var systemImage: String {
+        switch self {
+        case .clothing: "tshirt"
+        case .electronics: "cable.connector"
+        case .documents: "doc.text"
+        case .toiletries: "drop.fill"
+        case .medication: "pills"
+        case .other: "cube.box"
+        }
     }
 }
 
@@ -59,10 +96,28 @@ public struct PackingItem: Codable, Hashable, Sendable, Identifiable {
     public var id: UUID
     public var title: String
     public var isPacked: Bool
+    /// Round-12 slice 7: optional category. Persists as a string raw value
+    /// inside the parent `Trip`'s `packingItems` array; older items decode
+    /// to `.other` via the explicit default-on-decode path.
+    public var category: PackingCategory
 
-    public init(id: UUID = UUID(), title: String, isPacked: Bool = false) {
+    public init(
+        id: UUID = UUID(),
+        title: String,
+        isPacked: Bool = false,
+        category: PackingCategory = .other
+    ) {
         self.id = id
         self.title = title
         self.isPacked = isPacked
+        self.category = category
+    }
+
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.id = try container.decode(UUID.self, forKey: .id)
+        self.title = try container.decode(String.self, forKey: .title)
+        self.isPacked = try container.decode(Bool.self, forKey: .isPacked)
+        self.category = try container.decodeIfPresent(PackingCategory.self, forKey: .category) ?? .other
     }
 }
