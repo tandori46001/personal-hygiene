@@ -8,6 +8,11 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed — Session 11 (post-deploy real-device, commit `4770ee0`)
+
+- **Today schedule hour wrap:** `BlockTimelineRow`'s time text "09:00" wrapped onto two lines on iPhone 15 Pro Max because the explicit `.frame(width: 56)` was insufficient for the rendered glyphs and there was no `.lineLimit(1)`. Replaced the fixed width with `.lineLimit(1)` + `.fixedSize(horizontal: true, vertical: false)` so the time renders on a single line at its intrinsic width. Same fix applied to the new round-9 `NowMarkerRow`.
+- **TripDetailView back-arrow:** `ToolbarItem(placement: .cancellationAction)` Cancel + `ToolbarItem(placement: .confirmationAction)` Save were both `.disabled(!viewModel.hasChanges)`. iOS suppresses the system back-arrow when there's any leading toolbar item, so when `hasChanges == false` the user had no way to dismiss the screen — Cancel was greyed out and there was no back-arrow. Wrapped both ToolbarItems in `if viewModel.hasChanges { ... }` so the slots are empty when there are no pending edits, and the system back-arrow reappears for navigation.
+
 ### Added — Session 11 ("haz todo" round 9, 22 slices: HKObserverQuery scaffolding + reschedule-today + watch detail)
 
 - **Slice 1 — L004 propagated to Trips:** dropped inner `NavigationStack` from `TripsListView`. Hydration / Housekeeping / Birthdays keep theirs (zero internal `NavigationLink`s, no visible bug, conservative re: tab-reorder out of the More overflow).
