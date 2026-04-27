@@ -147,6 +147,27 @@ final class TripsListViewModel {
             errorMessage = error.localizedDescription
         }
     }
+
+    /// Round-13 slice 13: duplicate trip with every date shifted by `days`.
+    /// Useful for "next year same week" plans. Milestones cloned as
+    /// incomplete; cover photo + packing + notes carry over.
+    func duplicateShifted(_ source: Trip, byDays days: Int) {
+        do {
+            let copy = TripDetailViewModel.duplicateShifted(source, byDays: days)
+            try repository.upsert(copy)
+            for milestone in source.milestones.sorted(by: { $0.daysBefore > $1.daysBefore }) {
+                let cloned = TripMilestone(
+                    title: milestone.title,
+                    daysBefore: milestone.daysBefore,
+                    isComplete: false
+                )
+                try repository.addMilestone(cloned, to: copy)
+            }
+            reload()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
 }
 
 private extension String {

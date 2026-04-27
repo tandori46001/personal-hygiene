@@ -2,7 +2,7 @@ import Foundation
 import UserNotifications
 import WidgetKit
 
-public enum NotificationAuthorizationStatus: Sendable {
+public enum NotificationAuthorizationStatus: String, Sendable {
     case notDetermined
     case denied
     case authorized

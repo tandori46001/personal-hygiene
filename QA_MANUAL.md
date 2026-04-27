@@ -1441,3 +1441,45 @@ None — purely build-time guard.
 2. Birthdays → tap "Re-sync from Contacts" — even if the system permission was already granted, the list reloads. Each row shows a "Reminder on Mon, Apr 27" caption from the per-contact lead days.
 3. Settings → Focus schedule → top "Focus right now (60 min)" — taps creates a one-day window starting at the current time. Returning to the list shows the new window.
 4. Add an overlapping window on the same day → a yellow warning section appears at the top.
+
+## [T-101] — Trip notes paragraphs render separately (round 13)
+
+**Module:** trips · **Shipped in:** round 13 (Tier A)
+
+### Manual verification
+1. Open any trip · Notes section. Type "First paragraph." then a blank line then "Second paragraph.".
+2. Save. The rendered area below shows two separate Text rows, not a single squashed paragraph.
+
+## [T-102] — Trip Markdown share + cost log (round 13)
+
+**Module:** trips · **Shipped in:** round 13 (Tier B)
+
+### Manual verification
+1. Open trip detail · `…` menu → "Share as Markdown" → share sheet shows a `.md` file with title, dates, milestones, packing, notes, expenses.
+2. Add an expense via the new "Expenses" section (label "Hotel", amount "120", currency "USD"). It appears in the list with a per-entry currency badge.
+3. Swipe a row trailing → Delete.
+
+## [T-103] — Diagnostics: snapshot history + auth timeline + network activity (round 13)
+
+**Module:** settings/diagnostics · **Shipped in:** round 13 (Tier C)
+
+### Manual verification
+1. Settings → Diagnostics → Advanced → tap "Export diagnostics snapshot" twice. The new "Snapshot history" disclosure shows both runs.
+2. The "Auth timeline" section lists status changes since the last reset.
+3. Tap any view that hits the network (Currency convert, marine forecast). The "Network activity" section count for that source goes up by 1.
+
+## [T-104] — Today: hide completed blocks + minute-tick caption (round 13)
+
+**Module:** today · **Shipped in:** round 13 (Tiers A + D)
+
+### Manual verification
+1. Today menu → "Hide completed blocks" → schedule rows you've checked disappear; toggle again → restored.
+2. The "Next" row caption ("in N min") updates without forcing a reload after waiting >60s on the foreground.
+
+## [T-105] — Bedtime auto-mute (round 13)
+
+**Module:** notifications · **Shipped in:** round 13 (Tier F)
+
+### Manual verification
+1. Settings → Notification categories → enable "Bedtime auto-mute".
+2. With a sleep block defined in the active template, refresh notifications → hydration reminders that would fire inside the sleep window (±15 min buffer) are not scheduled. Medication primaries + follow-ups remain regardless.

@@ -21,6 +21,15 @@ extension TripDetailView {
                     Image(systemName: "square.and.arrow.up")
                 }
             }
+            Button {
+                shareMarkdown()
+            } label: {
+                Label {
+                    Text("trip.action.shareMarkdown", bundle: .main)
+                } icon: {
+                    Image(systemName: "doc.text")
+                }
+            }
             if viewModel.isStillActive() {
                 Button(role: .destructive) {
                     showingArchiveConfirm = true
@@ -36,6 +45,21 @@ extension TripDetailView {
             Image(systemName: "ellipsis.circle")
         }
         .accessibilityLabel(Text("trip.action.menu", bundle: .main))
+    }
+
+    func shareMarkdown() {
+        let markdown = viewModel.itineraryMarkdown()
+        let safeName = viewModel.trip.name
+            .replacingOccurrences(of: "/", with: "-")
+            .trimmingCharacters(in: .whitespacesAndNewlines)
+        let filename = "\(safeName.isEmpty ? "Trip" : safeName).md"
+        let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)
+        do {
+            try markdown.data(using: .utf8)?.write(to: url, options: .atomic)
+            pendingMarkdownShare = TripDetailExportPayload(url: url)
+        } catch {
+            viewModel.errorMessage = error.localizedDescription
+        }
     }
 
     func exportPDF() {
@@ -81,7 +105,9 @@ extension TripDetailView {
     }
 }
 
-/// Round-12 slice 9: notes section (Markdown rendered below the field).
+/// Round-12 slice 9 + round-13 slice 1: notes section. Round-13: render each
+/// `\n\n`-separated paragraph as its own visual block instead of collapsing
+/// everything into one Text.
 struct TripNotesSection: View {
     @Bindable var viewModel: TripDetailViewModel
 
@@ -95,8 +121,8 @@ struct TripNotesSection: View {
                 Text("trip.notes.label", bundle: .main)
             }
             .lineLimit(3...8)
-            if !viewModel.trip.notes.isEmpty {
-                Text(.init(viewModel.trip.notes))
+            ForEach(Array(viewModel.notesParagraphs.enumerated()), id: \.offset) { _, paragraph in
+                Text(.init(paragraph))
                     .font(.callout)
                     .foregroundStyle(.secondary)
             }
@@ -104,6 +130,115 @@ struct TripNotesSection: View {
             Text("trip.detail.section.notes", bundle: .main)
         } footer: {
             Text("trip.detail.section.notes.footer", bundle: .main)
+        }
+    }
+}
+
+/// Round-13 slice 4: surface the captured currency snapshot inline so the
+/// user can see what was archived alongside the trip without opening the PDF.
+struct TripCurrencySnapshotSection: View {
+    let viewModel: TripDetailViewModel
+
+    var body: some View {
+        let snapshot = viewModel.capturedCurrencySnapshot
+        if !snapshot.isEmpty {
+            Section {
+                ForEach(snapshot) { entry in
+                    HStack {
+                        Text(verbatim: String(
+                            format: "%.2f %@ → %@",
+                            entry.amount, entry.from, entry.to
+                        ))
+                        .font(.caption)
+                        Spacer()
+                        Text(verbatim: String(format: "%.2f", entry.amountConverted))
+                            .font(.caption.monospacedDigit())
+                            .foregroundStyle(.secondary)
+                    }
+                    .accessibilityElement(children: .combine)
+                }
+            } header: {
+                Text("trip.detail.section.currencySnapshot", bundle: .main)
+            } footer: {
+                Text("trip.detail.section.currencySnapshot.footer", bundle: .main)
+            }
+        }
+    }
+}
+
+/// Round-13 slice 10: free-form trip expenses list.
+struct TripExpensesSection: View {
+    @Bindable var viewModel: TripDetailViewModel
+    @Binding var newLabel: String
+    @Binding var newAmount: String
+    @Binding var newCurrency: String
+
+    var body: some View {
+        Section {
+            ForEach(viewModel.expenses) { expense in
+                HStack {
+                    Text(verbatim: expense.label)
+                    Spacer()
+                    Text(verbatim: String(format: "%.2f %@", expense.amount, expense.currencyCode))
+                        .font(.caption.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                }
+                .accessibilityElement(children: .combine)
+                .swipeActions(edge: .trailing) {
+                    Button(role: .destructive) {
+                        viewModel.deleteExpense(expense)
+                    } label: {
+                        Label {
+                            Text("common.delete", bundle: .main)
+                        } icon: {
+                            Image(systemName: "trash")
+                        }
+                    }
+                }
+            }
+            HStack {
+                TextField(
+                    text: $newLabel,
+                    prompt: Text("trip.expense.label.placeholder", bundle: .main)
+                ) {
+                    Text("trip.expense.label", bundle: .main)
+                }
+                TextField(
+                    text: $newAmount,
+                    prompt: Text(verbatim: "0.00")
+                ) {
+                    Text("trip.expense.amount", bundle: .main)
+                }
+                .keyboardType(.decimalPad)
+                .frame(maxWidth: 80)
+                TextField(
+                    text: $newCurrency,
+                    prompt: Text(verbatim: "USD")
+                ) {
+                    Text("trip.expense.currency", bundle: .main)
+                }
+                .textInputAutocapitalization(.characters)
+                .frame(maxWidth: 60)
+                Button {
+                    if let amount = Double(newAmount) {
+                        viewModel.addExpense(
+                            label: newLabel,
+                            amount: amount,
+                            currencyCode: newCurrency
+                        )
+                        newLabel = ""
+                        newAmount = ""
+                    }
+                } label: {
+                    Image(systemName: "plus.circle.fill")
+                }
+                .accessibilityLabel(Text("trip.expense.action.add", bundle: .main))
+                .disabled(newLabel.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                    || Double(newAmount) == nil
+                    || newCurrency.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            }
+        } header: {
+            Text("trip.detail.section.expenses", bundle: .main)
         }
     }
 }

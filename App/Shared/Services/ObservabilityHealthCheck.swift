@@ -17,14 +17,21 @@ public enum ObservabilityHealthCheck {
     /// - `widgetReloads`: count from `WidgetReloadCounter`
     /// - `observerAvailable`: `MedicationObserverService.isAvailable`
     /// - `authStatusOK`: notification authorization is `.authorized` or `.provisional`
+    /// - `paused`: round-13 — `true` while `PauseNotificationsStore.isPaused()`.
+    ///             We surface yellow rather than red because the user
+    ///             explicitly opted in. Defaults `false` for back-compat.
     public static func status(
         routinePendingDelta: Int,
         widgetReloads: Int,
         observerAvailable: Bool,
-        authStatusOK: Bool
+        authStatusOK: Bool,
+        paused: Bool = false
     ) -> Status {
         if !authStatusOK || abs(routinePendingDelta) > 5 {
             return .red
+        }
+        if paused {
+            return .yellow
         }
         if abs(routinePendingDelta) > 0 || (widgetReloads == 0 && observerAvailable) {
             return .yellow

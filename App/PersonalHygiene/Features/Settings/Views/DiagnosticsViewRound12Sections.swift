@@ -37,7 +37,8 @@ extension DiagnosticsView {
             routinePendingDelta: routineDelta,
             widgetReloads: widgetReloadCount,
             observerAvailable: observerSnapshot.available,
-            authStatusOK: authOK
+            authStatusOK: authOK,
+            paused: PauseNotificationsStore.isPaused()
         )
     }
 

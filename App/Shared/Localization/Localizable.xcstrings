@@ -2408,6 +2408,78 @@
     "settings.focus.conflict.warning" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Two windows overlap on the same weekday." } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Dos ventanas se solapan el mismo día." } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Deux fenêtres se chevauchent le même jour." } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Deux fenêtres se chevauchent le même jour." } } } },
+
+    "today.collapseDone.show" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Show completed blocks" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Mostrar bloques hechos" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Afficher les blocs terminés" } } } },
+    "today.collapseDone.hide" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Hide completed blocks" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Ocultar bloques hechos" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Masquer les blocs terminés" } } } },
+
+    "trip.action.shareMarkdown" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Share as Markdown" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Compartir como Markdown" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Partager en Markdown" } } } },
+    "trip.detail.section.currencySnapshot" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Currency snapshot" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Snapshot de divisas" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Instantané des devises" } } } },
+    "trip.detail.section.currencySnapshot.footer" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Captured when the trip was archived." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Capturado al archivar el viaje." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Capturé lors de l'archivage du voyage." } } } },
+    "trip.detail.section.expenses" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Expenses" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Gastos" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Dépenses" } } } },
+    "trip.expense.label" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Label" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Etiqueta" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Libellé" } } } },
+    "trip.expense.label.placeholder" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Hotel, dinner, taxi…" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hotel, cena, taxi…" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Hôtel, dîner, taxi…" } } } },
+    "trip.expense.amount" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Amount" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Importe" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Montant" } } } },
+    "trip.expense.currency" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Currency" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Divisa" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Devise" } } } },
+    "trip.expense.action.add" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Add expense" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Añadir gasto" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ajouter dépense" } } } },
+
+    "settings.diagnostics.section.snapshotHistory" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Snapshot history" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Historial de snapshots" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Historique des snapshots" } } } },
+    "settings.diagnostics.section.authTimeline" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Auth status timeline" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Cronología de permisos" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Chronologie des autorisations" } } } },
+    "settings.diagnostics.section.networkActivity" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Network activity (this run)" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Actividad de red (esta sesión)" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Activité réseau (cette session)" } } } },
+    "settings.diagnostics.section.networkActivity.footer" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Cache hits do not increment. Resets at relaunch." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Los aciertos de caché no cuentan. Se reinicia al relanzar." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Les hits de cache ne comptent pas. Remis à zéro au relancement." } } } },
+    "settings.diagnostics.section.pendingDetails" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Pending notification IDs" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "IDs de notificaciones pendientes" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "ID des notifications en attente" } } } },
+
+    "settings.mute.bedtime" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Bedtime auto-mute" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Silencio automático nocturno" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Silence auto la nuit" } } } }
   }
 }

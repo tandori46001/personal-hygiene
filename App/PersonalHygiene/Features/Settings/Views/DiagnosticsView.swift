@@ -42,6 +42,12 @@ struct DiagnosticsView: View {
     @State var refreshTraceFilter: RefreshTraceKind?
     @State var pendingByCategoryExpanded = false
     @State var tripDocsExpanded = false
+    @State var snapshotHistory: [DiagnosticsSnapshot] = []
+    @State var authTimeline: [NotificationAuthTimelineLog.Entry] = []
+    @State var networkCounts: [NetworkActivityCounter.Source: Int] = [:]
+    @State var pendingDetails: [DiagnosticsSnapshot.PendingNotificationSummary] = []
+    @State var snapshotHistoryExpanded = false
+    @State var pendingDetailsExpanded = false
 
     var body: some View {
         List {
@@ -299,6 +305,12 @@ struct DiagnosticsView: View {
         pendingByCategory = await actions.pendingByCategory()
         launchHistory = actions.launchHistory()
         whatsNewHistory = actions.whatsNewHistory()
+        snapshotHistory = actions.snapshotHistory()
+        authTimeline = actions.authTimeline()
+        networkCounts = actions.networkCounts()
+        pendingDetails = await actions.pendingDetails()
+        // Round-13 slice 19: also record any auth-status change observed during refresh.
+        NotificationAuthTimelineLog.record(statusRawValue: viewModel.status.rawValue)
     }
 
     private func localizedStatus(_ status: NotificationAuthorizationStatus) -> LocalizedStringKey {

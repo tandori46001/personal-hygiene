@@ -12,6 +12,10 @@ struct TripDetailView: View {
     @State private var newPackingItemTitle: String = ""
     @State private var newPackingItemCategory: PackingCategory = .other
     @State var showingArchiveConfirm = false
+    @State private var newExpenseLabel: String = ""
+    @State private var newExpenseAmount: String = ""
+    @State private var newExpenseCurrency: String = "USD"
+    @State var pendingMarkdownShare: TripDetailExportPayload?
 
     private struct PendingDocument: Identifiable {
         let id = UUID()
@@ -167,6 +171,13 @@ struct TripDetailView: View {
             )
 
             TripNotesSection(viewModel: viewModel)
+            TripCurrencySnapshotSection(viewModel: viewModel)
+            TripExpensesSection(
+                viewModel: viewModel,
+                newLabel: $newExpenseLabel,
+                newAmount: $newExpenseAmount,
+                newCurrency: $newExpenseCurrency
+            )
 
             Section {
                 if viewModel.sortedDocuments.isEmpty {
@@ -282,6 +293,9 @@ struct TripDetailView: View {
             }
         }
         .sheet(item: $pendingExport) { payload in
+            ShareSheet(items: [payload.url])
+        }
+        .sheet(item: $pendingMarkdownShare) { payload in
             ShareSheet(items: [payload.url])
         }
     }

@@ -126,7 +126,8 @@ final class TripDetailViewModel {
 
     /// Round-12 slice 14: archive the trip — convenience for "Trip done".
     /// Shifts `endDate` to yesterday so it falls into the Past Trips section,
-    /// captures the currency snapshot, and saves.
+    /// captures the currency snapshot, and saves. Round-13 slice 3: snapshot
+    /// always writes, even when recents are empty (sentinel `[]` JSON).
     func archiveNow(now: Date = Date(), calendar: Calendar = .autoupdatingCurrent) {
         let yesterday = calendar.date(byAdding: .day, value: -1, to: calendar.startOfDay(for: now))
             ?? now
@@ -134,7 +135,7 @@ final class TripDetailViewModel {
             trip.endDate = yesterday
             draftEndDate = yesterday
         }
-        captureCurrencySnapshot()
+        captureCurrencySnapshotWithFallback()
     }
 
     /// Round-12 slice 14: whether the trip is still upcoming/active (vs already

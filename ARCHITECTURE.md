@@ -426,6 +426,41 @@ Settings → Diagnostics gained a destructive "Reset all customizations" button 
 
 **Version history:**
 
+## 29. Round 13 — caveat closure, cost log + Markdown share, diagnostics deep-dive, bedtime mute
+
+### Round-12 caveat closure
+
+`TripDetailViewModel.notesParagraphs` splits `trip.notes` on `\n\n` so the renderer can show one `Text(.init(paragraph))` per visual block instead of collapsing everything into one. `captureCurrencySnapshotWithFallback()` always writes a JSON value (even an empty `[]`) so a future reader can distinguish "trip never archived" from "trip archived with no recents". `RefreshTraceKind.paused` is a new third case so observability code doesn't read the deliberate gap from `PauseNotificationsStore` as drift; `ObservabilityHealthCheck.status(...)` now takes a `paused: Bool = false` arg and returns `.yellow` while paused. Today's minute-tick `Task` keeps `nowMinutes` fresh every 60s while the view is foregrounded — cancelled on `onDisappear` and on `scenePhase != .active` so it doesn't burn battery in background.
+
+### Trip cost log + Markdown share + shifted-dates duplication
+
+`Trip.expensesJSON` (String?) holds a JSON-encoded `[TripExpense]`. `TripExpense` is a new value type with `(label, amount, currencyCode, occurredAt)`. The `expenses` getter/setter on the view-model decodes/encodes through this single field — keeps SwiftData migrations cheap. `TripExpensesSection` renders the list + an inline add row with TextFields for label/amount/currency. `itineraryMarkdown()` builds a printable Markdown string covering title, dates, milestones, packing, notes, expenses; the toolbar `…` menu's "Share as Markdown" action writes a `.md` file to temp + opens a share sheet (mirror of round-11 PDF flow). `TripDetailViewModel.duplicateShifted(_:byDays:calendar:)` clones a trip with every date moved by N days, resetting packing-pack state + skipping the cost snapshot.
+
+### Diagnostics deep-dive
+
+`SnapshotHistoryStore` keeps the last 3 `DiagnosticsSnapshot` objects as JSON bytes in UserDefaults. The export action (`DiagnosticsActionsFactory.exportSnapshot`) records every snapshot it writes so the user can compare against earlier runs without leaving the app. `NotificationAuthTimelineLog` is a deduped rolling history of `(timestamp, statusRawValue)` pairs — only logs *changes*, not periodic resamples. `NetworkActivityCounter.shared` (singleton, process-local, resets at relaunch) is incremented from each `URLSession.data(from:)` call into Frankfurter / OpenMeteo / advisory services. Cache hits don't count (the cached service decorators short-circuit before reaching `URLSession`). Diagnostics gained four new disclosure sections: Snapshot history, Auth timeline, Network activity, Pending notification IDs (identifier + trigger date — no titles/bodies, same privacy bar as the snapshot).
+
+### BedtimeMute
+
+`BedtimeMute.shouldSuppress(notification:sleepBlock:on:calendar:)` returns `true` when the notification's trigger date falls inside the user's sleep block ±15 min. `HydrationNotificationFactory.filteringBedtimeMuted(_:sleepBlock:on:calendar:)` is a static helper the coordinator can call before scheduling. Gated on `NotificationCategoryMuteStore.isMuted(.bedtime)` so users can opt in/out from Settings. Medication notifications (primaries + follow-ups) are NEVER suppressed — the helper is only called on hydration/housekeeping/birthday/milestone payloads.
+
+### Housekeeping streak + birthday metadata
+
+`HousekeepingStreakCounter` is a pure helper (current streak + best streak ever) over a `Set<String>` of `yyyy-MM-dd` keys. `BirthdayIdeaStore` and `BirthdayRelationshipStore` are UserDefaults-backed dicts keyed on Contact ID — each surface adds a non-disruptive sidecar to existing `BirthdayContact` value-type rendering.
+
+### Trip notes templates
+
+`NotesTemplateStore` (JSON array in UserDefaults) holds reusable `(title, body)` snippets the user can paste into any trip's notes field. Decoupled from the per-trip `notes` field so a snippet edit doesn't leak into trips that already used it.
+
+### TodayView extraction
+
+Round 13 hit SwiftLint's 300-line type-body cap on `TodayView` again. `visibleBlocks(_:filter:collapseDone:)`, `shouldInsertNowMarker(...)`, the toolbar `@ToolbarContentBuilder` `todayToolbar`, and the static `makeMinuteTicker(_:)` all live in `TodayViewRound12.swift`'s extension now. Same pattern for `TripDetailViewModel` — round-13 notes/expenses/markdown helpers live in `TripDetailViewModelRound13.swift`.
+
+---
+
+**Version history:**
+
+- **v0.10 (2026-04-27)** — added §29 reflecting round 13: round-12 caveat closure (notes paragraphs, snapshot fallback, `RefreshTraceKind.paused`, ObservabilityHealthCheck pause-aware, Today minute-tick); trip cost log + Markdown share + duplicate-with-shifted-dates + notes templates; SnapshotHistoryStore + NotificationAuthTimelineLog + NetworkActivityCounter + pending-details disclosure; HousekeepingStreakCounter + BirthdayIdeaStore + BirthdayRelationshipStore; BedtimeMute helper.
 - **v0.9 (2026-04-27)** — added §28 reflecting round 12: pending-by-category drift, trip notes/archive/packing categories, pause notifications, theme override, per-category mute toggles, per-block follow-up override, ObservabilityHealthCheck + snapshot diff + launch history, MarineForecastFreshnessStore, TemplateBackup, L004 audit script.
 - **v0.8 (2026-04-26)** — added §27 reflecting round 11: Schedule-health Δ filtered to routine-prefix only; `DestinationSlug` + `PreferredAdvisorySourceStore` for multi-source advisory; `RecentConversionsStore` + `convertAll(amount:from:to:)` (single Frankfurter round-trip for the seven supported currencies); `ProcessLaunchTimer` + `DiagnosticsSnapshot` (JSON export to share sheet); `tripDocumentByteFootprint` (real Keychain bytes); Diagnostics Advanced disclosure group; trips searchable + duplicate-with-name + next-milestone card + packing bulk actions; Today block-detail bottom sheet + "in N min" caption + compact mode.
 - **v0.7 (2026-04-26)** — added §26 reflecting round 10: process-local diagnostics surfaces (`RefreshTraceLog`, `WidgetReloadCounter`, observer status), multi-source travel advisory, schedule-health diff in DiagnosticsView, configurable medication follow-up delay, currency quick-pick chips, trip duplication + countdown badge + PDF cover photo, L005 (signal-trap detection in `check-tests.sh`).

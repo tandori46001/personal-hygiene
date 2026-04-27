@@ -134,6 +134,10 @@ extension DiagnosticsView {
                 tripDocsDetailSection
                 launchHistorySection
                 whatsNewHistorySection
+                snapshotHistorySection
+                authTimelineSection
+                networkActivitySection
+                pendingDetailsSection
                 Section {
                     Button {
                         Task {

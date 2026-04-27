@@ -56,8 +56,25 @@ enum DiagnosticsActionsFactory {
                 Self.tripDocDetails(tripsRepo: tripsRepo, docStore: docStore)
             },
             launchHistory: { ProcessLaunchHistoryStore.history() },
-            whatsNewHistory: { WhatsNewHistoryStore.history() }
+            whatsNewHistory: { WhatsNewHistoryStore.history() },
+            snapshotHistory: { SnapshotHistoryStore.snapshots() },
+            authTimeline: { NotificationAuthTimelineLog.entries() },
+            networkCounts: { NetworkActivityCounter.shared.totals },
+            pendingDetails: { await Self.pendingDetails() }
         )
+    }
+
+    static func pendingDetails() async -> [DiagnosticsSnapshot.PendingNotificationSummary] {
+        let center = UNUserNotificationCenter.current()
+        let pending = await center.pendingNotificationRequests()
+        return pending.map { req in
+            let triggerDate = (req.trigger as? UNCalendarNotificationTrigger)?.nextTriggerDate()
+                ?? (req.trigger as? UNTimeIntervalNotificationTrigger)?.nextTriggerDate()
+            return DiagnosticsSnapshot.PendingNotificationSummary(
+                identifier: req.identifier,
+                triggerDate: triggerDate
+            )
+        }
     }
 
     static func pendingByCategory() async -> PendingNotificationsByCategory {
@@ -140,6 +157,8 @@ enum DiagnosticsActionsFactory {
             tripDocumentCount: docCount,
             tripDocumentByteFootprint: docBytes
         )
+        // Round-13 slice 15: persist to local history alongside the file.
+        SnapshotHistoryStore.record(snapshot)
         return try snapshot.writeToTemporaryFile()
     }
 

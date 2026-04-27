@@ -26,6 +26,29 @@ public enum HydrationNotificationFactory {
 
     public static let identifierPrefix = "personal-hygiene.hydration."
 
+    /// Round-13 slice 40 helper: filters out hydration notifications that
+    /// would fire inside the user's sleep window. Caller passes the active
+    /// sleep block (block whose category == .sleep, if any). No-op when
+    /// `BedtimeMute` toggle off.
+    public static func filteringBedtimeMuted(
+        _ notifications: [ScheduledNotification],
+        sleepBlock: Block?,
+        on day: Date,
+        calendar: Calendar = .autoupdatingCurrent
+    ) -> [ScheduledNotification] {
+        guard sleepBlock != nil,
+              NotificationCategoryMuteStore.isMuted(.bedtime)
+        else { return notifications }
+        return notifications.filter { notif in
+            !BedtimeMute.shouldSuppress(
+                notification: notif,
+                sleepBlock: sleepBlock,
+                on: day,
+                calendar: calendar
+            )
+        }
+    }
+
     public static func notifications(
         for schedule: HydrationReminderSchedule,
         title: String,

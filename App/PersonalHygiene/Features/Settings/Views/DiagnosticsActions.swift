@@ -96,4 +96,18 @@ struct DiagnosticsActions {
     /// popup has shown — useful to verify the user actually saw a given
     /// release on this device.
     let whatsNewHistory: @MainActor () -> [WhatsNewHistoryStore.Entry]
+
+    /// Round-13 slice 15: locally-stored snapshot history (last 3) for
+    /// offline diff comparison.
+    let snapshotHistory: @MainActor () -> [DiagnosticsSnapshot]
+
+    /// Round-13 slice 19: rolling notification authorization timeline log.
+    let authTimeline: @MainActor () -> [NotificationAuthTimelineLog.Entry]
+
+    /// Round-13 slice 21: per-source network activity counts.
+    let networkCounts: @MainActor () -> [NetworkActivityCounter.Source: Int]
+
+    /// Round-13 slice 18: pending notification details (identifier + trigger
+    /// date only — no titles/bodies, same privacy bar as the snapshot).
+    let pendingDetails: @MainActor () async -> [DiagnosticsSnapshot.PendingNotificationSummary]
 }

@@ -8,17 +8,12 @@ struct TodayView: View {
     @State private var nowMinutes: Int = Self.currentMinutesFromMidnight()
     @State private var detailBlock: Block?
     @State private var categoryFilter: BlockCategory?
-    @State private var showingResetDayConfirm = false
+    @State var showingResetDayConfirm = false
     @State private var refreshToast: String?
-    @AppStorage("today.compactMode") private var compactMode = false
+    @State private var minuteTickTimer: Task<Void, Never>?
+    @AppStorage("today.compactMode") var compactMode = false
+    @AppStorage("today.collapseDone") var collapseDoneBlocks = false
     @Environment(\.scenePhase) private var scenePhase
-
-    /// Round-12 slice 23: filter shown blocks by the selected category. `nil`
-    /// shows everything (default).
-    private func visibleBlocks(_ blocks: [Block]) -> [Block] {
-        guard let categoryFilter else { return blocks }
-        return blocks.filter { $0.category == categoryFilter }
-    }
 
     static func currentMinutesFromMidnight(
         now: Date = Date(),
@@ -28,17 +23,13 @@ struct TodayView: View {
         return (comps.hour ?? 0) * 60 + (comps.minute ?? 0)
     }
 
-    private func shouldInsertNowMarker(before block: Block, in blocks: [Block]) -> Bool {
-        guard let first = blocks.first, let last = blocks.last else { return false }
-        let scheduleEnd = last.startMinutesFromMidnight + last.durationMinutes
-        guard nowMinutes >= first.startMinutesFromMidnight, nowMinutes < scheduleEnd else {
-            return false
+    /// Round-13 slice 7: keep `nowMinutes` fresh every 60s while the view is
+    /// foregrounded — wraps the static factory so view body stays compact.
+    func startMinuteTicker() {
+        minuteTickTimer?.cancel()
+        minuteTickTimer = Self.makeMinuteTicker { [self] in
+            self.nowMinutes = Self.currentMinutesFromMidnight()
         }
-        // Insert before the first block whose start is strictly after `nowMinutes`.
-        guard let target = blocks.first(where: { $0.startMinutesFromMidnight > nowMinutes }) else {
-            return false
-        }
-        return block.id == target.id
     }
 
     @ViewBuilder
@@ -102,8 +93,17 @@ struct TodayView: View {
                         }
 
                         Section {
-                            ForEach(visibleBlocks(template.sortedBlocks)) { block in
-                                if shouldInsertNowMarker(before: block, in: template.sortedBlocks) {
+                            let visible = visibleBlocks(
+                                template.sortedBlocks,
+                                filter: categoryFilter,
+                                collapseDone: collapseDoneBlocks
+                            )
+                            ForEach(visible) { block in
+                                if shouldInsertNowMarker(
+                                    before: block,
+                                    in: template.sortedBlocks,
+                                    nowMinutes: nowMinutes
+                                ) {
                                     NowMarkerRow(nowMinutes: nowMinutes)
                                 }
                                 BlockTimelineRow(
@@ -218,38 +218,7 @@ struct TodayView: View {
                 }
             }
             .navigationTitle(Text("today.title", bundle: .main))
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Menu {
-                        Button {
-                            compactMode.toggle()
-                        } label: {
-                            Label {
-                                Text(
-                                    compactMode ? "today.compact.disable" : "today.compact.enable",
-                                    bundle: .main
-                                )
-                            } icon: {
-                                Image(systemName: compactMode
-                                    ? "list.bullet.rectangle.fill"
-                                    : "list.bullet.rectangle")
-                            }
-                        }
-                        Button(role: .destructive) {
-                            showingResetDayConfirm = true
-                        } label: {
-                            Label {
-                                Text("today.action.resetDay", bundle: .main)
-                            } icon: {
-                                Image(systemName: "arrow.counterclockwise")
-                            }
-                        }
-                    } label: {
-                        Image(systemName: "ellipsis.circle")
-                    }
-                    .accessibilityLabel(Text("today.action.menu", bundle: .main))
-                }
-            }
+            .toolbar { todayToolbar }
             .refreshable {
                 viewModel.reload()
                 nowMinutes = Self.currentMinutesFromMidnight()
@@ -286,11 +255,20 @@ struct TodayView: View {
             .onAppear {
                 viewModel.reload()
                 nowMinutes = Self.currentMinutesFromMidnight()
+                startMinuteTicker()
+            }
+            .onDisappear {
+                minuteTickTimer?.cancel()
+                minuteTickTimer = nil
             }
             .onChange(of: scenePhase) { _, phase in
                 if phase == .active {
                     nowMinutes = Self.currentMinutesFromMidnight()
                     viewModel.reload()
+                    startMinuteTicker()
+                } else {
+                    minuteTickTimer?.cancel()
+                    minuteTickTimer = nil
                 }
             }
             .sheet(isPresented: $showingProgressDetail) {

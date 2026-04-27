@@ -42,7 +42,9 @@ public final class NotificationCoordinator {
     public func refreshForToday(_ now: Date = Date()) async throws {
         if PauseNotificationsStore.isPaused(now: now) {
             await service.cancelAll()
-            RefreshTraceLog.shared.record(scheduledCount: 0, kind: .refresh, at: now)
+            // Round-13 slice 5: distinguish paused gaps from real refreshes
+            // so observability code doesn't read "0 scheduled" as drift.
+            RefreshTraceLog.shared.record(scheduledCount: 0, kind: .paused, at: now)
             return
         }
         let built = try await buildTodayNotifications(now: now)

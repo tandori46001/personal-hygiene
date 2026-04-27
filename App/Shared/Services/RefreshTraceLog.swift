@@ -7,6 +7,10 @@ import Foundation
 public enum RefreshTraceKind: String, Sendable {
     case refresh
     case reschedule
+    /// Round-13 slice 5: the coordinator short-circuited because notifications
+    /// are paused. Distinct from `.refresh` so observability code doesn't
+    /// confuse a deliberate gap with drift.
+    case paused
 }
 
 @MainActor

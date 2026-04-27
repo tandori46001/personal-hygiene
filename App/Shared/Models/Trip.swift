@@ -30,6 +30,10 @@ public final class Trip {
     /// array so we don't need a new schema migration. `nil` until set.
     public var currencySnapshotJSON: String?
 
+    /// Round-13 slice 10: free-form expense log captured during the trip.
+    /// JSON-encoded array of `TripExpense` so we don't add a new @Model.
+    public var expensesJSON: String?
+
     @Relationship(deleteRule: .cascade, inverse: \TripMilestone.trip)
     public var milestones: [TripMilestone]
 
@@ -49,7 +53,8 @@ public final class Trip {
         milestones: [TripMilestone] = [],
         documents: [TripDocument] = [],
         notes: String = "",
-        currencySnapshotJSON: String? = nil
+        currencySnapshotJSON: String? = nil,
+        expensesJSON: String? = nil
     ) {
         self.id = id
         self.name = name
@@ -64,6 +69,7 @@ public final class Trip {
         self.documents = documents
         self.notes = notes
         self.currencySnapshotJSON = currencySnapshotJSON
+        self.expensesJSON = expensesJSON
     }
 }
 

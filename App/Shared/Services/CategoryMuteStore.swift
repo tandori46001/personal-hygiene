@@ -12,6 +12,10 @@ public enum NotificationCategoryMuteStore {
         case birthdays
         case milestones
         case medication
+        /// Round-13 slice 40: bedtime auto-mute toggle. When enabled,
+        /// non-medication notifications inside the user's sleep window are
+        /// dropped at refresh time.
+        case bedtime
 
         public var defaultsKey: String { "notifications.mute.\(rawValue)" }
     }
