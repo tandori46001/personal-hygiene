@@ -196,25 +196,28 @@ struct TripDetailView: View {
         .navigationTitle(viewModel.trip.name)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
-            ToolbarItem(placement: .cancellationAction) {
-                Button {
-                    viewModel.revertDraft()
-                } label: {
-                    Text("common.cancel", bundle: .main)
+            // Show Cancel only when there's a pending draft. With no changes
+            // we let the system back arrow handle navigation — the user was
+            // getting stuck here when both buttons were disabled.
+            if viewModel.hasChanges {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button {
+                        viewModel.revertDraft()
+                    } label: {
+                        Text("common.cancel", bundle: .main)
+                    }
                 }
-                .disabled(!viewModel.hasChanges)
-            }
-            ToolbarItem(placement: .confirmationAction) {
-                Button {
-                    viewModel.commitDraft()
-                } label: {
-                    Text("common.save", bundle: .main)
+                ToolbarItem(placement: .confirmationAction) {
+                    Button {
+                        viewModel.commitDraft()
+                    } label: {
+                        Text("common.save", bundle: .main)
+                    }
+                    .disabled(
+                        viewModel.draftName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                            || viewModel.draftDestination.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                    )
                 }
-                .disabled(
-                    !viewModel.hasChanges
-                        || viewModel.draftName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                        || viewModel.draftDestination.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                )
             }
             ToolbarItem(placement: .primaryAction) {
                 Button {
