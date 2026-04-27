@@ -235,7 +235,10 @@ public final class NotificationActionHandler: NSObject, UNUserNotificationCenter
         nowProvider: @escaping @Sendable () -> Date = { Date() },
         snoozeRecorder: (@Sendable (ParsedNotificationIdentifier) -> Void)? = nil,
         markDoneObserver: (@Sendable (String) -> Void)? = nil,
-        widgetReloader: @escaping @Sendable () -> Void = { WidgetCenter.shared.reloadAllTimelines() }
+        widgetReloader: @escaping @Sendable () -> Void = {
+            WidgetCenter.shared.reloadAllTimelines()
+            WidgetReloadCounter.shared.increment()
+        }
     ) {
         self.snoozeIntervalProvider = snoozeIntervalProvider
         self.nowProvider = nowProvider

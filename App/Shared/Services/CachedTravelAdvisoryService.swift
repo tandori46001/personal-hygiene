@@ -13,11 +13,17 @@ public final class CachedTravelAdvisoryService: TravelAdvisoryService, @unchecke
         let storedAt: Date
     }
 
+    private struct ListEntry {
+        let links: [TravelAdvisoryLink]
+        let storedAt: Date
+    }
+
     private let upstream: any TravelAdvisoryService
     private let ttl: TimeInterval
     private let now: @Sendable () -> Date
     private let lock = NSLock()
     private var cache: [String: Entry] = [:]
+    private var listCache: [String: ListEntry] = [:]
 
     public init(
         upstream: any TravelAdvisoryService,
@@ -48,5 +54,26 @@ public final class CachedTravelAdvisoryService: TravelAdvisoryService, @unchecke
     private func store(_ link: TravelAdvisoryLink, key: String, at instant: Date) {
         lock.lock(); defer { lock.unlock() }
         cache[key] = Entry(link: link, storedAt: instant)
+    }
+
+    public func advisories(forDestination name: String) -> [TravelAdvisoryLink] {
+        let key = name.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        let timestamp = now()
+        if let hit = lookupList(key: key, at: timestamp) { return hit }
+        let links = upstream.advisories(forDestination: name)
+        storeList(links, key: key, at: timestamp)
+        return links
+    }
+
+    private func lookupList(key: String, at instant: Date) -> [TravelAdvisoryLink]? {
+        lock.lock(); defer { lock.unlock() }
+        guard let entry = listCache[key] else { return nil }
+        if instant.timeIntervalSince(entry.storedAt) > ttl { return nil }
+        return entry.links
+    }
+
+    private func storeList(_ links: [TravelAdvisoryLink], key: String, at instant: Date) {
+        lock.lock(); defer { lock.unlock() }
+        listCache[key] = ListEntry(links: links, storedAt: instant)
     }
 }

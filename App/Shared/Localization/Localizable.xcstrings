@@ -1790,6 +1790,154 @@
     "blockEditor.notifications.footer.%lld" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Schedules %lld notification(s) per active day." } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Programa %lld notificación(es) por día activo." } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Programme %lld notification(s) par jour actif." } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Programme %lld notification(s) par jour actif." } } } },
+
+    "today.summary.dayDone" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Done for today 🎉" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "¡Día completado! 🎉" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Journée terminée 🎉" } } } },
+
+    "hydration.weekly.empty" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "No hydration logged in the last 7 days." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Sin registros de hidratación en los últimos 7 días." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aucune hydratation enregistrée ces 7 derniers jours." } } } },
+
+    "settings.reschedule.toast.%lld" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "%lld notifications rescheduled." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "%lld notificaciones reescaladas." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "%lld notifications reprogrammées." } } } },
+    "settings.reschedule.confirm.title %lld" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Shift today's notifications by %lld minutes?" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "¿Desplazar las notificaciones de hoy %lld minutos?" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Décaler les notifications d'aujourd'hui de %lld min ?" } } } },
+    "settings.reschedule.confirm.action" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Apply shift" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Aplicar desplazamiento" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Appliquer le décalage" } } } },
+    "settings.reschedule.confirm.message" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Block start times in storage are not modified — the next refresh restores the nominal schedule." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Las horas de los bloques no se modifican — el próximo refresco restaura el horario nominal." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Les heures de bloc ne sont pas modifiées — le prochain rafraîchissement restaure l'horaire nominal." } } } },
+
+    "settings.medication.followup.label" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Medication follow-up delay" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Retraso del recordatorio de medicación" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Délai de rappel de médicament" } } } },
+    "settings.medication.followup.hint" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Minutes after the primary alert before re-notifying." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Minutos tras la alerta principal antes de re-notificar." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Minutes après l'alerte initiale avant de re-notifier." } } } },
+    "settings.medication.followup.15" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "15 min" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "15 min" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "15 min" } } } },
+    "settings.medication.followup.30" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "30 min" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "30 min" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "30 min" } } } },
+    "settings.medication.followup.45" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "45 min" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "45 min" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "45 min" } } } },
+    "settings.medication.followup.60" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "60 min" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "60 min" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "60 min" } } } },
+
+    "settings.diagnostics.section.schedule" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Schedule health" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Salud del horario" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "État du planning" } } } },
+    "settings.diagnostics.section.schedule.footer" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Δ ≠ 0 indicates pending notifications drifted from the deterministic build." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Δ ≠ 0 indica que las notificaciones pendientes divergen de la construcción determinista." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Δ ≠ 0 signale un écart entre les notifications en attente et la construction déterministe." } } } },
+    "settings.diagnostics.schedule.expected" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Expected" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Esperadas" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Attendues" } } } },
+    "settings.diagnostics.schedule.pending" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Pending" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Pendientes" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "En attente" } } } },
+    "settings.diagnostics.schedule.diff" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Diff" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Diferencia" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Écart" } } } },
+    "settings.diagnostics.schedule.computing" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Computing…" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Calculando…" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Calcul en cours…" } } } },
+    "settings.diagnostics.section.refreshTrace" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Recent refreshes" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Últimos refrescos" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Derniers rafraîchissements" } } } },
+    "settings.diagnostics.refreshTrace.empty" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "No refreshes recorded this session." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Sin refrescos registrados esta sesión." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aucun rafraîchissement enregistré cette session." } } } },
+    "settings.diagnostics.section.observability" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Observability" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Observabilidad" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Observabilité" } } } },
+    "settings.diagnostics.observ.widgetReloads" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Widget reloads (this session)" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Recargas de widget (sesión)" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Rechargements de widget (session)" } } } },
+    "settings.diagnostics.observ.medObserver.available" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Medication observer available" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Observador de medicación disponible" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Observateur de médication actif" } } } },
+    "settings.diagnostics.observ.medObserver.identifiers" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Registered concepts" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Conceptos registrados" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Concepts enregistrés" } } } },
+    "settings.diagnostics.observ.tripDocs" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Trip documents stored" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Documentos de viaje guardados" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Documents de voyage stockés" } } } },
+
+    "trips.action.duplicate" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Duplicate" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Duplicar" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Dupliquer" } } } },
+    "trips.countdown.underway" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "underway" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "en curso" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "en cours" } } } },
+    "trips.countdown.today" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "today" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "hoy" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "aujourd'hui" } } } },
+    "trips.countdown.inDays.%lld" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "in %lld d" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "en %lld d" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "dans %lld j" } } } },
+
+    "trip.advisory.multi.footer" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Multiple authoritative sources for cross-checking." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Varias fuentes oficiales para contrastar." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Plusieurs sources officielles à recouper." } } } },
+    "trip.advisory.section.sources" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Sources" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Fuentes" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Sources" } } } },
+    "trip.advisory.openSource %@" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Open advisory from %@" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Abrir aviso de %@" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ouvrir l'avis de %@" } } } },
+
+    "trip.currency.quick.from" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Quick pick (from)" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Selección rápida (origen)" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Choix rapide (de)" } } } },
+    "trip.currency.quick.to" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Quick pick (to)" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Selección rápida (destino)" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Choix rapide (vers)" } } } },
+    "trip.currency.quickPick.label %@" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Use %@" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Usar %@" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Utiliser %@" } } } }
   }
 }

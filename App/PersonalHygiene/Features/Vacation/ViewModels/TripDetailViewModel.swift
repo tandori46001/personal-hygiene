@@ -84,6 +84,13 @@ final class TripDetailViewModel {
         advisoryService?.advisory(forDestination: trip.destinationName)
     }
 
+    /// Multi-source advisory list (round 10): every authoritative foreign-
+    /// affairs source returns one entry. Empty when no advisory service is
+    /// configured (e.g. previews / certain tests).
+    var advisoryLinks: [TravelAdvisoryLink] {
+        advisoryService?.advisories(forDestination: trip.destinationName) ?? []
+    }
+
     var hasGeocodedDestination: Bool {
         trip.destinationLatitude != nil && trip.destinationLongitude != nil
     }

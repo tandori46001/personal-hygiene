@@ -26,11 +26,27 @@ public enum TripPDFExporter {
     // MARK: - Sections
 
     private static func drawCover(trip: Trip, in pageSize: CGSize, calendar: Calendar) -> CGFloat {
+        var cursor = margin
+        // Cover photo banner: full-bleed at top of page, capped at 200pt
+        // height so the title block always fits below it on US-Letter.
+        if let data = trip.coverPhotoData, let image = UIImage(data: data) {
+            let bannerHeight: CGFloat = 200
+            let bannerRect = CGRect(
+                x: margin,
+                y: margin,
+                width: pageSize.width - 2 * margin,
+                height: bannerHeight
+            )
+            image.draw(in: bannerRect)
+            cursor = margin + bannerHeight + 16
+        }
+
         let title = trip.name as NSString
         title.draw(
-            at: CGPoint(x: margin, y: margin),
+            at: CGPoint(x: margin, y: cursor),
             withAttributes: titleAttributes
         )
+        cursor += 36
 
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -39,7 +55,6 @@ public enum TripPDFExporter {
             "Destination: \(trip.destinationName)",
             "From \(formatter.string(from: trip.startDate)) to \(formatter.string(from: trip.endDate))",
         ]
-        var cursor = margin + 36
         for line in lines {
             (line as NSString).draw(
                 at: CGPoint(x: margin, y: cursor),

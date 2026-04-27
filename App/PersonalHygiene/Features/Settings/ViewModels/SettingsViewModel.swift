@@ -11,6 +11,10 @@ final class SettingsViewModel {
     var status: NotificationAuthorizationStatus = .notDetermined
     var lastError: String?
     var lastRefreshAt: Date?
+    /// Set to the count of notifications scheduled by the most recent
+    /// `rescheduleToday` call so the view can surface a "N reschedulé" toast.
+    /// Cleared after the user dismisses it.
+    var lastRescheduleCount: Int?
 
     init(service: any NotificationService, coordinator: NotificationCoordinator) {
         self.service = service
@@ -43,8 +47,16 @@ final class SettingsViewModel {
         do {
             try await coordinator.rescheduleToday(shiftedByMinutes: shiftMinutes)
             lastRefreshAt = Date()
+            // Re-read the trace log so the toast shows the count we just
+            // shipped instead of an opaque "done" — the trace records the
+            // exact value `scheduleAll` was given.
+            lastRescheduleCount = RefreshTraceLog.shared.entries.last?.scheduledCount ?? 0
         } catch {
             lastError = error.localizedDescription
         }
+    }
+
+    func clearLastRescheduleCount() {
+        lastRescheduleCount = nil
     }
 }

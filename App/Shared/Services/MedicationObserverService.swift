@@ -19,19 +19,24 @@ public final class MedicationObserverService: MedicationObserving {
 
     private var registered: Set<String> = []
 
+    /// Snapshot of currently-registered concept identifiers — exposed to
+    /// `DiagnosticsView` so the on-device user can see which medication
+    /// concepts the app *would* observe once HealthKit lands. Sorted for
+    /// deterministic UI ordering.
+    public var registeredIdentifiers: [String] { registered.sorted() }
+
     public init() {}
 
     public func start(
         for conceptIdentifier: String,
         onChange: @escaping @MainActor () -> Void
     ) {
-        guard isAvailable else {
-            // Pre-entitlement: record the registration so a future
-            // `HKObserverQuery`-backed implementation can replay them once
-            // available. No callback fires today.
-            registered.insert(conceptIdentifier)
-            return
-        }
+        // Always record the registration so DiagnosticsView can surface what
+        // *would* be observed. Pre-entitlement (`isAvailable == false`) we
+        // never fire callbacks; the M3.2 follow-up reminder path is the
+        // source of truth in that case.
+        registered.insert(conceptIdentifier)
+        guard isAvailable else { return }
     }
 
     public func stop(for conceptIdentifier: String) {

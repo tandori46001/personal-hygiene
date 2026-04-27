@@ -17,6 +17,13 @@ struct DiagnosticsView: View {
     @State private var pendingError: String?
     @State private var lastDevAction: String?
     @State private var showingResetConfirm = false
+    // Round-10 sections (rendered from `DiagnosticsViewSections.swift` extension)
+    // need access to these — leave package-internal, not `private`.
+    @State var refreshTrace: [RefreshTraceLog.Entry] = []
+    @State var scheduleDiff: (pending: Int, expected: Int)?
+    @State var widgetReloadCount: Int = 0
+    @State var observerSnapshot: (available: Bool, identifiers: [String]) = (false, [])
+    @State var tripDocumentCount: Int = 0
 
     var body: some View {
         List {
@@ -72,6 +79,10 @@ struct DiagnosticsView: View {
             } header: {
                 Text("settings.diagnostics.section.notifications", bundle: .main)
             }
+
+            scheduleHealthSection
+            refreshTraceSection
+            observabilitySection
 
             devToolsSection
 
@@ -224,7 +235,7 @@ struct DiagnosticsView: View {
         }
     }
 
-    private func row(label: LocalizedStringKey, value: String) -> some View {
+    func row(label: LocalizedStringKey, value: String) -> some View {
         HStack {
             Text(label, bundle: .main)
             Spacer()
@@ -253,6 +264,11 @@ struct DiagnosticsView: View {
         deliveredCount = delivered.count
         let settings = await center.notificationSettings()
         criticalAlertsEnabled = (settings.criticalAlertSetting == .enabled)
+        refreshTrace = actions.refreshTrace()
+        widgetReloadCount = actions.widgetReloadCount()
+        observerSnapshot = actions.medicationObserverSnapshot()
+        tripDocumentCount = actions.tripDocumentCount()
+        scheduleDiff = try? await actions.scheduleDiff()
     }
 
     private func localizedStatus(_ status: NotificationAuthorizationStatus) -> LocalizedStringKey {

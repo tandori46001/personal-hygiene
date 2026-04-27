@@ -100,6 +100,24 @@ Mirror as a one-line entry in:
 
 ---
 
+## L005 — Test process crashes (signal-trap) must NOT be filtered as the LLDB glitch in `check-tests.sh`
+
+**Trigger pattern.** `xcodebuild test` exits non-zero with no `Test Case '...' failed` lines because the test PROCESS crashed mid-suite (signal trap, segfault, "Restarting after unexpected exit, crash, or test timeout"). `scripts/check-tests.sh` had a single condition — exit 65 + zero failed test methods — that classified the run as the harmless DebuggerLLDB glitch and returned exit 0. A real process-level crash silently passed CI.
+
+**Symptom.** `./scripts/check-tests.sh` reports green; the xcresult bundle and the raw log show the suite restarted mid-run. Round 9's `TripsListViewModelArchiveTests` flake (an L001 regression — orphan ModelContext crashing the process) was masked this way. Bug surfaces only when someone opens the xcresult or notices a missing test in the count.
+
+**Root cause.** The script's "treat as success" branch only counted `Test Case 'X' failed` lines + `error:` lines + `FAILED:`. None of those appear when the process itself dies — xcodebuild emits a generic "Restarting after unexpected exit" and exits 65, indistinguishable from the LLDB glitch by exit code alone.
+
+**Fix.** Count `Restarting after unexpected exit, crash, or test timeout|signal trap|Encountered an error \(Crash:` matches separately. The "treat as success" branch now requires `PROCESS_CRASHES == 0` in addition to `REAL_FAILURES == 0`. Otherwise the script preserves the original exit code and surfaces a count of process crashes for the next session to investigate.
+
+**Guard test.** Manual: introduce an L001-style orphan-context crash in any test class, run `./scripts/check-tests.sh`, verify exit code is non-zero and the script prints the crash count. (No automated test here — it would require provoking a real process crash, which is what the regression itself is.)
+
+**Where it was caught.** 2026-04-26, session 12 round 10 — investigating the round-9 `TripsListViewModelArchiveTests` flake. Found that `makeListViewModel()` in `TripDetailViewModelTests.swift` returned `(vm, repo)` without retaining the `ModelContainer`. Fixed by storing `container` as a test-class property (the L001 fix) and hardened `check-tests.sh` so this class of regression can no longer pass silently.
+
+**Interaction with other lessons.** Reinforces L001 — the orphan-container pattern was the *bug*; this lesson is about the *guard* that should have caught it.
+
+---
+
 ## L004 — Tab-root views inside iOS 18 TabView "More" overflow must NOT add their own `NavigationStack`
 
 **Trigger pattern.** A SwiftUI app has more tabs than iOS shows on the bar (5+ on iPhone). iOS 18 promotes the overflow into a system-provided "More" tab, which wraps each overflowed tab's content in its own `NavigationStack` so list-style navigation works. If the tab-root view *also* declares `NavigationStack { … }` at its top level, the two stacks nest. Every internal `NavigationLink` push then renders **two** stacked back chevrons in the navigation bar (one per stack).

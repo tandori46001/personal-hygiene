@@ -260,6 +260,11 @@ private struct ProgressSummaryRow: View {
                         .font(.caption)
                         .foregroundStyle(.secondary)
                         .lineLimit(1)
+                } else {
+                    Text("today.summary.dayDone", bundle: .main)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
                 }
             }
         }

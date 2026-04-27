@@ -73,11 +73,21 @@ REAL_FAILURES="$(grep -E "^Test Case '.*' failed|FAILED:|error:" "$LOG_FILE" \
     | grep -vE "DebuggerVersionStore|failed to attach to xpc service" \
     | wc -l \
     | tr -d ' ' || true)"
-if [ "$XB_EXIT" = "65" ] && [ "$REAL_FAILURES" = "0" ]; then
+# Round 10 hardening: a "signal trap" / "Restarting after unexpected exit"
+# line means the test PROCESS crashed mid-suite. Round 9 had a flake that
+# emitted these without any "Test Case 'X' failed" line — the old filter
+# treated it as success. Now we count those crashes as real failures.
+PROCESS_CRASHES="$(grep -cE "Restarting after unexpected exit, crash, or test timeout|signal trap|Encountered an error \(Crash:" "$LOG_FILE" \
+    | tr -d ' ' || true)"
+if [ "$XB_EXIT" = "65" ] && [ "$REAL_FAILURES" = "0" ] && [ "$PROCESS_CRASHES" = "0" ]; then
   echo
   echo "==> xcodebuild exit 65 with zero test-method failures — treating as known"
   echo "    DebuggerLLDB simulator glitch (does not indicate a real failure)."
   XB_EXIT=0
+elif [ "$PROCESS_CRASHES" != "0" ]; then
+  echo
+  echo "==> $PROCESS_CRASHES test-process crash(es) detected (signal trap / unexpected exit)"
+  echo "    NOT treating as the LLDB glitch — see L005 in LESSONS.md."
 fi
 
 if [ "$XB_EXIT" != "0" ]; then

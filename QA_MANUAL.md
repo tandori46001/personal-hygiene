@@ -1245,3 +1245,98 @@ None — purely build-time guard.
 4. "Skip today" button → row picks up the orange skip badge after dismiss.
 5. Scroll to bottom of Today list → tap "Settings" row → SettingsGlanceWatchView shows snooze duration + notification auth status + build descriptor.
 6. iPhone side: Settings → Scheduling → "Shift today by ±N min" stepper → "Reschedule today" button → all today's pending notifications shift by N minutes (verify via Diagnostics → Pending notifications panel).
+
+## [T-081] — Diagnostics: Schedule-health + Refreshes + Observability sections (round 10)
+
+**Module:** settings/diagnostics · **Shipped in:** round 10 (Tier B)
+
+### Manual verification (iPhone, real device)
+1. Settings → Diagnostics. Below the Notifications section the new sections appear in order: **Schedule health**, **Recent refreshes**, **Observability**.
+2. Pull-to-refresh. **Schedule health** shows Expected, Pending, and a Diff row that reads `✓` when they match, otherwise `Δ N`.
+3. Trigger a refresh (Settings → Refresh notifications). Re-open Diagnostics → **Recent refreshes** lists the just-fired entry at the top with timestamp + count.
+4. Trigger reschedule-today (Settings → Reschedule today after Apply shift in the confirmation). Diagnostics shows a `↔` icon for that entry.
+5. **Observability** shows: Widget reloads (a non-zero number after marking a block done from a notification action), Medication observer available `—` (entitlement gated), Registered concepts `0` (until medication blocks define `medicationConceptIdentifier`s), Trip documents stored `N`.
+
+## [T-082] — Today summary: Done-for-today caption when day is complete (round 10)
+
+**Module:** today · **Shipped in:** round 10 (Tier C)
+
+### Manual verification
+1. Open Today on a day where every scheduled block has already started + been marked done (or is past `endMinutesFromMidnight`).
+2. Today summary row shows "Done for today 🎉" caption in place of the next-block preview.
+3. Marking a block undone → caption flips back to the next-block preview.
+
+## [T-083] — Settings: Reschedule confirmation + toast (round 10)
+
+**Module:** settings · **Shipped in:** round 10 (Tier C)
+
+### Manual verification
+1. Settings → Scheduling. Set the shift to ±60 min. Tap "Reschedule today".
+2. Confirmation dialog appears with the shift value spelled out + Apply / Cancel actions. Cancel → no change.
+3. Tap "Reschedule today" → Apply shift. After completion a green-checkmark toast appears reading "N notifications rescheduled" with a dismiss `✕` button.
+4. Tap dismiss → toast hides. Diagnostics → Recent refreshes shows the corresponding `↔` entry.
+
+## [T-084] — Settings: Medication follow-up delay picker (round 10)
+
+**Module:** settings/medication · **Shipped in:** round 10 (Tier F)
+
+### Manual verification
+1. Settings → Scheduling → "Medication follow-up delay" picker shows 15 / 30 / 45 / 60 min options.
+2. Pick 45 → Settings → Refresh notifications → Diagnostics → Pending notifications: every medication follow-up is +45 min after its primary (was +30 min on default).
+3. Switch back to 30 → next refresh restores the 30-min spacing.
+
+## [T-085] — Trips: Countdown badge + duplicate swipe (round 10)
+
+**Module:** trips · **Shipped in:** round 10 (Tier G)
+
+### Manual verification
+1. Trips tab → upcoming section shows a small "in N d" / "today" / "underway" badge next to the *closest* upcoming trip's name. Other rows have no badge.
+2. Swipe a trip row from the leading edge → "Duplicate" action (blue chevron). Tap → a new "Copy of <name>" trip appears in the same section, packing items reset to unpacked, milestones cloned but incomplete.
+
+## [T-086] — Trips: PDF export with cover photo (round 10)
+
+**Module:** trips · **Shipped in:** round 10 (Tier G)
+
+### Manual verification
+1. Trip detail → set a cover photo via the picker (or use one already set).
+2. Tap the share icon (top right) → PDF preview opens. The cover page now starts with the cover photo as a full-bleed banner above the title block.
+3. Trips without a cover photo still produce a PDF — the title sits at the top, no banner.
+
+## [T-087] — Currencies: Quick-pick chips for 7 codes (round 10)
+
+**Module:** trips/currency · **Shipped in:** round 10 (Extra 1)
+
+### Manual verification
+1. Trip detail → Currency. Above each text field (From, To) a horizontal scroll of chip buttons appears: USD · EUR · GBP · CAD · CHF · AUD · JPY.
+2. Currently-selected chip is filled (.borderedProminent); others are bordered.
+3. Tap CAD chip on To → text field updates to "CAD". Convert button stays enabled. Conversion succeeds (Frankfurter / ECB supports all 7).
+4. Repeat for GBP / CHF / AUD / JPY.
+
+## [T-088] — Travel advisory: Multi-source list (round 10)
+
+**Module:** trips/advisory · **Shipped in:** round 10 (Extra 2)
+
+### Manual verification
+1. Trip detail → "Travel advisory" navigation row.
+2. The advisory screen shows "Sources" section with 4 rows in this order: exteriores.gob.es · travel.state.gov · travel.gc.ca · gov.uk · FCDO.
+3. Each row's host appears as a caption underneath the source label.
+4. Tap any row → Safari opens the corresponding country page (or search results page when the slug doesn't match).
+
+## [T-089] — Today summary: counter no longer exceeds total (round 10)
+
+**Module:** today · **Shipped in:** round 10 (Tier A)
+
+### Manual verification
+1. Mark all blocks of today's template as done.
+2. Edit the active template → delete one of those blocks → Save.
+3. Return to Today. Summary row shows `N-1 / N-1` (not `N / N-1`). Progress bar caps at 100% / 1.0.
+
+## [T-090] — Diagnostics: process-crash detection in `check-tests.sh` (round 10)
+
+**Module:** scripts · **Shipped in:** round 10 (Tier A, L005)
+
+### Verification (developer machine)
+1. Inject an artificial process crash in any test class (e.g. `precondition(false)` in a `setUp`).
+2. Run `./scripts/check-tests.sh`.
+3. Script must exit non-zero AND print "==> N test-process crash(es) detected (signal trap / unexpected exit) … See L005 in LESSONS.md."
+4. Remove the injected crash. Re-run → script returns zero.

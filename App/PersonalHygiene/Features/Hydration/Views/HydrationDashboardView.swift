@@ -223,28 +223,58 @@ private struct HydrationWeeklyChart: View {
     let totals: [(date: Date, milliliters: Int)]
     let goalMilliliters: Int
 
+    private var hasAnyData: Bool {
+        totals.contains { $0.milliliters > 0 }
+    }
+
     var body: some View {
-        Chart {
-            ForEach(totals, id: \.date) { entry in
-                BarMark(
-                    x: .value("hydration.weekly.dayAxis", entry.date, unit: .day),
-                    y: .value("hydration.weekly.mlAxis", entry.milliliters)
-                )
-                .foregroundStyle(entry.milliliters >= goalMilliliters ? .green : .blue)
+        if !hasAnyData {
+            HStack {
+                Image(systemName: "chart.bar.xaxis")
+                    .foregroundStyle(.secondary)
+                    .accessibilityHidden(true)
+                Text("hydration.weekly.empty", bundle: .main)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
             }
-            if goalMilliliters > 0 {
-                RuleMark(y: .value("hydration.weekly.goal", goalMilliliters))
-                    .foregroundStyle(.orange.opacity(0.6))
-                    .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4]))
+            .frame(height: 140, alignment: .center)
+            .frame(maxWidth: .infinity)
+            .accessibilityElement(children: .combine)
+        } else {
+            Chart {
+                ForEach(totals, id: \.date) { entry in
+                    BarMark(
+                        x: .value("hydration.weekly.dayAxis", entry.date, unit: .day),
+                        y: .value("hydration.weekly.mlAxis", entry.milliliters)
+                    )
+                    .foregroundStyle(entry.milliliters >= goalMilliliters ? .green : .blue)
+                }
+                if goalMilliliters > 0 {
+                    RuleMark(y: .value("hydration.weekly.goal", goalMilliliters))
+                        .foregroundStyle(.orange.opacity(0.6))
+                        .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4]))
+                }
             }
+            .chartXAxis {
+                AxisMarks(values: .stride(by: .day)) { _ in
+                    AxisValueLabel(format: .dateTime.weekday(.narrow))
+                }
+            }
+            .frame(height: 140)
+            .accessibilityLabel(Text("a11y.hydration.weeklyChart", bundle: .main))
+            .accessibilityValue(Text(verbatim: a11ySummary))
         }
-        .chartXAxis {
-            AxisMarks(values: .stride(by: .day)) { _ in
-                AxisValueLabel(format: .dateTime.weekday(.narrow))
+    }
+
+    /// VoiceOver-friendly summary: "Mon 800ml of 2000ml goal · Tue …"
+    private var a11ySummary: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEE"
+        return totals
+            .map { entry in
+                "\(formatter.string(from: entry.date)) \(entry.milliliters)ml of \(goalMilliliters)ml"
             }
-        }
-        .frame(height: 140)
-        .accessibilityLabel(Text("a11y.hydration.weeklyChart", bundle: .main))
+            .joined(separator: " · ")
     }
 }
 

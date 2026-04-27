@@ -156,8 +156,20 @@ final class TripDetailViewModelTests: XCTestCase {
 @MainActor
 final class TripsListViewModelArchiveTests: XCTestCase {
 
+    // L001: hold the ModelContainer for the lifetime of the test. Returning
+    // (vm, repo) from a helper without retaining `container` deallocates the
+    // container the moment the helper returns; the next operation against
+    // the orphaned context crashed the test process with a signal-trap.
+    private var container: ModelContainer?
+
+    override func tearDown() {
+        container = nil
+        super.tearDown()
+    }
+
     private func makeListViewModel() throws -> (TripsListViewModel, SwiftDataTripsRepository) {
         let container = try AppModelContainer.makeInMemory()
+        self.container = container
         let repo = SwiftDataTripsRepository(context: container.mainContext)
         let viewModel = TripsListViewModel(repository: repo)
         return (viewModel, repo)

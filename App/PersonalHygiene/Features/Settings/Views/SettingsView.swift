@@ -10,13 +10,16 @@ struct SettingsView: View {
     @Environment(\.modelContext) private var modelContext
 
     @AppStorage(SnoozeDurationStore.key) private var snoozeMinutes = SnoozeDurationStore.defaultMinutes
+    @AppStorage(MedicationFollowUpDelayStore.key)
+    private var followUpMinutes = MedicationFollowUpDelayStore.defaultMinutes
 
     @State private var backupExport: BackupExport?
-    @State private var showingImporter = false
-    @State private var backupError: String?
+    @State var showingImporter = false
+    @State var backupError: String?
     @State private var showingWhatsNew = false
     @State private var showingOnboardingRestartConfirm = false
     @State private var rescheduleShiftMinutes: Int = 30
+    @State private var showingRescheduleConfirm = false
 
     private struct BackupExport: Identifiable {
         let id = UUID()
@@ -72,6 +75,23 @@ struct SettingsView: View {
             titleVisibility: .visible,
             actions: { onboardingRestartActions }
         )
+        .confirmationDialog(
+            Text("settings.reschedule.confirm.title \(rescheduleShiftMinutes)", bundle: .main),
+            isPresented: $showingRescheduleConfirm,
+            titleVisibility: .visible
+        ) {
+            Button {
+                let shift = rescheduleShiftMinutes
+                Task { await viewModel.rescheduleToday(shiftedByMinutes: shift) }
+            } label: {
+                Text("settings.reschedule.confirm.action", bundle: .main)
+            }
+            Button(role: .cancel) {} label: {
+                Text("common.cancel", bundle: .main)
+            }
+        } message: {
+            Text("settings.reschedule.confirm.message", bundle: .main)
+        }
         .fileImporter(
             isPresented: $showingImporter,
             allowedContentTypes: [.json],
@@ -148,6 +168,16 @@ struct SettingsView: View {
                 Text("settings.snooze.duration.label", bundle: .main)
             }
 
+            Picker(selection: $followUpMinutes) {
+                ForEach(MedicationFollowUpDelayStore.allowedMinutes, id: \.self) { minutes in
+                    Text(LocalizedStringResource("settings.medication.followup.\(minutes)"))
+                        .tag(minutes)
+                }
+            } label: {
+                Text("settings.medication.followup.label", bundle: .main)
+            }
+            .accessibilityHint(Text("settings.medication.followup.hint", bundle: .main))
+
             Stepper(
                 value: $rescheduleShiftMinutes,
                 in: -120...120,
@@ -161,12 +191,30 @@ struct SettingsView: View {
                 }
             }
             Button {
-                let shift = rescheduleShiftMinutes
-                Task { await viewModel.rescheduleToday(shiftedByMinutes: shift) }
+                showingRescheduleConfirm = true
             } label: {
                 Text("settings.reschedule.action", bundle: .main)
             }
             .disabled(viewModel.status != .authorized && viewModel.status != .provisional)
+
+            if let count = viewModel.lastRescheduleCount {
+                HStack {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundStyle(.green)
+                        .accessibilityHidden(true)
+                    Text("settings.reschedule.toast.\(count)", bundle: .main)
+                        .font(.caption)
+                    Spacer()
+                    Button {
+                        viewModel.clearLastRescheduleCount()
+                    } label: {
+                        Image(systemName: "xmark.circle")
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityLabel(Text("common.dismiss", bundle: .main))
+                }
+                .accessibilityElement(children: .combine)
+            }
         } header: {
             Text("settings.section.scheduling", bundle: .main)
         } footer: {
@@ -216,40 +264,7 @@ struct SettingsView: View {
         }
     }
 
-    @ViewBuilder
-    private var backupSection: some View {
-        Section {
-            Button {
-                exportBackup()
-            } label: {
-                Label {
-                    Text("settings.backup.action.export", bundle: .main)
-                } icon: {
-                    Image(systemName: "square.and.arrow.up")
-                }
-            }
-            Button(role: .destructive) {
-                showingImporter = true
-            } label: {
-                Label {
-                    Text("settings.backup.action.import", bundle: .main)
-                } icon: {
-                    Image(systemName: "square.and.arrow.down")
-                }
-            }
-            if let backupError {
-                Text(verbatim: backupError)
-                    .font(.caption)
-                    .foregroundStyle(.red)
-            }
-        } header: {
-            Text("settings.section.backup", bundle: .main)
-        } footer: {
-            Text("settings.section.backup.footer", bundle: .main)
-        }
-    }
-
-    private func exportBackup() {
+    func exportBackup() {
         backupError = nil
         do {
             let snapshot = try BackupService.export(from: modelContext)

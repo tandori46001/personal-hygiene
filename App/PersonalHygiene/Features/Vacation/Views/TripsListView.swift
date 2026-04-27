@@ -36,9 +36,22 @@ struct TripsListView: View {
                 let past = viewModel.pastTrips()
 
                 if !upcoming.isEmpty {
+                    let nearestID = viewModel.daysUntilNearest()?.0.id
                     Section {
                         ForEach(upcoming) { trip in
-                            tripLink(for: trip)
+                            tripLink(for: trip, nearestID: nearestID)
+                                .swipeActions(edge: .leading) {
+                                    Button {
+                                        viewModel.duplicate(trip)
+                                    } label: {
+                                        Label {
+                                            Text("trips.action.duplicate", bundle: .main)
+                                        } icon: {
+                                            Image(systemName: "plus.square.on.square")
+                                        }
+                                    }
+                                    .tint(.blue)
+                                }
                         }
                         .onDelete { offsets in delete(upcoming, at: offsets) }
                     } header: {
@@ -49,8 +62,20 @@ struct TripsListView: View {
                 if !past.isEmpty {
                     Section {
                         ForEach(past) { trip in
-                            tripLink(for: trip)
+                            tripLink(for: trip, nearestID: nil)
                                 .foregroundStyle(.secondary)
+                                .swipeActions(edge: .leading) {
+                                    Button {
+                                        viewModel.duplicate(trip)
+                                    } label: {
+                                        Label {
+                                            Text("trips.action.duplicate", bundle: .main)
+                                        } icon: {
+                                            Image(systemName: "plus.square.on.square")
+                                        }
+                                    }
+                                    .tint(.blue)
+                                }
                         }
                         .onDelete { offsets in delete(past, at: offsets) }
                     } header: {
@@ -139,7 +164,7 @@ struct TripsListView: View {
     }
 
     @ViewBuilder
-    private func tripLink(for trip: Trip) -> some View {
+    private func tripLink(for trip: Trip, nearestID: UUID?) -> some View {
         NavigationLink {
             TripDetailView(
                 viewModel: TripDetailViewModel(
@@ -154,21 +179,32 @@ struct TripsListView: View {
                 )
             )
         } label: {
-            TripRow(trip: trip)
+            TripRow(
+                trip: trip,
+                isNearest: nearestID == trip.id,
+                daysUntilStart: nearestID == trip.id ? viewModel.daysUntilNearest()?.1 : nil
+            )
         }
     }
 }
 
 private struct TripRow: View {
     let trip: Trip
+    var isNearest: Bool = false
+    var daysUntilStart: Int?
 
     var body: some View {
         HStack(spacing: 12) {
             thumbnail
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
-                Text(trip.name)
-                    .font(.body)
+                HStack(spacing: 6) {
+                    Text(trip.name)
+                        .font(.body)
+                    if isNearest, let days = daysUntilStart {
+                        countdownBadge(days: days)
+                    }
+                }
                 Text(trip.destinationName)
                     .font(.caption)
                     .foregroundStyle(.secondary)
@@ -186,6 +222,21 @@ private struct TripRow: View {
             }
         }
         .accessibilityElement(children: .combine)
+    }
+
+    @ViewBuilder
+    private func countdownBadge(days: Int) -> some View {
+        let key: LocalizedStringKey = {
+            if days < 0 { return "trips.countdown.underway" }
+            if days == 0 { return "trips.countdown.today" }
+            return "trips.countdown.inDays.\(days)"
+        }()
+        Text(key, bundle: .main)
+            .font(.caption2.bold())
+            .padding(.horizontal, 6)
+            .padding(.vertical, 2)
+            .background(Color.accentColor.opacity(0.15), in: Capsule())
+            .foregroundStyle(Color.accentColor)
     }
 
     @ViewBuilder

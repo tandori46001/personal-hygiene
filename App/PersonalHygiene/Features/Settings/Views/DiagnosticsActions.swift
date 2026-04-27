@@ -39,4 +39,28 @@ struct DiagnosticsActions {
     /// presents the sheet once per app lifetime; if the user already chose,
     /// this is a no-op aside from refreshing the authorization status.
     let requestAuthorization: @MainActor () async -> Void
+
+    /// Snapshot of recent `RefreshTraceLog` entries (newest-first) so
+    /// DiagnosticsView can show what was scheduled and when. Process-local;
+    /// cleared on relaunch.
+    let refreshTrace: @MainActor () -> [RefreshTraceLog.Entry]
+
+    /// Returns `(pendingCount, expectedCount)` for today — diff > 0 means the
+    /// scheduler dropped or duplicated something vs the deterministic build.
+    /// Throws if the build pipeline can't run (rare; surfaces upstream error).
+    let scheduleDiff: @MainActor () async throws -> (pending: Int, expected: Int)
+
+    /// Process-wide count of `widgetReloader` invocations from the
+    /// `NotificationActionHandler` mark-done path. Confirms the wiring
+    /// actually fires on real devices.
+    let widgetReloadCount: @MainActor () -> Int
+
+    /// Snapshot of the medication concept identifiers that are currently
+    /// registered with the observer. `isAvailable` is `false` until the
+    /// HealthKit entitlement lands, so registrations are intent-only for now.
+    let medicationObserverSnapshot: @MainActor () -> (available: Bool, identifiers: [String])
+
+    /// Count of trip documents stored across all trips — proxy for
+    /// "Keychain footprint" until we add real byte-size accounting.
+    let tripDocumentCount: @MainActor () -> Int
 }

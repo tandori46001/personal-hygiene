@@ -316,10 +316,47 @@ Once the paid Apple Developer Program lands, swap `MedicationObserverService.isA
 
 Trips list view (`TripsListView`) drops its inner `NavigationStack` (matches the Settings fix from round 8 post-deploy). Hydration / Housekeeping / Birthdays keep their inner stacks for now since they have zero internal `NavigationLink`s and would risk breakage if the user reorders tabs out of the More overflow.
 
+## 26. Diagnostics observability + multi-source advisory + L005 (round 10)
+
+### Process-local diagnostics surfaces
+
+Round 10 introduces three small process-local services that feed `DiagnosticsView` so an on-device user can answer "what just happened?" without attaching Xcode:
+
+- **`RefreshTraceLog.shared`** — ring buffer (capacity 20) of `(timestamp, scheduledCount, kind: refresh|reschedule)` entries. `NotificationCoordinator.refreshForToday` and `rescheduleToday` write here on every successful schedule. Cleared on relaunch; not persisted.
+- **`WidgetReloadCounter.shared`** — counts how many times the default `widgetReloader` closure (passed into `NotificationActionHandler`) has invoked `WidgetCenter.shared.reloadAllTimelines()`. Confirms the round-9 mark-done → widget reload wiring fires in production.
+- **`MedicationObserverService.registeredIdentifiers`** — DiagnosticsView surfaces the count + availability so the user can see which medication concepts the app *would* observe once HealthKit lands. Pre-entitlement, `start(_:onChange:)` records the registration but never fires a callback (M3.2 push fallback stays the source of truth).
+
+`DiagnosticsActions` is the single closure-bag through which the view reads these — no concrete service types leak into the view layer.
+
+### Multi-source travel advisory
+
+The `TravelAdvisoryService` protocol grew an `advisories(forDestination:)` method (default impl wraps the single-source `advisory(forDestination:)` for backward compat). New implementations cover US (`StateDepartmentAdvisoryService`), Canada (`CanadaTravelAdvisoryService`), UK (`UKFCDOAdvisoryService`); existing `ExterioresAdvisoryService` (Spain) is kept as the lead source. `MultiSourceAdvisoryService` aggregates them in fixed order (ES → US → CA → UK). `CachedTravelAdvisoryService` was extended with a parallel list cache (same 24h TTL). `AdvisoryView` is now list-shaped — every source becomes a tappable row. Single-link consumers (previews, legacy tests) keep working via the back-compat init.
+
+### Schedule-health diff
+
+`scheduleDiff` (in `DiagnosticsActions`) returns `(pending, expected)` where `expected = coordinator.buildTodayNotifications().count`. The Diagnostics view renders the delta and badges it `Δ ≠ 0` so drift between the deterministic build and what's actually pending is visible without an Xcode debugger.
+
+### Configurable medication follow-up delay
+
+`MedicationFollowUpDelayStore` (UserDefaults-backed, allowed values 15/30/45/60, default 30) lets the user adjust the M3.2 follow-up delay from Settings → Scheduling. `NotificationCoordinator.medicationFollowUps` reads the stored value via a default arg so tests can override deterministically.
+
+### Trip module polish
+
+`TripsListViewModel.duplicate(_:)` clones a trip (packing items reset to unpacked, milestones cloned as incomplete). `daysUntilNearest()` powers a small "in N d" / "today" / "underway" badge on the closest upcoming `TripRow`. `TripPDFExporter` renders `coverPhotoData` as a 200pt full-bleed banner above the title block when present.
+
+### Currency quick-pick
+
+`CurrencyView` shows a horizontal chip row of the seven supported codes (USD, EUR, GBP, CAD, CHF, AUD, JPY) above each text field so the user doesn't have to type. The Frankfurter API supports all seven (ECB-sourced).
+
+### L005 — process crashes vs LLDB glitch
+
+`scripts/check-tests.sh` previously treated *every* exit-65 with zero `Test Case 'X' failed` lines as the harmless DebuggerLLDB glitch and returned 0. Round 9's `TripsListViewModelArchiveTests` flake (an L001 regression — orphan `ModelContainer` deallocating mid-test) fired exactly that pattern: process-level crash, no failed-test-method line. Round 10 adds a separate count of `Restarting after unexpected exit, crash, or test timeout|signal trap|Encountered an error \(Crash:` matches; the success branch now requires *both* the failure count and the crash count to be zero. See `LESSONS.md` L005.
+
 ---
 
 **Version history:**
 
+- **v0.7 (2026-04-26)** — added §26 reflecting round 10: process-local diagnostics surfaces (`RefreshTraceLog`, `WidgetReloadCounter`, observer status), multi-source travel advisory, schedule-health diff in DiagnosticsView, configurable medication follow-up delay, currency quick-pick chips, trip duplication + countdown badge + PDF cover photo, L005 (signal-trap detection in `check-tests.sh`).
 - **v0.6 (2026-04-26)** — added §25 reflecting round 9: `MedicationObserving` scaffolding (entitlement-gated), `NotificationCoordinator.rescheduleToday(shiftedByMinutes:)`, `WidgetCenter` reload wiring in `NotificationActionHandler`, watch `BlockDetailWatchView` + `SettingsGlanceWatchView`, L004 propagated to Trips, Today timeline now-line, drag-to-reorder for blocks, Hydration weekly chart.
 - **v0.5 (2026-04-26)** — added §23 (build identity pipeline) + §24 (CI watchOS guard) reflecting session 10 (round 8). Robust medication follow-up matching via `BlockNotificationIdentifier.parseAny`; `RecentlyDeliveredNotificationsView` + `DeliveredNotificationsGrouper`; `removeAll()` on snooze/skip stores.
 - **v0.4 (2026-04-26)** — added §21-§22 reflecting session 9 (round 7): Diagnostics dev tools (`DiagnosticsActions`), `MedicationFollowUpFactory`, `BlockSnoozeSource.medicationFollowUp`, build-time `CommitSHA.txt` injection, watch complication focus indicator + watch app snooze badge.

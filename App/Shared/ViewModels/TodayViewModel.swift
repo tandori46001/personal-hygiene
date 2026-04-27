@@ -125,7 +125,15 @@ final class TodayViewModel {
         }
     }
 
-    var doneCount: Int { completedBlockIDs.count }
+    /// Done count is computed against the *currently visible* blocks so a
+    /// completion recorded against a block that was later deleted (or that
+    /// belongs to a different template / day-type) cannot inflate the ratio
+    /// past `totalCount`. Earlier this could yield "2 of 1" in the Today
+    /// summary row after a template edit.
+    var doneCount: Int {
+        let activeIDs = Set(blocks.map(\.id))
+        return completedBlockIDs.intersection(activeIDs).count
+    }
     var totalCount: Int { blocks.count }
 
     var blocks: [Block] {

@@ -4,6 +4,12 @@ struct CurrencyView: View {
 
     let service: any CurrencyService
 
+    /// Round-10 extra: G7-ish destination shortlist so the user can tap a
+    /// currency without typing on iPhone. Order matches the rough frequency
+    /// of the user's actual trips (USD/CAD first since they border, then
+    /// the European cluster, then JPY for the Asian leg).
+    static let supportedCodes = ["USD", "EUR", "GBP", "CAD", "CHF", "AUD", "JPY"]
+
     @AppStorage("currencyFromCode") private var fromCode = "EUR"
     @AppStorage("currencyToCode") private var toCode = "USD"
     @State private var amountText = "100"
@@ -29,6 +35,7 @@ struct CurrencyView: View {
                     Text("trip.currency.field.from", bundle: .main)
                 }
                 .textInputAutocapitalization(.characters)
+                quickPickRow(binding: $fromCode, title: "trip.currency.quick.from")
 
                 TextField(
                     text: $toCode,
@@ -37,6 +44,7 @@ struct CurrencyView: View {
                     Text("trip.currency.field.to", bundle: .main)
                 }
                 .textInputAutocapitalization(.characters)
+                quickPickRow(binding: $toCode, title: "trip.currency.quick.to")
             }
 
             Section {
@@ -78,6 +86,35 @@ struct CurrencyView: View {
         }
         .navigationTitle(Text("trip.currency.title", bundle: .main))
         .navigationBarTitleDisplayMode(.inline)
+    }
+
+    @ViewBuilder
+    private func quickPickRow(binding: Binding<String>, title: LocalizedStringKey) -> some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Text(title, bundle: .main)
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 6) {
+                    ForEach(Self.supportedCodes, id: \.self) { code in
+                        Button {
+                            binding.wrappedValue = code
+                        } label: {
+                            Text(verbatim: code)
+                                .font(.caption.bold())
+                                .padding(.horizontal, 10)
+                                .padding(.vertical, 4)
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(binding.wrappedValue.uppercased() == code ? .accentColor : .secondary)
+                        .accessibilityLabel(
+                            Text("trip.currency.quickPick.label \(code)", bundle: .main)
+                        )
+                    }
+                }
+            }
+        }
+        .padding(.vertical, 2)
     }
 
     private func convert() async {

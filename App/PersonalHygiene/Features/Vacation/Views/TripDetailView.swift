@@ -144,10 +144,13 @@ struct TripDetailView: View {
                 }
             }
 
-            if let advisory = viewModel.advisoryLink {
+            if !viewModel.advisoryLinks.isEmpty {
                 Section {
                     NavigationLink {
-                        AdvisoryView(link: advisory)
+                        AdvisoryView(
+                            links: viewModel.advisoryLinks,
+                            destination: viewModel.trip.destinationName
+                        )
                     } label: {
                         Label {
                             Text("trip.advisory.title", bundle: .main)

@@ -39,6 +39,7 @@ public final class NotificationCoordinator {
     public func refreshForToday(_ now: Date = Date()) async throws {
         let built = try await buildTodayNotifications(now: now)
         try await service.scheduleAll(built)
+        RefreshTraceLog.shared.record(scheduledCount: built.count, kind: .refresh, at: now)
     }
 
     /// Pure-build pipeline for today's routine + follow-up notifications. The
@@ -98,6 +99,7 @@ public final class NotificationCoordinator {
         let nominal = try await buildTodayNotifications(now: now)
         let shifted = Self.shifted(nominal, byMinutes: shiftMinutes, dropPastBefore: now)
         try await service.scheduleAll(shifted)
+        RefreshTraceLog.shared.record(scheduledCount: shifted.count, kind: .reschedule, at: now)
     }
 
     /// Pure shift-and-filter for `ScheduledNotification`s. Exposed for tests.
@@ -133,7 +135,8 @@ public final class NotificationCoordinator {
         primaries: [ScheduledNotification],
         blocks: [Block],
         now: Date,
-        calendar: Calendar
+        calendar: Calendar,
+        offsetMinutes: Int = MedicationFollowUpDelayStore.minutes()
     ) -> [ScheduledNotification] {
         let medicationBlocks = Dictionary(
             uniqueKeysWithValues: blocks
@@ -147,6 +150,7 @@ public final class NotificationCoordinator {
             return MedicationFollowUpFactory.followUp(
                 for: primary,
                 block: block,
+                offsetMinutes: offsetMinutes,
                 dayKey: dayKey,
                 calendar: calendar
             )

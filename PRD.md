@@ -144,6 +144,7 @@ Diferenciador: no es un calendario más. Es un **planificador de rutina total** 
 - **M3.2 follow-up reminders (shipped session 9, round 7):** mientras no exista el entitlement HealthKit, `MedicationFollowUpFactory` programa una notificación adicional a `triggerDate + 30 min` para cada bloque de medicación, con prefijo `personal-hygiene.medication.followup.` y nivel critical. Si Apple aprueba el entitlement Critical Alerts y se conecta `HKObserverQuery`, esta lógica se reemplaza por re-notificación basada en evento real (la dosis no se marcó tomada en Health).
 - **M3.2 hardening (round 8, session 10):** el matching primary→bloque dentro de `NotificationCoordinator.medicationFollowUps` se hizo a través de `BlockNotificationIdentifier.parseAny` en vez de `String.contains` para que un cambio futuro en el shape del identifier rompa parser/test en lugar de silenciar el follow-up. Cubierto por `NotificationCoordinatorFollowUpTests` (3 casos: 1-medicación, no-medicación filtrado, identifier desconocido).
 - **M3.2 observer scaffolding (round 9, session 11):** `MedicationObserving` (`@MainActor` protocol) + `MedicationObserverService` (entitlement-gated, `isAvailable: false` hasta el entitlement) + `MockMedicationObserver` (test double con `simulateChange(for:)`). El protocolo abstrae lo que un día llamará `HKObserverQuery`; mientras tanto `start(_:onChange:)` registra el identifier pero no dispara callback. Cuando el entitlement caiga, `MedicationObserverService` se cablea sobre `HKObserverQuery` por concept identifier y el push-reminder fallback se condiciona en `observerService.isAvailable == false`.
+- **M3.2 follow-up delay configurable (round 10, session 12):** `MedicationFollowUpDelayStore` (UserDefaults, valores permitidos 15/30/45/60, default 30) deja al usuario elegir el offset desde Settings → Scheduling. `NotificationCoordinator.medicationFollowUps` lo lee por defecto. Nuevos helpers: `MedicationFollowUpFactory.identifier(blockID:dayKey:)` + `cancelFollowUps(for:in:)` para que el futuro path observer-driven pueda silenciar el recordatorio cuando la dosis se registre en Health.
 
 ### M4 — Sueño
 
@@ -231,10 +232,11 @@ Generación automática de bloques en el calendario principal con la siguiente c
 #### M9.6 — Divisa y cash
 - **Frankfurter API** (gratis, sin auth, sin límites) — tipo de cambio en tiempo real.
 - Estimación de cash recomendado: cálculo simple `días × estimación coste medio diario` (estimación basada en IA con prompt sobre el destino).
+- **Round 10 (session 12):** quick-pick chips en `CurrencyView` para 7 monedas: USD, EUR, GBP, CAD, CHF, AUD, JPY (todas soportadas por Frankfurter / ECB).
 
 #### M9.7 — Advisories y zonas peligrosas
-- **MVP:** feed RSS oficial del Ministerio de Asuntos Exteriores español — `exteriores.gob.es/recomendaciones-de-viaje` (gratis).
-- **Fase posterior:** opcionalmente añadir feeds gobierno UK (FCDO) y US State Dept para cross-check.
+- **MVP:** deep link al Ministerio de Asuntos Exteriores español — `exteriores.gob.es/recomendaciones-de-viaje` (gratis).
+- **Round 10 (session 12) — multi-source shipped:** `MultiSourceAdvisoryService` ahora agrega 4 fuentes oficiales — ES (`exteriores.gob.es`), US (`travel.state.gov`), CA (`travel.gc.ca`), UK (`gov.uk · FCDO`). `AdvisoryView` muestra una fila por fuente, todas tappable hacia Safari. Cache 24h por destino.
 - Mostrar nivel de riesgo + recomendaciones específicas del destino.
 
 #### M9.8 — Ajuste de rutina por jet-lag

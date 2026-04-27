@@ -77,4 +77,52 @@ final class TripsListViewModel {
             errorMessage = error.localizedDescription
         }
     }
+
+    /// Days from `now` to the *closest* upcoming trip's start date. `nil` if
+    /// there are no upcoming trips. The list view uses this to badge the
+    /// nearest trip with "in N days" / "today" / "underway".
+    func daysUntilNearest(now: Date = Date(), calendar: Calendar = .autoupdatingCurrent) -> (Trip, Int)? {
+        let upcoming = upcomingTrips(now: now, calendar: calendar)
+        guard let nearest = upcoming.min(by: { $0.startDate < $1.startDate }) else { return nil }
+        let today = calendar.startOfDay(for: now)
+        let target = calendar.startOfDay(for: nearest.startDate)
+        let days = calendar.dateComponents([.day], from: today, to: target).day ?? 0
+        return (nearest, days)
+    }
+
+    /// Build a *new* `Trip` cloned from `source` — packing list + milestones
+    /// duplicated by value, dates left unchanged for the user to adjust. The
+    /// caller must `upsert` the returned trip; the duplicate isn't persisted
+    /// until then so `Cancel` from the editor leaves no orphan row behind.
+    static func duplicate(_ source: Trip, namePrefix: String = "Copy of ") -> Trip {
+        let copy = Trip(
+            name: namePrefix + source.name,
+            startDate: source.startDate,
+            endDate: source.endDate,
+            destinationName: source.destinationName
+        )
+        copy.destinationLatitude = source.destinationLatitude
+        copy.destinationLongitude = source.destinationLongitude
+        copy.coverPhotoData = source.coverPhotoData
+        copy.packingItems = source.packingItems.map { PackingItem(title: $0.title, isPacked: false) }
+        return copy
+    }
+
+    func duplicate(_ source: Trip) {
+        do {
+            let copy = Self.duplicate(source)
+            try repository.upsert(copy)
+            for milestone in source.milestones.sorted(by: { $0.daysBefore > $1.daysBefore }) {
+                let cloned = TripMilestone(
+                    title: milestone.title,
+                    daysBefore: milestone.daysBefore,
+                    isComplete: false
+                )
+                try repository.addMilestone(cloned, to: copy)
+            }
+            reload()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
 }

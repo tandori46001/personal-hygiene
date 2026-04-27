@@ -27,6 +27,7 @@ struct AppEnvironment {
     let blockSnoozeStore: any BlockSnoozeStore
     let birthdayLeadStore: any BirthdayLeadStore
     let focusScheduleStore: any FocusScheduleStore
+    let medicationObserver: any MedicationObserving
 
     init(modelContext: ModelContext) {
         let trips = SwiftDataTripsRepository(context: modelContext)
@@ -39,7 +40,9 @@ struct AppEnvironment {
         self.itineraryStore = FileItineraryStore()
         self.marineService = CachedMarineWeatherService(upstream: OpenMeteoMarineService())
         self.currencyService = CachedCurrencyService(upstream: FrankfurterCurrencyService())
-        self.advisoryService = CachedTravelAdvisoryService(upstream: ExterioresAdvisoryService())
+        self.advisoryService = CachedTravelAdvisoryService(
+            upstream: MultiSourceAdvisoryService.standard()
+        )
         self.notificationService = UserNotificationsService()
         self.medicationService = HealthKitMedicationService()
         self.sleepService = HealthKitSleepService()
@@ -50,6 +53,11 @@ struct AppEnvironment {
         self.blockSnoozeStore = UserDefaultsBlockSnoozeStore()
         self.birthdayLeadStore = UserDefaultsBirthdayLeadStore()
         self.focusScheduleStore = UserDefaultsFocusScheduleStore()
+        // Pre-entitlement scaffolding: registrations are recorded but no
+        // HKObserverQuery callbacks fire until the
+        // `health.records.medications` entitlement lands. The push fallback
+        // (MedicationFollowUpFactory) stays the source of truth meanwhile.
+        self.medicationObserver = MedicationObserverService()
     }
 
     func makeNotificationCoordinator(calendar: Calendar = .autoupdatingCurrent) -> NotificationCoordinator {

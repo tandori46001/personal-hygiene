@@ -249,6 +249,44 @@ final class TodayViewModelTests: XCTestCase {
         XCTAssertFalse(vm.isSkipped(block, now: now))
     }
 
+    // Round-10 regression guard: completing a block, deleting it from the
+    // template, then reloading must NOT yield doneCount > totalCount.
+    // Previously the Today summary would render "2 of 1" if a stale
+    // completion lingered for a block that no longer existed in the active
+    // template — `doneCount` returned `completedBlockIDs.count` raw.
+    func test_doneCount_doesNotExceedTotalAfterStaleCompletion() throws {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(secondsFromGMT: 0)!
+        let kept = Block(
+            title: "Kept",
+            category: .hygiene,
+            startMinutesFromMidnight: 7 * 60,
+            durationMinutes: 30
+        )
+        let removed = Block(
+            title: "Removed",
+            category: .hygiene,
+            startMinutesFromMidnight: 8 * 60,
+            durationMinutes: 30
+        )
+        let template = RoutineTemplate(
+            name: "T", dayType: .weekday, blocks: [kept, removed], isActive: true
+        )
+        try repo.upsert(template)
+        let now = date(weekday: 3, hour: 9)
+        try repo.markDone(kept, on: now, calendar: cal)
+        try repo.markDone(removed, on: now, calendar: cal)
+        // Simulate the user editing the template to drop `removed`.
+        try repo.delete(removed)
+
+        let vm = TodayViewModel(repository: repo, calendar: cal)
+        vm.reload(now: now)
+
+        XCTAssertEqual(vm.totalCount, 1)
+        XCTAssertEqual(vm.doneCount, 1, "doneCount must clamp to active blocks")
+        XCTAssertLessThanOrEqual(vm.doneCount, vm.totalCount)
+    }
+
     func test_reload_rehydratesCompletionsForToday() throws {
         var cal = Calendar(identifier: .gregorian)
         cal.timeZone = TimeZone(secondsFromGMT: 0)!
