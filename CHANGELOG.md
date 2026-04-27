@@ -8,6 +8,15 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added — Session 14 ("haz todo" round 14, infrastructure-heavy: trip carbon + emergency contacts + quiet hours + template presets + pending grouping)
+
+- **Trip module:** `TripCarbonEstimate` (haversine distance + 0.255 kg CO₂ per passenger·km factor for rough round-trip flight estimate). `TripEmergencyContact` value type + `Trip.emergencyContactsJSON` field. New `TripEmergencyContactsSection` UI with phone-pad input. `TripExpensesSection` now shows per-currency totals when ≥2 expenses present. View-model: `expensesByCurrency`, `addEmergencyContact`, `deleteEmergencyContact`, `roundTripCO2Kg(home:)`.
+- **Notifications:** `QuietHoursStore` recurring-window mute (default 22:00 → 07:00, wrap-around aware). Distinct from `PauseNotificationsStore` (one-shot, time-bounded).
+- **Diagnostics:** `PendingNotificationsGroup` classifier groups identifiers by category in canonical order — UI can render disclosure-per-category instead of a flat 50-row list.
+- **Templates:** `TemplatePresetSeeds` enum with `morningRoutine` / `workday` / `weekendChores` block bundles for one-tap insert.
+- **Hydration:** `HydrationWeeklyAverage` pure helper for trailing-7-days average (rounded to nearest 10 ml).
+- **Tests:** 6 new test files (`TripCarbonEstimateTests`, `QuietHoursStoreTests`, `HydrationWeeklyAverageTests`, `PendingNotificationsGroupTests`, `TemplatePresetSeedsTests`, `TripDetailViewModelRound14Tests`). +8 i18n keys × 3 locales = 605 total.
+
 ### Added — Session 14 ("haz todo" round 13, 54 slices: round-12 caveat closure + trip cost log + Markdown share + diagnostics deep-dive + bedtime auto-mute)
 
 - **Tier A (slices 1-7) — Round-12 caveats:** trip notes Markdown now renders one Text per `\n\n`-separated paragraph (`notesParagraphs`). Currency snapshot empty fallback writes `[]` JSON sentinel rather than nil. New `RefreshTraceKind.paused` distinguishes pause-induced gaps from real refreshes. `ObservabilityHealthCheck.status(...)` gained a `paused: Bool` parameter that returns `.yellow` instead of `.green` while paused. Today minute-tick refreshes the next-block "in N min" caption every 60s while foregrounded (cancelled on disappear / scenePhase != .active).

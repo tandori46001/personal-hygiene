@@ -134,6 +134,69 @@ struct TripNotesSection: View {
     }
 }
 
+/// Round-14 slice 14: emergency contacts section.
+struct TripEmergencyContactsSection: View {
+    @Bindable var viewModel: TripDetailViewModel
+    @Binding var newLabel: String
+    @Binding var newPhone: String
+
+    var body: some View {
+        Section {
+            ForEach(viewModel.emergencyContacts) { contact in
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(verbatim: contact.label)
+                        .font(.body)
+                    Text(verbatim: contact.phone)
+                        .font(.caption.monospacedDigit())
+                        .foregroundStyle(.secondary)
+                        .textSelection(.enabled)
+                }
+                .accessibilityElement(children: .combine)
+                .swipeActions(edge: .trailing) {
+                    Button(role: .destructive) {
+                        viewModel.deleteEmergencyContact(contact)
+                    } label: {
+                        Label {
+                            Text("common.delete", bundle: .main)
+                        } icon: {
+                            Image(systemName: "trash")
+                        }
+                    }
+                }
+            }
+            HStack {
+                TextField(
+                    text: $newLabel,
+                    prompt: Text("trip.emergency.label.placeholder", bundle: .main)
+                ) {
+                    Text("trip.emergency.label", bundle: .main)
+                }
+                TextField(
+                    text: $newPhone,
+                    prompt: Text("trip.emergency.phone.placeholder", bundle: .main)
+                ) {
+                    Text("trip.emergency.phone", bundle: .main)
+                }
+                .keyboardType(.phonePad)
+                Button {
+                    viewModel.addEmergencyContact(label: newLabel, phone: newPhone)
+                    newLabel = ""
+                    newPhone = ""
+                } label: {
+                    Image(systemName: "plus.circle.fill")
+                }
+                .accessibilityLabel(Text("trip.emergency.action.add", bundle: .main))
+                .disabled(newLabel.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                    || newPhone.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            }
+        } header: {
+            Text("trip.detail.section.emergency", bundle: .main)
+        } footer: {
+            Text("trip.detail.section.emergency.footer", bundle: .main)
+        }
+    }
+}
+
 /// Round-13 slice 4: surface the captured currency snapshot inline so the
 /// user can see what was archived alongside the trip without opening the PDF.
 struct TripCurrencySnapshotSection: View {

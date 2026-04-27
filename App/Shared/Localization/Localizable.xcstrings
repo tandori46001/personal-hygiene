@@ -2480,6 +2480,39 @@
     "settings.mute.bedtime" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Bedtime auto-mute" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Silencio automático nocturno" } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Silence auto la nuit" } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Silence auto la nuit" } } } },
+
+    "trip.expense.total.label" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Total" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Total" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Total" } } } },
+    "trip.detail.section.emergency" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Emergency contacts" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Contactos de emergencia" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Contacts d'urgence" } } } },
+    "trip.detail.section.emergency.footer" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Long-press a number to copy." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Mantén pulsado un número para copiarlo." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Appui long pour copier le numéro." } } } },
+    "trip.emergency.label" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Label" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Etiqueta" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Libellé" } } } },
+    "trip.emergency.label.placeholder" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Embassy, hotel, family…" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Embajada, hotel, familia…" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ambassade, hôtel, famille…" } } } },
+    "trip.emergency.phone" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Phone" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Teléfono" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Téléphone" } } } },
+    "trip.emergency.phone.placeholder" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "+1 555 123 4567" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "+34 600 123 456" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "+33 6 12 34 56 78" } } } },
+    "trip.emergency.action.add" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Add contact" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Añadir contacto" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ajouter contact" } } } }
   }
 }

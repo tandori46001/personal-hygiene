@@ -114,6 +114,68 @@ extension TripDetailViewModel {
         return lines.joined(separator: "\n")
     }
 
+    // MARK: - Round 14 helpers
+
+    /// Round-14 slice 3: total expenses grouped by currency. Returns
+    /// `[currencyCode: total]` so the UI can show a per-currency summary
+    /// without doing live FX (which the user might not want mid-trip).
+    var expensesByCurrency: [String: Double] {
+        var result: [String: Double] = [:]
+        for expense in expenses {
+            result[expense.currencyCode, default: 0] += expense.amount
+        }
+        return result
+    }
+
+    /// Round-14 slice 14: emergency contacts decoded from `Trip.emergencyContactsJSON`.
+    var emergencyContacts: [TripEmergencyContact] {
+        get {
+            guard let json = trip.emergencyContactsJSON,
+                  let data = json.data(using: .utf8)
+            else { return [] }
+            return (try? JSONDecoder().decode([TripEmergencyContact].self, from: data)) ?? []
+        }
+        set {
+            let payload = try? JSONEncoder().encode(newValue)
+            trip.emergencyContactsJSON = payload.flatMap { String(data: $0, encoding: .utf8) }
+            saveEdits()
+        }
+    }
+
+    func addEmergencyContact(label: String, phone: String, notes: String? = nil) {
+        let trimmedLabel = label.trimmingCharacters(in: .whitespacesAndNewlines)
+        let trimmedPhone = phone.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmedLabel.isEmpty, !trimmedPhone.isEmpty else { return }
+        var current = emergencyContacts
+        current.append(TripEmergencyContact(
+            label: trimmedLabel,
+            phone: trimmedPhone,
+            notes: notes?.trimmingCharacters(in: .whitespacesAndNewlines)
+        ))
+        emergencyContacts = current
+    }
+
+    func deleteEmergencyContact(_ contact: TripEmergencyContact) {
+        emergencyContacts = emergencyContacts.filter { $0.id != contact.id }
+    }
+
+    /// Round-14 slice 13: estimated round-trip CO₂ for the trip in kg.
+    /// Requires both endpoints — returns `nil` when the trip lacks a
+    /// destination geocode or the home location is unset.
+    func roundTripCO2Kg(home: BlockLocation?) -> Double? {
+        guard let home,
+              let toLat = trip.destinationLatitude,
+              let toLon = trip.destinationLongitude
+        else { return nil }
+        let distance = TripCarbonEstimate.distanceKm(
+            fromLat: home.latitude,
+            fromLon: home.longitude,
+            toLat: toLat,
+            toLon: toLon
+        )
+        return TripCarbonEstimate.roundTripKgCO2(distanceKm: distance)
+    }
+
     /// Round-13 slice 13: clone trip with every date shifted by `days`.
     /// Keeps milestones + packing + notes; resets the cost snapshot since
     /// the original trip's spend doesn't apply.

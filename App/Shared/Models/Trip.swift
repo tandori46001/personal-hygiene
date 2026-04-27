@@ -34,6 +34,10 @@ public final class Trip {
     /// JSON-encoded array of `TripExpense` so we don't add a new @Model.
     public var expensesJSON: String?
 
+    /// Round-14 slice 14: emergency contacts attached to the trip. JSON-
+    /// encoded `[TripEmergencyContact]` to avoid another schema migration.
+    public var emergencyContactsJSON: String?
+
     @Relationship(deleteRule: .cascade, inverse: \TripMilestone.trip)
     public var milestones: [TripMilestone]
 
@@ -54,7 +58,8 @@ public final class Trip {
         documents: [TripDocument] = [],
         notes: String = "",
         currencySnapshotJSON: String? = nil,
-        expensesJSON: String? = nil
+        expensesJSON: String? = nil,
+        emergencyContactsJSON: String? = nil
     ) {
         self.id = id
         self.name = name
@@ -70,6 +75,7 @@ public final class Trip {
         self.notes = notes
         self.currencySnapshotJSON = currencySnapshotJSON
         self.expensesJSON = expensesJSON
+        self.emergencyContactsJSON = emergencyContactsJSON
     }
 }
 

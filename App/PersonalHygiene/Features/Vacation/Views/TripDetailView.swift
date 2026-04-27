@@ -15,6 +15,8 @@ struct TripDetailView: View {
     @State private var newExpenseLabel: String = ""
     @State private var newExpenseAmount: String = ""
     @State private var newExpenseCurrency: String = "USD"
+    @State private var newEmergencyLabel: String = ""
+    @State private var newEmergencyPhone: String = ""
     @State var pendingMarkdownShare: TripDetailExportPayload?
 
     private struct PendingDocument: Identifiable {
@@ -177,6 +179,11 @@ struct TripDetailView: View {
                 newLabel: $newExpenseLabel,
                 newAmount: $newExpenseAmount,
                 newCurrency: $newExpenseCurrency
+            )
+            TripEmergencyContactsSection(
+                viewModel: viewModel,
+                newLabel: $newEmergencyLabel,
+                newPhone: $newEmergencyPhone
             )
 
             Section {
