@@ -4,6 +4,7 @@ struct BirthdaysView: View {
     @Bindable var viewModel: BirthdaysViewModel
 
     @State private var leadEditing: BirthdayContact?
+    @State private var relationshipFilter: BirthdayRelationship?
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
@@ -98,9 +99,46 @@ struct BirthdaysView: View {
                             Image(systemName: "arrow.clockwise")
                         }
                     }
+                    // Round-15 slice 33: relationship filter chips.
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 6) {
+                            Button {
+                                relationshipFilter = nil
+                            } label: {
+                                Text("birthdays.filter.all", bundle: .main)
+                                    .font(.caption.bold())
+                                    .padding(.horizontal, 10)
+                                    .padding(.vertical, 4)
+                            }
+                            .buttonStyle(.bordered)
+                            .tint(relationshipFilter == nil ? .accentColor : .secondary)
+                            ForEach(BirthdayRelationship.allCases, id: \.self) { rel in
+                                Button {
+                                    relationshipFilter = rel
+                                } label: {
+                                    Label {
+                                        Text(LocalizedStringKey("birthdays.relationship.\(rel.rawValue)"))
+                                            .font(.caption.bold())
+                                    } icon: {
+                                        Image(systemName: rel.systemImage)
+                                    }
+                                    .padding(.horizontal, 10)
+                                    .padding(.vertical, 4)
+                                }
+                                .buttonStyle(.bordered)
+                                .tint(relationshipFilter == rel ? .accentColor : .secondary)
+                            }
+                        }
+                    }
                 }
                 Section {
-                    ForEach(viewModel.upcoming, id: \.contact.identifier) { entry in
+                    let filteredUpcoming = viewModel.upcoming.filter { entry in
+                        guard let rel = relationshipFilter else { return true }
+                        return BirthdayRelationshipStore.relationship(
+                            for: entry.contact.identifier
+                        ) == rel
+                    }
+                    ForEach(filteredUpcoming, id: \.contact.identifier) { entry in
                         BirthdayRow(
                             entry: entry,
                             leadDays: viewModel.leadDays(for: entry.contact),

@@ -180,6 +180,20 @@ struct HydrationDashboardView: View {
                         totals: viewModel.weeklyTotals(),
                         goalMilliliters: viewModel.goal.dailyMilliliters
                     )
+                    let weeklyAvg = HydrationWeeklyAverage.averageMilliliters(
+                        dailyTotals: viewModel.weeklyTotals()
+                    )
+                    if weeklyAvg > 0 {
+                        HStack {
+                            Image(systemName: "chart.line.uptrend.xyaxis")
+                                .foregroundStyle(.tint)
+                                .accessibilityHidden(true)
+                            Text("hydration.weekly.average.\(weeklyAvg)", bundle: .main)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                        }
+                        .accessibilityElement(children: .combine)
+                    }
                 } header: {
                     Text("hydration.section.weekly", bundle: .main)
                 }

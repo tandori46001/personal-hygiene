@@ -2513,6 +2513,39 @@
     "trip.emergency.action.add" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Add contact" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Añadir contacto" } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ajouter contact" } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ajouter contact" } } } },
+
+    "hydration.weekly.average" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Weekly average: %lld ml/day" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Promedio semanal: %lld ml/día" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Moyenne hebdomadaire : %lld ml/jour" } } } },
+    "trip.milestone.action.addBundle" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Add 6m / 3m / 1m / 1w defaults" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Añadir 6m / 3m / 1m / 1s por defecto" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ajouter 6m / 3m / 1m / 1s par défaut" } } } },
+    "templateEditor.section.blocks.footer" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Total: %1$@ · %2$lld blocks" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Total: %1$@ · %2$lld bloques" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Total : %1$@ · %2$lld blocs" } } } },
+    "birthdays.filter.all" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "All" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Todos" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Tous" } } } },
+    "birthdays.relationship.family" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Family" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Familia" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Famille" } } } },
+    "birthdays.relationship.friend" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Friends" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Amigos" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Amis" } } } },
+    "birthdays.relationship.coworker" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Coworkers" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Colegas" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Collègues" } } } },
+    "birthdays.relationship.other" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Other" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Otros" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Autre" } } } }
   }
 }

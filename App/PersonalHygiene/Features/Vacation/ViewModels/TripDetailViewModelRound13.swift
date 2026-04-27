@@ -176,6 +176,16 @@ extension TripDetailViewModel {
         return TripCarbonEstimate.roundTripKgCO2(distanceKm: distance)
     }
 
+    /// Round-15 slice 11: drop the standard 6m / 3m / 1m / 1w milestone
+    /// bundle into the current trip. Skips entries that already exist (by
+    /// matching `daysBefore`) so the action is idempotent.
+    func addStandardMilestoneBundle() {
+        let existingDays = Set(trip.milestones.map(\.daysBefore))
+        for seed in MilestoneDefaultBundle.standard where !existingDays.contains(seed.daysBefore) {
+            addMilestone(title: seed.title, daysBefore: seed.daysBefore)
+        }
+    }
+
     /// Round-13 slice 13: clone trip with every date shifted by `days`.
     /// Keeps milestones + packing + notes; resets the cost snapshot since
     /// the original trip's spend doesn't apply.

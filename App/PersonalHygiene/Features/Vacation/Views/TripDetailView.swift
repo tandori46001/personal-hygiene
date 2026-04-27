@@ -87,6 +87,15 @@ struct TripDetailView: View {
                 if viewModel.sortedMilestones.isEmpty {
                     Text("trip.detail.milestones.empty", bundle: .main)
                         .foregroundStyle(.secondary)
+                    Button {
+                        viewModel.addStandardMilestoneBundle()
+                    } label: {
+                        Label {
+                            Text("trip.milestone.action.addBundle", bundle: .main)
+                        } icon: {
+                            Image(systemName: "calendar.badge.plus")
+                        }
+                    }
                 } else {
                     ForEach(viewModel.sortedMilestones) { milestone in
                         Button {

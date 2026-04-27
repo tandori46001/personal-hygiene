@@ -56,6 +56,18 @@ struct TemplateEditorView: View {
                 }
             } header: {
                 Text("templateEditor.section.blocks", bundle: .main)
+            } footer: {
+                // Round-15 slice 27: total duration footer.
+                if !viewModel.sortedBlocks.isEmpty {
+                    let totalMinutes = TemplateDurationCalculator.totalMinutes(viewModel.sortedBlocks)
+                    let formatted = TemplateDurationCalculator.formatted(totalMinutes)
+                    let blockCount = viewModel.sortedBlocks.count
+                    Text(
+                        "templateEditor.section.blocks.footer \(formatted) \(blockCount)",
+                        bundle: .main
+                    )
+                    .font(.caption)
+                }
             }
         }
         .navigationTitle(viewModel.template.name.isEmpty ? "" : viewModel.template.name)
