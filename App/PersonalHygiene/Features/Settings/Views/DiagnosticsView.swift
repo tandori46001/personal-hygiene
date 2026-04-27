@@ -13,6 +13,7 @@ struct DiagnosticsView: View {
 
     @State private var pendingCount: Int?
     @State private var deliveredCount: Int?
+    @State private var criticalAlertsEnabled: Bool?
     @State private var pendingError: String?
     @State private var lastDevAction: String?
     @State private var showingResetConfirm = false
@@ -64,6 +65,10 @@ struct DiagnosticsView: View {
                         Image(systemName: "checkmark.bubble")
                     }
                 }
+                row(
+                    label: "settings.diagnostics.notif.criticalAlerts",
+                    value: criticalAlertsEnabled.map { $0 ? "✓" : "—" } ?? "—"
+                )
             } header: {
                 Text("settings.diagnostics.section.notifications", bundle: .main)
             }
@@ -114,6 +119,60 @@ struct DiagnosticsView: View {
                     Text("settings.diagnostics.devTools.testNotif", bundle: .main)
                 } icon: {
                     Image(systemName: "bell.badge")
+                }
+            }
+
+            Button {
+                Task {
+                    await actions.scheduleMedicationTest()
+                    lastDevAction = String(
+                        localized: "settings.diagnostics.devTools.medicationTest.done"
+                    )
+                    await refreshCounts()
+                }
+            } label: {
+                Label {
+                    Text("settings.diagnostics.devTools.medicationTest", bundle: .main)
+                } icon: {
+                    Image(systemName: "pills.circle")
+                }
+            }
+
+            Button {
+                Task {
+                    if let title = await actions.replayLastDelivered() {
+                        lastDevAction = String(
+                            localized: "settings.diagnostics.devTools.replay.done \(title)"
+                        )
+                    } else {
+                        lastDevAction = String(
+                            localized: "settings.diagnostics.devTools.replay.empty"
+                        )
+                    }
+                    await refreshCounts()
+                }
+            } label: {
+                Label {
+                    Text("settings.diagnostics.devTools.replay", bundle: .main)
+                } icon: {
+                    Image(systemName: "arrow.clockwise.circle")
+                }
+            }
+
+            Button {
+                Task {
+                    await actions.requestAuthorization()
+                    await viewModel.reloadStatus()
+                    lastDevAction = String(
+                        localized: "settings.diagnostics.devTools.requestAuth.done"
+                    )
+                    await refreshCounts()
+                }
+            } label: {
+                Label {
+                    Text("settings.diagnostics.devTools.requestAuth", bundle: .main)
+                } icon: {
+                    Image(systemName: "lock.shield")
                 }
             }
 
@@ -192,6 +251,8 @@ struct DiagnosticsView: View {
         pendingCount = requests.count
         let delivered = await center.deliveredNotifications()
         deliveredCount = delivered.count
+        let settings = await center.notificationSettings()
+        criticalAlertsEnabled = (settings.criticalAlertSetting == .enabled)
     }
 
     private func localizedStatus(_ status: NotificationAuthorizationStatus) -> LocalizedStringKey {

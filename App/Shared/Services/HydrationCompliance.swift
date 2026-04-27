@@ -90,4 +90,24 @@ public enum HydrationCompliance {
             calendar.startOfDay(for: log.drankAt)
         }.mapValues { $0.reduce(0) { $0 + max(0, $1.milliliters) } }
     }
+
+    /// One `(dayStart, totalMl)` row per day in the trailing `days`-day window
+    /// ending on the calendar day of `now`, oldest first. Days with no logs
+    /// surface as `0` — the bar chart relies on a dense series.
+    public static func dailyTotals(
+        on now: Date,
+        logs: [HydrationLog],
+        days: Int,
+        calendar: Calendar = .autoupdatingCurrent
+    ) -> [(date: Date, milliliters: Int)] {
+        guard days > 0 else { return [] }
+        let totals = totalsByDay(logs: logs, calendar: calendar)
+        var output: [(Date, Int)] = []
+        let endDay = calendar.startOfDay(for: now)
+        for offset in (0..<days).reversed() {
+            guard let day = calendar.date(byAdding: .day, value: -offset, to: endDay) else { continue }
+            output.append((day, totals[day] ?? 0))
+        }
+        return output
+    }
 }

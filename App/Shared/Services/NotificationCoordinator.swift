@@ -37,10 +37,20 @@ public final class NotificationCoordinator {
     /// Schedule notifications for today's active template based on the user's
     /// current day-type. Cancels any previously scheduled `personal-hygiene` notifications first.
     public func refreshForToday(_ now: Date = Date()) async throws {
+        let built = try await buildTodayNotifications(now: now)
+        try await service.scheduleAll(built)
+    }
+
+    /// Pure-build pipeline for today's routine + follow-up notifications. The
+    /// returned array is what `refreshForToday` would have scheduled. Reused
+    /// by `rescheduleToday(shiftedByMinutes:)` so the user can offset every
+    /// notification by ±N minutes after a late wake-up / jet-lag without
+    /// touching the block start times in storage.
+    public func buildTodayNotifications(now: Date = Date()) async throws -> [ScheduledNotification] {
         let todayType = TodayViewModel.dayType(for: now, in: calendar)
         guard let template = try repository.activeTemplate(for: todayType) else {
             await service.cancelAll()
-            return
+            return []
         }
 
         skipStore?.purgeStale(before: now, calendar: calendar, keepLastDays: 7)
@@ -72,13 +82,44 @@ public final class NotificationCoordinator {
             calendar: calendar
         )
         let filtered = DeepFocusFilter.suppressing(raw, focusWindows: focusWindows)
-        let withFollowUps = filtered + Self.medicationFollowUps(
+        return filtered + Self.medicationFollowUps(
             primaries: filtered,
             blocks: blocks,
             now: now,
             calendar: calendar
         )
-        try await service.scheduleAll(withFollowUps)
+    }
+
+    /// One-shot "shift today's notifications by ±N minutes" for jet-lag /
+    /// late-wake recovery. Builds today's nominal schedule, applies the shift
+    /// in-memory, drops anything that lands in the past, and re-schedules the
+    /// result. Block start times in storage are not modified.
+    public func rescheduleToday(shiftedByMinutes shiftMinutes: Int, now: Date = Date()) async throws {
+        let nominal = try await buildTodayNotifications(now: now)
+        let shifted = Self.shifted(nominal, byMinutes: shiftMinutes, dropPastBefore: now)
+        try await service.scheduleAll(shifted)
+    }
+
+    /// Pure shift-and-filter for `ScheduledNotification`s. Exposed for tests.
+    static func shifted(
+        _ notifications: [ScheduledNotification],
+        byMinutes shiftMinutes: Int,
+        dropPastBefore now: Date
+    ) -> [ScheduledNotification] {
+        let interval = TimeInterval(shiftMinutes * 60)
+        return notifications.compactMap { notif -> ScheduledNotification? in
+            let newDate = notif.triggerDate.addingTimeInterval(interval)
+            guard newDate > now else { return nil }
+            return ScheduledNotification(
+                identifier: notif.identifier,
+                title: notif.title,
+                body: notif.body,
+                triggerDate: newDate,
+                isCritical: notif.isCritical,
+                threadIdentifier: notif.threadIdentifier,
+                categoryIdentifier: notif.categoryIdentifier
+            )
+        }
     }
 
     /// PRD M3.2 fallback: every primary medication notification gains a +30

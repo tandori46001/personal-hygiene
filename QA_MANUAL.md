@@ -1165,3 +1165,83 @@ None — purely build-time guard.
 3. Undo toast appears at the top of the list with the deleted volume + an `Undo` button.
 4. Tapping `Undo` restores the log with the original timestamp.
 5. Letting the toast sit for 5s clears it automatically.
+
+---
+
+## [T-075] — Diagnostics: Replay last delivered notification
+
+**Module:** diagnostics · **Shipped in:** round 9 (Tier B)
+
+### Manual verification (real device, needs ≥1 delivered notification in the last 24h)
+1. Trigger any test notification (e.g. T-064) and wait for it to fire.
+2. Settings → Diagnostics → "Replay last delivered" button.
+3. Within ~5s a copy of the most-recent delivered notification fires (same title + body + sound).
+4. The dev-action footer reads "Replayed: <title>".
+5. If no delivered notifications exist (post-reset / fresh install), the footer reads "No recent delivered notifications".
+
+---
+
+## [T-076] — Diagnostics: Schedule medication test (60s + follow-up at 90s)
+
+**Module:** diagnostics · **Shipped in:** round 9 (Tier B)
+
+### Manual verification (real device, notifications authorized)
+1. Settings → Diagnostics → "Schedule medication test" button.
+2. Pending count increments by 2 immediately.
+3. After 60s the primary medication-shaped notification fires (long-press shows Snooze + Mark Done actions).
+4. After another 30s the follow-up notification fires.
+5. Marking the primary as done before the follow-up fires does NOT cancel the follow-up — it's a real M3.2 fallback test.
+
+---
+
+## [T-077] — Today: live "now" line between schedule rows
+
+**Module:** today · **Shipped in:** round 9 (Tier D)
+
+### Manual verification
+1. Today tab with an active template covering the current hour.
+2. Scroll to the schedule list.
+3. A red horizontal divider with "Now · HH:MM" caption appears between the last-passed block and the next-upcoming block.
+4. Background or close + reopen the app → the line repositions to the new current minute (refreshes on `scenePhase == .active`).
+5. Outside the schedule's first/last block the line is hidden.
+
+---
+
+## [T-078] — Templates: drag-to-reorder blocks within an editor
+
+**Module:** templates · **Shipped in:** round 9 (Tier D)
+
+### Manual verification
+1. Templates tab → tap any template → editor.
+2. Tap "Edit" in the toolbar → drag handles appear next to each block row.
+3. Drag block A from slot 1 to slot 3.
+4. After release, block A's start time = original slot-3 start time; the previous slot-3 occupant moves into slot 1.
+5. Each block's `durationMinutes` stays attached to the block (not the slot).
+6. Pull-to-refresh / re-open the editor → the new order persists.
+
+---
+
+## [T-079] — Hydration: weekly 7-day bar chart
+
+**Module:** hydration · **Shipped in:** round 9 (Tier D)
+
+### Manual verification
+1. Hydration tab → scroll to "Weekly" section.
+2. 7 vertical bars, oldest day on the left, today on the right (narrow weekday letter axis).
+3. Days that met the goal render green; days under goal render blue.
+4. Dashed orange horizontal rule across the chart represents the goal.
+5. Days with no logs render flat (zero) — chart stays dense.
+
+---
+
+## [T-080] — Watch: BlockDetail + Settings glance + reschedule-today
+
+**Module:** watch · **Shipped in:** round 9 (Tier E)
+
+### Manual verification (Apple Watch on wrist, app installed)
+1. Open the watch app → Today list shows current schedule.
+2. Tap any non-current row → BlockDetailWatchView pushes with title + category + time + duration.
+3. "Mark done" button toggles completion + dismisses the detail. Watch widget timeline reloads (NextBlock complication updates within seconds).
+4. "Skip today" button → row picks up the orange skip badge after dismiss.
+5. Scroll to bottom of Today list → tap "Settings" row → SettingsGlanceWatchView shows snooze duration + notification auth status + build descriptor.
+6. iPhone side: Settings → Scheduling → "Shift today by ±N min" stepper → "Reschedule today" button → all today's pending notifications shift by N minutes (verify via Diagnostics → Pending notifications panel).

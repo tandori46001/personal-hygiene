@@ -123,4 +123,66 @@ final class NotificationCoordinatorFollowUpTests: XCTestCase {
 
         XCTAssertTrue(followUps.isEmpty)
     }
+
+    // MARK: - shifted(_:byMinutes:dropPastBefore:) (round-9 reschedule helper)
+
+    private func makeNotif(at trigger: Date, identifier: String = "id") -> ScheduledNotification {
+        ScheduledNotification(
+            identifier: identifier,
+            title: "T",
+            body: nil,
+            triggerDate: trigger,
+            isCritical: false,
+            threadIdentifier: NotificationThreadID.routine,
+            categoryIdentifier: NotificationCategoryID.routineBlock
+        )
+    }
+
+    func test_shifted_addsOffsetToEachTriggerDate() {
+        let now = date(year: 2026, month: 4, day: 26, hour: 6)
+        let original = makeNotif(at: date(year: 2026, month: 4, day: 26, hour: 9))
+
+        let shifted = NotificationCoordinator.shifted(
+            [original],
+            byMinutes: 30,
+            dropPastBefore: now
+        )
+
+        XCTAssertEqual(shifted.count, 1)
+        XCTAssertEqual(
+            shifted.first?.triggerDate,
+            original.triggerDate.addingTimeInterval(30 * 60)
+        )
+        XCTAssertEqual(shifted.first?.identifier, "id")
+    }
+
+    func test_shifted_dropsTriggersThatLandInThePastAfterShift() {
+        let now = date(year: 2026, month: 4, day: 26, hour: 12)
+        let earlier = makeNotif(at: date(year: 2026, month: 4, day: 26, hour: 11), identifier: "early")
+        let later = makeNotif(at: date(year: 2026, month: 4, day: 26, hour: 14), identifier: "late")
+
+        // -120 min shift moves "early" to 09:00 (before now=12:00) → dropped.
+        // "late" moves to 12:00 → equal-to-now → also dropped (strictly > now).
+        let shifted = NotificationCoordinator.shifted(
+            [earlier, later],
+            byMinutes: -120,
+            dropPastBefore: now
+        )
+
+        XCTAssertTrue(shifted.allSatisfy { $0.triggerDate > now })
+        XCTAssertFalse(shifted.contains(where: { $0.identifier == "early" }))
+    }
+
+    func test_shifted_zeroMinutesIsIdentityForFutureTriggers() {
+        let now = date(year: 2026, month: 4, day: 26, hour: 6)
+        let future = makeNotif(at: date(year: 2026, month: 4, day: 26, hour: 18))
+
+        let shifted = NotificationCoordinator.shifted(
+            [future],
+            byMinutes: 0,
+            dropPastBefore: now
+        )
+
+        XCTAssertEqual(shifted, [future])
+    }
 }

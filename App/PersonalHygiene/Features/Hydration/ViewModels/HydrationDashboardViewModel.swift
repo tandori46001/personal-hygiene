@@ -117,4 +117,15 @@ final class HydrationDashboardViewModel {
             calendar: calendar
         )
     }
+
+    /// Trailing 7-day totals (oldest first), each as `(dayStart, totalMl)`.
+    /// Days without logs come back as `0` so the bar chart is dense.
+    func weeklyTotals(now: Date = Date()) -> [(date: Date, milliliters: Int)] {
+        HydrationCompliance.dailyTotals(
+            on: now,
+            logs: recentLogs,
+            days: 7,
+            calendar: calendar
+        )
+    }
 }

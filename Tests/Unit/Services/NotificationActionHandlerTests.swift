@@ -177,4 +177,45 @@ final class NotificationActionHandlerTests: XCTestCase {
         XCTAssertTrue(removed.snapshot.contains(target))
         XCTAssertFalse(removed.snapshot.contains(other))
     }
+
+    // MARK: - WidgetCenter reload wiring (round 9 slice 17)
+
+    /// Thread-safe int counter for `@Sendable` test closures.
+    private final class Counter: @unchecked Sendable {
+        private let lock = NSLock()
+        private var count = 0
+        func increment() { lock.lock(); defer { lock.unlock() }; count += 1 }
+        var value: Int { lock.lock(); defer { lock.unlock() }; return count }
+    }
+
+    func test_markDone_invokesWidgetReloaderExactlyOnce() {
+        let identifier = "personal-hygiene.block.\(UUID().uuidString).2026-04-26"
+        let widgetReloads = Counter()
+
+        let handler = NotificationActionHandler(
+            snoozeIntervalProvider: { 300 },
+            widgetReloader: { widgetReloads.increment() }
+        )
+
+        handler.handleMarkDoneAction(identifier: identifier) { _ in }
+
+        XCTAssertEqual(widgetReloads.value, 1)
+    }
+
+    func test_markDone_widgetReloadFiresAfterMarkDoneObserver() {
+        let identifier = "personal-hygiene.block.\(UUID().uuidString).2026-04-26"
+        let order = Collector<String>()
+
+        let handler = NotificationActionHandler(
+            snoozeIntervalProvider: { 300 },
+            markDoneObserver: { _ in order.append("observer") },
+            widgetReloader: { order.append("reload") }
+        )
+
+        handler.handleMarkDoneAction(identifier: identifier) { _ in
+            order.append("removed")
+        }
+
+        XCTAssertEqual(order.snapshot, ["removed", "observer", "reload"])
+    }
 }

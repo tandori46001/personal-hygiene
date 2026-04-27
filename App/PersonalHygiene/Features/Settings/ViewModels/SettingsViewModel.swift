@@ -38,4 +38,13 @@ final class SettingsViewModel {
             lastError = error.localizedDescription
         }
     }
+
+    func rescheduleToday(shiftedByMinutes shiftMinutes: Int) async {
+        do {
+            try await coordinator.rescheduleToday(shiftedByMinutes: shiftMinutes)
+            lastRefreshAt = Date()
+        } catch {
+            lastError = error.localizedDescription
+        }
+    }
 }

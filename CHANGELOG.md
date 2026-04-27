@@ -8,6 +8,27 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added — Session 11 ("haz todo" round 9, 22 slices: HKObserverQuery scaffolding + reschedule-today + watch detail)
+
+- **Slice 1 — L004 propagated to Trips:** dropped inner `NavigationStack` from `TripsListView`. Hydration / Housekeeping / Birthdays keep theirs (zero internal `NavigationLink`s, no visible bug, conservative re: tab-reorder out of the More overflow).
+- **Slice 2 — iPhone widget reload after mark-done:** `NotificationActionHandler` gained an injectable `widgetReloader: @Sendable () -> Void` defaulting to `WidgetCenter.shared.reloadAllTimelines()`. The mark-done branch (live + pure helper) calls it so `NextBlockHomeWidget` reflects the just-completed block immediately. Mirrors watch slice 17 from round 8.
+- **Slice 3 — Identifier round-trip tracer test:** `test_parseAny_payloadRoundTripsForEachSource` verifies the *full payload* (not just source kind) for every `BlockSnoozeSource` case. Catches refactors that change payload encoding (e.g. UUID → shortcode) but keep the prefix.
+- **Slice 4 — Diagnostics: Replay last delivered:** new button reads the most-recent `deliveredNotifications`, re-fires a copy at +5s with the same title/body/category. Empty-list returns `nil` and the action footer flips to the empty-state message.
+- **Slice 5 — Diagnostics: Schedule medication test:** new button schedules a medication-shaped primary at +60s + a follow-up at +90s using the same identifier prefixes as the production `MedicationFollowUpFactory`. Cuts on-device M3.2 verification from ~30min to ~2min.
+- **Slice 6 — Diagnostics: Re-request authorization + Critical Alerts row:** new "Request authorization" button calls `requestAuthorization` and refreshes the status row. New "Critical Alerts" row shows whether the entitlement is granted (`✓` / `—`) — always `—` until the paid program lands.
+- **Slices 7-9 — `MedicationObserving` scaffolding:** new `@MainActor` protocol with `start(for:onChange:) / stop(for:) / stopAll()`. `MockMedicationObserver` (test double with `simulateChange(for:)`, last-writer-wins on duplicate `start`) + `MedicationObserverService` (production shell, `isAvailable: false` until the entitlement). 8 tests cover registration, fire, double-register, stop, stop-on-unregistered, stopAll, production gating, and "no-fire when unavailable".
+- **Slice 10 — Today now-line indicator:** new `NowMarkerRow` injected into the schedule list before the first block whose start > now. Red "Now · HH:MM" caption + 1px hairline. Refreshes on `scenePhase == .active` so it survives backgrounding.
+- **Slice 11 — Templates drag-to-reorder:** `TemplateEditorViewModel.move(fromOffsets:toOffset:)` permutes which block occupies each time slot (start times stay the schedule's invariant; durations follow blocks). `TemplateEditorView` adds `.onMove` + an `EditButton` toolbar item. 4 tests cover swap-adjacent, no-op self-move, empty-template, and per-block duration preservation.
+- **Slice 12 — Hydration weekly chart:** new Swift Charts bar chart shows trailing 7-day totals (oldest left, today right). Bars over goal render green, under blue; orange dashed `RuleMark` for the goal. Backed by `HydrationCompliance.dailyTotals(on:logs:days:calendar:)` + 3 tests (length, zero-fill, days=0 returns empty).
+- **Slice 13 — Settings: reschedule-today by ±N min:** new Stepper (-120 to +120, step 15) + button. `NotificationCoordinator.rescheduleToday(shiftedByMinutes:)` builds the nominal schedule, applies the shift via pure `shifted(_:byMinutes:dropPastBefore:)`, drops past triggers, sends to service. Block start times in storage stay nominal. 3 tests cover the pure helper.
+- **Slice 14 — `BlockDetailWatchView`:** tapping a watch Today row now pushes a detail screen with title + category + time + duration + Mark-done + Skip-today buttons. Either action dismisses back to Today.
+- **Slice 15 — Watch settings glance:** new `SettingsGlanceWatchView` accessible from the bottom of the Today list. Read-only: snooze duration, notification auth status, build descriptor.
+- **Slice 16 — Watch widget reload on scenePhase active:** `TodayWatchView` calls `WidgetCenter.shared.reloadAllTimelines()` on `.active` so the NextBlock complication picks up any iPhone-side changes immediately.
+- **Slice 17 — `WidgetCenter` reload wiring tests (2):** counter-based `widgetReloader` injection verifies the call site fires exactly once on mark-done; ordered-collector test verifies the call ordering (`removed` → `observer` → `reload`).
+- **Slice 18 — Skip-rest-of-today integration tests (2):** verifies that calling `skipRestOfToday(from:)` marks the cutoff + every later block as skipped while leaving earlier blocks untouched; verifies the no-skipStore path is a no-op.
+- **Slice 19 — QA_MANUAL T-075…T-080 (6 sections):** Replay last delivered, Schedule medication test, Today now-line, Templates drag-to-reorder, Hydration weekly chart, Watch detail + glance + reschedule-today.
+- **Slice 20 — ARCHITECTURE §25 + PRD M3.2 observer scaffolding note + this CHANGELOG entry.** Bumped ARCHITECTURE version to v0.6.
+
 ### Added — Session 10 ("haz todo" round 8, 22 slices: CI watchOS guard + diagnostics + UX polish)
 
 - **Slice 1 — CI watchOS build job:** new `build-watch` job in `.github/workflows/ci.yml` runs `xcodebuild -scheme PersonalHygieneWatch -destination 'generic/platform=watchOS'` on `macos-latest` after every push/PR. Catches L003-class regressions before they reach a manual deploy.

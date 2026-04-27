@@ -42,6 +42,7 @@ struct TemplateEditorView: View {
                     .buttonStyle(.plain)
                 }
                 .onDelete(perform: deleteBlocks)
+                .onMove(perform: moveBlocks)
 
                 Button {
                     editingExistingBlock = nil
@@ -59,6 +60,9 @@ struct TemplateEditorView: View {
         }
         .navigationTitle(viewModel.template.name.isEmpty ? "" : viewModel.template.name)
         .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                EditButton()
+            }
             ToolbarItem(placement: .confirmationAction) {
                 Button {
                     saveMetadata()
@@ -114,6 +118,14 @@ struct TemplateEditorView: View {
             } catch {
                 errorMessage = error.localizedDescription
             }
+        }
+    }
+
+    private func moveBlocks(from source: IndexSet, to destination: Int) {
+        do {
+            try viewModel.move(fromOffsets: source, toOffset: destination)
+        } catch {
+            errorMessage = error.localizedDescription
         }
     }
 

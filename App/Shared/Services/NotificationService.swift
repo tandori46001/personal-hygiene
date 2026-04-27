@@ -1,5 +1,6 @@
 import Foundation
 import UserNotifications
+import WidgetKit
 
 public enum NotificationAuthorizationStatus: Sendable {
     case notDetermined
@@ -213,6 +214,11 @@ public final class NotificationActionHandler: NSObject, UNUserNotificationCenter
     /// removal call site fires; in production it's nil and the real
     /// `UNUserNotificationCenter` removal still runs.
     private let markDoneObserver: (@Sendable (String) -> Void)?
+    /// Reloads the iPhone home-screen widget timelines after a mark-done so
+    /// `NextBlockHomeWidget` reflects the just-completed block immediately.
+    /// Defaults to `WidgetCenter.shared.reloadAllTimelines()` in production;
+    /// tests inject a no-op or a counter to verify the wiring fires.
+    private let widgetReloader: @Sendable () -> Void
 
     /// Default initializer reads the user's chosen snooze duration from
     /// `SnoozeDurationStore` (UserDefaults-backed) and uses `Date()` as `now`.
@@ -228,12 +234,14 @@ public final class NotificationActionHandler: NSObject, UNUserNotificationCenter
         snoozeIntervalProvider: @escaping @Sendable () -> TimeInterval,
         nowProvider: @escaping @Sendable () -> Date = { Date() },
         snoozeRecorder: (@Sendable (ParsedNotificationIdentifier) -> Void)? = nil,
-        markDoneObserver: (@Sendable (String) -> Void)? = nil
+        markDoneObserver: (@Sendable (String) -> Void)? = nil,
+        widgetReloader: @escaping @Sendable () -> Void = { WidgetCenter.shared.reloadAllTimelines() }
     ) {
         self.snoozeIntervalProvider = snoozeIntervalProvider
         self.nowProvider = nowProvider
         self.snoozeRecorder = snoozeRecorder
         self.markDoneObserver = markDoneObserver
+        self.widgetReloader = widgetReloader
         super.init()
     }
 
@@ -269,6 +277,7 @@ public final class NotificationActionHandler: NSObject, UNUserNotificationCenter
             let identifier = response.notification.request.identifier
             center.removePendingNotificationRequests(withIdentifiers: [identifier])
             markDoneObserver?(identifier)
+            widgetReloader()
             completionHandler()
         default:
             completionHandler()
@@ -286,6 +295,7 @@ public final class NotificationActionHandler: NSObject, UNUserNotificationCenter
     ) {
         removePending([identifier])
         markDoneObserver?(identifier)
+        widgetReloader()
     }
 
     /// Pure builder — exposed for testing.

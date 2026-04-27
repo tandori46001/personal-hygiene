@@ -211,4 +211,47 @@ final class HydrationComplianceTests: XCTestCase {
             0
         )
     }
+
+    // MARK: - dailyTotals (round-9 weekly chart helper)
+
+    func test_dailyTotals_returnsRequestedNumberOfDaysOldestFirst() {
+        let now = date(year: 2026, month: 4, day: 26)
+        let totals = HydrationCompliance.dailyTotals(
+            on: now,
+            logs: [],
+            days: 7,
+            calendar: gregorianUTC()
+        )
+        XCTAssertEqual(totals.count, 7)
+        let cal = gregorianUTC()
+        let firstDay = cal.date(byAdding: .day, value: -6, to: cal.startOfDay(for: now))
+        XCTAssertEqual(totals.first?.date, firstDay)
+        XCTAssertEqual(totals.last?.date, cal.startOfDay(for: now))
+    }
+
+    func test_dailyTotals_zerosOutDaysWithoutLogs() {
+        let now = date(year: 2026, month: 4, day: 26)
+        let twoDaysAgo = date(year: 2026, month: 4, day: 24)
+        let logs = [HydrationLog(milliliters: 800, drankAt: twoDaysAgo)]
+        let totals = HydrationCompliance.dailyTotals(
+            on: now,
+            logs: logs,
+            days: 7,
+            calendar: gregorianUTC()
+        )
+        let nonZero = totals.filter { $0.milliliters > 0 }
+        XCTAssertEqual(nonZero.count, 1)
+        XCTAssertEqual(nonZero.first?.milliliters, 800)
+    }
+
+    func test_dailyTotals_zeroDaysReturnsEmpty() {
+        let now = date(year: 2026, month: 4, day: 26)
+        let totals = HydrationCompliance.dailyTotals(
+            on: now,
+            logs: [],
+            days: 0,
+            calendar: gregorianUTC()
+        )
+        XCTAssertTrue(totals.isEmpty)
+    }
 }

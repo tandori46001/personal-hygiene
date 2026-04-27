@@ -139,6 +139,52 @@ final class BlockSnoozeStoreTests: XCTestCase {
         XCTAssertNil(BlockNotificationIdentifier.parseAny(identifier))
     }
 
+    /// Round-trips the full payload (not just the source kind) for every
+    /// `BlockSnoozeSource`. Catches refactors that change the encoding
+    /// (e.g. UUID → shortcode) without updating the parser.
+    func test_parseAny_payloadRoundTripsForEachSource() {
+        for source in BlockSnoozeSource.allCases {
+            switch source {
+            case .routine:
+                let blockID = UUID()
+                let dayKey = "2026-04-26"
+                let identifier = "\(NotificationFactory.identifierPrefix)\(blockID.uuidString).\(dayKey)"
+                XCTAssertEqual(
+                    BlockNotificationIdentifier.parseAny(identifier),
+                    .routine(blockID: blockID, dayKey: dayKey),
+                    "routine payload did not round-trip"
+                )
+            case .hydration:
+                let dayKey = "2026-04-26"
+                let index = 4
+                let identifier = "\(HydrationNotificationFactory.identifierPrefix)\(dayKey).\(index)"
+                XCTAssertEqual(
+                    BlockNotificationIdentifier.parseAny(identifier),
+                    .hydration(dayKey: dayKey, index: index),
+                    "hydration payload did not round-trip"
+                )
+            case .milestone:
+                let milestoneID = UUID()
+                let identifier = "\(TripMilestoneNotificationFactory.identifierPrefix)\(milestoneID.uuidString)"
+                XCTAssertEqual(
+                    BlockNotificationIdentifier.parseAny(identifier),
+                    .milestone(milestoneID: milestoneID),
+                    "milestone payload did not round-trip"
+                )
+            case .medicationFollowUp:
+                let blockID = UUID()
+                let dayKey = "2026-04-26"
+                let prefix = MedicationFollowUpFactory.identifierPrefix
+                let identifier = "\(prefix)\(blockID.uuidString).\(dayKey)"
+                XCTAssertEqual(
+                    BlockNotificationIdentifier.parseAny(identifier),
+                    .medicationFollowUp(blockID: blockID, dayKey: dayKey),
+                    "medicationFollowUp payload did not round-trip"
+                )
+            }
+        }
+    }
+
     /// Iterates `BlockSnoozeSource.allCases` and round-trips a synthesized
     /// identifier for each kind; if a new source is added without updating
     /// `parseAny`, this test fails — guarding L002.

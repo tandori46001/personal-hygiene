@@ -5,6 +5,29 @@ struct TodayView: View {
     var onCreateTemplate: (() -> Void)?
 
     @State private var showingProgressDetail = false
+    @State private var nowMinutes: Int = Self.currentMinutesFromMidnight()
+    @Environment(\.scenePhase) private var scenePhase
+
+    static func currentMinutesFromMidnight(
+        now: Date = Date(),
+        calendar: Calendar = .autoupdatingCurrent
+    ) -> Int {
+        let comps = calendar.dateComponents([.hour, .minute], from: now)
+        return (comps.hour ?? 0) * 60 + (comps.minute ?? 0)
+    }
+
+    private func shouldInsertNowMarker(before block: Block, in blocks: [Block]) -> Bool {
+        guard let first = blocks.first, let last = blocks.last else { return false }
+        let scheduleEnd = last.startMinutesFromMidnight + last.durationMinutes
+        guard nowMinutes >= first.startMinutesFromMidnight, nowMinutes < scheduleEnd else {
+            return false
+        }
+        // Insert before the first block whose start is strictly after `nowMinutes`.
+        guard let target = blocks.first(where: { $0.startMinutesFromMidnight > nowMinutes }) else {
+            return false
+        }
+        return block.id == target.id
+    }
 
     @ViewBuilder
     private var tripCountdownSection: some View {
@@ -53,6 +76,9 @@ struct TodayView: View {
 
                         Section {
                             ForEach(template.sortedBlocks) { block in
+                                if shouldInsertNowMarker(before: block, in: template.sortedBlocks) {
+                                    NowMarkerRow(nowMinutes: nowMinutes)
+                                }
                                 BlockTimelineRow(
                                     block: block,
                                     isDone: viewModel.isDone(block),
@@ -121,7 +147,16 @@ struct TodayView: View {
                 }
             }
             .navigationTitle(Text("today.title", bundle: .main))
-            .onAppear { viewModel.reload() }
+            .onAppear {
+                viewModel.reload()
+                nowMinutes = Self.currentMinutesFromMidnight()
+            }
+            .onChange(of: scenePhase) { _, phase in
+                if phase == .active {
+                    nowMinutes = Self.currentMinutesFromMidnight()
+                    viewModel.reload()
+                }
+            }
             .sheet(isPresented: $showingProgressDetail) {
                 if let template = viewModel.activeTemplate {
                     ProgressDetailSheet(blocks: template.sortedBlocks, isDone: viewModel.isDone)
@@ -303,6 +338,32 @@ private struct BlockNowRow: View {
             return Text(date, format: .dateTime.hour().minute())
         }
         return Text(verbatim: formattedTime(minutes: minutes))
+    }
+}
+
+private struct NowMarkerRow: View {
+    let nowMinutes: Int
+
+    var body: some View {
+        HStack(spacing: 8) {
+            Text(formattedTime(minutes: nowMinutes))
+                .font(.caption.monospacedDigit())
+                .foregroundStyle(.red)
+                .frame(width: 56, alignment: .leading)
+            Rectangle()
+                .fill(.red)
+                .frame(height: 1)
+            Text("today.now.line", bundle: .main)
+                .font(.caption2.bold())
+                .foregroundStyle(.red)
+        }
+        .padding(.vertical, 2)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(Text("today.now.line", bundle: .main))
+    }
+
+    private func formattedTime(minutes: Int) -> String {
+        String(format: "%02d:%02d", minutes / 60, minutes % 60)
     }
 }
 

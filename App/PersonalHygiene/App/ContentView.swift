@@ -196,6 +196,17 @@ private struct MainTabs: View {
             },
             resetDevStores: {
                 Self.resetDevStores(skipStore: skipStore, snoozeStore: snoozeStore)
+            },
+            replayLastDelivered: {
+                await Self.replayLastDelivered()
+            },
+            scheduleMedicationTest: {
+                await Self.scheduleMedicationTest()
+            },
+            requestAuthorization: {
+                _ = try? await UNUserNotificationCenter.current().requestAuthorization(
+                    options: [.alert, .sound, .badge]
+                )
             }
         )
     }
@@ -245,6 +256,67 @@ private struct MainTabs: View {
         skipStore.removeAll()
         snoozeStore.removeAll()
         SnoozeDurationStore.set(SnoozeDurationStore.defaultMinutes, in: .standard)
+    }
+
+    @MainActor
+    private static func replayLastDelivered() async -> String? {
+        let center = UNUserNotificationCenter.current()
+        let delivered = await center.deliveredNotifications()
+        let mostRecent = delivered.max(by: { $0.date < $1.date })
+        guard let original = mostRecent else { return nil }
+
+        let content = UNMutableNotificationContent()
+        content.title = original.request.content.title
+        content.body = original.request.content.body
+        content.sound = original.request.content.sound
+        content.categoryIdentifier = original.request.content.categoryIdentifier
+        content.threadIdentifier = original.request.content.threadIdentifier
+
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
+        let identifier = "\(original.request.identifier).replay.\(Int(Date().timeIntervalSince1970))"
+        let request = UNNotificationRequest(identifier: identifier, content: content, trigger: trigger)
+        try? await center.add(request)
+        return original.request.content.title
+    }
+
+    @MainActor
+    private static func scheduleMedicationTest() async {
+        // Primary medication notification at +60s (real category so the
+        // mark-done/snooze actions show up). Follow-up at +90s mirrors the
+        // M3.2 "missed-dose" path the MedicationFollowUpFactory produces in
+        // production (default offset is 30 min; we shrink it to 30s here so
+        // QA can verify the wiring inline).
+        let center = UNUserNotificationCenter.current()
+        let blockID = UUID()
+        let dayKey = "test"
+
+        let primary = UNMutableNotificationContent()
+        primary.title = String(localized: "settings.diagnostics.devTools.medicationTest.primary.title")
+        primary.body = String(localized: "settings.diagnostics.devTools.medicationTest.primary.body")
+        primary.sound = .default
+        primary.categoryIdentifier = NotificationCategoryID.routineBlock
+        primary.threadIdentifier = NotificationThreadID.routine
+        let primaryID = "\(NotificationFactory.identifierPrefix)\(blockID.uuidString).\(dayKey)"
+        let primaryRequest = UNNotificationRequest(
+            identifier: primaryID,
+            content: primary,
+            trigger: UNTimeIntervalNotificationTrigger(timeInterval: 60, repeats: false)
+        )
+
+        let followUp = UNMutableNotificationContent()
+        followUp.title = String(localized: "settings.diagnostics.devTools.medicationTest.followup.title")
+        followUp.body = String(localized: "settings.diagnostics.devTools.medicationTest.followup.body")
+        followUp.sound = .default
+        followUp.threadIdentifier = NotificationThreadID.routine
+        let followUpID = "\(MedicationFollowUpFactory.identifierPrefix)\(blockID.uuidString).\(dayKey)"
+        let followUpRequest = UNNotificationRequest(
+            identifier: followUpID,
+            content: followUp,
+            trigger: UNTimeIntervalNotificationTrigger(timeInterval: 90, repeats: false)
+        )
+
+        try? await center.add(primaryRequest)
+        try? await center.add(followUpRequest)
     }
 }
 

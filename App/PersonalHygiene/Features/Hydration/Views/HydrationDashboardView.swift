@@ -1,3 +1,4 @@
+import Charts
 import SwiftUI
 
 struct HydrationDashboardView: View {
@@ -142,6 +143,15 @@ struct HydrationDashboardView: View {
                 }
 
                 Section {
+                    HydrationWeeklyChart(
+                        totals: viewModel.weeklyTotals(),
+                        goalMilliliters: viewModel.goal.dailyMilliliters
+                    )
+                } header: {
+                    Text("hydration.section.weekly", bundle: .main)
+                }
+
+                Section {
                     if viewModel.todayLogs.isEmpty {
                         Text("hydration.history.empty", bundle: .main)
                             .foregroundStyle(.secondary)
@@ -206,6 +216,35 @@ struct HydrationDashboardView: View {
                 .buttonStyle(.bordered)
                 .accessibilityLabel(a11y)
         }
+    }
+}
+
+private struct HydrationWeeklyChart: View {
+    let totals: [(date: Date, milliliters: Int)]
+    let goalMilliliters: Int
+
+    var body: some View {
+        Chart {
+            ForEach(totals, id: \.date) { entry in
+                BarMark(
+                    x: .value("hydration.weekly.dayAxis", entry.date, unit: .day),
+                    y: .value("hydration.weekly.mlAxis", entry.milliliters)
+                )
+                .foregroundStyle(entry.milliliters >= goalMilliliters ? .green : .blue)
+            }
+            if goalMilliliters > 0 {
+                RuleMark(y: .value("hydration.weekly.goal", goalMilliliters))
+                    .foregroundStyle(.orange.opacity(0.6))
+                    .lineStyle(StrokeStyle(lineWidth: 1, dash: [4, 4]))
+            }
+        }
+        .chartXAxis {
+            AxisMarks(values: .stride(by: .day)) { _ in
+                AxisValueLabel(format: .dateTime.weekday(.narrow))
+            }
+        }
+        .frame(height: 140)
+        .accessibilityLabel(Text("a11y.hydration.weeklyChart", bundle: .main))
     }
 }
 

@@ -16,6 +16,7 @@ struct SettingsView: View {
     @State private var backupError: String?
     @State private var showingWhatsNew = false
     @State private var showingOnboardingRestartConfirm = false
+    @State private var rescheduleShiftMinutes: Int = 30
 
     private struct BackupExport: Identifiable {
         let id = UUID()
@@ -146,8 +147,30 @@ struct SettingsView: View {
             } label: {
                 Text("settings.snooze.duration.label", bundle: .main)
             }
+
+            Stepper(
+                value: $rescheduleShiftMinutes,
+                in: -120...120,
+                step: 15
+            ) {
+                HStack {
+                    Text("settings.reschedule.shift", bundle: .main)
+                    Spacer()
+                    Text(LocalizedStringResource("settings.reschedule.shift.value \(rescheduleShiftMinutes)"))
+                        .foregroundStyle(.secondary)
+                }
+            }
+            Button {
+                let shift = rescheduleShiftMinutes
+                Task { await viewModel.rescheduleToday(shiftedByMinutes: shift) }
+            } label: {
+                Text("settings.reschedule.action", bundle: .main)
+            }
+            .disabled(viewModel.status != .authorized && viewModel.status != .provisional)
         } header: {
             Text("settings.section.scheduling", bundle: .main)
+        } footer: {
+            Text("settings.reschedule.footer", bundle: .main)
         }
     }
 

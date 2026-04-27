@@ -10,67 +10,69 @@ struct TripsListView: View {
     @State private var newEnd = Date().addingTimeInterval(7 * 24 * 60 * 60)
 
     var body: some View {
-        NavigationStack {
-            List {
-                if let error = viewModel.errorMessage {
+        // L004: no inner `NavigationStack` here. This view lives inside the
+        // iOS 18 TabView "More" overflow, which already wraps content in its
+        // own NavigationStack. A second stack would render two stacked back
+        // chevrons when pushing into TripDetailView.
+        List {
+            if let error = viewModel.errorMessage {
+                Section {
+                    ErrorBanner(message: error, onDismiss: { viewModel.errorMessage = nil })
+                }
+            }
+
+            if viewModel.trips.isEmpty {
+                ContentUnavailableView {
+                    Label {
+                        Text("trips.empty.title", bundle: .main)
+                    } icon: {
+                        Image(systemName: "airplane")
+                    }
+                } description: {
+                    Text("trips.empty.description", bundle: .main)
+                }
+            } else {
+                let upcoming = viewModel.upcomingTrips()
+                let past = viewModel.pastTrips()
+
+                if !upcoming.isEmpty {
                     Section {
-                        ErrorBanner(message: error, onDismiss: { viewModel.errorMessage = nil })
+                        ForEach(upcoming) { trip in
+                            tripLink(for: trip)
+                        }
+                        .onDelete { offsets in delete(upcoming, at: offsets) }
+                    } header: {
+                        Text("trips.section.upcoming", bundle: .main)
                     }
                 }
 
-                if viewModel.trips.isEmpty {
-                    ContentUnavailableView {
-                        Label {
-                            Text("trips.empty.title", bundle: .main)
-                        } icon: {
-                            Image(systemName: "airplane")
+                if !past.isEmpty {
+                    Section {
+                        ForEach(past) { trip in
+                            tripLink(for: trip)
+                                .foregroundStyle(.secondary)
                         }
-                    } description: {
-                        Text("trips.empty.description", bundle: .main)
-                    }
-                } else {
-                    let upcoming = viewModel.upcomingTrips()
-                    let past = viewModel.pastTrips()
-
-                    if !upcoming.isEmpty {
-                        Section {
-                            ForEach(upcoming) { trip in
-                                tripLink(for: trip)
-                            }
-                            .onDelete { offsets in delete(upcoming, at: offsets) }
-                        } header: {
-                            Text("trips.section.upcoming", bundle: .main)
-                        }
-                    }
-
-                    if !past.isEmpty {
-                        Section {
-                            ForEach(past) { trip in
-                                tripLink(for: trip)
-                                    .foregroundStyle(.secondary)
-                            }
-                            .onDelete { offsets in delete(past, at: offsets) }
-                        } header: {
-                            Text("trips.section.past", bundle: .main)
-                        }
+                        .onDelete { offsets in delete(past, at: offsets) }
+                    } header: {
+                        Text("trips.section.past", bundle: .main)
                     }
                 }
             }
-            .navigationTitle(Text("trips.title", bundle: .main))
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
-                    Button {
-                        showingNewSheet = true
-                    } label: {
-                        Image(systemName: "plus")
-                    }
-                    .accessibilityLabel(Text("trips.action.add", bundle: .main))
+        }
+        .navigationTitle(Text("trips.title", bundle: .main))
+        .toolbar {
+            ToolbarItem(placement: .primaryAction) {
+                Button {
+                    showingNewSheet = true
+                } label: {
+                    Image(systemName: "plus")
                 }
+                .accessibilityLabel(Text("trips.action.add", bundle: .main))
             }
-            .onAppear { viewModel.reload() }
-            .sheet(isPresented: $showingNewSheet) {
-                newTripSheet
-            }
+        }
+        .onAppear { viewModel.reload() }
+        .sheet(isPresented: $showingNewSheet) {
+            newTripSheet
         }
     }
 

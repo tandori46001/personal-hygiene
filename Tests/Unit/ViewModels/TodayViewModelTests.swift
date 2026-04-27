@@ -185,6 +185,70 @@ final class TodayViewModelTests: XCTestCase {
         XCTAssertFalse(vm.isSkipped(block, now: now))
     }
 
+    // MARK: - Skip-rest-of-today cascade (round 9 slice 18)
+
+    func test_skipRestOfToday_marksAllBlocksAtOrAfterCutoffAsSkipped() throws {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(secondsFromGMT: 0)!
+        let early = Block(
+            title: "Early",
+            category: .hygiene,
+            startMinutesFromMidnight: 7 * 60,
+            durationMinutes: 30
+        )
+        let mid = Block(
+            title: "Mid",
+            category: .hygiene,
+            startMinutesFromMidnight: 9 * 60,
+            durationMinutes: 30
+        )
+        let late = Block(
+            title: "Late",
+            category: .hygiene,
+            startMinutesFromMidnight: 18 * 60,
+            durationMinutes: 30
+        )
+        let template = RoutineTemplate(
+            name: "T",
+            dayType: .weekday,
+            blocks: [early, mid, late],
+            isActive: true
+        )
+        try repo.upsert(template)
+
+        let skipStore = InMemoryBlockSkipStore()
+        let vm = TodayViewModel(repository: repo, skipStore: skipStore, calendar: cal)
+        let now = date(weekday: 3, hour: 8)
+        vm.reload(now: now)
+
+        vm.skipRestOfToday(from: mid, now: now)
+
+        XCTAssertFalse(vm.isSkipped(early, now: now), "blocks before cutoff stay un-skipped")
+        XCTAssertTrue(vm.isSkipped(mid, now: now), "cutoff block itself is skipped")
+        XCTAssertTrue(vm.isSkipped(late, now: now), "blocks after cutoff are skipped")
+    }
+
+    func test_skipRestOfToday_isNoOpWithoutSkipStore() throws {
+        var cal = Calendar(identifier: .gregorian)
+        cal.timeZone = TimeZone(secondsFromGMT: 0)!
+        let block = Block(
+            title: "B",
+            category: .hygiene,
+            startMinutesFromMidnight: 9 * 60,
+            durationMinutes: 30
+        )
+        let template = RoutineTemplate(name: "T", dayType: .weekday, blocks: [block], isActive: true)
+        try repo.upsert(template)
+
+        let vm = TodayViewModel(repository: repo, calendar: cal)
+        let now = date(weekday: 3, hour: 8)
+        vm.reload(now: now)
+
+        // Without a skip store the call must not crash and must leave state alone.
+        vm.skipRestOfToday(from: block, now: now)
+        XCTAssertFalse(vm.isSkipped(block, now: now))
+    }
+
     func test_reload_rehydratesCompletionsForToday() throws {
         var cal = Calendar(identifier: .gregorian)
         cal.timeZone = TimeZone(secondsFromGMT: 0)!

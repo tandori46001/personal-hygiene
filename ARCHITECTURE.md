@@ -293,10 +293,34 @@ The short git SHA is stamped into `App/PersonalHygiene/Resources/CommitSHA.txt` 
 
 L003 (Shared/ files using iOS-only APIs need `#if !os(watchOS)` gating) was caught manually in session 9 by a local watch deploy. The CI workflow now has a `build-watch` job (`.github/workflows/ci.yml`) that runs `xcodebuild build -scheme PersonalHygieneWatch -destination 'generic/platform=watchOS'` on `macos-latest` for every push and PR. Code-signing is disabled for the CI build so it doesn't need credentials. Failure here means a Shared/ file probably regressed; resolve by guarding the offending file with `#if canImport(UIKit) && !os(watchOS)`.
 
+## 25. MedicationObserving scaffolding + reschedule-today (round 9)
+
+### MedicationObserving (PRD M3.2 entitlement-gated future)
+
+`MedicationObserving` is a `@MainActor` protocol with `start(for:onChange:)` / `stop(for:)` / `stopAll()`. The shipped implementations are:
+
+- **`MockMedicationObserver`** — in-memory test double. Records `start`/`stop` calls; `simulateChange(for:)` fires the registered handler. Duplicate `start` calls are last-writer-wins per protocol contract.
+- **`MedicationObserverService`** — production shell with `isAvailable: false` until the `health.records.medications` HealthKit entitlement ships. `start` records the registration but never fires a callback; the push-reminder fallback (`MedicationFollowUpFactory`, scheduled by `NotificationCoordinator.refreshForToday`) is the source of truth for M3.2 in the meantime.
+
+Once the paid Apple Developer Program lands, swap `MedicationObserverService.isAvailable` to a real `HKHealthStore.isHealthDataAvailable()` check, wire `HKObserverQuery` per concept identifier, and gate the follow-up factory on observer presence.
+
+### Reschedule-today (jet-lag / late-wake recovery)
+
+`NotificationCoordinator.rescheduleToday(shiftedByMinutes:now:)` builds today's nominal schedule via the new `buildTodayNotifications(now:)` helper, applies a ±N-minute shift in-memory (pure `shifted(_:byMinutes:dropPastBefore:)` mapping, exposed for testing), drops triggers that land in the past, and sends the result back through `NotificationService.scheduleAll`. Block start times in storage are not modified — re-running `refreshForToday` later restores the nominal schedule.
+
+### iPhone widget reload after mark-done
+
+`NotificationActionHandler` gained an injectable `widgetReloader` defaulting to `WidgetCenter.shared.reloadAllTimelines()`; the production handler invokes it in the mark-done branch so `NextBlockHomeWidget` reflects the just-completed block immediately. Tests inject a counter to verify the wiring.
+
+### L004 propagation
+
+Trips list view (`TripsListView`) drops its inner `NavigationStack` (matches the Settings fix from round 8 post-deploy). Hydration / Housekeeping / Birthdays keep their inner stacks for now since they have zero internal `NavigationLink`s and would risk breakage if the user reorders tabs out of the More overflow.
+
 ---
 
 **Version history:**
 
+- **v0.6 (2026-04-26)** — added §25 reflecting round 9: `MedicationObserving` scaffolding (entitlement-gated), `NotificationCoordinator.rescheduleToday(shiftedByMinutes:)`, `WidgetCenter` reload wiring in `NotificationActionHandler`, watch `BlockDetailWatchView` + `SettingsGlanceWatchView`, L004 propagated to Trips, Today timeline now-line, drag-to-reorder for blocks, Hydration weekly chart.
 - **v0.5 (2026-04-26)** — added §23 (build identity pipeline) + §24 (CI watchOS guard) reflecting session 10 (round 8). Robust medication follow-up matching via `BlockNotificationIdentifier.parseAny`; `RecentlyDeliveredNotificationsView` + `DeliveredNotificationsGrouper`; `removeAll()` on snooze/skip stores.
 - **v0.4 (2026-04-26)** — added §21-§22 reflecting session 9 (round 7): Diagnostics dev tools (`DiagnosticsActions`), `MedicationFollowUpFactory`, `BlockSnoozeSource.medicationFollowUp`, build-time `CommitSHA.txt` injection, watch complication focus indicator + watch app snooze badge.
 - **v0.3 (2026-04-26)** — added §18-§20 reflecting session 8 (round 6): cross-module shared services, notification-identifier registry pattern, diagnostics + deploy automation.

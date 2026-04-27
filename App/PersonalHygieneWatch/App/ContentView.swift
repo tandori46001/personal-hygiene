@@ -8,8 +8,13 @@ struct ContentView: View {
     var body: some View {
         let repository = SwiftDataRoutineRepository(context: modelContext)
         let snoozeStore = UserDefaultsBlockSnoozeStore()
+        let skipStore = UserDefaultsBlockSkipStore()
         TodayWatchView(
-            viewModel: TodayViewModel(repository: repository, snoozeStore: snoozeStore),
+            viewModel: TodayViewModel(
+                repository: repository,
+                skipStore: skipStore,
+                snoozeStore: snoozeStore
+            ),
             repository: repository
         )
     }
@@ -54,10 +59,40 @@ struct TodayWatchView: View {
 
                         Section {
                             ForEach(viewModel.blocks) { block in
-                                row(for: block, highlighted: false)
+                                NavigationLink {
+                                    BlockDetailWatchView(
+                                        block: block,
+                                        isDone: doneBlockIDs.contains(block.id),
+                                        isSkipped: viewModel.isSkipped(block),
+                                        onToggleDone: { toggleDone(block) },
+                                        onToggleSkip: {
+                                            viewModel.toggleSkippedToday(block)
+                                            viewModel.reload()
+                                        }
+                                    )
+                                } label: {
+                                    WatchBlockRow(
+                                        block: block,
+                                        highlighted: false,
+                                        isDone: doneBlockIDs.contains(block.id),
+                                        isSnoozedToday: viewModel.isSnoozedToday(block)
+                                    )
+                                }
                             }
                         } header: {
                             Text("today.section.schedule", bundle: .main)
+                        }
+
+                        Section {
+                            NavigationLink {
+                                SettingsGlanceWatchView()
+                            } label: {
+                                Label {
+                                    Text("watch.settings.title", bundle: .main)
+                                } icon: {
+                                    Image(systemName: "gearshape")
+                                }
+                            }
                         }
                     }
                 }
@@ -71,10 +106,13 @@ struct TodayWatchView: View {
                 // Watch dozes between glances; when the user wakes the watch we
                 // re-pull the schedule + done set so the snooze badge mirrored
                 // from iPhone reflects whatever the user did on the phone in
-                // the meantime.
+                // the meantime. We also force a widget timeline reload so the
+                // NextBlock complication picks up any iPhone-side changes
+                // immediately instead of waiting for the system's next refresh.
                 if phase == .active {
                     viewModel.reload()
                     refreshDoneSet()
+                    WidgetCenter.shared.reloadAllTimelines()
                 }
             }
         }
@@ -120,6 +158,140 @@ struct TodayWatchView: View {
         } catch {
             errorMessage = error.localizedDescription
         }
+    }
+}
+
+private struct SettingsGlanceWatchView: View {
+    @State private var authStatus: NotificationAuthorizationStatus = .notDetermined
+
+    var body: some View {
+        List {
+            Section {
+                HStack {
+                    Text("watch.settings.snoozeDuration", bundle: .main)
+                    Spacer()
+                    Text(LocalizedStringResource(
+                        "settings.snooze.duration.\(SnoozeDurationStore.minutes())"
+                    ))
+                    .foregroundStyle(.secondary)
+                }
+                .accessibilityElement(children: .combine)
+            } header: {
+                Text("watch.settings.section.snooze", bundle: .main)
+            } footer: {
+                Text("watch.settings.snooze.footer", bundle: .main)
+            }
+
+            Section {
+                HStack {
+                    Text("watch.settings.notifications", bundle: .main)
+                    Spacer()
+                    Text(localizedStatus(authStatus))
+                        .foregroundStyle(.secondary)
+                }
+                .accessibilityElement(children: .combine)
+            } header: {
+                Text("watch.settings.section.notifications", bundle: .main)
+            }
+
+            Section {
+                Text(verbatim: BuildInfo.shortDescriptor)
+                    .font(.caption2.monospacedDigit())
+                    .foregroundStyle(.secondary)
+            } header: {
+                Text("watch.settings.section.about", bundle: .main)
+            }
+        }
+        .navigationTitle(Text("watch.settings.title", bundle: .main))
+        .task {
+            authStatus = await UserNotificationsService().authorizationStatus()
+        }
+    }
+
+    private func localizedStatus(_ status: NotificationAuthorizationStatus) -> LocalizedStringKey {
+        switch status {
+        case .authorized: return "settings.notifications.status.authorized"
+        case .provisional: return "settings.notifications.status.provisional"
+        case .denied: return "settings.notifications.status.denied"
+        case .ephemeral: return "settings.notifications.status.ephemeral"
+        case .notDetermined: return "settings.notifications.status.notDetermined"
+        }
+    }
+}
+
+private struct BlockDetailWatchView: View {
+    let block: Block
+    let isDone: Bool
+    let isSkipped: Bool
+    let onToggleDone: () -> Void
+    let onToggleSkip: () -> Void
+    @Environment(\.dismiss) private var dismiss
+
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 8) {
+                Text(block.title)
+                    .font(.headline)
+                Label {
+                    Text(LocalizedStringKey("category.\(block.category.rawValue)"))
+                } icon: {
+                    Image(systemName: "tag")
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
+                Label {
+                    Text(verbatim: formattedTime(minutes: block.startMinutesFromMidnight))
+                        + Text(verbatim: " · \(block.durationMinutes) min")
+                } icon: {
+                    Image(systemName: "clock")
+                }
+                .font(.caption)
+                .foregroundStyle(.secondary)
+
+                Divider()
+
+                Button {
+                    onToggleDone()
+                    dismiss()
+                } label: {
+                    Label {
+                        Text(
+                            isDone
+                                ? "today.action.unmarkDone"
+                                : "today.action.markDone",
+                            bundle: .main
+                        )
+                    } icon: {
+                        Image(systemName: isDone ? "arrow.uturn.backward" : "checkmark.circle")
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(isSkipped)
+
+                Button(role: .destructive) {
+                    onToggleSkip()
+                    dismiss()
+                } label: {
+                    Label {
+                        Text(
+                            isSkipped
+                                ? "today.action.unskipToday"
+                                : "today.action.skipToday",
+                            bundle: .main
+                        )
+                    } icon: {
+                        Image(systemName: "moon.zzz")
+                    }
+                }
+                .buttonStyle(.bordered)
+            }
+            .padding(.horizontal, 4)
+        }
+        .navigationTitle(Text("watch.detail.title", bundle: .main))
+    }
+
+    private func formattedTime(minutes: Int) -> String {
+        String(format: "%02d:%02d", minutes / 60, minutes % 60)
     }
 }
 

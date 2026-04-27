@@ -1571,6 +1571,131 @@
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Stores dev restablecidos a valores por defecto." } },
       "fr" : { "stringUnit" : { "state" : "translated", "value" : "Stores dev réinitialisés aux valeurs par défaut." } } } },
 
+    "settings.diagnostics.notif.criticalAlerts" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Critical Alerts" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Alertas críticas" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Alertes critiques" } } } },
+    "settings.diagnostics.devTools.replay" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Replay last delivered" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Reenviar última entregada" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Rejouer la dernière reçue" } } } },
+    "settings.diagnostics.devTools.replay.done %@" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Replayed: %@" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Reenviada: %@" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Rejouée : %@" } } } },
+    "settings.diagnostics.devTools.replay.empty" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "No recent delivered notifications." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "No hay notificaciones entregadas recientes." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aucune notification reçue récente." } } } },
+    "settings.diagnostics.devTools.medicationTest" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Schedule medication test (60s + 90s)" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Programar prueba de medicación (60s + 90s)" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Planifier test médication (60s + 90s)" } } } },
+    "settings.diagnostics.devTools.medicationTest.primary.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Test medication" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Medicación de prueba" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Médication test" } } } },
+    "settings.diagnostics.devTools.medicationTest.primary.body" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Take your test medication now." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Toma tu medicación de prueba ahora." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Prenez votre médication test maintenant." } } } },
+    "settings.diagnostics.devTools.medicationTest.followup.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Test medication — follow-up" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Medicación de prueba — seguimiento" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Médication test — suivi" } } } },
+    "settings.diagnostics.devTools.medicationTest.followup.body" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Did you forget? Mark done if already taken." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "¿Se te olvidó? Marca hecho si ya la tomaste." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Oublié ? Marquez fait si déjà pris." } } } },
+    "settings.diagnostics.devTools.medicationTest.done" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Medication test scheduled (primary at +60s, follow-up at +90s)." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Prueba de medicación programada (principal a +60s, seguimiento a +90s)." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Test médication programmé (principal à +60s, suivi à +90s)." } } } },
+    "settings.diagnostics.devTools.requestAuth" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Request authorization" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Solicitar autorización" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Demander l'autorisation" } } } },
+    "settings.diagnostics.devTools.requestAuth.done" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Authorization request sent." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Solicitud de autorización enviada." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Demande d'autorisation envoyée." } } } },
+
+    "today.now.line" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Now" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Ahora" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Maintenant" } } } },
+
+    "settings.reschedule.shift" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Shift today" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Desplazar hoy" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Décaler aujourd'hui" } } } },
+    "settings.reschedule.shift.value %lld" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "%lld min" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "%lld min" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "%lld min" } } } },
+    "settings.reschedule.action" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Reschedule today" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Reprogramar hoy" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Reprogrammer aujourd'hui" } } } },
+    "settings.reschedule.footer" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Shifts today's pending notifications by the chosen offset. Block start times are not modified." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Desplaza las notificaciones pendientes de hoy por el desfase elegido. Las horas de inicio de los bloques no se modifican." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Décale les notifications en attente d'aujourd'hui de l'offset choisi. Les heures de début des blocs ne sont pas modifiées." } } } },
+
+    "hydration.section.weekly" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Weekly" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Semanal" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Hebdomadaire" } } } },
+    "hydration.weekly.dayAxis" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Day" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Día" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Jour" } } } },
+    "hydration.weekly.mlAxis" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Millilitres" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Mililitros" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Millilitres" } } } },
+    "hydration.weekly.goal" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Goal" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Objetivo" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Objectif" } } } },
+    "a11y.hydration.weeklyChart" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Weekly hydration totals — last 7 days" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Totales semanales de hidratación — últimos 7 días" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Totaux hebdomadaires d'hydratation — 7 derniers jours" } } } },
+
+    "watch.detail.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Block" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Bloque" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Bloc" } } } },
+    "watch.settings.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Settings" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Ajustes" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réglages" } } } },
+    "watch.settings.section.snooze" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Snooze" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Posponer" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Reporter" } } } },
+    "watch.settings.snoozeDuration" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Duration" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Duración" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Durée" } } } },
+    "watch.settings.snooze.footer" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Set on iPhone in Settings → Scheduling." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Se ajusta en iPhone en Ajustes → Programación." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Configuré sur iPhone dans Réglages → Planification." } } } },
+    "watch.settings.section.notifications" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Notifications" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Notificaciones" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Notifications" } } } },
+    "watch.settings.notifications" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Status" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Estado" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "État" } } } },
+    "watch.settings.section.about" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "About" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Acerca de" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "À propos" } } } },
+
     "housekeeping.notification.body" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Time for this housekeeping task." } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Hora de esta tarea del hogar." } },
