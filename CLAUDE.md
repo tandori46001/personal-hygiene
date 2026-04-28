@@ -154,16 +154,75 @@ See [LESSONS.md](LESSONS.md) for full text. Quick table:
 
 ---
 
-## 10. `ALL OK?` — UNIFIED SESSION PULSE
+## 10. `ALL OK?` — UNIFIED SESSION PULSE (expanded round 25 / session 23)
 
-When the user says `ALL OK?` / `pulse?` / `que tal va?` / `estado?`, run a full drift check + forward-look:
+When the user says `ALL OK?` / `pulse?` / `que tal va?` / `estado?`, run a full system audit. **Verify EVERYTHING.** No skipping. The user expects this to surface bugs, incoherencies, and a forward-looking 100-task backlog every time.
 
-**A. Drift check:** git state · memory files · ROADMAP status · PRD/ARCH staleness · QA_MANUAL coverage · test status · env sanity · cross-code consistency.
-**B. Next:** active milestone + open follow-ups + recommended next slice.
-**C. Session:** continue here / soft yes (after next commit) / yes new session now.
-**D. Action menu:** numbered options for the user to pick.
+### A. Per-platform completion %
 
-Subset trigger `no hace falta nada?` runs only the drift half (§A).
+Compute the % of *acceptance criteria delivered* per surface, not lines of code. Cite source: `ROADMAP.md`, `memory/project_status.md`, what's actually built vs what's blocked.
+
+| Surface | % | Source-of-truth |
+|---|---|---|
+| iPhone (iOS) | x% | Phase 1+3+5 acceptance |
+| Apple Watch (watchOS) | x% | Phase 2 acceptance |
+| Backend | x% | None planned (CloudKit private DB only — see PRD §2) |
+| Web | x% | Phase 7d (future, not started) |
+| Android | x% | Phase 7c (future, not started) |
+| macOS | x% | Phase 7b (future, not started) |
+| TestFlight beta | x% | Phase 4 acceptance |
+| App Store listing | x% | Phase 6 acceptance |
+
+If a surface is *deliberately not in scope*, mark **n/a** and link to the PRD line that excludes it.
+
+### B. Drift + incoherencies + bugs check
+
+- **Git state:** branch, ahead/behind, uncommitted, untracked.
+- **Memory files:** `memory/MEMORY.md` index, `memory/session_handoff.md` recency, `memory/project_status.md` recency. Flag anything >7 days stale.
+- **Doc parity:** `ROADMAP.md` phase line == `CLAUDE.md §8` line == `memory/project_status.md`. Three-way sync.
+- **Test + lint state:** last `./scripts/check-tests.sh` exit; counts; process-crash count.
+- **i18n parity:** `LocalizationKeyCount.total` matches `grep -c '"extractionState"' Localizable.xcstrings`.
+- **Lessons:** any new class-of-bug observed without an L0NN entry?
+- **Cross-code consistency:**
+  - `XC79TD476V` (or current `DEVELOPMENT_TEAM`) — Personal vs paid?
+  - `CommitSHA.txt` on device == HEAD?
+  - `.tint(.tint)`, `Menu`, or other watchOS-incompatible API surfaces in `Shared/`?
+  - `LocalizationKeyCount.total` constant updated since last xcstrings change?
+- **Deferred items:** anything in `session_handoff.md` "next step" that didn't ship; carry forward.
+- **Stale TODO/FIXME/XXX comments** in code.
+- **Apple Developer Program gate:** which features are still gated? List explicitly.
+
+### C. 100 forward tasks — classified + batched
+
+Produce a numbered list of the next **≥100 tasks** classified by:
+- **Surface** (iPhone / Watch / Backend / Web / Android / macOS / DevOps / Docs / QA)
+- **Batch** (groups of tasks deliverable end-to-end at 100% with NO inter-batch dependencies — explicit "depends on Batch X" notes for sequencing)
+
+Each task = one line: `[ID] [Surface] [Batch] short description`. Include an **estimated effort** when relevant (S/M/L). When a task is gated by Apple (entitlement, review), mark it 🔒.
+
+Batch organization rules:
+- A batch must be *atomically deliverable* — if you ship the batch, all its tasks land together with no half-finished state.
+- A batch must explicitly state its dependencies (e.g., "Batch C depends on Batch B's Apple Developer Program activation").
+- Each batch should fit in **one round** (≤40 slices) when possible.
+
+### D. "Anything else?" — proactive flags
+
+Before closing, surface anything observed during the audit that doesn't fit cleanly above:
+- Risk: external dependencies (Apple review queues, weather API rate limits, Frankfurter availability).
+- Tech debt: places where shortcuts were taken that should be paid back.
+- L007+ candidates: bug classes that haven't earned an L-entry yet but probably should.
+- Memory gaps: things that should be in `memory/` but aren't.
+- Privacy / security: any change that touched user data flow worth reviewing.
+
+### E. Action menu
+
+Numbered options the user can pick (each a one-liner). Include "do nothing — just commit", "run round N", "validate on device", "deploy", etc.
+
+### Subset triggers
+
+- `no hace falta nada?` — runs only §B (drift half).
+- `pulse?` (short) — §A + §B + §E only (skip 100-task list).
+- `ALL OK ?` (full) — A through E, complete.
 
 ---
 
