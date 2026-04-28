@@ -128,14 +128,14 @@ See [LESSONS.md](LESSONS.md) for full text. Quick table:
 | Phase | Status | Acceptance |
 |---|---|---|
 | 0 — Bootstrap | ✅ Done | Repo + tooling ready · Xcode project · CI green |
-| 1 — MVP daily routine | 🟡 ~99.7% | M1+M2+M3+M4 code-complete; rounds 12-16 polish layer in (per-block followup, pause, theme, per-category mute, bedtime auto-mute, quiet hours store, dose history). Remaining: real-device validation + paid Apple Developer Program. |
-| 2 — Apple Watch | ✅ ~97% | Today list + NextBlock complication + mark-done shipped. Rounds 12-16 added zero watch surfaces — watch still on `39e0c5b`. |
-| 3 — Secondary modules | ✅ Done | M5 hydration (+ hot-weather + weekly avg), M6 housekeeping (+ streak + room-icon palette), M7 birthdays (+ re-sync + relationship/idea stores + filter chips), M8 deep focus (+ right-now + conflict + filter-preview helper). |
+| 1 — MVP daily routine | 🟡 ~99.8% | M1+M2+M3+M4 code-complete; rounds 12-18 polish layer (per-block followup, pause, theme, per-category mute, bedtime auto-mute, quiet hours, dose history + filter chips + 30-day adherence + skip-this-dose, stale-day banner, block conflict detector, undo preset insertion). Remaining: real-device validation + paid Apple Developer Program. |
+| 2 — Apple Watch | ✅ ~97% | Today list + NextBlock complication + mark-done shipped. Rounds 12-18 added zero watch surfaces — watch still on `39e0c5b`. |
+| 3 — Secondary modules | ✅ Done | M5 hydration (+ hot-weather + weekly avg + comeback nudge), M6 housekeeping (+ streak + room-icon palette + per-task icon picker), M7 birthdays (+ re-sync + relationship/idea stores + filter chips + copy-gift-ideas), M8 deep focus (+ right-now + conflict + filter-preview surface). |
 | 4 — TestFlight beta | 🔒 Blocked | Needs paid Apple Developer Program ($99/yr). |
-| 5 — Vacation module | ✅ Feature-complete | M9 closed: trips + milestones + reminders + scanner + AI itinerary + marine + currency + 5-source advisory + PDF + notes (Markdown) + archive + cost log + Markdown share + carbon estimate + emergency contacts + duplicate-with-shifted-dates + milestone-defaults bundle. Real-trip validation pending. |
+| 5 — Vacation module | ✅ Feature-complete | M9 closed: trips + milestones + reminders + scanner + AI itinerary + marine + currency + 5-source advisory + PDF + notes (Markdown) + archive + cost log + Markdown share + plain-text copy + carbon estimate (kg/lb toggle) + emergency contacts (tap-to-call) + monthly expense summary + duplicate-with-shifted-dates + milestone-defaults bundle. Real-trip validation pending. |
 | 6 — App Store | ⬜ | Submission + listing in 3 languages. |
 
-> Source of truth for phase progress — must match `memory/project_status.md` and `ROADMAP.md § Phases`. Last synced: round 16 (`61c0a1a`).
+> Source of truth for phase progress — must match `memory/project_status.md` and `ROADMAP.md § Phases`. Last synced: round 18 (`66b978a`).
 
 ---
 
