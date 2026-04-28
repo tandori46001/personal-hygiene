@@ -8,6 +8,44 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added — Session 18 round 20: 30-slice regression guards + mood log surface + trip polish + Today QoL + observability
+
+Tier 1 (regression guards):
+- Snapshot-lab smokes (perpetual-deferred since round 11) for AdvisoryView, CurrencyView quick-pick, HydrationDashboard empty-chart via native `ImageRenderer`. No third-party SnapshotTesting dep.
+- DynamicType regression at `.accessibility5` for the round-12+ surfaces (Advisory, Currency, Hydration, TemplateEditor) extracted into a new `RenderSmokeTestsRound20` class.
+- New `BlockNotifIDRoundTripTests`: property-style ~1000-input round-trip across the 4 known notification identifier shapes (routine / hydration / milestone / medicationFollowUp) plus the `.snooze.<ts>` strip path. Catches L002-style format drift on existing kinds at runtime.
+- `DiagnosticsPendingByGroupCSVTests` extended: header-only CSV no trailing newline, identifiers containing commas sanitized into semicolons.
+- New `MoodLogStoreTests`: 35→30 capacity cap, today-entry filter (most-recent same-day), clear behavior.
+
+Tier 2 (mood log surface):
+- TodayView "How do you feel?" gains a "X good days this week" caption when `MoodLogStore.goodDaysCount() > 0` (trailing 7 days, dedup-counted by entry).
+- New `SettingsViewRound20` extension: mood log disclosure (last 30 entries with timestamp + emoji) + "Copy mood log (CSV)" button + destructive "Clear mood log" button.
+- `BackupSnapshot` v3: optional `mood: [MoodEntryPayload]?` field. v1/v2 backups decode as nil; restore replays the full mood log when present.
+- `MoodLogStore.exportCSV(formatter:)` helper used by the Settings button.
+
+Tier 3 (vacation polish):
+- TripsListView past-trips section gains year filter chips when ≥2 distinct years present. Static `distinctYears(in:)` helper on TripsListView.
+- `CurrencyView.supportedCodes` reordered: JPY moves from 7th to 3rd position to match the user's diving-trip pattern (EUR home → USD → JPY → GBP → CAD → CHF → AUD).
+- ItineraryView day-section header gains a relative-day marker (`T-N` countdown · `D+N` in-trip · `✈` on start day) via new `dayMarker(forIndex:tripStart:)` static.
+- TripNotesSection gains "Insert template" Menu (Preparation / Day-D / Return). Each template appends Markdown bullets to draftNotes — additive, never overwrites.
+- TripCarbonSection adds a per-mode factor caption (`0.115 kg CO₂ / passenger·km · DEFRA 2023`).
+
+Tier 4 (Today / Routine QoL):
+- TodayView wraps List in `ScrollViewReader`; tapping the "Now · HH:MM" red hairline now smooth-scrolls to the current/next block (via `.id(block.id)` anchors). NowMarkerRow gains optional `onTap` callback.
+- `TemplateEditorViewModel.renumberStartTimes(from:)` re-anchors blocks back-to-back from the original first start; "Renumber start times" button surfaced when ≥2 blocks exist.
+- Today reset-day now returns a `ResetDaySnapshot`; floating bottom toast with Undo button auto-expires after 10s. New `undoResetDay(_:)` view-model method replays the snapshot.
+- New `BlockTitleSuggestions.recent(in:category:limit:)` helper. `TemplateEditorViewModel.titleSuggestions(for:)` wires it into the new optional `BlockEditorView.titleSuggestions` provider — surfaces last 5 distinct titles per category as a Menu in the block editor.
+
+Tier 5 (observability):
+- `DiagnosticsView.refreshTraceCSV(_:)` static helper + new "Export refresh trace (CSV)" share button alongside the existing pending-by-group CSV. Header `timestamp,scheduledCount,kind`.
+- Settings "Copy everything bundle" — multi-section text dump (build descriptor + locale + key count + mood entry count + last-mood summary + diagnostics snapshot count + mood CSV) for one-tap bug-report copy.
+- `WhatsNewSheet` confirm-dismiss flow: tracks whether the user has scrolled to the bottom; tapping Done before reaching the end shows a destructive confirm dialog ("Dismiss without reading?").
+- T5.24 (process launches table) was already covered by the round-12 `launchHistorySection` — verified, no new code.
+
+Build housekeeping: refactored `NotificationCategoryRegistrar.register(...)` into `action(...)` + `category(...)` helpers + a fileprivate `CategoryID` enum to fit the 50-line function-body cap. Extracted `TripExpensesSection` to `TripDetailViewRound20.swift` so `TripDetailViewRound12.swift` stays under the 500-line file cap. Round-20 reset-day overlay extracted to `TodayViewRound19.swift` extension to keep `TodayView` struct body under the 300-line type-body cap.
+
+Counts: tests **585** (583 unit + 2 UI). i18n keys **737** × 3 locales (+33 net). Lessons captured: still **6** (L001-L006).
+
 ### Added — Session 17 round 19: 28-slice quality + watch parity + vacation deepening
 
 Tier 1 (preventive L006 guards):

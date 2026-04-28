@@ -1926,3 +1926,137 @@ Verify by running each script — must exit 0.
 ### Manual verification
 1. **Duplicate block:** TemplateEditor → long-press any block → context menu "Duplicate block". A clone appears immediately after the source (start time = source start + source duration).
 2. **Category legend:** TemplateList → bottom of the list → "Category legend" disclosure. Expand → 12 category dots with their localized names.
+
+## [T-161…T-166] — Round 20 regression guards (no manual case)
+
+**Module:** ci/tests · **Shipped in:** round 20 (T1.2, T1.3, T1.4, T1.5, T1.6)
+
+Five new test files + extended existing tests cover the round-20 guards:
+- `RenderSmokeTestsRound20`: AdvisoryView, CurrencyView quick-pick, HydrationDashboard empty, plus AX5 versions for those + TemplateEditor.
+- `BlockNotifIDRoundTripTests`: 1000-input random round-trip across the 4 known notification identifier shapes.
+- `DiagnosticsPendingByGroupCSVTests`: header-no-trailing-newline + comma sanitization regressions.
+- `MoodLogStoreTests`: capacity cap, today-entry filter, clear behavior.
+
+Verify by running `./scripts/check-tests.sh`.
+
+## [T-167] — Today: mood "good days this week" caption (round 20)
+
+**Module:** today · **Shipped in:** round 20 (T2.7)
+
+### Manual verification
+1. Tap the 😄 or 🙂 emoji on Today's mood row at least once today.
+2. A small centered caption appears below the chips: "X good days this week" (X = count in the trailing 7 days, dedup-counted by entry, 1 here).
+3. Repeat tomorrow → caption rises to 2.
+
+## [T-168] — Settings: mood log disclosure + clear + CSV (round 20)
+
+**Module:** settings · **Shipped in:** round 20 (T2.8, T2.9, T2.11)
+
+### Manual verification
+1. Settings → "Mood log" disclosure → expand. Last 30 entries shown (timestamp + emoji).
+2. Tap "Copy mood log (CSV)" → paste into Notes → header `recordedAt,mood` + one row per entry.
+3. Tap "Clear mood log" (red) → list collapses to "No moods recorded yet."
+
+## [T-169] — Backup includes mood log (round 20)
+
+**Module:** settings/backup · **Shipped in:** round 20 (T2.10)
+
+### Manual verification
+1. Tap a few mood emojis. Settings → Backup → Export. Open the JSON.
+2. Top-level `mood` array present with one entry per mood log row.
+3. Restore on a fresh state (or via clearing mood log first) → mood entries reappear.
+
+## [T-170] — Trips: past-trips year filter chips (round 20)
+
+**Module:** trips · **Shipped in:** round 20 (T3.12)
+
+### Manual verification
+*Requires ≥2 past trips spanning ≥2 distinct years (use round-19 "Duplicate next year" then back-date a trip if needed.)*
+1. Trips → past section → year chip row visible at the top: "All · YYYY · YYYY-1 · …".
+2. Tap any year chip → list filters to trips with `startDate.year == chip`.
+3. Tap "All" → filter clears.
+
+## [T-171] — Currency: JPY promoted to 3rd preset (round 20)
+
+**Module:** trip/currency · **Shipped in:** round 20 (T3.13)
+
+### Manual verification
+1. Currency tab → quick-pick row → 3rd chip is now JPY (was 7th).
+
+## [T-172] — Itinerary day marker (round 20)
+
+**Module:** trip/itinerary · **Shipped in:** round 20 (T3.14)
+
+### Manual verification
+1. Trips → trip with itinerary generated → each day-section header shows a relative-day marker (`T-3` countdown · `D+1` in-trip · `✈` on start day).
+2. Day 0 of the trip with start date today → marker is `✈`.
+
+## [T-173] — Trip notes "Insert template" menu (round 20)
+
+**Module:** trip · **Shipped in:** round 20 (T3.15)
+
+### Manual verification
+1. Trips → notes section → tap "Insert template" → 3 options (Preparation / Day D / Return).
+2. Each appends Markdown bullet list to existing draftNotes (separator = blank line).
+3. Tap a second template → appends below; existing content not overwritten.
+
+## [T-174] — TripCarbon factor caption (round 20)
+
+**Module:** trip/carbon · **Shipped in:** round 20 (T3.16)
+
+### Manual verification
+1. Trips → trip with destination geocoded + home set → carbon section.
+2. Below the mode picker, caption shows `0.255 kg CO₂ / passenger·km · DEFRA 2023` (flight default; updates per mode toggle).
+
+## [T-175] — Today: tap "Now" hairline to scroll (round 20)
+
+**Module:** today · **Shipped in:** round 20 (T4.17)
+
+### Manual verification
+1. Today → scroll the schedule away from "Now" hairline.
+2. Tap the red "Now · HH:MM" line → list smooth-scrolls so the current block is centered.
+
+## [T-176] — TemplateEditor: renumber start times (round 20)
+
+**Module:** routine · **Shipped in:** round 20 (T4.18)
+
+### Manual verification
+1. TemplateEditor with ≥2 blocks → tap "Renumber start times".
+2. Blocks now sit back-to-back from the original first start (gaps collapse to zero).
+
+## [T-177] — Today: reset-day undo toast (round 20)
+
+**Module:** today · **Shipped in:** round 20 (T4.19)
+
+### Manual verification
+1. Mark some blocks done. Today → "Reset day" → Confirm.
+2. Bottom of screen shows "Day reset · Undo" capsule.
+3. Tap "Undo" within 10s → all completions + skips restore.
+4. Wait 10s → capsule disappears; further state changes can't be undone.
+
+## [T-178] — BlockEditor: suggest from history (round 20)
+
+**Module:** routine · **Shipped in:** round 20 (T4.20)
+
+### Manual verification
+1. Open BlockEditor with any category that has ≥1 prior block in any template.
+2. "Suggest from history" Menu visible below the category picker.
+3. Tap → shows up to 5 distinct titles for that category (most-recent first).
+4. Pick one → fills the title field.
+
+## [T-179] — Diagnostics refresh trace CSV (round 20)
+
+**Module:** settings/diagnostics · **Shipped in:** round 20 (T5.21)
+
+### Manual verification
+1. Diagnostics → Advanced → "Export refresh trace (CSV)".
+2. Share sheet opens with `refresh-trace-<ts>.csv`. Header `timestamp,scheduledCount,kind`; one row per RefreshTraceLog entry.
+3. Disabled when refreshTrace is empty.
+
+## [T-180] — Round 20 wrap-ups: everything bundle + WhatsNew confirm
+
+**Module:** settings · **Shipped in:** round 20 (T5.22, T5.23)
+
+### Manual verification
+1. **Everything bundle:** Settings → "Copy everything bundle" → paste in Notes → multi-section text with build descriptor + locale + key counts + mood entries + diagnostics snapshot count + mood CSV.
+2. **WhatsNew confirm-dismiss:** Open WhatsNewSheet (Settings → "What's new") → tap Done *without scrolling to bottom* → confirm dialog appears. Scroll to bottom → tap Done → dismisses immediately.
