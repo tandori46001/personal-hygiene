@@ -4,6 +4,23 @@ import WidgetKit
 
 struct ContentView: View {
     @Environment(\.modelContext) private var modelContext
+    /// Round-19: mirror the iPhone `settings.theme` AppStorage via the App
+    /// Group suite so a user toggle on the phone propagates to the watch
+    /// without a redeploy. Falls back to the watch's standard defaults until
+    /// the App Group entitlement ships.
+    @AppStorage(
+        "settings.theme",
+        store: UserDefaults(suiteName: AppGroup.suiteName) ?? .standard
+    )
+    private var themeOverride: String = "system"
+
+    private var preferredColorScheme: ColorScheme? {
+        switch themeOverride {
+        case "light": .light
+        case "dark": .dark
+        default: nil
+        }
+    }
 
     var body: some View {
         let repository = SwiftDataRoutineRepository(context: modelContext)
@@ -17,6 +34,7 @@ struct ContentView: View {
             ),
             repository: repository
         )
+        .preferredColorScheme(preferredColorScheme)
     }
 }
 
@@ -163,6 +181,11 @@ struct TodayWatchView: View {
 
 private struct SettingsGlanceWatchView: View {
     @State private var authStatus: NotificationAuthorizationStatus = .notDetermined
+    @State private var pauseSummary: String = ""
+
+    private var sharedDefaults: UserDefaults {
+        UserDefaults(suiteName: AppGroup.suiteName) ?? .standard
+    }
 
     var body: some View {
         List {
@@ -170,10 +193,9 @@ private struct SettingsGlanceWatchView: View {
                 HStack {
                     Text("watch.settings.snoozeDuration", bundle: .main)
                     Spacer()
-                    Text(LocalizedStringResource(
-                        "settings.snooze.duration.\(SnoozeDurationStore.minutes())"
-                    ))
-                    .foregroundStyle(.secondary)
+                    let mins = SnoozeDurationStore.minutes(defaults: sharedDefaults)
+                    Text(localizedKey: "settings.snooze.duration.\(mins)")
+                        .foregroundStyle(.secondary)
                 }
                 .accessibilityElement(children: .combine)
             } header: {
@@ -190,6 +212,16 @@ private struct SettingsGlanceWatchView: View {
                         .foregroundStyle(.secondary)
                 }
                 .accessibilityElement(children: .combine)
+                if !pauseSummary.isEmpty {
+                    HStack {
+                        Text("watch.settings.pause.label", bundle: .main)
+                        Spacer()
+                        Text(verbatim: pauseSummary)
+                            .foregroundStyle(.orange)
+                            .font(.caption.monospacedDigit())
+                    }
+                    .accessibilityElement(children: .combine)
+                }
             } header: {
                 Text("watch.settings.section.notifications", bundle: .main)
             }
@@ -205,7 +237,23 @@ private struct SettingsGlanceWatchView: View {
         .navigationTitle(Text("watch.settings.title", bundle: .main))
         .task {
             authStatus = await UserNotificationsService().authorizationStatus()
+            pauseSummary = computePauseSummary(now: Date())
         }
+    }
+
+    /// Round-19 slice T2.8: mirror the iOS pause-notifications state on the
+    /// watch glance. Reads `PauseNotificationsStore` via the App Group suite
+    /// (falls back to `.standard` until the entitlement ships) so a pause
+    /// triggered on the phone shows up here without a watch-side toggle.
+    private func computePauseSummary(now: Date) -> String {
+        let defaults = sharedDefaults
+        guard PauseNotificationsStore.isPaused(now: now, defaults: defaults),
+              let until = PauseNotificationsStore.pausedUntil(defaults: defaults)
+        else { return "" }
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        formatter.dateStyle = .none
+        return formatter.string(from: until)
     }
 
     private func localizedStatus(_ status: NotificationAuthorizationStatus) -> LocalizedStringKey {

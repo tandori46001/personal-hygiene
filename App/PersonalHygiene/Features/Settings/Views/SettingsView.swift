@@ -79,6 +79,8 @@ struct SettingsView: View {
             aboutSection
             backupSection
             backupAutoFrequencySection
+            resetOnboardingTipsRow
+            aboutFooterSection
         }
         .navigationTitle(Text("settings.title", bundle: .main))
         .task { await viewModel.reloadStatus() }
@@ -281,7 +283,14 @@ struct SettingsView: View {
     func exportBackup() {
         backupError = nil
         do {
-            let snapshot = try BackupService.export(from: modelContext)
+            // Round-19 slice T3.11: bundle the most recent diagnostics
+            // snapshot inside the backup file so a single share covers
+            // user data + the diagnostics one-pager.
+            let latestDiagnostics = SnapshotHistoryStore.snapshots().first
+            let snapshot = try BackupService.export(
+                from: modelContext,
+                diagnostics: latestDiagnostics
+            )
             let data = try BackupService.encode(snapshot)
             let filename = "personal-hygiene-backup-\(Int(Date().timeIntervalSince1970)).json"
             let url = FileManager.default.temporaryDirectory.appendingPathComponent(filename)

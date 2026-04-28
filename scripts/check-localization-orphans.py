@@ -33,8 +33,14 @@ LITERAL_PATTERNS = [
     re.compile(r'String\(localized:\s*"([a-zA-Z][^"]+)"\)'),
 ]
 
-# Keys that look like `prefix.\(value)` — captured loosely as `prefix.`
-DYNAMIC_PREFIX = re.compile(r'(?:Text|LocalizedStringKey|LocalizedStringResource)\("([a-zA-Z][^"]*?)\\\(')
+# Keys that look like `prefix.\(value)` — captured loosely as `prefix.`. The
+# `localizedKey:` form is the round-19 safe replacement for the L006-broken
+# `LocalizedStringKey("foo.\(rawValue)")` pattern, and produces the same set
+# of dynamic-suffix lookups, so we treat it as another prefix source.
+DYNAMIC_PREFIX = re.compile(
+    r'(?:Text|LocalizedStringKey|LocalizedStringResource|Text\(localizedKey:\s|localizedKey:\s)'
+    r'\s*"([a-zA-Z][^"]*?)\\\('
+)
 
 
 def collect_declared() -> set[str]:

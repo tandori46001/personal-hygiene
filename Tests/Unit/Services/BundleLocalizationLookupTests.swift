@@ -42,6 +42,44 @@ final class BundleLocalizationLookupTests: XCTestCase {
         }
     }
 
+    /// Round-19 extension: discrete-suffix keys for the *integer*-driven
+    /// dynamic lookups (snooze duration, follow-up override, marine
+    /// freshness). These aren't enum-backed but the source of truth lives
+    /// in the corresponding store's `allowedMinutes` / `allowedHours` array.
+    func test_integerSuffixKeysResolve() {
+        let cases: [(prefix: String, values: [Int])] = [
+            ("settings.snooze.duration.", SnoozeDurationStore.allowedMinutes),
+            ("settings.medication.followup.", MedicationFollowUpDelayStore.allowedMinutes),
+            ("settings.marine.freshness.", MarineForecastFreshnessStore.allowedHours),
+        ]
+        for (prefix, values) in cases {
+            for value in values {
+                let key = "\(prefix)\(value)"
+                let resolved = NSLocalizedString(key, bundle: .main, value: key, comment: "")
+                XCTAssertNotEqual(resolved, key, "Missing translation for \(key) — UI will render the raw key.")
+            }
+        }
+    }
+
+    /// Round-19 extension: discrete-suffix keys for the round-14 / round-17
+    /// surfaces — pending-notifications source headers, mute categories,
+    /// template-presets and their toast variants.
+    func test_round17_18_discreteSuffixKeysResolve() {
+        let cases: [(prefix: String, values: [String])] = [
+            ("settings.pendingNotifications.source.", BlockSnoozeSource.allCases.map(\.rawValue)),
+            ("settings.mute.", NotificationCategoryMuteStore.Category.allCases.map(\.rawValue)),
+            ("templateEditor.preset.", TemplatePresetSeeds.Preset.allCases.map(\.rawValue)),
+            ("templateEditor.preset.inserted.", TemplatePresetSeeds.Preset.allCases.map(\.rawValue)),
+        ]
+        for (prefix, values) in cases {
+            for value in values {
+                let key = "\(prefix)\(value)"
+                let resolved = NSLocalizedString(key, bundle: .main, value: key, comment: "")
+                XCTAssertNotEqual(resolved, key, "Missing translation for \(key) — UI will render the raw key.")
+            }
+        }
+    }
+
     /// Format-string keys (with `%lld` / `%@` placeholders) must exist with
     /// the *matching format suffix* SwiftUI looks up at runtime, not the
     /// bare key. These are the patterns the app uses with

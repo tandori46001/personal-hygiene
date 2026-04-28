@@ -120,6 +120,29 @@ public struct DiagnosticsSnapshot: Codable, Sendable {
         public let observerIdentifierAdditions: [String]
         public let observerIdentifierRemovals: [String]
         public let buildChanged: Bool
+
+        /// Round-19 slice T3.12: terse human-readable summary suitable for
+        /// `UIPasteboard.general.string` so the user can paste a quick "what
+        /// changed since the last snapshot" line into an issue/email.
+        public func formatted() -> String {
+            var lines: [String] = []
+            if buildChanged { lines.append("build: changed") }
+            if pendingDelta != 0 { lines.append("pending: \(signed(pendingDelta))") }
+            if deliveredDelta != 0 { lines.append("delivered: \(signed(deliveredDelta))") }
+            if widgetReloadDelta != 0 { lines.append("widget reloads: \(signed(widgetReloadDelta))") }
+            if tripDocCountDelta != 0 { lines.append("trip docs: \(signed(tripDocCountDelta))") }
+            if !observerIdentifierAdditions.isEmpty {
+                lines.append("+observer: \(observerIdentifierAdditions.joined(separator: ","))")
+            }
+            if !observerIdentifierRemovals.isEmpty {
+                lines.append("-observer: \(observerIdentifierRemovals.joined(separator: ","))")
+            }
+            return lines.isEmpty ? "no diff" : lines.joined(separator: " · ")
+        }
+
+        private func signed(_ value: Int) -> String {
+            value > 0 ? "+\(value)" : "\(value)"
+        }
     }
 
     public static func diff(from older: Self, to newer: Self) -> Diff {

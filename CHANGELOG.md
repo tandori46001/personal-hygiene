@@ -8,6 +8,45 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added — Session 17 round 19: 28-slice quality + watch parity + vacation deepening
+
+Tier 1 (preventive L006 guards):
+- SwiftLint custom rule `dynamic_localized_key` now flags any `LocalizedStringKey("...\(...)")` as build error (catches the SwiftUI gotcha L006 captured at compile time).
+- `scripts/check-localized-key-usage.py` — backup static scan for the same pattern.
+- `scripts/check-xcstrings-format-consistency.py` — verifies declared `%@`/`%lld` placeholders match call-site interpolation count.
+- `BundleLocalizationLookupTests` extended with `test_integerSuffixKeysResolve` (snooze duration / medication follow-up / marine freshness) and `test_round17_18_discreteSuffixKeysResolve` (pending source headers, mute categories, template presets + insertion toasts).
+- Two L006 sites missed in the round-18 hotfix (BlockEditorView Picker + TemplateEditorView day-type Picker) migrated to `Text(localizedKey:)`.
+
+Tier 2 (watch parity catch-up):
+- New `NotificationActionID.snooze30min` action (UNNotificationCategory) registered on routine, hydration, and trip-milestone categories.
+- New `NotificationActionID.skipDose` (destructive) action registered on the medication category.
+- `NotificationActionHandler` handles both new actions: snooze30 schedules a fresh request 30 min out; skipDose removes the pending notification without scheduling a follow-up.
+- `NextBlockComplication` (rectangular) gains line-3 caption: localized category + duration (e.g. `hygiene · 30 min`).
+- Watch `ContentView` reads `settings.theme` via the App Group suite and applies `.preferredColorScheme(_:)` so the iPhone toggle propagates once the entitlement is wired.
+- Watch `SettingsGlanceWatchView` reads `PauseNotificationsStore` from the App Group suite and shows "Paused until HH:MM" when the iPhone has paused notifications.
+- Watch snooze-duration row migrated from the L006-broken `LocalizedStringResource` pattern to `Text(localizedKey:)`.
+
+Tier 3 (settings / diagnostics):
+- `BackupSnapshot` v2: optional `diagnostics: DiagnosticsSnapshot` field bundled into the JSON export so a single share covers user data + the diagnostics one-pager.
+- Diagnostics snapshot-history disclosure gains a "Copy diff (last vs prev)" button using the new `DiagnosticsSnapshot.Diff.formatted()` helper.
+- New `SettingsViewRound19.swift` extension hosts:
+  - "Reset onboarding tips" destructive row (clears `whatsNew.lastSeenCommitSHA` + `WhatsNewHistoryStore`).
+  - "About this build" footer section with `BuildInfo.shortDescriptor` + locale + `LocalizationKeyCount.total`. Tap-to-copy.
+
+Tier 4 (vacation deepening):
+- `TripCarbonEstimate.TransportMode` enum (flight / ferry / publicTransport / car) with per-mode `kgPerPassengerKm` factor (DEFRA 2023 averages). `roundTripKgCO2(distanceKm:mode:)` defaults to `.flight` so existing callers stay green.
+- `TripCarbonSection` gains a transport-mode picker; selection persisted via `@AppStorage("trip.carbon.mode")`.
+- `TripExpensesSection` gains "Copy converted totals" button — uses `LastConversionStore` rate to print a per-currency breakdown + grand total to clipboard (offline; no network).
+- `TripsListViewModel.duplicateToNextYear(_:)` shortcut + new "Duplicate next year" swipe action on upcoming trips (purple, calendar.badge.plus icon).
+
+Tier 5 (Today / Routine quality of life):
+- New `MoodLogStore` (UserDefaults-backed, capacity 30 entries, 5-emoji `Mood` enum). New "How do you feel?" section on TodayView highlights the most-recent mood for today.
+- New `tomorrowSection` disclosure on TodayView lists tomorrow's blocks (based on tomorrow's day-type); collapsed by default.
+- `TemplateEditor` block rows gain a "Duplicate block" context menu (`TemplateEditorViewModel.duplicate(_:)` clones with start time bumped by source duration).
+- `TemplateListView` gains a "Category legend" disclosure at the bottom mapping each `BlockCategory` to its color dot + localized name.
+
+Counts: tests **567** (565 unit + 2 UI). i18n keys **704** × 3 locales (+25 net: round 19 added 17, watch + medication actions added 8, layout-polish keys carried). Lessons captured: still **6** (L001-L006).
+
 ### Fixed — Session 16 hotfix: localization regression + layout polish
 
 User screenshotted round-18 install on the iPhone and surfaced 9 places where raw localization keys rendered instead of translations (`category.work`, `housekeeping.recurrence.weekly`, `settings.snooze.duration.5`, `settings.medication.followup.30`, `settings.marine.freshness.24`, `trip.packing.category.clothing`, `birthdays.daysUntil 28`, `settings.backup.autoFrequency.off`, `birthdays.lead.preview ...`).

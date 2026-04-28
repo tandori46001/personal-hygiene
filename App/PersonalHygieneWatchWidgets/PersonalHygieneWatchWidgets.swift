@@ -45,6 +45,11 @@ struct NextBlockSnapshot: Sendable, Hashable {
     /// scheduled). The complication shows a small `moon.zzz.fill` glyph when
     /// this is true so the wearer knows non-critical alerts are suppressed.
     var isFocusActive: Bool = false
+    /// Round-19: BlockCategory raw value (e.g. "hygiene", "work", "meal") used
+    /// to render the line-2 caption + the duration suffix on the rectangular
+    /// complication so the user sees the category + minutes at a glance.
+    var categoryRawValue: String = ""
+    var durationMinutes: Int = 0
 }
 
 struct NextBlockProvider: TimelineProvider {
@@ -93,7 +98,9 @@ struct NextBlockProvider: TimelineProvider {
         return NextBlockSnapshot(
             title: next.title,
             startMinutes: next.startMinutesFromMidnight,
-            isFocusActive: focusActive
+            isFocusActive: focusActive,
+            categoryRawValue: next.category.rawValue,
+            durationMinutes: next.durationMinutes
         )
     }
 }
@@ -116,7 +123,19 @@ struct NextBlockEntryView: View {
                 }
                 Text(block.title)
                     .font(.caption)
-                    .lineLimit(2)
+                    .lineLimit(1)
+                if !block.categoryRawValue.isEmpty {
+                    HStack(spacing: 4) {
+                        Text(localizedKey: "category.\(block.categoryRawValue)")
+                            .font(.caption2)
+                            .foregroundStyle(.secondary)
+                        if block.durationMinutes > 0 {
+                            Text(verbatim: "· \(block.durationMinutes) min")
+                                .font(.caption2)
+                                .foregroundStyle(.tertiary)
+                        }
+                    }
+                }
             }
             .accessibilityElement(children: .combine)
             .accessibilityLabel(Text(verbatim: voiceOverPhrase(for: block)))

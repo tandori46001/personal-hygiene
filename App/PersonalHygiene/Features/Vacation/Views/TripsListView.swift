@@ -55,6 +55,18 @@ struct TripsListView: View {
                                         }
                                     }
                                     .tint(.blue)
+                                    Button {
+                                        // Round-19 slice T4.18: shortcut for the most-common
+                                        // recurring-trip pattern.
+                                        viewModel.duplicateToNextYear(trip)
+                                    } label: {
+                                        Label {
+                                            Text("trips.action.duplicateNextYear", bundle: .main)
+                                        } icon: {
+                                            Image(systemName: "calendar.badge.plus")
+                                        }
+                                    }
+                                    .tint(.purple)
                                 }
                         }
                         .onDelete { offsets in delete(upcoming, at: offsets) }

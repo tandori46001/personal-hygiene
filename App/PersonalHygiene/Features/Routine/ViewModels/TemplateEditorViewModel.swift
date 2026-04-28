@@ -46,6 +46,29 @@ final class TemplateEditorViewModel {
         try repository.delete(block)
     }
 
+    /// Round-19 slice T5.21: clone `block` into the same template, placing
+    /// the copy immediately after the source block. Start time is bumped by
+    /// the source's own duration (so a 30-min block at 09:00 spawns a clone
+    /// at 09:30) and clamped to the last minute of the day. The clone keeps
+    /// the same category, notes, lead minutes, and deep-focus flag — the
+    /// user usually wants to tweak only one field afterwards.
+    func duplicate(_ block: Block) throws {
+        let nextStart = min(
+            24 * 60 - 1,
+            block.startMinutesFromMidnight + max(1, block.durationMinutes)
+        )
+        let clone = Block(
+            title: block.title,
+            category: block.category,
+            startMinutesFromMidnight: nextStart,
+            durationMinutes: block.durationMinutes,
+            notes: block.notes,
+            notificationLeadMinutes: block.notificationLeadMinutes,
+            isDeepFocus: block.isDeepFocus
+        )
+        try repository.upsert(clone, in: template)
+    }
+
     /// Drag-to-reorder semantics for a time-anchored schedule: the sequence
     /// of start times stays fixed (07:00, 09:00, 11:00 …), but blocks swap
     /// the slot they occupy according to the user's gesture. Each block

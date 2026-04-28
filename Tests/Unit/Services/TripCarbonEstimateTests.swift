@@ -37,4 +37,20 @@ final class TripCarbonEstimateTests: XCTestCase {
     func test_roundTripKgCO2_negativeDistanceClamped() {
         XCTAssertEqual(TripCarbonEstimate.roundTripKgCO2(distanceKm: -100), 0)
     }
+
+    func test_roundTripKgCO2_ferryIsLowerThanFlight() {
+        let dist = 1_000.0
+        let flight = TripCarbonEstimate.roundTripKgCO2(distanceKm: dist, mode: .flight)
+        let ferry = TripCarbonEstimate.roundTripKgCO2(distanceKm: dist, mode: .ferry)
+        XCTAssertLessThan(ferry, flight)
+        XCTAssertEqual(ferry, dist * 2 * 0.115, accuracy: 0.001)
+    }
+
+    func test_roundTripKgCO2_publicTransportIsLowest() {
+        let dist = 1_000.0
+        let pub = TripCarbonEstimate.roundTripKgCO2(distanceKm: dist, mode: .publicTransport)
+        let car = TripCarbonEstimate.roundTripKgCO2(distanceKm: dist, mode: .car)
+        XCTAssertLessThan(pub, car)
+        XCTAssertEqual(pub, dist * 2 * 0.041, accuracy: 0.001)
+    }
 }

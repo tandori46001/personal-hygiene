@@ -57,6 +57,32 @@ struct TemplateListView: View {
                 }
             }
             .onDelete(perform: deleteTemplates)
+            // Round-19 slice T5.22: legend at the bottom of the list mapping
+            // each category color to its name. Collapsed by default to keep
+            // the primary list dense.
+            if !viewModel.templates.isEmpty {
+                Section {
+                    DisclosureGroup {
+                        VStack(alignment: .leading, spacing: 6) {
+                            ForEach(BlockCategory.allCases, id: \.self) { category in
+                                HStack(spacing: 8) {
+                                    BlockCategoryDot(category: category)
+                                    Text(localizedKey: "category.\(category.rawValue)")
+                                        .font(.caption)
+                                }
+                                .accessibilityElement(children: .combine)
+                            }
+                        }
+                        .padding(.vertical, 4)
+                    } label: {
+                        HStack {
+                            Image(systemName: "circle.grid.3x3.fill")
+                                .foregroundStyle(.secondary)
+                            Text("templateList.legend.title", bundle: .main)
+                        }
+                    }
+                }
+            }
         }
         .navigationTitle(Text("templateList.title", bundle: .main))
         .toolbar {

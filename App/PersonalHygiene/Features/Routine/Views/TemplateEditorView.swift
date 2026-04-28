@@ -20,7 +20,7 @@ struct TemplateEditorView: View {
                 }
                 Picker(selection: $viewModel.dayType) {
                     ForEach(DayType.allCases, id: \.self) { dayType in
-                        Text(localizedDayType(dayType)).tag(dayType)
+                        Text(localizedKey: "dayType.\(dayType.rawValue)").tag(dayType)
                     }
                 } label: {
                     Text("templateEditor.field.dayType", bundle: .main)
@@ -43,6 +43,19 @@ struct TemplateEditorView: View {
                         BlockSummaryRow(block: block, hasConflict: conflicts.contains(block.id))
                     }
                     .buttonStyle(.plain)
+                    .contextMenu {
+                        Button {
+                            do { try viewModel.duplicate(block) } catch {
+                                errorMessage = error.localizedDescription
+                            }
+                        } label: {
+                            Label {
+                                Text("templateEditor.action.duplicateBlock", bundle: .main)
+                            } icon: {
+                                Image(systemName: "plus.square.on.square")
+                            }
+                        }
+                    }
                 }
                 .onDelete(perform: deleteBlocks)
                 .onMove(perform: moveBlocks)
@@ -206,9 +219,6 @@ struct TemplateEditorView: View {
         }
     }
 
-    private func localizedDayType(_ dayType: DayType) -> LocalizedStringKey {
-        LocalizedStringKey("dayType.\(dayType.rawValue)")
-    }
 }
 
 private struct BlockSummaryRow: View {

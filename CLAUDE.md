@@ -74,7 +74,7 @@ See [LESSONS.md](LESSONS.md) for full text. Quick table:
 | L003 | Files in `App/Shared/` using iOS-only APIs (UIGraphicsPDFRenderer, UIActivityViewController, etc.) must be `#if canImport(UIKit) && !os(watchOS)`-guarded — the watch target compiles `Shared/` too | `./scripts/deploy-watch.sh --no-install` builds the watch scheme; run after touching `Shared/` |
 | L004 | Tab-root views inside iOS 18 TabView "More" overflow must NOT add their own `NavigationStack` (More provides one); doing so produces two stacked back chevrons on every push | Manual on-device check: open any overflowed tab → push into a child → exactly one back arrow |
 | L005 | Test process crashes (signal-trap / "Restarting after unexpected exit") must NOT be filtered as the LLDB glitch in `check-tests.sh` — a real crash with no failed-test-method line silently passed CI | `scripts/check-tests.sh` counts process-crash lines separately; treats them as real failures regardless of exit code |
-| L006 | `Text(LocalizedStringKey("foo.\(rawValue)"))` looks up `"foo.%@"`, not the runtime key — UI shows raw keys (`category.work` etc.). Use `Text(localizedKey: "foo.\(rawValue)")` for discrete-suffix lookups; xcstrings keys with placeholders must include the matching `%@` / `%lld` suffix | `BundleLocalizationLookupTests` resolves every enum-driven discrete-suffix key + every format-string key through `Bundle.main` |
+| L006 | `Text(LocalizedStringKey("foo.\(rawValue)"))` looks up `"foo.%@"`, not the runtime key — UI shows raw keys (`category.work` etc.). Use `Text(localizedKey: "foo.\(rawValue)")` for discrete-suffix lookups; xcstrings keys with placeholders must include the matching `%@` / `%lld` suffix | `BundleLocalizationLookupTests` resolves every enum-driven discrete-suffix key + every format-string key through `Bundle.main`; round-19 SwiftLint custom rule `dynamic_localized_key` rejects new `LocalizedStringKey("...\(...)")` at compile time; backup `scripts/check-localized-key-usage.py` and `scripts/check-xcstrings-format-consistency.py` static scans run alongside |
 
 ---
 
@@ -129,14 +129,14 @@ See [LESSONS.md](LESSONS.md) for full text. Quick table:
 | Phase | Status | Acceptance |
 |---|---|---|
 | 0 — Bootstrap | ✅ Done | Repo + tooling ready · Xcode project · CI green |
-| 1 — MVP daily routine | 🟡 ~99.8% | M1+M2+M3+M4 code-complete; rounds 12-18 polish layer (per-block followup, pause, theme, per-category mute, bedtime auto-mute, quiet hours, dose history + filter chips + 30-day adherence + skip-this-dose, stale-day banner, block conflict detector, undo preset insertion). Remaining: real-device validation + paid Apple Developer Program. |
-| 2 — Apple Watch | ✅ ~97% | Today list + NextBlock complication + mark-done shipped. Rounds 12-18 added zero watch surfaces — watch still on `39e0c5b`. |
+| 1 — MVP daily routine | 🟡 ~99.85% | M1+M2+M3+M4 code-complete; rounds 12-19 polish layer (per-block followup, pause, theme, per-category mute, bedtime auto-mute, quiet hours, dose history + filter chips + 30-day adherence + skip-this-dose, stale-day banner, block conflict detector, undo preset insertion, snooze-30 action, mood quick-log, tomorrow disclosure, about-build footer). Remaining: real-device validation + paid Apple Developer Program. |
+| 2 — Apple Watch | ✅ ~98% | Today list + NextBlock complication + mark-done shipped. Round 19 added complication line-2 (category + duration), theme-override mirror, pause-notifications mirror, snooze-30 + skip-dose actions registered globally. Watch still on `39e0c5b` until next deploy. |
 | 3 — Secondary modules | ✅ Done | M5 hydration (+ hot-weather + weekly avg + comeback nudge), M6 housekeeping (+ streak + room-icon palette + per-task icon picker), M7 birthdays (+ re-sync + relationship/idea stores + filter chips + copy-gift-ideas), M8 deep focus (+ right-now + conflict + filter-preview surface). |
 | 4 — TestFlight beta | 🔒 Blocked | Needs paid Apple Developer Program ($99/yr). |
-| 5 — Vacation module | ✅ Feature-complete | M9 closed: trips + milestones + reminders + scanner + AI itinerary + marine + currency + 5-source advisory + PDF + notes (Markdown) + archive + cost log + Markdown share + plain-text copy + carbon estimate (kg/lb toggle) + emergency contacts (tap-to-call) + monthly expense summary + duplicate-with-shifted-dates + milestone-defaults bundle. Real-trip validation pending. |
+| 5 — Vacation module | ✅ Feature-complete | M9 closed: trips + milestones + reminders + scanner + AI itinerary + marine + currency + 5-source advisory + PDF + notes (Markdown) + archive + cost log + Markdown share + plain-text copy + carbon estimate (kg/lb toggle, ferry/PT/car factors) + emergency contacts (tap-to-call) + monthly expense summary + duplicate-with-shifted-dates + duplicate-to-next-year + milestone-defaults bundle + copy-converted-totals. Real-trip validation pending. |
 | 6 — App Store | ⬜ | Submission + listing in 3 languages. |
 
-> Source of truth for phase progress — must match `memory/project_status.md` and `ROADMAP.md § Phases`. Last synced: round 18 (`66b978a`).
+> Source of truth for phase progress — must match `memory/project_status.md` and `ROADMAP.md § Phases`. Last synced: round 19 (HEAD).
 
 ---
 

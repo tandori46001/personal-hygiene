@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 /// Round-13 sections of `DiagnosticsView` — snapshot history, auth timeline,
 /// network counts, pending details, refresh-trace export. Hosted in their
@@ -23,6 +24,23 @@ extension DiagnosticsView {
                             .foregroundStyle(.secondary)
                         }
                         .accessibilityElement(children: .combine)
+                    }
+                    if snapshotHistory.count >= 2 {
+                        Button {
+                            // Round-19 slice T3.12: copy a one-line diff
+                            // (newest vs second-newest) so the user can paste
+                            // it into a bug report without grepping JSON.
+                            let newer = snapshotHistory[0]
+                            let older = snapshotHistory[1]
+                            let diff = DiagnosticsSnapshot.diff(from: older, to: newer)
+                            UIPasteboard.general.string = diff.formatted()
+                        } label: {
+                            Label {
+                                Text("settings.diagnostics.snapshotDiff.copy", bundle: .main)
+                            } icon: {
+                                Image(systemName: "doc.on.doc")
+                            }
+                        }
                     }
                 } label: {
                     HStack {

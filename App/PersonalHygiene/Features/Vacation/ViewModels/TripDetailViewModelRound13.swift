@@ -192,7 +192,12 @@ extension TripDetailViewModel {
     /// Round-14 slice 13: estimated round-trip CO₂ for the trip in kg.
     /// Requires both endpoints — returns `nil` when the trip lacks a
     /// destination geocode or the home location is unset.
-    func roundTripCO2Kg(home: BlockLocation?) -> Double? {
+    /// Round-19 slice T4.16: optional `mode` parameter so the caller can
+    /// preview ferry / public-transport / car estimates instead of flight.
+    func roundTripCO2Kg(
+        home: BlockLocation?,
+        mode: TripCarbonEstimate.TransportMode = .flight
+    ) -> Double? {
         guard let home,
               let toLat = trip.destinationLatitude,
               let toLon = trip.destinationLongitude
@@ -203,7 +208,49 @@ extension TripDetailViewModel {
             toLat: toLat,
             toLon: toLon
         )
-        return TripCarbonEstimate.roundTripKgCO2(distanceKm: distance)
+        return TripCarbonEstimate.roundTripKgCO2(distanceKm: distance, mode: mode)
+    }
+
+    /// Round-19 slice T4.15: convert *all* expenses to a single target
+    /// currency using the most-recent saved conversion rate from
+    /// `LastConversionStore`. Returns a printable per-currency breakdown
+    /// + grand total in the target currency, intended for clipboard share.
+    /// The conversion is offline — no network round-trip.
+    ///
+    /// When `LastConversionStore` is empty or all expenses share the same
+    /// currency, returns a simple one-line total without conversion.
+    func convertedExpensesSummary(now: Date = Date()) -> String {
+        let exps = expenses
+        guard !exps.isEmpty else { return "" }
+        let totalsByCurrency = Dictionary(
+            grouping: exps,
+            by: { $0.currencyCode.uppercased() }
+        ).mapValues { $0.reduce(0.0) { $0 + $1.amount } }
+
+        guard let snapshot = LastConversionStore.load() else {
+            return totalsByCurrency
+                .sorted { $0.key < $1.key }
+                .map { String(format: "%.2f %@", $0.value, $0.key) }
+                .joined(separator: " · ")
+        }
+
+        let target = snapshot.to.uppercased()
+        var lines: [String] = []
+        var grandTotal = 0.0
+        for (code, total) in totalsByCurrency.sorted(by: { $0.key < $1.key }) {
+            if code == target {
+                lines.append(String(format: "%.2f %@", total, code))
+                grandTotal += total
+            } else if code == snapshot.from.uppercased() {
+                let converted = total * snapshot.rate
+                lines.append(String(format: "%.2f %@ → %.2f %@", total, code, converted, target))
+                grandTotal += converted
+            } else {
+                lines.append(String(format: "%.2f %@ (no rate)", total, code))
+            }
+        }
+        let header = String(format: "≈ %.2f %@", grandTotal, target)
+        return ([header] + lines).joined(separator: "\n")
     }
 
     /// Round-15 slice 11: drop the standard 6m / 3m / 1m / 1w milestone

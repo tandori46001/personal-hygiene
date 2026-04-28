@@ -168,6 +168,16 @@ final class TripsListViewModel {
             errorMessage = error.localizedDescription
         }
     }
+
+    /// Round-19 slice T4.18: convenience wrapper for the common "same trip
+    /// next year" pattern — shifts by exactly one calendar year using
+    /// `Calendar.date(byAdding: .year, value: 1, ...)` so leap-day endpoints
+    /// land on Feb 28 of a non-leap target instead of producing nil.
+    func duplicateToNextYear(_ source: Trip, calendar: Calendar = .autoupdatingCurrent) {
+        let shifted = calendar.date(byAdding: .year, value: 1, to: source.startDate) ?? source.startDate
+        let days = calendar.dateComponents([.day], from: source.startDate, to: shifted).day ?? 365
+        duplicateShifted(source, byDays: days)
+    }
 }
 
 private extension String {

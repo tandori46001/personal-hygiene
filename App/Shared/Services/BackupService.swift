@@ -5,7 +5,7 @@ import SwiftData
 /// SwiftData currently owns *except* the per-device Keychain bytes for trip
 /// documents — those don't survive a device move and would import as dangling
 /// references.
-public struct BackupSnapshot: Codable, Equatable, Sendable {
+public struct BackupSnapshot: Codable, Sendable {
 
     public let version: Int
     public let exportedAt: Date
@@ -14,15 +14,21 @@ public struct BackupSnapshot: Codable, Equatable, Sendable {
     public let hydration: [HydrationLogPayload]
     public let housekeeping: [HousekeepingTaskPayload]
     public let trips: [TripPayload]
+    /// Round-19 slice T3.11: optional diagnostics snapshot bundled at export
+    /// time. When present, a single shared backup file covers user data + the
+    /// diagnostics one-pager — so the user only needs to attach one file to
+    /// a bug report. Restore ignores this field; it's purely informational.
+    public let diagnostics: DiagnosticsSnapshot?
 
     public init(
-        version: Int = 1,
+        version: Int = 2,
         exportedAt: Date = Date(),
         templates: [TemplatePayload],
         completions: [CompletionPayload],
         hydration: [HydrationLogPayload],
         housekeeping: [HousekeepingTaskPayload],
-        trips: [TripPayload]
+        trips: [TripPayload],
+        diagnostics: DiagnosticsSnapshot? = nil
     ) {
         self.version = version
         self.exportedAt = exportedAt
@@ -31,6 +37,7 @@ public struct BackupSnapshot: Codable, Equatable, Sendable {
         self.hydration = hydration
         self.housekeeping = housekeeping
         self.trips = trips
+        self.diagnostics = diagnostics
     }
 }
 
@@ -128,7 +135,10 @@ extension BackupSnapshot {
 @MainActor
 public enum BackupService {
 
-    public static func export(from context: ModelContext) throws -> BackupSnapshot {
+    public static func export(
+        from context: ModelContext,
+        diagnostics: DiagnosticsSnapshot? = nil
+    ) throws -> BackupSnapshot {
         let templates = try context.fetch(FetchDescriptor<RoutineTemplate>())
         let completions = try context.fetch(FetchDescriptor<BlockCompletion>())
         let hydration = try context.fetch(FetchDescriptor<HydrationLog>())
@@ -140,7 +150,8 @@ public enum BackupService {
             completions: completions.map(payload(from:)),
             hydration: hydration.map(payload(from:)),
             housekeeping: housekeeping.map(payload(from:)),
-            trips: trips.map(payload(from:))
+            trips: trips.map(payload(from:)),
+            diagnostics: diagnostics
         )
     }
 

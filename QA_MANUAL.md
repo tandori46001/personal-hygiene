@@ -1790,4 +1790,139 @@ The following slices ship purely automated artifacts and have no manual case:
 - Slice 2: 2 new DynamicType tests at `.accessibility5` (same).
 - Slice 3: `scripts/check-i18n-coverage.sh` — covered by running the script.
 - Slice 4: `scripts/check-localization-orphans.py` — covered by running the script.
-- (Reserved for round 19+.)
+
+## [T-146] — Round 19 L006 lint guard (no manual case)
+
+**Module:** ci/scripts · **Shipped in:** round 19 (T1.1, T1.2, T1.3)
+
+Three preventive guards now block the L006 SwiftUI-dynamic-key trap:
+- SwiftLint custom rule `dynamic_localized_key` flags any `LocalizedStringKey("...\(...)")` as build error.
+- `./scripts/check-localized-key-usage.py` — backup static scan.
+- `./scripts/check-xcstrings-format-consistency.py` — verifies `%@`/`%lld` parity between xcstrings keys and call sites.
+
+Verify by running each script — must exit 0.
+
+## [T-147] — Notification: snooze 30-min action (round 19)
+
+**Module:** notifications · **Shipped in:** round 19 (T2.5)
+
+### Manual verification
+1. Today → snooze-eligible block (any non-medication routine, hydration, or trip-milestone notification).
+2. Long-press the live notification → category sheet shows two snooze actions: 5-min (default) + new 30-min.
+3. Tap "Snooze 30 min" → notification re-fires ~30 minutes later.
+
+## [T-148] — Notification: skip dose action (round 19)
+
+**Module:** notifications/medication · **Shipped in:** round 19 (T2.9)
+
+### Manual verification
+1. Trigger any medication notification (Diagnostics → Dev tools → "Send medication test").
+2. Long-press the notification → category sheet shows "Mark done" + "Skip this dose" (red/destructive).
+3. Tap "Skip this dose" → pending follow-up is removed (Diagnostics → Pending IDs has no medication-followup for that block today).
+
+## [T-149] — Watch: complication line 2 (round 19)
+
+**Module:** watch · **Shipped in:** round 19 (T2.6)
+
+### Manual verification
+*Requires watch redeploy.*
+1. Add the rectangular `NextBlockComplication` to a watch face.
+2. Verify line 1 = start time, line 2 = block title, line 3 = category + duration (e.g. `hygiene · 30 min`).
+
+## [T-150] — Watch: theme + pause mirror (round 19)
+
+**Module:** watch · **Shipped in:** round 19 (T2.7, T2.8)
+
+### Manual verification
+*Requires App Group entitlement to function across devices; falls back to standalone watch defaults until the entitlement ships.*
+1. iPhone → Settings → set theme override to "Dark". Watch should respect the same value (when App Group is wired).
+2. iPhone → Settings → "Pause notifications for 1h". Watch glance → settings page now shows "Paused until HH:MM".
+
+## [T-151] — Backup includes diagnostics snapshot (round 19)
+
+**Module:** settings/backup · **Shipped in:** round 19 (T3.11)
+
+### Manual verification
+1. Diagnostics → "Capture snapshot" twice (so `SnapshotHistoryStore` has ≥1 entry).
+2. Settings → Backup → Export. Open the JSON file.
+3. Top-level `diagnostics` field present, equal to the most recent snapshot.
+
+## [T-152] — Diagnostics: copy snapshot diff (round 19)
+
+**Module:** settings/diagnostics · **Shipped in:** round 19 (T3.12)
+
+### Manual verification
+1. Diagnostics → capture two snapshots (history count ≥ 2).
+2. Expand "Snapshot history" → tap "Copy diff (last vs prev)".
+3. Paste into Notes — single-line summary like `pending: +2 · widget reloads: +1`.
+
+## [T-153] — Settings: reset onboarding tips (round 19)
+
+**Module:** settings · **Shipped in:** round 19 (T3.13)
+
+### Manual verification
+1. Settings → scroll to bottom → "Reset onboarding tips" (red/destructive row).
+2. Tap → next launch should re-trigger the "What's New" sheet automatically.
+
+## [T-154] — Settings: about footer (round 19)
+
+**Module:** settings · **Shipped in:** round 19 (T3.14)
+
+### Manual verification
+1. Settings → bottom "About this build" section.
+2. Row shows `vX.Y.Z (build N) — sha` + `locale en_GB · keys 704`.
+3. Tap → entire string copied to clipboard.
+
+## [T-155] — Trip carbon: transport mode picker (round 19)
+
+**Module:** trip · **Shipped in:** round 19 (T4.16)
+
+### Manual verification
+1. Trips → trip with destination geocoded + home location set → Carbon section now shows a transport-mode picker (Flight / Ferry / Public transport / Car).
+2. Switch to Public transport → kg drops to ~16% of the flight value.
+3. Switch back to Flight → original value restored.
+
+## [T-156] — Trip expenses: copy converted totals (round 19)
+
+**Module:** trip · **Shipped in:** round 19 (T4.15)
+
+### Manual verification
+1. Add ≥2 expenses in different currencies. In Currency tab, perform a conversion (e.g. EUR→USD). LastConversion is now stored.
+2. Trip detail → Expenses → tap "Copy converted totals".
+3. Paste into Notes → multi-line summary with `≈ NN.NN USD` header + per-currency lines.
+
+## [T-157] — Trips: duplicate to next year (round 19)
+
+**Module:** trips · **Shipped in:** round 19 (T4.18)
+
+### Manual verification
+1. Trips → upcoming trip → swipe-leading edge.
+2. Two buttons: "Duplicate" (existing) + new "Duplicate next year" (purple, calendar icon).
+3. Tap → new trip appears with start/end date shifted by exactly one calendar year.
+
+## [T-158] — Today: tomorrow disclosure (round 19)
+
+**Module:** today · **Shipped in:** round 19 (T5.19)
+
+### Manual verification
+1. Today → scroll past the schedule → "Tomorrow" disclosure (sun icon).
+2. Expand → list of tomorrow's blocks (based on tomorrow's day-type).
+3. If today is a weekday and tomorrow is a weekend, weekend template's blocks are shown.
+
+## [T-159] — Today: mood quick-log (round 19)
+
+**Module:** today · **Shipped in:** round 19 (T5.20)
+
+### Manual verification
+1. Today → "How do you feel?" section — 5 emoji chips (😄 🙂 😐 🙁 😞).
+2. Tap one → chip is highlighted (subtle accent background).
+3. Re-tap a different mood → highlight moves; today's record updates.
+4. Re-launch app → highlight persists for the day's most-recent selection.
+
+## [T-160] — TemplateEditor + TemplateList enhancements (round 19)
+
+**Module:** routine · **Shipped in:** round 19 (T5.21, T5.22)
+
+### Manual verification
+1. **Duplicate block:** TemplateEditor → long-press any block → context menu "Duplicate block". A clone appears immediately after the source (start time = source start + source duration).
+2. **Category legend:** TemplateList → bottom of the list → "Category legend" disclosure. Expand → 12 category dots with their localized names.

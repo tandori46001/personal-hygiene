@@ -122,5 +122,13 @@ custom_rules:
     severity: error
     excluded:
       - "Tests"
+  dynamic_localized_key:
+    name: "Dynamic LocalizedStringKey lookup (L006)"
+    regex: 'LocalizedStringKey\("[^"]*\\\([^"]*"\)'
+    message: "Use Text(localizedKey: \"prefix.\\(rawValue)\") for dynamic suffix lookups — LocalizedStringKey treats \\(...) as a %@ placeholder and renders the raw key (L006). For genuine format strings with %@/%lld, use LocalizedStringResource."
+    severity: error
+    excluded:
+      - "Tests"
+      - "App/Shared/Localization/TextLocalizedKey.swift"
 
 reporter: "xcode"

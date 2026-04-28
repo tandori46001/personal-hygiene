@@ -20,7 +20,7 @@ struct BlockEditorView: View {
                     }
                     Picker(selection: $viewModel.category) {
                         ForEach(BlockCategory.allCases, id: \.self) { category in
-                            Text(localizedCategory(category)).tag(category)
+                            Text(localizedKey: "category.\(category.rawValue)").tag(category)
                         }
                     } label: {
                         Text("blockEditor.field.category", bundle: .main)
@@ -186,9 +186,6 @@ struct BlockEditorView: View {
         }
     }
 
-    private func localizedCategory(_ category: BlockCategory) -> LocalizedStringKey {
-        LocalizedStringKey("category.\(category.rawValue)")
-    }
 }
 
 #Preview("New") {

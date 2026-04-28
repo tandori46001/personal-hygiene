@@ -198,6 +198,8 @@ struct TodayView: View {
                         } header: {
                             Text("today.section.schedule", bundle: .main)
                         }
+                        moodQuickLogSection
+                        tomorrowSection
                     }
                 } else {
                     ContentUnavailableView {

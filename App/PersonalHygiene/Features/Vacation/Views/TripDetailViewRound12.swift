@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 /// Round-12 helpers extracted from `TripDetailView` to keep the main view
 /// type body under SwiftLint's 300-line cap.
@@ -152,11 +153,20 @@ struct TripCarbonSection: View {
     /// Round-18 slice 15: persisted user preference for the displayed unit.
     /// "kg" = kilograms (default), "lb" = pounds. 1 kg ≈ 2.2046 lb.
     @AppStorage("trip.carbon.unit") private var unit: String = "kg"
+    /// Round-19 slice T4.16: persisted transport mode preference. Mirrors
+    /// `TripCarbonEstimate.TransportMode.rawValue` ("flight" | "ferry" |
+    /// "publicTransport" | "car"). Default = flight to keep parity with the
+    /// round-14 / round-16 behavior.
+    @AppStorage("trip.carbon.mode") private var modeRaw: String = "flight"
 
     private static let kgToLb = 2.2046226218
 
+    private var mode: TripCarbonEstimate.TransportMode {
+        TripCarbonEstimate.TransportMode(rawValue: modeRaw) ?? .flight
+    }
+
     var body: some View {
-        if let kg = viewModel.roundTripCO2Kg(home: homeLocation) {
+        if let kg = viewModel.roundTripCO2Kg(home: homeLocation, mode: mode) {
             Section {
                 HStack(spacing: 10) {
                     Image(systemName: "leaf.fill")
@@ -180,6 +190,14 @@ struct TripCarbonSection: View {
                     .frame(maxWidth: 110)
                 }
                 .accessibilityElement(children: .combine)
+                Picker(selection: $modeRaw) {
+                    ForEach(TripCarbonEstimate.TransportMode.allCases, id: \.rawValue) { value in
+                        Text(localizedKey: "trip.carbon.mode.\(value.rawValue)")
+                            .tag(value.rawValue)
+                    }
+                } label: {
+                    Text("trip.carbon.mode.label", bundle: .main)
+                }
             } footer: {
                 Text("trip.carbon.footer", bundle: .main)
             }
@@ -408,6 +426,20 @@ struct TripExpensesSection: View {
                     }
                 } label: {
                     Text("trip.expense.monthly.title", bundle: .main)
+                }
+            }
+            // Round-19 slice T4.15: per-trip "convert all expenses" button
+            // that prints + copies a per-currency total using the last
+            // recorded conversion rate (offline, single-tap).
+            if !viewModel.expenses.isEmpty {
+                Button {
+                    UIPasteboard.general.string = viewModel.convertedExpensesSummary()
+                } label: {
+                    Label {
+                        Text("trip.expense.convertAll.action", bundle: .main)
+                    } icon: {
+                        Image(systemName: "arrow.left.arrow.right")
+                    }
                 }
             }
         } header: {

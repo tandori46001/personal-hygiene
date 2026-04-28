@@ -164,6 +164,17 @@ final class TodayViewModel {
         return blocks.first { $0.startMinutesFromMidnight > nowMinutes }
     }
 
+    /// Round-19 slice T5.19: blocks scheduled for *tomorrow* (based on
+    /// tomorrow's day-type's active template). Returns an empty array when
+    /// no template exists for the target day-type. Pure read — does not
+    /// mutate `activeTemplate` or `todaysDayType`.
+    func tomorrowBlocks(now: Date = Date()) -> [Block] {
+        guard let tomorrow = calendar.date(byAdding: .day, value: 1, to: now) else { return [] }
+        let dayType = Self.dayType(for: tomorrow, in: calendar)
+        guard let template = try? repository.activeTemplate(for: dayType) else { return [] }
+        return template.sortedBlocks
+    }
+
     func currentBlock(at now: Date = Date()) -> Block? {
         let nowMinutes = calendar.component(.hour, from: now) * 60 + calendar.component(.minute, from: now)
         return blocks.first {

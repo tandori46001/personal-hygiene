@@ -51,7 +51,12 @@ public enum NotificationCategoryID {
 
 public enum NotificationActionID {
     public static let snooze5min = "personal-hygiene.action.snooze5min"
+    public static let snooze30min = "personal-hygiene.action.snooze30min"
     public static let markDone = "personal-hygiene.action.markDone"
+    /// Round-19: medication-only "skip this dose" action — removes the
+    /// pending notification without scheduling a follow-up. Mirrors the
+    /// in-app skip-dose row already present in `BlockDetailSheet`.
+    public static let skipDose = "personal-hygiene.action.skipDose"
 }
 
 public enum NotificationThreadID {

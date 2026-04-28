@@ -122,50 +122,59 @@ public final class UserNotificationsService: NotificationService {
 /// snooze button on a medication reminder.
 public enum NotificationCategoryRegistrar {
 
+    /// Builds and registers the four notification categories the app uses.
+    /// Implementation extracted into helpers to keep each function under
+    /// SwiftLint's 50-line body cap (round-19 cleanup).
     @MainActor
     public static func register(center: UNUserNotificationCenter = .current()) {
-        let snooze = UNNotificationAction(
-            identifier: NotificationActionID.snooze5min,
-            title: NSLocalizedString(
-                "notification.action.snooze5min",
-                comment: "Push action that re-fires the alert in 5 minutes"
-            ),
-            options: []
+        let snooze5 = action(NotificationActionID.snooze5min, "notification.action.snooze5min")
+        let snooze30 = action(NotificationActionID.snooze30min, "notification.action.snooze30min")
+        let markDone = action(NotificationActionID.markDone, "notification.action.markDone")
+        let skipDose = action(
+            NotificationActionID.skipDose,
+            "notification.action.skipDose",
+            options: [.destructive]
         )
-        let markDone = UNNotificationAction(
-            identifier: NotificationActionID.markDone,
-            title: NSLocalizedString(
-                "notification.action.markDone",
-                comment: "Push action that marks the block as done"
-            ),
-            options: []
-        )
+        let snoozeBoth = [snooze5, snooze30]
+        center.setNotificationCategories([
+            category(.routineBlock, [markDone] + snoozeBoth),
+            category(.medication, [markDone, skipDose]),
+            category(.tripMilestone, snoozeBoth),
+            category(.hydration, snoozeBoth),
+        ])
+    }
 
-        let routine = UNNotificationCategory(
-            identifier: NotificationCategoryID.routineBlock,
-            actions: [markDone, snooze],
+    @MainActor
+    private static func action(
+        _ identifier: String,
+        _ titleKey: String,
+        options: UNNotificationActionOptions = []
+    ) -> UNNotificationAction {
+        UNNotificationAction(
+            identifier: identifier,
+            title: NSLocalizedString(titleKey, comment: ""),
+            options: options
+        )
+    }
+
+    @MainActor
+    private static func category(
+        _ id: Self.CategoryID,
+        _ actions: [UNNotificationAction]
+    ) -> UNNotificationCategory {
+        UNNotificationCategory(
+            identifier: id.rawValue,
+            actions: actions,
             intentIdentifiers: [],
             options: []
         )
-        let medication = UNNotificationCategory(
-            identifier: NotificationCategoryID.medication,
-            actions: [markDone],
-            intentIdentifiers: [],
-            options: []
-        )
-        let milestone = UNNotificationCategory(
-            identifier: NotificationCategoryID.tripMilestone,
-            actions: [snooze],
-            intentIdentifiers: [],
-            options: []
-        )
-        let hydration = UNNotificationCategory(
-            identifier: NotificationCategoryID.hydration,
-            actions: [snooze],
-            intentIdentifiers: [],
-            options: []
-        )
-        center.setNotificationCategories([routine, medication, milestone, hydration])
+    }
+
+    fileprivate enum CategoryID: String {
+        case routineBlock = "personal-hygiene.category.routineBlock"
+        case medication = "personal-hygiene.category.medication"
+        case tripMilestone = "personal-hygiene.category.tripMilestone"
+        case hydration = "personal-hygiene.category.hydration"
     }
 }
 
@@ -274,10 +283,22 @@ public final class NotificationActionHandler: NSObject, UNUserNotificationCenter
                 now: nowProvider()
             )
             center.add(request) { _ in completionHandler() }
-        case NotificationActionID.markDone:
-            // Defensive removal: when the user explicitly marks done, we drop
-            // any pending duplicate of the same identifier so a second alert
-            // doesn't fire later.
+        case NotificationActionID.snooze30min:
+            let originalRequest = response.notification.request
+            if let parsed = BlockNotificationIdentifier.parseAny(originalRequest.identifier) {
+                snoozeRecorder?(parsed)
+            }
+            let request = Self.makeSnoozeRequest(
+                from: originalRequest,
+                interval: 30 * 60,
+                now: nowProvider()
+            )
+            center.add(request) { _ in completionHandler() }
+        case NotificationActionID.markDone, NotificationActionID.skipDose:
+            // Defensive removal: when the user explicitly marks done or skips
+            // a dose, drop any pending duplicate of the same identifier so a
+            // second alert doesn't fire later. Skip-dose intentionally does
+            // *not* schedule a follow-up (unlike snooze).
             let identifier = response.notification.request.identifier
             center.removePendingNotificationRequests(withIdentifiers: [identifier])
             markDoneObserver?(identifier)
