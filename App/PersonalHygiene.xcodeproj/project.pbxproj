@@ -22,6 +22,7 @@
 		03CC3856A4A2116B7C4DF81F /* ContactsServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B4B7C0C3656EBA46280D550 /* ContactsServiceTests.swift */; };
 		03D17F41A2F0A9655813A84F /* TemplateEditorViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB37FFE78603CAD043CEF508 /* TemplateEditorViewModelTests.swift */; };
 		04256CABB1E366FCD7128EF6 /* MedicationDoseHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72299130B717DD6E0DDEACFD /* MedicationDoseHistory.swift */; };
+		04A57849649FE52546818E86 /* TemplateEditorBulkCategoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EDE0B35F0C15364C42964C14 /* TemplateEditorBulkCategoryTests.swift */; };
 		055A5CB034744EFB5A888DEB /* NotesTemplateStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BECC2D2FFD6BF64C9923478A /* NotesTemplateStore.swift */; };
 		058AC12BE5497BDCEB019EF6 /* TripDetailViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C2F31840C148B9BB955A118 /* TripDetailViewModelTests.swift */; };
 		05E93DD9E718A14DE57E3216 /* MoodLogStoreCSVTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9DE9C22B4F6C983A5283B92B /* MoodLogStoreCSVTests.swift */; };
@@ -39,6 +40,7 @@
 		08EFA7C8CDC8E29F784D3E17 /* PauseNotificationsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD0E8D4FB0BC22F985DB771D /* PauseNotificationsStore.swift */; };
 		0965A45A48D4F4A71705A641 /* ItineraryForecastBinningTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 14BAE057BC052191BC0C18ED /* ItineraryForecastBinningTests.swift */; };
 		0B8BAB6D5E651B540C52316F /* MedicationCompliance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87CF274A384796487EFA71A4 /* MedicationCompliance.swift */; };
+		0BB7D893FFFD45E7B14A6EEF /* MostRecentBackupStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890BD06C66B9E1AA886EC0E0 /* MostRecentBackupStore.swift */; };
 		0BF1E03FF8D4BEBD24A2D696 /* MedicationObserving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F885405457F7DB37A0D27CE /* MedicationObserving.swift */; };
 		0CC92CD549DACF282455948B /* TripFootprintTieBreakTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6EAD2A88527F68F705322C2 /* TripFootprintTieBreakTests.swift */; };
 		0CF8BDD7F0CA4228EDA273D6 /* BlockLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498429D0D47787A663C6BD39 /* BlockLocation.swift */; };
@@ -127,6 +129,7 @@
 		242F3C10964359E7C286187B /* BlockCSVImporter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 29D97C9F8D622A0BB7F3E1C7 /* BlockCSVImporter.swift */; };
 		24D26F260A7E1CDBCFDBE501 /* RecentConversionsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BEA8471F3ED2BF6F5D125C /* RecentConversionsStore.swift */; };
 		250031CFAF00CF1146907A67 /* SwiftDataRoutineRepositoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB758833B5B3BA55E64050D2 /* SwiftDataRoutineRepositoryTests.swift */; };
+		250AA793A53CD7A7726C6AFB /* MostRecentBackupStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2214CB64DCC7C5D62424D4E /* MostRecentBackupStoreTests.swift */; };
 		250E5ADC3C7B95F1E380D32C /* HydrationLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF6DCB5D30BD8C57759C588D /* HydrationLog.swift */; };
 		250EB02B3FEA9A9CF38652EA /* TripsListViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0CEACE10A5D2310E5A11B00F /* TripsListViewModel.swift */; };
 		2510F95AC05C4E928122AAD6 /* HotWeatherStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F12F9A716D06BADDB2EDED81 /* HotWeatherStore.swift */; };
@@ -144,6 +147,7 @@
 		277267AF5F8F800F81DF1991 /* BirthdayRelationshipStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F50E17FD9B135536169563C /* BirthdayRelationshipStore.swift */; };
 		27D653F7743B7AB8BE73B9F4 /* RuntimeWeatherForecastFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3635D94F3D3B3A3CCEF4EA8 /* RuntimeWeatherForecastFetcher.swift */; };
 		27F04F0D075DCD235B6A9E65 /* TripDetailViewRound12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06FF189750C00C2C60169B88 /* TripDetailViewRound12.swift */; };
+		27F743CF61372CAE9B2F5CE3 /* BulkCategoryEditorSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = D0CDC1E98E3453E6C92B963A /* BulkCategoryEditorSheet.swift */; };
 		2843756C93767398F8622D0A /* MarineWeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCF1F0A69A9DA870BFC49C9B /* MarineWeatherService.swift */; };
 		2851414B1FE1FEEDF194BA22 /* FoundationModelsItineraryGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 830CE2EED13F4D5045D82195 /* FoundationModelsItineraryGenerator.swift */; };
 		29029740613FDF033E8988E3 /* HydrationNotificationFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DB64FF3083A5594BDDFDAA0 /* HydrationNotificationFactory.swift */; };
@@ -159,6 +163,7 @@
 		2C1F427A2E5A340D9712CC7E /* TodayCompletionPercent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252BBC4DA77CF4BB04E643F8 /* TodayCompletionPercent.swift */; };
 		2C241746E372C25947575F18 /* BedtimeMute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02A8B82F5586F5C093CF41B1 /* BedtimeMute.swift */; };
 		2CB038858244A2C828032DDE /* TemplatePresetSeeds.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B9666F2DEE039616A5BC049 /* TemplatePresetSeeds.swift */; };
+		2D1F1F7D13A2E0B289A8DF72 /* MostRecentBackupStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890BD06C66B9E1AA886EC0E0 /* MostRecentBackupStore.swift */; };
 		2DC96496991F3ACE3824A3A9 /* DiagnosticsSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5D067AA24477EE6294F238E0 /* DiagnosticsSnapshot.swift */; };
 		2DD031555604C14FA097327F /* PauseNotificationsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD0E8D4FB0BC22F985DB771D /* PauseNotificationsStore.swift */; };
 		2E6818BDE2B302F579D5C9FA /* MoodLogStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92307881DA64D0181A2046E6 /* MoodLogStore.swift */; };
@@ -523,6 +528,7 @@
 		950ED5D394A3E36402784D91 /* FocusFilterPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 37920AD09275C7782DBDFAE3 /* FocusFilterPreview.swift */; };
 		95AA3DA76E2CB9011B3ED3BF /* TripDetailViewRound20.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2D69D1C985CD3C07465FB21B /* TripDetailViewRound20.swift */; };
 		96022604654B2F2426262F47 /* MoodTrendSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F92B870481FB3953F0498E1C /* MoodTrendSectionView.swift */; };
+		96AE3BEFDA8B8DED9F9909BE /* MostRecentBackupStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890BD06C66B9E1AA886EC0E0 /* MostRecentBackupStore.swift */; };
 		96D440DD8723DA24E3F9E15A /* WidgetReloadCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2958201BAEB1591D5DFEDD78 /* WidgetReloadCounter.swift */; };
 		9710DAEF76B1199B31357AF0 /* SnapshotHistoryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB2D75D5BB16D734F3D3DED1 /* SnapshotHistoryStoreTests.swift */; };
 		971E22F19DEE8918391CA1B5 /* BlockCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57416A608867A6A25E96429 /* BlockCompletion.swift */; };
@@ -757,6 +763,7 @@
 		E0ADC5B7D87E3816847D47AD /* CachedMarineWeatherServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C22F9AF8C87F8B295115FD2 /* CachedMarineWeatherServiceTests.swift */; };
 		E0B8C6036A030E99D6F339CF /* MilestoneDefaultBundle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B40DFD65A88810B2A655E56 /* MilestoneDefaultBundle.swift */; };
 		E0C49D2D5FE976E9A7084ABD /* RuntimeWeatherForecastFetcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3635D94F3D3B3A3CCEF4EA8 /* RuntimeWeatherForecastFetcher.swift */; };
+		E0EFD5CD1F2DB0E31512942B /* BlockEditorViewRound25.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B8B6783B00A4E16D8528CB2 /* BlockEditorViewRound25.swift */; };
 		E133FDB66305A5A9E03A087A /* NotesTemplateStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36B9E1037B7B84691C9B9385 /* NotesTemplateStoreTests.swift */; };
 		E14FF840F899E9341AA5BBDF /* BlockLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 498429D0D47787A663C6BD39 /* BlockLocation.swift */; };
 		E1C3FDF1377EEC8C942BA831 /* MedicationDoseHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72299130B717DD6E0DDEACFD /* MedicationDoseHistory.swift */; };
@@ -775,6 +782,7 @@
 		E4F9184F07297B58059B82AE /* SleepService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDE3A907E81705697C917327 /* SleepService.swift */; };
 		E51177FA90F109884A8C68F5 /* BuildInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE520D0DE7818DE937FA635 /* BuildInfo.swift */; };
 		E5121B314C08E265C6B6A4AF /* CurrencyRatesCSV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58BBFAA67AA1655460F99B6C /* CurrencyRatesCSV.swift */; };
+		E52DD7A7F749E54ECC7B8C0E /* MostRecentBackupStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 890BD06C66B9E1AA886EC0E0 /* MostRecentBackupStore.swift */; };
 		E5BAD6DCBA3DAAFFDB0150B1 /* FrankfurterMultiTargetTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2D61671A0C992E8AEE2D726 /* FrankfurterMultiTargetTests.swift */; };
 		E5E5E4E6D630B139AAC8DBA2 /* MarineWeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCF1F0A69A9DA870BFC49C9B /* MarineWeatherService.swift */; };
 		E5E6E5A3B48B296122C11643 /* PreferredAdvisorySourceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177077A94038E00A9993A6D7 /* PreferredAdvisorySourceStore.swift */; };
@@ -1156,6 +1164,8 @@
 		87FF0C71FC1B6DF918CA4D5F /* HousekeepingStreakBanner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousekeepingStreakBanner.swift; sourceTree = "<group>"; };
 		886486C6CAB1D1662653C06F /* MoodHeatmapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodHeatmapView.swift; sourceTree = "<group>"; };
 		887CE19600348057C87784D1 /* CategoryMuteStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryMuteStoreTests.swift; sourceTree = "<group>"; };
+		890BD06C66B9E1AA886EC0E0 /* MostRecentBackupStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MostRecentBackupStore.swift; sourceTree = "<group>"; };
+		8B8B6783B00A4E16D8528CB2 /* BlockEditorViewRound25.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockEditorViewRound25.swift; sourceTree = "<group>"; };
 		8BCE68F9764497191779ACED /* ProcessLaunchTimer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProcessLaunchTimer.swift; sourceTree = "<group>"; };
 		8C19D877906FF840053F2B56 /* TemplateEditorCascadeShiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateEditorCascadeShiftTests.swift; sourceTree = "<group>"; };
 		8C59A76E55FB88BF81BD02D4 /* BlockConflictOverlapTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockConflictOverlapTests.swift; sourceTree = "<group>"; };
@@ -1235,6 +1245,7 @@
 		C0EB689DF4CA67CBC258438C /* TripExpense.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripExpense.swift; sourceTree = "<group>"; };
 		C11C72E3DAAA91AAB85A80AE /* HydrationDaysSinceLastLogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HydrationDaysSinceLastLogTests.swift; sourceTree = "<group>"; };
 		C17D0E19FD61C4A6E3A8AE7C /* WatchHydrationReconciler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHydrationReconciler.swift; sourceTree = "<group>"; };
+		C2214CB64DCC7C5D62424D4E /* MostRecentBackupStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MostRecentBackupStoreTests.swift; sourceTree = "<group>"; };
 		C3B74997F968BEEF3A796ACE /* DestinationSlugTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationSlugTests.swift; sourceTree = "<group>"; };
 		C3FE661A74A1AA7C1934598A /* WatchHydrationReconcilerTailTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHydrationReconcilerTailTests.swift; sourceTree = "<group>"; };
 		C4285CE2A6DE82DABC589094 /* PersonalHygieneTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PersonalHygieneTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1264,6 +1275,7 @@
 		CF7B22EAA6894D510EA6C7A4 /* BlockSkipStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockSkipStore.swift; sourceTree = "<group>"; };
 		D045C9393BA34359C1CCAC90 /* BlockSnoozeStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockSnoozeStoreTests.swift; sourceTree = "<group>"; };
 		D071438E62C39A43103393B8 /* BuildInfoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BuildInfoTests.swift; sourceTree = "<group>"; };
+		D0CDC1E98E3453E6C92B963A /* BulkCategoryEditorSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkCategoryEditorSheet.swift; sourceTree = "<group>"; };
 		D0CF7717BBBDD242EFB742F9 /* TemplatePresetSeedsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatePresetSeedsTests.swift; sourceTree = "<group>"; };
 		D15A10D5DE460A958A5D53E2 /* AppModelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppModelContainer.swift; sourceTree = "<group>"; };
 		D286C3CA04A9375E3768F117 /* NotificationFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationFactoryTests.swift; sourceTree = "<group>"; };
@@ -1318,6 +1330,7 @@
 		EAA80FB1799D4B4B41B24F4F /* DiagnosticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsView.swift; sourceTree = "<group>"; };
 		EBF6F526DEDA829C99528FBD /* BlockConflictOverlap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockConflictOverlap.swift; sourceTree = "<group>"; };
 		EDB09B67156279BA81C6C123 /* BirthdayRelationshipStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayRelationshipStoreTests.swift; sourceTree = "<group>"; };
+		EDE0B35F0C15364C42964C14 /* TemplateEditorBulkCategoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateEditorBulkCategoryTests.swift; sourceTree = "<group>"; };
 		EE021253752FB8EB009B9D41 /* BlockEditorViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockEditorViewModel.swift; sourceTree = "<group>"; };
 		EED8E573F98679F9BF723F4E /* TravelAdvisoryServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelAdvisoryServiceTests.swift; sourceTree = "<group>"; };
 		EF143DCCE0B1C185A3105636 /* CacheResetterPreservesMoodTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheResetterPreservesMoodTests.swift; sourceTree = "<group>"; };
@@ -1587,7 +1600,9 @@
 			children = (
 				A729769349B2CC907D157D89 /* BlockCategoryColor.swift */,
 				C451104F3CD28FB1CDE85792 /* BlockEditorView.swift */,
+				8B8B6783B00A4E16D8528CB2 /* BlockEditorViewRound25.swift */,
 				E7600D8AA220188661B85865 /* BlockOverlapGanttView.swift */,
+				D0CDC1E98E3453E6C92B963A /* BulkCategoryEditorSheet.swift */,
 				C9016CA1F69F72664DB39DCF /* RoutineListView.swift */,
 				E6126279A32AD79122C97619 /* TemplateEditorView.swift */,
 				31A48E3104DBA3869BDD9032 /* TemplateEditorViewRound21.swift */,
@@ -1736,6 +1751,7 @@
 				92307881DA64D0181A2046E6 /* MoodLogStore.swift */,
 				4699791CBBDB69A3774A20F9 /* MoodTrendAggregator.swift */,
 				21C5EEA6D159BA959C2BC122 /* MoodWeeklyGoalStore.swift */,
+				890BD06C66B9E1AA886EC0E0 /* MostRecentBackupStore.swift */,
 				A247E9C34C3D4AC586D52546 /* NetworkActivityCounter.swift */,
 				2B2FC99C764A6B3A7034D3B1 /* NextBlockResolver.swift */,
 				BECC2D2FFD6BF64C9923478A /* NotesTemplateStore.swift */,
@@ -1986,6 +2002,7 @@
 				B333A1D5C76989036A0B1E68 /* MoodTrendAggregatorSymbolTests.swift */,
 				FA72BED3159522287971834A /* MoodTrendAggregatorTests.swift */,
 				A5E140EFE350D5A0F6837C4D /* MoodWeeklyGoalStoreTests.swift */,
+				C2214CB64DCC7C5D62424D4E /* MostRecentBackupStoreTests.swift */,
 				3778FBEE4C86424C35D262DF /* NetworkActivityCounterTests.swift */,
 				03B243F1A829D97FE7827AFA /* NextBlockResolverTests.swift */,
 				36B9E1037B7B84691C9B9385 /* NotesTemplateStoreTests.swift */,
@@ -2016,6 +2033,7 @@
 				70A0FEE1F22A212B89AA41E5 /* TemplateArchiveStoreTests.swift */,
 				339D957E552929D76B42CD04 /* TemplateBackupTests.swift */,
 				F29FA4CE8FCBE66C2D2B8D76 /* TemplateDurationCalculatorTests.swift */,
+				EDE0B35F0C15364C42964C14 /* TemplateEditorBulkCategoryTests.swift */,
 				8C19D877906FF840053F2B56 /* TemplateEditorCascadeShiftTests.swift */,
 				3DAE64346685964B35062EAE /* TemplateListFilterTests.swift */,
 				D0CF7717BBBDD242EFB742F9 /* TemplatePresetSeedsTests.swift */,
@@ -2553,6 +2571,7 @@
 				30E5F9D7AB457223A837ED71 /* MoodQuickLogWatchView.swift in Sources */,
 				4BBEB48CB4FB3DAA5B38B02A /* MoodTrendAggregator.swift in Sources */,
 				529607BAFB920E1EF67E2971 /* MoodWeeklyGoalStore.swift in Sources */,
+				E52DD7A7F749E54ECC7B8C0E /* MostRecentBackupStore.swift in Sources */,
 				74B53BF47ADF4C33CF5C4F32 /* NetworkActivityCounter.swift in Sources */,
 				75E8D6B60B574C700FF77EC3 /* NextBlockResolver.swift in Sources */,
 				055A5CB034744EFB5A888DEB /* NotesTemplateStore.swift in Sources */,
@@ -2708,6 +2727,7 @@
 				30746CC885B8B86114A45A33 /* MoodLogStore.swift in Sources */,
 				3E0BAE7DF0001FE1BB7BC83A /* MoodTrendAggregator.swift in Sources */,
 				1047F705CD4D9F49943995C0 /* MoodWeeklyGoalStore.swift in Sources */,
+				96AE3BEFDA8B8DED9F9909BE /* MostRecentBackupStore.swift in Sources */,
 				78E725321BE3A822D817025C /* NetworkActivityCounter.swift in Sources */,
 				9C2F4B1B4B6A17DE5DF121DF /* NextBlockResolver.swift in Sources */,
 				B6C0BF967C6B36F7A411FFD1 /* NotesTemplateStore.swift in Sources */,
@@ -2880,6 +2900,7 @@
 				086E63935EEAE5556F6241A7 /* MoodTrendAggregatorSymbolTests.swift in Sources */,
 				4CF5B835688FD3CB675A0BEF /* MoodTrendAggregatorTests.swift in Sources */,
 				766D2175E320DA880B29D763 /* MoodWeeklyGoalStoreTests.swift in Sources */,
+				250AA793A53CD7A7726C6AFB /* MostRecentBackupStoreTests.swift in Sources */,
 				3DEB2C31972E800CE136DD89 /* NetworkActivityCounterTests.swift in Sources */,
 				77A9FD494E0663CF7EA3CA33 /* NextBlockResolverTests.swift in Sources */,
 				E133FDB66305A5A9E03A087A /* NotesTemplateStoreTests.swift in Sources */,
@@ -2914,6 +2935,7 @@
 				F241EE30EBE6E20614BE8ABD /* TemplateArchiveStoreTests.swift in Sources */,
 				17089593C20477CF486F68F2 /* TemplateBackupTests.swift in Sources */,
 				341EF00D960FCA3C1B05F4CE /* TemplateDurationCalculatorTests.swift in Sources */,
+				04A57849649FE52546818E86 /* TemplateEditorBulkCategoryTests.swift in Sources */,
 				43E17A5CCCB4E2CA4AEAA113 /* TemplateEditorCascadeShiftTests.swift in Sources */,
 				03D17F41A2F0A9655813A84F /* TemplateEditorViewModelTests.swift in Sources */,
 				98ED3A841C2CFE7E2B8B4FE8 /* TemplateListFilterTests.swift in Sources */,
@@ -2988,6 +3010,7 @@
 				82CA1F3B1416F09FAF34DA85 /* BlockDetailSheet.swift in Sources */,
 				802C99AA8D6647108D2D8A51 /* BlockEditorView.swift in Sources */,
 				87D6221EB6E9BE29179A6EB6 /* BlockEditorViewModel.swift in Sources */,
+				E0EFD5CD1F2DB0E31512942B /* BlockEditorViewRound25.swift in Sources */,
 				76E23C539CE8B21795D5AE13 /* BlockLocation.swift in Sources */,
 				FB93DB66C97CDC0E1A34B8CB /* BlockOverlapGanttView.swift in Sources */,
 				BB61D2B42694D62F7810B9E2 /* BlockSkipStore.swift in Sources */,
@@ -2995,6 +3018,7 @@
 				ABF8FF0C5C63FA38EDC29776 /* BlockTitleSuggestions.swift in Sources */,
 				ECFC11ECD61571AB72E07F80 /* BuildInfo.swift in Sources */,
 				BF42E436443C817A3E10514A /* BulkCategoryEditor.swift in Sources */,
+				27F743CF61372CAE9B2F5CE3 /* BulkCategoryEditorSheet.swift in Sources */,
 				559FD4656D1B2C550B5D59EA /* CacheResetter.swift in Sources */,
 				AB0EA5712A4888786E793B56 /* CachedCurrencyService.swift in Sources */,
 				1A2552477E8E92BEE2C0F56C /* CachedMarineWeatherService.swift in Sources */,
@@ -3085,6 +3109,7 @@
 				224458E32B0DF210E2A17E26 /* MoodTrendChartView.swift in Sources */,
 				96022604654B2F2426262F47 /* MoodTrendSectionView.swift in Sources */,
 				26B29F9E7EFD0C63334AE559 /* MoodWeeklyGoalStore.swift in Sources */,
+				0BB7D893FFFD45E7B14A6EEF /* MostRecentBackupStore.swift in Sources */,
 				ADC9AFD8A0B4D43199336724 /* NetworkActivityCounter.swift in Sources */,
 				7A34DEBF467440DB12C76439 /* NextBlockResolver.swift in Sources */,
 				A6787563F065EE3954F0F3B2 /* NotesTemplateStore.swift in Sources */,
@@ -3287,6 +3312,7 @@
 				2E6818BDE2B302F579D5C9FA /* MoodLogStore.swift in Sources */,
 				4ABACCF0046551ACCB1AE632 /* MoodTrendAggregator.swift in Sources */,
 				BF6835BE187C20BBA94115B4 /* MoodWeeklyGoalStore.swift in Sources */,
+				2D1F1F7D13A2E0B289A8DF72 /* MostRecentBackupStore.swift in Sources */,
 				B212D9AAE4FBE594F3D0F8E0 /* NetworkActivityCounter.swift in Sources */,
 				EA8567B892E1FC97B906FD41 /* NextBlockResolver.swift in Sources */,
 				DD59B0ABE07267E103E4DEC5 /* NotesTemplateStore.swift in Sources */,

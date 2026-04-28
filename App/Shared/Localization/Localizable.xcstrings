@@ -17816,6 +17816,94 @@
         "es": { "stringUnit": { "state": "translated", "value": "El reconciliador del iPhone saltará la cola borrada." } },
         "fr": { "stringUnit": { "state": "translated", "value": "Le réconciliateur iPhone sautera la file effacée." } }
       }
+    },
+    "blockEditor.followUp.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Follow-up override" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Override de seguimiento" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Délai de suivi spécifique" } }
+      }
+    },
+    "blockEditor.followUp.useDefault": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Use default" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Usar predeterminado" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Utiliser par défaut" } }
+      }
+    },
+    "blockEditor.followUp.minutes %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "+%lld min" } },
+        "es": { "stringUnit": { "state": "translated", "value": "+%lld min" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "+%lld min" } }
+      }
+    },
+    "blockEditor.followUp.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Per-block override of the medication follow-up reminder delay. Default lives in Settings." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Override del retraso del recordatorio de medicación. El valor por defecto está en Ajustes." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Remplacement du délai de rappel de médicament. Valeur par défaut dans Réglages." } }
+      }
+    },
+    "templateEditor.bulkEdit.action": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Bulk edit category" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Editar categorías en lote" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Modifier catégories en lot" } }
+      }
+    },
+    "templateEditor.bulkEdit.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Bulk edit" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Edición en lote" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Édition en lot" } }
+      }
+    },
+    "templateEditor.bulkEdit.targetSection": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Target" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Destino" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Cible" } }
+      }
+    },
+    "templateEditor.bulkEdit.category": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Set category to" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Cambiar categoría a" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Définir la catégorie à" } }
+      }
+    },
+    "templateEditor.bulkEdit.empty": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "No blocks in this template." } },
+        "es": { "stringUnit": { "state": "translated", "value": "No hay bloques en esta plantilla." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Aucun bloc dans ce modèle." } }
+      }
+    },
+    "templateEditor.bulkEdit.selectedCount %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Selected (%lld)" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Seleccionados (%lld)" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Sélectionnés (%lld)" } }
+      }
+    },
+    "templateEditor.bulkEdit.apply": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Apply" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Aplicar" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Appliquer" } }
+      }
     }
   }
 }

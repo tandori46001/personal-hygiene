@@ -160,6 +160,8 @@ struct BlockEditorView: View {
                 } header: {
                     Text("blockEditor.section.notes", bundle: .main)
                 }
+
+                followUpOverrideSection()
             }
             .navigationTitle(
                 viewModel.editingBlockID == nil

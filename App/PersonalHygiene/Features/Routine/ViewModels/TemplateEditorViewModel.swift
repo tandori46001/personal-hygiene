@@ -167,6 +167,16 @@ final class TemplateEditorViewModel {
         return result.warnings
     }
 
+    /// Round-25 slice T5.29: applies a new category to every block whose
+    /// id is in `ids` via `BulkCategoryEditor.apply(...)`, then persists
+    /// the template. No-op when `ids` is empty.
+    func applyBulkCategory(ids: Set<UUID>, category: BlockCategory) throws {
+        let targets = sortedBlocks.filter { ids.contains($0.id) }
+        guard !targets.isEmpty else { return }
+        _ = BulkCategoryEditor.apply(category: category, to: targets)
+        try repository.upsert(template)
+    }
+
     /// Round-22 slice T5.29: shift every block's start time by `minutes`
     /// (positive = later, negative = earlier). Clamped to [0, 23:59]. The
     /// per-block durations stay intact.

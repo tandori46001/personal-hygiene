@@ -2718,3 +2718,31 @@ Verify by running `./scripts/check-tests.sh`.
 2. Watch settings: "Reset N pending taps" destructive button.
 3. Complication: line-3 shows "X%" day-completion when ≥ 1 done.
 4. `TodayCompletionPercent` helper covered by 3 tests.
+
+## [T-261] — BlockEditor per-block follow-up override (round 24.5)
+
+**Module:** medication · **Shipped in:** round 24.5 (T3.19, deferred from r24)
+
+### Manual verification
+1. Open BlockEditor on an existing medication block.
+2. New "Follow-up override" section visible at the bottom; defaults to "Use default".
+3. Pick "+45 min" → reopen the block → selection persists.
+4. Open BlockEditor on a non-medication block → section hidden.
+
+## [T-262] — MostRecentBackupStore (round 24.5)
+
+**Module:** backup · **Shipped in:** round 24.5 (T4.24, deferred from r24)
+
+### Manual verification (smoke)
+1. `MostRecentBackupStoreTests` 3 cases pass — fresh store nil, record persists URL+name+timestamp, clear removes everything.
+
+## [T-263] — TemplateEditor bulk category edit (round 24.5)
+
+**Module:** routine · **Shipped in:** round 24.5 (T5.29, deferred from r24)
+
+### Manual verification
+1. TemplateEditor with ≥2 blocks → "Bulk edit category" button visible in blocks section.
+2. Tap → sheet shows category picker + selectable block list.
+3. Pick blocks (checkmarks toggle), pick target category, Apply.
+4. Sheet dismisses; selected blocks now carry the new category; others untouched.
+5. `TemplateEditorBulkCategoryTests` 2 cases cover the VM path.

@@ -11,6 +11,8 @@ struct TemplateEditorView: View {
     /// Round-22 slice T5.25: warnings list emitted by the CSV importer.
     /// Non-nil = sheet visible.
     @State private var csvImportWarnings: [String]?
+    /// Round-25 slice T5.29: bulk-category editor sheet visibility.
+    @State private var showingBulkCategorySheet = false
 
     var body: some View {
         Form {
@@ -119,6 +121,21 @@ struct TemplateEditorView: View {
                     errorBinding: $errorMessage
                 )
 
+                // Round-25 slice T5.29: bulk-category edit. Hidden when
+                // the template has fewer than 2 blocks (nothing to bulk-
+                // edit).
+                if viewModel.sortedBlocks.count >= 2 {
+                    Button {
+                        showingBulkCategorySheet = true
+                    } label: {
+                        Label {
+                            Text("templateEditor.bulkEdit.action", bundle: .main)
+                        } icon: {
+                            Image(systemName: "checklist")
+                        }
+                    }
+                }
+
                 if let key = lastInsertedPresetTitleKey {
                     HStack(spacing: 8) {
                         Image(systemName: "wand.and.stars")
@@ -191,6 +208,12 @@ struct TemplateEditorView: View {
                 onDismiss: { csvImportWarnings = nil }
             )
         }
+        // Round-25 slice T5.29: bulk category edit sheet.
+        .sheet(isPresented: $showingBulkCategorySheet) {
+            BulkCategoryEditorSheet(blocks: viewModel.sortedBlocks) { selectedIDs, category in
+                applyBulkCategory(ids: selectedIDs, category: category)
+            }
+        }
         .alert(
             Text("common.error", bundle: .main),
             isPresented: Binding(
@@ -254,6 +277,16 @@ struct TemplateEditorView: View {
     private func moveBlocks(from source: IndexSet, to destination: Int) {
         do {
             try viewModel.move(fromOffsets: source, toOffset: destination)
+        } catch {
+            errorMessage = error.localizedDescription
+        }
+    }
+
+    /// Round-25 slice T5.29: bridges `BulkCategoryEditorSheet`'s onApply
+    /// to the view-model's persisted bulk-category helper.
+    private func applyBulkCategory(ids: Set<UUID>, category: BlockCategory) {
+        do {
+            try viewModel.applyBulkCategory(ids: ids, category: category)
         } catch {
             errorMessage = error.localizedDescription
         }
