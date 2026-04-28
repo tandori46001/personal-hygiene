@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+    Round-26 slice 1: iOS host-app entitlements. Active capabilities:
+
+    - App Groups: shared UserDefaults suite between the host + widget +
+      watch (when both run on devices signed into the same Apple ID).
+    - HealthKit: read medication doses + sleep data.
+    - iCloud / CloudKit: private database sync via SwiftData.
+    - Notifications time-sensitive interruption level (built into iOS 15+,
+      no separate entitlement key — controlled per-notification).
+
+    Deferred (require Apple approval, NOT yet enabled here):
+    - com.apple.developer.usernotifications.critical-alerts — request
+      via developer.apple.com/contact/request/notifications-critical-alerts.
+      See docs/critical-alerts-request.md for the justification template.
+-->
+<plist version="1.0">
+<dict>
+    <key>com.apple.security.application-groups</key>
+    <array>
+        <string>group.com.tandori46001.personalhygiene</string>
+    </array>
+    <key>com.apple.developer.healthkit</key>
+    <true/>
+    <key>com.apple.developer.healthkit.access</key>
+    <array/>
+    <key>com.apple.developer.icloud-services</key>
+    <array>
+        <string>CloudKit</string>
+    </array>
+    <key>com.apple.developer.icloud-container-identifiers</key>
+    <array>
+        <string>iCloud.com.tandori46001.personalhygiene</string>
+    </array>
+    <key>com.apple.developer.ubiquity-kvstore-identifier</key>
+    <string>$(TeamIdentifierPrefix)com.tandori46001.personalhygiene</string>
+</dict>
+</plist>

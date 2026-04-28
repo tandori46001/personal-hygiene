@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+    Round-26 slice 1: watchOS widget (complication) extension entitlements.
+    The complication only needs the App Group to read pre-computed
+    snapshots — it does NOT touch HealthKit or CloudKit directly to keep
+    the timeline-provider closure fast and side-effect-free.
+-->
+<plist version="1.0">
+<dict>
+    <key>com.apple.security.application-groups</key>
+    <array>
+        <string>group.com.tandori46001.personalhygiene</string>
+    </array>
+</dict>
+</plist>
