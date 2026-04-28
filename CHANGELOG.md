@@ -8,6 +8,56 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added — Session 19 round 21: 40-slice regression guards + mood deepening + WeatherKit scaffolding + Today QoL + watch parity + housekeeping
+
+Tier 1 (regression guards):
+- `BackupSnapshotV3MoodTests` — guards the round-20 v3 mood payload through export + encode/decode + restore (5 cases).
+- `BlockTitleSuggestionsTests` — round-20 helper got dedicated coverage: distinct titles, most-recent-first, category filter, empty/whitespace skip, cap behaviour.
+- `MoodLogStoreCSVTests` — CSV header, ISO-8601 timestamps, newest-first ordering, no trailing newline, capacity cap.
+- `TodayViewModelUndoResetTests` — verifies `resetDay → undoResetDay` replays both completions and skips; empty-snapshot path is a no-op.
+- `scripts/check-localized-key-usage.py` extended: explicit list of required scan targets (PersonalHygiene + Watch + Watch widgets + iOS widgets + Shared) — script now fails loudly if any target vanishes from the source tree.
+
+Tier 2 (mood log deepening):
+- `MoodTrendAggregator` bins entries into per-day buckets with average score; gaps for empty days (5 cases).
+- Settings → Mood log → 30-day Swift Charts trend (`MoodTrendChartView`) under the existing disclosure.
+- Today: 7-day `moodWeekStripSection` with one rounded mood emoji per day.
+- Settings → Mood log emoji filter (segmented Picker over the disclosure list).
+- `MoodWeeklyGoalStore` (0-7 clamp) + Settings stepper + `n / target` caption.
+- `MoodLogStore.exportLocalizedCSV(...)` with locale-aware header (`moodLog.csv.header` ES/EN/FR); data rows keep canonical mood codes.
+
+Tier 3 (vacation deepening + WeatherKit):
+- `WeatherForecast` value type + `WeatherForecastFetching` protocol + `StubWeatherForecastService` for previews + `WeatherKitForecastService` (entitlement-gated via `#if canImport(WeatherKit)`).
+- `WeatherForecastCache` — App-Group-aware, 6h TTL, lat/lon coarse-grained to 2 decimal places.
+- Itinerary `ItineraryDayForecastChip` chip rendering high/low + droplet + rain-prob ≥20%.
+- TripNotes weather template (`TripNotesWeatherTemplate.body(...)`) — Markdown-shaped body listing forecasts with rain tag for ≥30% chance.
+- `TripFootprintAggregator` + `SettingsFootprintSummaryView` — 30-day rolling carbon total + dominant transport mode across trips.
+- `CurrencyRatesCSV` + CurrencyView "Copy rates as table" button.
+
+Tier 4 (Today / Routine QoL):
+- `BlockConflictOverlap` + `TemplateEditorViewRound21.conflictOverlapList` — textual list of overlapping pairs with minute counts ("Standup ↔ Code review · 30 min").
+- `TodayViewRound21.skipPlusSnooze(...)` — long-press chain: skip-today + record snooze badge in one action.
+- TodayView `.refreshable` toast now appends the latest `RefreshTraceLog` summary (HH:mm · kind · count) → pull-to-refresh doubles as observability.
+- `BlockCSVImporter` — pure parser for one-row-per-block CSV with header `title,category,startMinutes,durationMinutes`; warnings for skipped rows + unknown-category fallback.
+- iPad ⌘D `keyboardShortcut` toolbar item — toggles done on the current/next block.
+- `TemplateListViewRound21.searchSuggestionsRow` + `titleSuggestions(matching:in:)` — chip row of recent block titles when the search field has a query.
+
+Tier 5 (Watch parity):
+- `WatchHydrationGlanceStore` (App-Group-shared total + pending-tap queue) + `HydrationGlanceWatchView` with `+150/+250/+330 ml` quick-tap row.
+- `MoodQuickLogWatchView` mirroring the iPhone 5-emoji row; writes via `MoodLogStore.record(_:in:)` against the App Group.
+- Watch complication `NextBlockSnapshot.isPaused` field + `pause.circle.fill` glyph rendered next to the time when the iPhone has notifications paused.
+- `WatchThemeSyncTests` guards the iPhone-watch theme contract (key name, suite name, fallback behaviour).
+- ContentView watch surface gets success haptic + 3-second `pendingUndoID` overlay after mark-done.
+- Today watch list adds Hydration + Mood NavigationLinks.
+
+Tier 6 (housekeeping / birthdays / focus):
+- `HousekeepingStreakAutoSnooze` — pure helper turning a 7+ day streak into a 3-7 day breathing-room snooze (round-13 deferred polish, now coverable).
+- `BirthdayGiftIdeaCSVExporter` — CSV table of `(contactID, idea)` with comma/quote escaping, sorted keys.
+- `BirthdayLeadDefaultStore` — global override on top of the legacy 7-day default; 0..60 clamped.
+- `FocusCategoryMuteMirror` + `NotificationCategoryMuteStore.allMuted(...)` — snapshots iOS-side mute state into App Group suite for watch-side reads.
+- TodayView ad-hoc Focus toggle row (`today.focusAdhocKey`).
+
+Counts: tests **649** (647 unit + 2 UI, +64 from round 20). i18n keys **769** × 3 locales (+32 net). Lessons captured: still **6** (L001-L006).
+
 ### Added — Session 18 round 20: 30-slice regression guards + mood log surface + trip polish + Today QoL + observability
 
 Tier 1 (regression guards):

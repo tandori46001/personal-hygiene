@@ -16952,6 +16952,262 @@
           }
         }
       }
+    },
+    "settings.moodLog.trend.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Mood trend (30 days)" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Tendencia de ánimo (30 días)" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Tendance d'humeur (30 jours)" } }
+      }
+    },
+    "settings.moodLog.trend.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Daily average. Empty days are gaps." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Media diaria. Los días vacíos aparecen como huecos." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Moyenne quotidienne. Les jours vides sont des trous." } }
+      }
+    },
+    "settings.moodLog.trend.a11y": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Mood trend chart" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Gráfico de tendencia de ánimo" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Graphique de tendance d'humeur" } }
+      }
+    },
+    "settings.moodLog.goal.none": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "No goal set" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Sin objetivo" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Aucun objectif défini" } }
+      }
+    },
+    "settings.moodLog.goal.value %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "%lld good days / week" } },
+        "es": { "stringUnit": { "state": "translated", "value": "%lld días buenos / semana" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "%lld bons jours / semaine" } }
+      }
+    },
+    "settings.moodLog.goal.progress %lld %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "%lld of %lld this week" } },
+        "es": { "stringUnit": { "state": "translated", "value": "%lld de %lld esta semana" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "%lld sur %lld cette semaine" } }
+      }
+    },
+    "settings.moodLog.goal.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Weekly goal" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Objetivo semanal" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Objectif hebdomadaire" } }
+      }
+    },
+    "settings.moodLog.goal.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Counts good + great moods recorded over the trailing 7 days." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Cuenta los ánimos buenos + excelentes en los últimos 7 días." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Compte les humeurs bonnes + excellentes des 7 derniers jours." } }
+      }
+    },
+    "settings.moodLog.exportLocalizedCSV": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Copy mood log (localized CSV)" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Copiar registro de ánimo (CSV localizado)" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Copier journal d'humeur (CSV localisé)" } }
+      }
+    },
+    "settings.moodLog.exportLocalizedCSV.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Header is translated; data rows keep canonical English mood codes." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Cabecera traducida; las filas mantienen los códigos de ánimo en inglés canónico." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "L'en-tête est traduit ; les lignes gardent les codes d'humeur canoniques en anglais." } }
+      }
+    },
+    "settings.moodLog.filter.all": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "All" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Todas" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Toutes" } }
+      }
+    },
+    "settings.moodLog.filter.label": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Filter" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Filtrar" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Filtrer" } }
+      }
+    },
+    "today.mood.weekStrip.a11y": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Mood for the last 7 days" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Ánimo de los últimos 7 días" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Humeur des 7 derniers jours" } }
+      }
+    },
+    "today.focus.adhoc.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Focus on" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Enfoque activo" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Concentration active" } }
+      }
+    },
+    "today.focus.adhoc.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Suppresses non-critical alerts until you turn this off." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Silencia las alertas no críticas hasta que lo desactives." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Supprime les alertes non critiques jusqu'à désactivation." } }
+      }
+    },
+    "today.shortcut.markDone": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Mark current block done" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Marcar bloque actual" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Marquer le bloc actuel" } }
+      }
+    },
+    "settings.footprint.total": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Total" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Total" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Total" } }
+      }
+    },
+    "settings.footprint.trips": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Trips counted" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Viajes contados" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Voyages comptés" } }
+      }
+    },
+    "settings.footprint.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "30-day footprint" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Huella de 30 días" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Empreinte sur 30 jours" } }
+      }
+    },
+    "settings.footprint.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Aggregated from trips ending in the last 30 days." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Agregado de viajes terminados en los últimos 30 días." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Agrégé des voyages terminés au cours des 30 derniers jours." } }
+      }
+    },
+    "trip.currency.action.copyTable": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Copy rates as table" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Copiar tipos como tabla" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Copier les taux en tableau" } }
+      }
+    },
+    "templateEditor.conflicts.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Overlapping blocks" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Bloques solapados" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Blocs en chevauchement" } }
+      }
+    },
+    "templateEditor.conflicts.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Adjust start time or duration to remove overlaps before saving." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Ajusta hora de inicio o duración para eliminar solapamientos antes de guardar." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Ajustez l'heure ou la durée pour éliminer les chevauchements avant d'enregistrer." } }
+      }
+    },
+    "templateList.search.suggestions": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Suggestions" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Sugerencias" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Suggestions" } }
+      }
+    },
+    "watch.hydration.todayTotal": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Today" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Hoy" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Aujourd'hui" } }
+      }
+    },
+    "watch.hydration.pending %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Pending sync · %lld ml" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Sincronización pendiente · %lld ml" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "En attente de sync · %lld ml" } }
+      }
+    },
+    "watch.hydration.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Hydration" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Hidratación" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Hydratation" } }
+      }
+    },
+    "watch.hydration.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Tap an amount to log it. iPhone reconciles on next launch." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Toca una cantidad para registrarla. El iPhone la reconcilia en el próximo arranque." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Touchez un montant pour l'enregistrer. L'iPhone le réconcilie au prochain lancement." } }
+      }
+    },
+    "watch.mood.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Mood" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Ánimo" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Humeur" } }
+      }
+    },
+    "watch.mood.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Tap an emoji to log how you feel right now." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Toca un emoji para registrar cómo te sientes ahora." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Touchez un emoji pour noter comment vous vous sentez." } }
+      }
+    },
+    "watch.undo.label": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Marked done" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Marcado" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Marqué" } }
+      }
+    },
+    "moodLog.csv.header": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "recordedAt,mood" } },
+        "es": { "stringUnit": { "state": "translated", "value": "registradoEn,ánimo" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "enregistréLe,humeur" } }
+      }
     }
   }
 }

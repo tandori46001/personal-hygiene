@@ -50,6 +50,10 @@ struct NextBlockSnapshot: Sendable, Hashable {
     /// complication so the user sees the category + minutes at a glance.
     var categoryRawValue: String = ""
     var durationMinutes: Int = 0
+    /// Round-21 slice T5.27: `true` when notifications are paused on the
+    /// phone. Watch complication renders a small `pause.circle.fill` glyph
+    /// so the wearer knows alerts are suppressed without opening the app.
+    var isPaused: Bool = false
 }
 
 struct NextBlockProvider: TimelineProvider {
@@ -95,12 +99,15 @@ struct NextBlockProvider: TimelineProvider {
             scheduledWindows: scheduled,
             calendar: .autoupdatingCurrent
         )
+        let pauseDefaults = UserDefaults(suiteName: AppGroup.suiteName) ?? .standard
+        let isPaused = PauseNotificationsStore.isPaused(now: now, defaults: pauseDefaults)
         return NextBlockSnapshot(
             title: next.title,
             startMinutes: next.startMinutesFromMidnight,
             isFocusActive: focusActive,
             categoryRawValue: next.category.rawValue,
-            durationMinutes: next.durationMinutes
+            durationMinutes: next.durationMinutes,
+            isPaused: isPaused
         )
     }
 }
@@ -117,6 +124,15 @@ struct NextBlockEntryView: View {
                     if block.isFocusActive {
                         Image(systemName: "moon.zzz.fill")
                             .foregroundStyle(.purple)
+                            .font(.caption2)
+                            .accessibilityHidden(true)
+                    }
+                    if block.isPaused {
+                        // Round-21 slice T5.27: pause-state badge so the
+                        // wearer can spot suppressed alerts without opening
+                        // either app surface.
+                        Image(systemName: "pause.circle.fill")
+                            .foregroundStyle(.orange)
                             .font(.caption2)
                             .accessibilityHidden(true)
                     }

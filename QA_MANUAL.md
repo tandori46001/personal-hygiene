@@ -2060,3 +2060,179 @@ Verify by running `./scripts/check-tests.sh`.
 ### Manual verification
 1. **Everything bundle:** Settings → "Copy everything bundle" → paste in Notes → multi-section text with build descriptor + locale + key counts + mood entries + diagnostics snapshot count + mood CSV.
 2. **WhatsNew confirm-dismiss:** Open WhatsNewSheet (Settings → "What's new") → tap Done *without scrolling to bottom* → confirm dialog appears. Scroll to bottom → tap Done → dismisses immediately.
+
+## [T-181] — BackupSnapshot v3 mood payload round-trip (round 21)
+
+**Module:** settings · **Shipped in:** round 21 (T1.3)
+
+### Manual verification
+1. Log a couple of mood entries (Today → emoji row).
+2. Settings → Export backup → save the JSON.
+3. Settings → Mood log → "Clear mood log".
+4. Settings → Import backup → pick the JSON.
+5. Today: the cleared mood entries reappear (newest-first preserved).
+
+## [T-182] — BlockTitleSuggestions guard (round 21)
+
+**Module:** routine · **Shipped in:** round 21 (T1.4)
+
+### Manual verification (smoke)
+1. Test suite ran: `BlockTitleSuggestionsTests` 5 cases pass.
+2. Change `BlockTitleSuggestions.recent(...)` cap value → tests must regress.
+
+## [T-183] — Mood CSV format guard (round 21)
+
+**Module:** settings · **Shipped in:** round 21 (T1.5)
+
+### Manual verification
+1. Settings → "Copy mood log (CSV)".
+2. Paste in Notes → header `recordedAt,mood`; no trailing newline; ISO-8601 timestamps; newest first.
+
+## [T-184] — TodayViewModel undoResetDay replay guard (round 21)
+
+**Module:** today · **Shipped in:** round 21 (T1.6)
+
+### Manual verification
+1. Mark blocks done + skip a few.
+2. Today → Reset day → Confirm.
+3. Tap "Undo" → both completions and skips restore exactly.
+
+## [T-185] — L006 scan covers watch target (round 21)
+
+**Module:** ci · **Shipped in:** round 21 (T1.7)
+
+### Manual verification
+1. Run `python3 scripts/check-localized-key-usage.py`.
+2. Last line lists each scanned target including `PersonalHygieneWatch` + `PersonalHygieneWatchWidgets`.
+3. Delete one of the scanned dirs temporarily → script exits non-zero with "missing" message.
+
+## [T-186] — Mood log 30-day Swift Charts trend (round 21)
+
+**Module:** settings · **Shipped in:** round 21 (T2.8)
+
+### Manual verification
+1. Log moods across multiple days (or use BackupSnapshot to seed).
+2. Settings → Mood log → "Mood trend (30 days)" section appears.
+3. Line + point marks plot the daily average; Y-axis labels render emoji at scores 1/3/5.
+
+## [T-187] — Today 7-day mood emoji strip (round 21)
+
+**Module:** today · **Shipped in:** round 21 (T2.9)
+
+### Manual verification
+1. Log moods for several recent days.
+2. Today → below the schedule a row shows 7 columns (one per day, oldest → today).
+3. Days without entries render as a faint dot; days with entries show the rounded mood emoji.
+
+## [T-188] — Mood log emoji filter (round 21)
+
+**Module:** settings · **Shipped in:** round 21 (T2.10)
+
+### Manual verification
+1. Settings → Mood log disclosure → "Filter" picker (segmented, All / 5 emojis).
+2. Pick an emoji → only entries matching that mood remain visible.
+3. Pick All → list returns to full.
+
+## [T-189] — Mood weekly goal store + caption (round 21)
+
+**Module:** settings · **Shipped in:** round 21 (T2.11)
+
+### Manual verification
+1. Settings → Mood log → "Weekly goal" stepper (0…7).
+2. Set to 3 → "X of 3 this week" caption appears.
+3. Set back to 0 → caption disappears.
+
+## [T-190] — Mood CSV header localized (round 21)
+
+**Module:** settings · **Shipped in:** round 21 (T2.12)
+
+### Manual verification
+1. Switch device language to ES.
+2. Settings → "Copy mood log (localized CSV)".
+3. Paste → header is `registradoEn,ánimo`; data rows still use English mood codes.
+
+## [T-191] — WeatherKit forecast bridge (round 21)
+
+**Module:** vacation · **Shipped in:** round 21 (T3.13)
+
+### Manual verification (offline)
+1. Inject `StubWeatherForecastService` in unit tests → returns 5 canned forecasts.
+2. WeatherKit entitlement still gated; `WeatherKitForecastService` compiles via `#if canImport(WeatherKit)`.
+
+## [T-192] — Forecast cache 6h TTL (round 21)
+
+**Module:** vacation · **Shipped in:** round 21 (T3.14)
+
+### Manual verification
+1. Test suite covers store + retrieve within TTL + expiry past TTL + 2dp coordinate rounding.
+2. Live: a future build with WeatherKit entitlement should hit the cache twice in <6h before refetching.
+
+## [T-193] — Itinerary day forecast chip (round 21)
+
+**Module:** vacation · **Shipped in:** round 21 (T3.15)
+
+### Manual verification
+1. Generate an AI itinerary for a trip with destination geocoded.
+2. Each day-section header now has a chip with `T-N`/`D+N`/`✈` marker + (when forecast available) high/low + rain-prob.
+3. Days with rain ≥20% surface a blue droplet + percentage.
+
+## [T-194] — Trip notes "Insert weather forecast" (round 21)
+
+**Module:** vacation · **Shipped in:** round 21 (T3.16)
+
+### Manual verification
+1. Trip detail → Notes → "Insert template" Menu → "Weather forecast".
+2. Markdown block appended with one line per forecast day, including rain tag when ≥30% chance.
+
+## [T-195] — Settings 30-day footprint summary (round 21)
+
+**Module:** settings · **Shipped in:** round 21 (T3.17)
+
+### Manual verification
+1. Settings → with at least one trip ending in the last 30 days + home location set → "30-day footprint" section shows Total kg/lb CO₂ + Trips counted.
+2. Hidden when no eligible trips exist.
+
+## [T-196] — Currency "Copy rates as table" (round 21)
+
+**Module:** vacation · **Shipped in:** round 21 (T3.18)
+
+### Manual verification
+1. CurrencyView → "Convert all" → table renders.
+2. New "Copy rates as table" button → paste in Notes → CSV table `base,target,rate,converted`.
+
+## [T-197] — TemplateEditor conflict overlap visualizer (round 21)
+
+**Module:** routine · **Shipped in:** round 21 (T4.19)
+
+### Manual verification
+1. TemplateEditor with two overlapping blocks (e.g. 9:00-60min + 9:30-60min).
+2. New "Overlapping blocks" section shows "A ↔ B · 30 min" lines.
+3. Adjust durations to remove overlap → section disappears.
+
+## [T-198] — Watch surfaces (round 21)
+
+**Module:** watch · **Shipped in:** round 21 (T5.25, T5.26, T5.27, T5.29)
+
+### Manual verification (post-deploy)
+1. Watch Today → bottom rows now include "Hydration" + "Mood" links.
+2. Hydration glance → today total + "+150/+250/+330 ml" buttons → tap appends pending tap.
+3. Mood quick-log → 5 emojis → tap → success haptic.
+4. Mark a block done from watch → 3-second "Marked done · Undo" capsule appears.
+5. Complication: with iPhone notifications paused → orange `pause.circle.fill` glyph next to the time.
+
+## [T-199] — Birthdays gift idea CSV export (round 21)
+
+**Module:** birthdays · **Shipped in:** round 21 (T6.31)
+
+### Manual verification (smoke)
+1. Test suite covers header, sorting, comma/quote escaping, empty dictionary.
+2. Wire-up to settings UI deferred to round 22.
+
+## [T-200] — Round 21 housekeeping bundle (round 21)
+
+**Module:** various · **Shipped in:** round 21 (T6.30, T6.32, T6.34)
+
+### Manual verification (smoke)
+1. **HousekeepingStreakAutoSnooze**: pure helper covered by 4 tests; threshold 7d, scales to 7d cap.
+2. **BirthdayLeadDefaultStore**: 0…60 clamp + fallback to legacy constant covered by 3 tests.
+3. **FocusCategoryMuteMirror**: writes iOS-side mute state to App Group suite; watch reads via `mirroredCategories(in:)`. 2 tests.

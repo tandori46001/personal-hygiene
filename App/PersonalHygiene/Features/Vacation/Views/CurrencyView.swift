@@ -1,4 +1,5 @@
 import SwiftUI
+import UIKit
 
 struct CurrencyView: View {
 
@@ -105,6 +106,24 @@ struct CurrencyView: View {
                                 .font(.system(.body, design: .monospaced))
                         } label: {
                             Text(verbatim: conv.to)
+                        }
+                    }
+                    // Round-21 slice T3.18: copy the rate matrix as a CSV
+                    // table for paste into a spreadsheet. Header is fixed
+                    // English so the export remains machine-readable.
+                    Button {
+                        let amount = Double(amountText) ?? 0
+                        let csv = CurrencyRatesCSV.render(
+                            amount: amount,
+                            from: fromCode,
+                            conversions: allConversions
+                        )
+                        UIPasteboard.general.string = csv
+                    } label: {
+                        Label {
+                            Text("trip.currency.action.copyTable", bundle: .main)
+                        } icon: {
+                            Image(systemName: "tablecells")
                         }
                     }
                 } header: {

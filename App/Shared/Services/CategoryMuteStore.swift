@@ -40,4 +40,17 @@ public enum NotificationCategoryMuteStore {
             defaults.removeObject(forKey: category.defaultsKey)
         }
     }
+
+    /// Round-21 slice T6.34: snapshot of every currently-muted category.
+    /// Used by `FocusCategoryMuteMirror` to push the iOS-side state into the
+    /// App Group suite so the watch can read it.
+    public static func allMuted(
+        defaults: UserDefaults = .standard
+    ) -> Set<Category> {
+        var result: Set<Category> = []
+        for category in Category.allCases where isMuted(category, defaults: defaults) {
+            result.insert(category)
+        }
+        return result
+    }
 }

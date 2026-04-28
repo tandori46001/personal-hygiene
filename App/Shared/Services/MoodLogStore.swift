@@ -104,4 +104,23 @@ public enum MoodLogStore {
         }
         return lines.joined(separator: "\n")
     }
+
+    /// Round-21 slice T2.12: variant of `exportCSV` whose header is rendered
+    /// in the user's preferred language so a copy/paste into a spreadsheet
+    /// matches the rest of the UI. Defaults to the legacy English header
+    /// when no localization is supplied. The data rows are unchanged — they
+    /// always carry the canonical English mood `rawValue` so a CSV is round-
+    /// trippable across locales.
+    public static func exportLocalizedCSV(
+        defaults: UserDefaults = .standard,
+        bundle: Bundle = .main,
+        formatter: ISO8601DateFormatter = ISO8601DateFormatter()
+    ) -> String {
+        let header = bundle.localizedString(forKey: "moodLog.csv.header", value: "recordedAt,mood", table: nil)
+        var lines = [header]
+        for entry in entries(defaults: defaults) {
+            lines.append("\(formatter.string(from: entry.recordedAt)),\(entry.mood)")
+        }
+        return lines.joined(separator: "\n")
+    }
 }

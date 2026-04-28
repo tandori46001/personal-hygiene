@@ -119,6 +119,20 @@ extension TodayView {
             }
             .accessibilityLabel(Text("today.action.menu", bundle: .main))
         }
+        // Round-21 slice T4.23: hidden iPad keyboard shortcut. ⌘D toggles
+        // done on the current/next block — useful on a Magic Keyboard so
+        // power users don't have to tap. Hidden via `.zero`/clear styling so
+        // it doesn't visually duplicate the menu button.
+        ToolbarItem(placement: .keyboard) {
+            Button {
+                if let target = viewModel.currentBlock() ?? viewModel.nextBlock() {
+                    viewModel.toggleDone(target)
+                }
+            } label: {
+                Text("today.shortcut.markDone", bundle: .main)
+            }
+            .keyboardShortcut("d", modifiers: [.command])
+        }
     }
 }
 

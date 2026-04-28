@@ -240,7 +240,7 @@ struct TodayView: View {
             .refreshable {
                 viewModel.reload()
                 nowMinutes = Self.currentMinutesFromMidnight()
-                refreshToast = String(localized: "today.refresh.done")
+                refreshToast = Self.composedRefreshToast()
                 try? await Task.sleep(nanoseconds: 1_500_000_000)
                 refreshToast = nil
             }

@@ -36,7 +36,36 @@ ALLOWLIST = {
 PATTERN = re.compile(r'LocalizedStringKey\("[^"]*\\\([^"]*"\)')
 
 
+# Round-21 slice T1.7: targets the scan must visit. If any of these directories
+# vanishes from the source tree we want the script to fail loudly rather than
+# silently skipping that target — keeps L006 coverage honest as the project
+# layout evolves.
+REQUIRED_TARGETS = (
+    REPO / "App" / "PersonalHygiene",
+    REPO / "App" / "PersonalHygieneWatch",
+    REPO / "App" / "PersonalHygieneWatchWidgets",
+    REPO / "App" / "PersonalHygieneWidgets",
+    REPO / "App" / "Shared",
+)
+
+
 def main() -> int:
+    missing_targets: list[Path] = []
+    for target in REQUIRED_TARGETS:
+        if not target.exists():
+            missing_targets.append(target)
+            continue
+        # Each target must contain at least one .swift file or the scan would
+        # be vacuously green on a vanished surface.
+        if not any(target.rglob("*.swift")):
+            missing_targets.append(target)
+
+    if missing_targets:
+        print("L006 scan targets missing or empty:")
+        for target in missing_targets:
+            print(f"  {target.relative_to(REPO)}")
+        return 1
+
     offenders: list[tuple[Path, int, str]] = []
     for swift in APP_DIR.rglob("*.swift"):
         if swift in ALLOWLIST:
@@ -53,7 +82,8 @@ def main() -> int:
                 offenders.append((swift, lineno, stripped))
 
     if not offenders:
-        print("✓ no LocalizedStringKey dynamic-key violations (L006 clean)")
+        target_summary = ", ".join(t.name for t in REQUIRED_TARGETS)
+        print(f"✓ no LocalizedStringKey dynamic-key violations (L006 clean) — scanned: {target_summary}")
         return 0
 
     print(f"L006 violations: {len(offenders)} site(s)")

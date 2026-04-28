@@ -42,7 +42,11 @@
 
 ---
 
-### Phase 1 — MVP daily routine (iOS only) ✅ feature-complete (~99.9%)
+### Phase 1 — MVP daily routine (iOS only) ✅ feature-complete (~99.95%)
+
+> **Session 19 polish (2026-04-28 round 21, 40 slices):** mood log analytics (`MoodTrendAggregator` + 30-day Swift Charts trend, 7-day Today week strip, emoji filter, `MoodWeeklyGoalStore` + caption, `MoodLogStore.exportLocalizedCSV`); WeatherKit scaffolding (`WeatherForecast` value type, entitlement-gated `WeatherKitForecastService`, `WeatherForecastCache` 6h TTL App-Group-aware, `ItineraryDayForecastChip`, `TripNotesWeatherTemplate`, `TripFootprintAggregator` + 30-day footprint summary, `CurrencyRatesCSV` + table copy); Today QoL (`BlockConflictOverlap` visualizer, long-press skip+snooze chain, refresh-trace toast, `BlockCSVImporter`, ⌘D iPad shortcut, `TemplateListView` search suggestions); watch parity (`WatchHydrationGlanceStore` + glance view, `MoodQuickLogWatchView`, complication pause badge, mark-done undo capsule, `WatchThemeSyncTests`); housekeeping (`HousekeepingStreakAutoSnooze`, `BirthdayGiftIdeaCSVExporter`, `BirthdayLeadDefaultStore`, ad-hoc Focus toggle, `FocusCategoryMuteMirror`). Tests **649** (+64), i18n **769 × 3** (+32). L006 scan extended with explicit REQUIRED_TARGETS.
+
+
 
 **Goal:** end user follows full daily routine on iPhone for 14 consecutive days using only this app's notifications.
 

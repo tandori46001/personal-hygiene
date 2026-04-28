@@ -1,5 +1,6 @@
 import SwiftData
 import SwiftUI
+import WatchKit
 import WidgetKit
 
 struct ContentView: View {
@@ -44,6 +45,11 @@ struct TodayWatchView: View {
 
     @State private var doneBlockIDs: Set<UUID> = []
     @State private var errorMessage: String?
+    /// Round-21 slice T5.29: most-recently-toggled block id, used to surface
+    /// a 3-second "Undo" overlay so a wrist mis-tap is recoverable without
+    /// opening the iPhone app.
+    @State private var pendingUndoID: UUID?
+    @State private var undoExpiryTask: Task<Void, Never>?
     @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
@@ -111,8 +117,49 @@ struct TodayWatchView: View {
                                     Image(systemName: "gearshape")
                                 }
                             }
+                            NavigationLink {
+                                HydrationGlanceWatchView()
+                            } label: {
+                                Label {
+                                    Text("watch.hydration.title", bundle: .main)
+                                } icon: {
+                                    Image(systemName: "drop.fill")
+                                }
+                            }
+                            NavigationLink {
+                                MoodQuickLogWatchView()
+                            } label: {
+                                Label {
+                                    Text("watch.mood.title", bundle: .main)
+                                } icon: {
+                                    Image(systemName: "face.smiling")
+                                }
+                            }
                         }
                     }
+                }
+            }
+            .overlay(alignment: .bottom) {
+                if let undoID = pendingUndoID {
+                    HStack(spacing: 6) {
+                        Text("watch.undo.label", bundle: .main)
+                            .font(.caption2)
+                        Button {
+                            if let block = viewModel.blocks.first(where: { $0.id == undoID }) {
+                                toggleDone(block)
+                            }
+                            pendingUndoID = nil
+                            undoExpiryTask?.cancel()
+                        } label: {
+                            Text("common.undo", bundle: .main)
+                                .font(.caption2.bold())
+                        }
+                        .buttonStyle(.plain)
+                    }
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(.thinMaterial, in: Capsule())
+                    .padding(.bottom, 4)
                 }
             }
             .navigationTitle(Text("today.title", bundle: .main))
@@ -168,6 +215,16 @@ struct TodayWatchView: View {
             } else {
                 try repository.markDone(block, on: Date(), calendar: .autoupdatingCurrent)
                 doneBlockIDs.insert(block.id)
+            }
+            // Round-21 slice T5.29: success haptic + 3-second undo capsule.
+            WKInterfaceDevice.current().play(.success)
+            pendingUndoID = block.id
+            undoExpiryTask?.cancel()
+            undoExpiryTask = Task { @MainActor in
+                try? await Task.sleep(nanoseconds: 3_000_000_000)
+                if !Task.isCancelled {
+                    pendingUndoID = nil
+                }
             }
             // The NextBlock complication renders the upcoming block; toggling
             // done here invalidates that, so force a timeline reload instead
