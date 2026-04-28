@@ -130,5 +130,12 @@ custom_rules:
     excluded:
       - "Tests"
       - "App/Shared/Localization/TextLocalizedKey.swift"
+  do_catch_same_line:
+    name: "do block followed by catch on its own line"
+    regex: '\}\s*\n\s*catch\s'
+    message: "swift-format expects `} catch` on the same line. Round 22 caught two of these as `statement_position` errors; this guard fires earlier."
+    severity: warning
+    excluded:
+      - "Tests"
 
 reporter: "xcode"

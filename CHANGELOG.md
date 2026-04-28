@@ -8,6 +8,28 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added — Session 21 round 23: 40-slice regression depth + WeatherKit runtime + mood analytics v3 + Today/Routine extras + watch + diagnostics
+
+Tier 1 (regression guards):
+- `HousekeepingLogIdempotencyTests` (4 cases), `WatchHydrationReconcilerTailTests` (3), `ItineraryForecastBinning` extracted into `Shared/` + tests (4), `BackupSnapshotV4DowngradeTests` (3), SwiftLint custom rule `do_catch_same_line`.
+
+Tier 2 (mood log analytics v3):
+- `MoodLogGrouping.sections(...)` + sectioned disclosure; `MoodHistogram` + `MoodHistogramChartView`; `StreakImageRenderer` + Share-as-image button; `MoodHeatmapAggregator` + `MoodHeatmapView` 6×7 grid.
+
+Tier 3 (vacation):
+- `RuntimeWeatherForecastFetcher.make()` runtime-aware; ItineraryView fetch-error banner; `TripForecastSummary`, `CurrencyRateChangeDetector` (2% threshold), `MarineDivingWindow` (≤1m wave + ≤12kt wind), `TripNotesCSVImporter`.
+
+Tier 4 (Today / Routine):
+- `BulkCategoryEditor`, `BedtimePlanCheck`, `TemplateArchiveStore`, `SingleTemplateBackup` v1, `RefreshTraceLog.recentSummary(limit:)`.
+
+Tier 5 (watch):
+- Complication `moodStreakDays` + `themeOverride` fields + `·N` chip; HydrationGlance stepper custom amount; SettingsGlance pause-1h + resume; complication theme-aware tint; BlockDetailWatchView swipe-up "Skip rest of day" + file extracted.
+
+Tier 6 (diagnostics):
+- `WeatherForecastCacheCounters` (hit/miss), `BackupSizeProjector`, `CacheResetter.resetAll()`.
+
+Counts: tests **734** (+50). i18n **813 × 3** (+12). Scripts unchanged. Lessons still **6**. Watch + iPhone deployed live this session.
+
 ### Added — Session 20 round 22: 40-slice helpers→UI + WeatherKit real path + mood deepening v2 + Today/Routine QoL + watch finishing
 
 Tier 1 (regression guards):

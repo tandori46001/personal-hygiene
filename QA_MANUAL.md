@@ -2409,3 +2409,155 @@ Verify by running `./scripts/check-tests.sh`.
 7. **Watch complication mood emoji**: complication line-2 shows today's mood emoji alongside title.
 8. **Watch mood week strip**: Settings glance → 7-day mood emoji strip.
 9. **Swipe-back haptic**: BlockDetailWatchView → swipe back → light click haptic.
+
+## [T-221] — HousekeepingCompletionLog day-boundary + idempotency (round 23)
+
+**Module:** housekeeping · **Shipped in:** round 23 (T1.3)
+
+### Manual verification (smoke)
+1. `HousekeepingLogIdempotencyTests` 4 cases pass — day boundary, double-tap idempotency, multi-room isolation, clear.
+
+## [T-222] — WatchHydrationReconciler partial-failure tail (round 23)
+
+**Module:** hydration/watch · **Shipped in:** round 23 (T1.4)
+
+### Manual verification (smoke)
+1. `WatchHydrationReconcilerTailTests` 3 cases pass — fail-on-first preserves queue exactly, fail-on-last keeps just the failing tap.
+
+## [T-223] — ItineraryForecastBinning extracted helper (round 23)
+
+**Module:** vacation · **Shipped in:** round 23 (T1.5)
+
+### Manual verification (smoke)
+1. `ItineraryForecastBinningTests` 4 cases pass — start-of-day key, last-write-wins, daysSpanned clamp, out-of-range index.
+2. `ItineraryView` delegates to the helper for both cache + fetch paths.
+
+## [T-224] — Backup v4 → v3 downgrade safety (round 23)
+
+**Module:** backup · **Shipped in:** round 23 (T1.6)
+
+### Manual verification (smoke)
+1. `BackupSnapshotV4DowngradeTests` 3 cases pass — strip moodWeeklyGoal still decodes, restore preserves existing goal.
+
+## [T-225] — SwiftLint do/catch warning (round 23)
+
+**Module:** ci · **Shipped in:** round 23 (T1.7)
+
+### Manual verification
+1. `.swiftlint.yml` has new `do_catch_same_line` custom rule.
+2. Run `./scripts/lint.sh` — no warnings on round-22+23 code.
+3. Insert a `do { … }\n catch { }` block locally → SwiftLint fires the warning.
+
+## [T-226] — Sectioned mood log disclosure (round 23)
+
+**Module:** settings · **Shipped in:** round 23 (T2.8)
+
+### Manual verification
+1. Settings → Mood log → "By day" disclosure groups entries per calendar day; newest day on top.
+
+## [T-227] — Mood histogram (round 23)
+
+**Module:** settings · **Shipped in:** round 23 (T2.10)
+
+### Manual verification
+1. Settings → "Histogram" section renders one bar per emoji.
+
+## [T-228] — Streak share image (round 23)
+
+**Module:** settings · **Shipped in:** round 23 (T2.11)
+
+### Manual verification
+1. Hit a 3+ day positive mood streak.
+2. Settings → "Share streak as image" copies a 320×320 PNG to clipboard.
+
+## [T-229] — 6-week mood heatmap (round 23)
+
+**Module:** settings · **Shipped in:** round 23 (T2.12)
+
+### Manual verification
+1. Log moods across multiple days.
+2. Settings → "6-week heatmap" renders a 7×6 grid; greener cells = better days.
+
+## [T-230] — Runtime-aware WeatherKit fetcher (round 23)
+
+**Module:** vacation · **Shipped in:** round 23 (T3.13)
+
+### Manual verification (smoke)
+1. `RuntimeWeatherForecastFetcher.make()` returns `StubWeatherForecastService` until WeatherKit + iOS 16+ are both available.
+
+## [T-231] — Itinerary forecast error banner (round 23)
+
+**Module:** vacation · **Shipped in:** round 23 (T3.14)
+
+### Manual verification
+1. Force the fetcher to fail → ItineraryView shows orange triangle banner with the error description.
+
+## [T-232] — Trip forecast summary helper (round 23)
+
+**Module:** vacation · **Shipped in:** round 23 (T3.15)
+
+### Manual verification (smoke)
+1. `TripForecastSummaryTests` 2 cases pass — averages high/low, picks max rain probability.
+
+## [T-233] — Currency rate change detector (round 23)
+
+**Module:** vacation · **Shipped in:** round 23 (T3.16)
+
+### Manual verification (smoke)
+1. `CurrencyRateChangeDetectorTests` 5 cases pass — stable / up / down / nil-on-non-positive / custom threshold.
+
+## [T-234] — Marine diving window helper (round 23)
+
+**Module:** vacation · **Shipped in:** round 23 (T3.17)
+
+### Manual verification (smoke)
+1. `MarineDivingWindowTests` 4 cases pass — empty input, single contiguous run, longest run wins, all-rough returns nil.
+
+## [T-235] — Trip notes CSV import (round 23)
+
+**Module:** vacation · **Shipped in:** round 23 (T3.18)
+
+### Manual verification (smoke)
+1. `TripNotesCSVImporterTests` 3 cases pass — markdown bullets, skip empties, empty input warning.
+
+## [T-236] — TemplateArchiveStore (round 23)
+
+**Module:** routine · **Shipped in:** round 23 (T4.20)
+
+### Manual verification (smoke)
+1. `TemplateArchiveStoreTests` 3 cases pass — set/get persistence, unarchive removes, archivedIDs returns the full set.
+
+## [T-237] — RefreshTraceLog recent summary (round 23)
+
+**Module:** today · **Shipped in:** round 23 (T4.24)
+
+### Manual verification (smoke)
+1. `RefreshTraceLogRecentSummaryTests` 3 cases pass — empty, cap, newest-first.
+
+## [T-238] — Round-23 watch surfaces bundle (round 23)
+
+**Module:** watch · **Shipped in:** round 23 (T5.25..T5.29)
+
+### Manual verification
+1. Complication: positive mood streak count appended to the today mood emoji when streak ≥ 3.
+2. Watch hydration: stepper-driven custom amount → "Log this amount" enqueues a pending tap.
+3. Watch settings: "Pause for 1 hour" + "Resume notifications" buttons control PauseNotificationsStore.
+4. Complication: theme-override tint applied based on `settings.theme` value.
+5. BlockDetailWatchView: "Skip rest of day" button at the bottom.
+
+## [T-239] — Diagnostics observability bundle (round 23)
+
+**Module:** settings/diagnostics · **Shipped in:** round 23 (T6.32, T6.33, T6.34)
+
+### Manual verification (smoke)
+1. `WeatherForecastCacheCounters` increments hits/misses on cache reads.
+2. `BackupSizeProjector.projectedSize(...)` returns a non-nil byte count for any container with templates.
+3. `CacheResetter.resetAll()` clears weather forecast keys + counters + last-conversion entries.
+
+## [T-240] — Cache reset destructive button (round 23)
+
+**Module:** settings · **Shipped in:** round 23 (T6.34)
+
+### Manual verification
+1. `CacheResetter.resetAll()` should be wired to a destructive Settings button in round 24 — currently helper only.
+2. Test smoke: helper does not throw.

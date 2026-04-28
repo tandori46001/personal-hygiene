@@ -138,15 +138,30 @@ struct ItineraryView: View {
             }
         }
         .safeAreaInset(edge: .bottom) {
-            if let fetchedAt = forecastFetchedAt {
-                Text(
-                    "trip.itinerary.forecast.lastUpdated \(forecastCaption(fetchedAt))",
-                    bundle: .main
-                )
-                .font(.caption2.monospacedDigit())
-                .foregroundStyle(forecastIsStale ? Color.orange : Color.secondary)
-                .padding(.bottom, 4)
+            VStack(spacing: 2) {
+                // Round-23 slice T3.14: surface fetch failures inline.
+                if let banner = forecastErrorBanner {
+                    HStack(spacing: 4) {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundStyle(.orange)
+                        Text(verbatim: banner)
+                            .font(.caption2)
+                            .foregroundStyle(.orange)
+                    }
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(.thinMaterial, in: Capsule())
+                }
+                if let fetchedAt = forecastFetchedAt {
+                    Text(
+                        "trip.itinerary.forecast.lastUpdated \(forecastCaption(fetchedAt))",
+                        bundle: .main
+                    )
+                    .font(.caption2.monospacedDigit())
+                    .foregroundStyle(forecastIsStale ? Color.orange : Color.secondary)
+                }
             }
+            .padding(.bottom, 4)
         }
         .onAppear {
             if itinerary == nil, let cached = store?.load(for: trip.id) {
@@ -159,15 +174,11 @@ struct ItineraryView: View {
         }
     }
 
-    /// Round-22 slice T3.15: lookup the forecast for itinerary day `index`
-    /// against the trip's start date. Returns nil when no forecast was
-    /// fetched for that calendar day.
+    /// Round-22 slice T3.15 (round-23 T1.5: delegated to
+    /// `ItineraryForecastBinning` for unit-test coverage). Returns nil when
+    /// no forecast was fetched for that calendar day.
     private func forecast(forIndex index: Int) -> WeatherForecast? {
-        let calendar = Calendar.autoupdatingCurrent
-        guard let day = calendar.date(byAdding: .day, value: index, to: trip.startDate) else {
-            return nil
-        }
-        return forecastsByDay[calendar.startOfDay(for: day)]
+        ItineraryForecastBinning.forecast(forIndex: index, tripStart: trip.startDate, in: forecastsByDay)
     }
 
     /// Round-22 slices T3.14 + T3.18: fetch forecasts via the injected
@@ -181,22 +192,22 @@ struct ItineraryView: View {
         else { return }
         let cache = WeatherForecastCache.shared
         if !force, let warm = cache.cached(latitude: lat, longitude: lon) {
-            forecastsByDay = Self.bin(warm)
+            forecastsByDay = ItineraryForecastBinning.bin(warm)
             forecastIsStale = false
             forecastFetchedAt = Date()
             return
         }
         do {
-            let days = max(1, min(10, daysSpanned()))
+            let days = ItineraryForecastBinning.daysSpanned(from: trip.startDate, to: trip.endDate)
             let fresh = try await forecastFetcher.forecast(latitude: lat, longitude: lon, days: days)
             cache.store(fresh, latitude: lat, longitude: lon)
-            forecastsByDay = Self.bin(fresh)
+            forecastsByDay = ItineraryForecastBinning.bin(fresh)
             forecastIsStale = false
             forecastFetchedAt = Date()
             forecastErrorBanner = nil
         } catch {
             if let stale = cache.cachedIgnoringTTL(latitude: lat, longitude: lon) {
-                forecastsByDay = Self.bin(stale.forecasts)
+                forecastsByDay = ItineraryForecastBinning.bin(stale.forecasts)
                 forecastIsStale = true
                 forecastFetchedAt = stale.storedAt
             }
@@ -204,21 +215,8 @@ struct ItineraryView: View {
         }
     }
 
-    private static func bin(_ forecasts: [WeatherForecast]) -> [Date: WeatherForecast] {
-        let calendar = Calendar.autoupdatingCurrent
-        var result: [Date: WeatherForecast] = [:]
-        for forecast in forecasts {
-            result[calendar.startOfDay(for: forecast.day)] = forecast
-        }
-        return result
-    }
-
-    private func daysSpanned() -> Int {
-        let calendar = Calendar.autoupdatingCurrent
-        let start = calendar.startOfDay(for: trip.startDate)
-        let end = calendar.startOfDay(for: trip.endDate)
-        let delta = calendar.dateComponents([.day], from: start, to: end).day ?? 1
-        return max(1, delta + 1)
+    private func cachedHit(latitude: Double, longitude: Double) -> [WeatherForecast]? {
+        WeatherForecastCache.shared.cached(latitude: latitude, longitude: longitude)
     }
 
     private func forecastCaption(_ date: Date) -> String {

@@ -35,8 +35,16 @@ public final class WeatherForecastCache: @unchecked Sendable {
         let storeKey = key(latitude: latitude, longitude: longitude)
         guard let data = defaults.data(forKey: storeKey),
               let entry = try? JSONDecoder().decode(Entry.self, from: data)
-        else { return nil }
-        if now.timeIntervalSince(entry.storedAt) > ttl { return nil }
+        else {
+            // Round-23 slice T6.33: counters used by Diagnostics.
+            WeatherForecastCacheCounters.shared.recordMiss()
+            return nil
+        }
+        if now.timeIntervalSince(entry.storedAt) > ttl {
+            WeatherForecastCacheCounters.shared.recordMiss()
+            return nil
+        }
+        WeatherForecastCacheCounters.shared.recordHit()
         return entry.forecasts
     }
 

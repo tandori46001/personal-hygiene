@@ -47,4 +47,16 @@ public final class RefreshTraceLog {
 
     /// Newest-first copy for UI rendering.
     public var newestFirst: [Entry] { entries.reversed() }
+
+    /// Round-23 slice T4.24: terse summary of the most-recent N entries
+    /// (each formatted `HH:MM:SS · kind · count`). Used by the Today
+    /// pull-to-refresh history disclosure.
+    public func recentSummary(limit: Int = 5) -> [String] {
+        let formatter = DateFormatter()
+        formatter.timeStyle = .medium
+        formatter.dateStyle = .none
+        return newestFirst.prefix(max(0, limit)).map { entry in
+            "\(formatter.string(from: entry.timestamp)) · \(entry.kind.rawValue) · \(entry.scheduledCount)"
+        }
+    }
 }

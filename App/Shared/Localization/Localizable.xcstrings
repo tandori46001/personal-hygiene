@@ -17464,6 +17464,102 @@
         "es": { "stringUnit": { "state": "translated", "value": "Ánimo — últimos 7 días" } },
         "fr": { "stringUnit": { "state": "translated", "value": "Humeur — 7 derniers jours" } }
       }
+    },
+    "settings.moodLog.sections.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "By day" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Por día" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Par jour" } }
+      }
+    },
+    "settings.moodLog.sections.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Sectioned view of the trailing log, newest day first." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Vista por secciones del registro, día más reciente primero." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Vue en sections, jour le plus récent en premier." } }
+      }
+    },
+    "settings.moodLog.histogram.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Histogram" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Histograma" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Histogramme" } }
+      }
+    },
+    "settings.moodLog.histogram.a11y": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Mood count chart" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Gráfica de conteo de ánimo" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Graphique des humeurs" } }
+      }
+    },
+    "settings.moodLog.heatmap.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "6-week heatmap" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Mapa de calor 6 semanas" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Carte de chaleur 6 semaines" } }
+      }
+    },
+    "settings.moodLog.heatmap.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Greener cells = happier days. Empty cells = no entry." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Más verde = mejor ánimo. Celdas vacías = sin registro." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Plus vert = meilleure humeur. Cases vides = pas d'entrée." } }
+      }
+    },
+    "settings.moodLog.heatmap.a11y": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Six-week mood heatmap" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Mapa de calor de ánimo de 6 semanas" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Carte de chaleur d'humeur sur 6 semaines" } }
+      }
+    },
+    "settings.moodLog.streak.share": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Share streak as image" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Compartir racha como imagen" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Partager la série en image" } }
+      }
+    },
+    "settings.moodLog.streak.share.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Renders a 320×320 PNG to the clipboard." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Genera un PNG de 320×320 al portapapeles." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Génère un PNG 320×320 dans le presse-papiers." } }
+      }
+    },
+    "watch.hydration.custom.log": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Log this amount" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Registrar esta cantidad" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Enregistrer cette quantité" } }
+      }
+    },
+    "watch.settings.pause.action.1h": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Pause for 1 hour" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Pausar 1 hora" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Pause d'1 heure" } }
+      }
+    },
+    "watch.settings.pause.action.resume": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Resume notifications" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Reanudar notificaciones" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Reprendre les notifications" } }
+      }
     }
   }
 }

@@ -59,6 +59,13 @@ struct NextBlockSnapshot: Sendable, Hashable {
     /// user's most-recent mood alongside the next block. Empty when the
     /// user hasn't logged a mood today.
     var todayMoodRaw: String = ""
+    /// Round-23 slice T5.25: positive-mood streak count rendered next to
+    /// the mood emoji. Zero hides the chip.
+    var moodStreakDays: Int = 0
+    /// Round-23 slice T5.28: theme override raw value mirrored from the
+    /// iPhone (`"light"` / `"dark"` / `"system"`). Drives the complication
+    /// fill tint via `complicationTint(for:)`.
+    var themeOverride: String = "system"
 }
 
 struct NextBlockProvider: TimelineProvider {
@@ -114,7 +121,9 @@ struct NextBlockProvider: TimelineProvider {
             categoryRawValue: next.category.rawValue,
             durationMinutes: next.durationMinutes,
             isPaused: isPaused,
-            todayMoodRaw: moodRaw
+            todayMoodRaw: moodRaw,
+            moodStreakDays: MoodLogStore.streakDays(now: now, defaults: pauseDefaults),
+            themeOverride: pauseDefaults.string(forKey: "settings.theme") ?? "system"
         )
     }
 }
@@ -150,10 +159,17 @@ struct NextBlockEntryView: View {
                         .lineLimit(1)
                     if let mood = MoodLogStore.Mood(rawValue: block.todayMoodRaw) {
                         // Round-22 slice T6.32: mood-of-today inline glyph.
+                        // Round-23 slice T5.25: append streak count when ≥ 3.
                         Text(verbatim: mood.emoji)
                             .font(.caption2)
+                        if block.moodStreakDays >= 3 {
+                            Text(verbatim: "·\(block.moodStreakDays)")
+                                .font(.caption2.monospacedDigit())
+                                .foregroundStyle(.green)
+                        }
                     }
                 }
+                .tint(complicationTint(for: block.themeOverride))
                 if !block.categoryRawValue.isEmpty {
                     HStack(spacing: 4) {
                         Text(localizedKey: "category.\(block.categoryRawValue)")
@@ -177,6 +193,17 @@ struct NextBlockEntryView: View {
 
     private func formattedTime(minutes: Int) -> String {
         String(format: "%02d:%02d", minutes / 60, minutes % 60)
+    }
+
+    /// Round-23 slice T5.28: theme-aware tint for the rectangular
+    /// complication. Light/dark return slightly different accent shades;
+    /// system falls through to the default tint.
+    private func complicationTint(for themeOverride: String) -> Color {
+        switch themeOverride {
+        case "dark": .blue
+        case "light": .accentColor
+        default: .accentColor
+        }
     }
 
     /// Reuses the iOS Siri dialog phrasing so "next block" reads identically

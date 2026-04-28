@@ -42,7 +42,9 @@
 
 ---
 
-### Phase 1 — MVP daily routine (iOS only) ✅ feature-complete (~99.97%)
+### Phase 1 — MVP daily routine (iOS only) ✅ feature-complete (~99.98%)
+
+> **Session 21 polish (2026-04-28 round 23, 40 slices):** regression depth (housekeeping log idempotency, reconciler tail-preservation, itinerary binning extracted into Shared, backup v4→v3 downgrade, SwiftLint `do_catch_same_line` rule); mood analytics v3 (sectioned disclosure, histogram chart, streak share-as-image PNG, 6×7 heatmap); vacation (runtime-aware WeatherKit bridge, fetch-error banner, trip forecast summary, currency rate-change detector, marine diving window, notes CSV importer); Today/Routine helpers (bulk category editor, bedtime plan check, archive store, single-template backup share-sheet, refresh-trace summary); watch (mood-streak chip on complication, custom hydration stepper, pause-from-watch, theme tint, swipe-up skip-rest-of-day + extracted file); diagnostics (cache counters, backup size projector, cache resetter). Tests **734** (+50), i18n **813 × 3** (+12). iPhone + Watch both deployed live this session.
 
 > **Session 20 polish (2026-04-28 round 22, 40 slices):** regression guards (mood symbol, refresh-trace toast, conflict API consistency, footprint tie-break, LocalizedStringResource scan); helpers→UI (gift CSV button, lead-time stepper, streak banner + completion log, auto-mirror mute, hydration reconciler, mood week strip in Settings); WeatherKit real path through `ItineraryView` (injection, forecast chips, stale-graceful, refresh button + last-updated caption); mood deepening (7d/30d toggle, weekly delta, streak helper, Today caption, backup v4); Today QoL (CSV import + warnings sheet, gantt visualizer, completion bar, duplicate-with-rename, cascade shift); watch finishing (pending count + clear, goal proportion, complication mood emoji, settings mood strip, swipe-back haptic). Tests **684** (+35), i18n **801 × 3** (+32 net). Watch deployed live this session.
 

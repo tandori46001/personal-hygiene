@@ -92,6 +92,10 @@ struct TodayWatchView: View {
                                         onToggleSkip: {
                                             viewModel.toggleSkippedToday(block)
                                             viewModel.reload()
+                                        },
+                                        onSkipRestOfDay: {
+                                            viewModel.skipRestOfToday(from: block)
+                                            viewModel.reload()
                                         }
                                     )
                                 } label: {
@@ -279,6 +283,29 @@ private struct SettingsGlanceWatchView: View {
                     }
                     .accessibilityElement(children: .combine)
                 }
+                // Round-23 slice T5.27: 1-hour pause toggle from the wrist.
+                Button {
+                    PauseNotificationsStore.pauseForHours(1, in: sharedDefaults)
+                    pauseSummary = computePauseSummary(now: Date())
+                } label: {
+                    Label {
+                        Text("watch.settings.pause.action.1h", bundle: .main)
+                    } icon: {
+                        Image(systemName: "pause.circle")
+                    }
+                }
+                if !pauseSummary.isEmpty {
+                    Button(role: .destructive) {
+                        PauseNotificationsStore.clear(in: sharedDefaults)
+                        pauseSummary = ""
+                    } label: {
+                        Label {
+                            Text("watch.settings.pause.action.resume", bundle: .main)
+                        } icon: {
+                            Image(systemName: "play.circle")
+                        }
+                    }
+                }
             } header: {
                 Text("watch.settings.section.notifications", bundle: .main)
             }
@@ -345,87 +372,7 @@ private struct SettingsGlanceWatchView: View {
     }
 }
 
-private struct BlockDetailWatchView: View {
-    let block: Block
-    let isDone: Bool
-    let isSkipped: Bool
-    let onToggleDone: () -> Void
-    let onToggleSkip: () -> Void
-    @Environment(\.dismiss) private var dismiss
-
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 8) {
-                Text(block.title)
-                    .font(.headline)
-                Label {
-                    Text(localizedKey: "category.\(block.category.rawValue)")
-                } icon: {
-                    Image(systemName: "tag")
-                }
-                .font(.caption)
-                .foregroundStyle(.secondary)
-                Label {
-                    Text(verbatim: formattedTime(minutes: block.startMinutesFromMidnight))
-                        + Text(verbatim: " · \(block.durationMinutes) min")
-                } icon: {
-                    Image(systemName: "clock")
-                }
-                .font(.caption)
-                .foregroundStyle(.secondary)
-
-                Divider()
-
-                Button {
-                    onToggleDone()
-                    dismiss()
-                } label: {
-                    Label {
-                        Text(
-                            isDone
-                                ? "today.action.unmarkDone"
-                                : "today.action.markDone",
-                            bundle: .main
-                        )
-                    } icon: {
-                        Image(systemName: isDone ? "arrow.uturn.backward" : "checkmark.circle")
-                    }
-                }
-                .buttonStyle(.borderedProminent)
-                .disabled(isSkipped)
-
-                Button(role: .destructive) {
-                    onToggleSkip()
-                    dismiss()
-                } label: {
-                    Label {
-                        Text(
-                            isSkipped
-                                ? "today.action.unskipToday"
-                                : "today.action.skipToday",
-                            bundle: .main
-                        )
-                    } icon: {
-                        Image(systemName: "moon.zzz")
-                    }
-                }
-                .buttonStyle(.bordered)
-            }
-            .padding(.horizontal, 4)
-        }
-        .navigationTitle(Text("watch.detail.title", bundle: .main))
-        .onDisappear {
-            // Round-22 slice T6.34: light "click" haptic on swipe-back so
-            // the user gets a confirmation that the navigation popped
-            // without an explicit done-tap.
-            WKInterfaceDevice.current().play(.click)
-        }
-    }
-
-    private func formattedTime(minutes: Int) -> String {
-        String(format: "%02d:%02d", minutes / 60, minutes % 60)
-    }
-}
+// `BlockDetailWatchView` lives in `BlockDetailWatchView.swift` (round 23 T7).
 
 private struct WatchBlockRow: View {
     let block: Block

@@ -7,6 +7,10 @@ struct HydrationGlanceWatchView: View {
 
     @State private var total: Int = WatchHydrationGlanceStore.todayTotal()
     @State private var pending: [Int] = WatchHydrationGlanceStore.pendingTaps()
+    /// Round-23 slice T5.26: custom-amount slot. Stepped in 50ml increments
+    /// from 50…1000 so the user can dial in unusual volumes without the
+    /// iPhone keyboard.
+    @State private var customAmount: Int = 200
     /// Round-22 slice T6.31: hydration goal pulled from the iPhone via the
     /// shared App Group `@AppStorage("hydration.goal.ml")`.
     @AppStorage(
@@ -75,6 +79,10 @@ struct HydrationGlanceWatchView: View {
                         }
                     }
                 }
+                // Round-23 slice T5.26: stepper-driven custom amount + log
+                // button so users can record arbitrary volumes from the
+                // wrist without going through the iPhone.
+                customAmountRow
             } footer: {
                 Text("watch.hydration.footer", bundle: .main)
             }
@@ -83,6 +91,26 @@ struct HydrationGlanceWatchView: View {
         .onAppear {
             total = WatchHydrationGlanceStore.todayTotal()
             pending = WatchHydrationGlanceStore.pendingTaps()
+        }
+    }
+
+    @ViewBuilder
+    private var customAmountRow: some View {
+        VStack(alignment: .leading, spacing: 4) {
+            Stepper(value: $customAmount, in: 50...1000, step: 50) {
+                Text(verbatim: "\(customAmount) ml")
+                    .font(.caption.monospacedDigit())
+            }
+            Button {
+                WatchHydrationGlanceStore.appendPendingTap(amountMl: customAmount)
+                pending = WatchHydrationGlanceStore.pendingTaps()
+            } label: {
+                Label {
+                    Text("watch.hydration.custom.log", bundle: .main)
+                } icon: {
+                    Image(systemName: "plus.circle.fill")
+                }
+            }
         }
     }
 }
