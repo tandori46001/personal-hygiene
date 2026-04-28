@@ -140,6 +140,7 @@ extension DiagnosticsView {
                 pendingDetailsSection
                 pendingByGroupSection
                 round18ExportSection
+                refreshTraceExportRow
                 Section {
                     Button {
                         Task {

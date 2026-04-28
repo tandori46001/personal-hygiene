@@ -6,6 +6,10 @@ import SwiftUI
 /// length cap.
 struct NowMarkerRow: View {
     let nowMinutes: Int
+    /// Round-20 slice T4.17: optional tap callback. Parent wires this to
+    /// `ScrollViewReader.scrollTo(currentBlock.id)` so a user who has
+    /// scrolled away from "now" can come back with a single tap.
+    var onTap: (() -> Void)?
 
     var body: some View {
         HStack(spacing: 8) {
@@ -22,8 +26,11 @@ struct NowMarkerRow: View {
                 .foregroundStyle(.red)
         }
         .padding(.vertical, 2)
+        .contentShape(Rectangle())
+        .onTapGesture { onTap?() }
         .accessibilityElement(children: .combine)
         .accessibilityLabel(Text("today.now.line", bundle: .main))
+        .accessibilityAddTraits(onTap != nil ? .isButton : [])
     }
 
     private func formattedTime(minutes: Int) -> String {

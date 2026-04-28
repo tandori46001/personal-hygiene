@@ -73,4 +73,35 @@ public enum MoodLogStore {
     public static func clear(in defaults: UserDefaults = .standard) {
         defaults.removeObject(forKey: key)
     }
+
+    /// Round-20 slice T2.7: count of entries marked `.good` or `.great` whose
+    /// `recordedAt` falls within the trailing `days` (default 7) up to `now`.
+    /// Multiple records on the same day count once each — the user explicitly
+    /// re-tapping a chip still expresses ongoing positive mood.
+    public static func goodDaysCount(
+        in days: Int = 7,
+        now: Date = Date(),
+        calendar: Calendar = .autoupdatingCurrent,
+        defaults: UserDefaults = .standard
+    ) -> Int {
+        guard let cutoff = calendar.date(byAdding: .day, value: -days, to: now) else { return 0 }
+        return entries(defaults: defaults).filter { entry in
+            entry.recordedAt >= cutoff
+                && entry.recordedAt <= now
+                && (entry.moodCase == .good || entry.moodCase == .great)
+        }.count
+    }
+
+    /// Round-20 slice T2.11: per-line CSV export sorted newest-first.
+    /// Header is `recordedAt,mood`. Used by Diagnostics → Export mood log.
+    public static func exportCSV(
+        defaults: UserDefaults = .standard,
+        formatter: ISO8601DateFormatter = ISO8601DateFormatter()
+    ) -> String {
+        var lines = ["recordedAt,mood"]
+        for entry in entries(defaults: defaults) {
+            lines.append("\(formatter.string(from: entry.recordedAt)),\(entry.mood)")
+        }
+        return lines.joined(separator: "\n")
+    }
 }

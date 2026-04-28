@@ -68,6 +68,16 @@ extension TodayView {
                 }
             }
             .frame(maxWidth: .infinity)
+            // Round-20 slice T2.7: trailing 7-day "good days" caption.
+            // Hidden when count is zero so the row stays empty for users who
+            // haven't engaged yet.
+            let goodCount = MoodLogStore.goodDaysCount()
+            if goodCount > 0 {
+                Text("today.mood.goodDaysWeek \(goodCount)", bundle: .main)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .frame(maxWidth: .infinity, alignment: .center)
+            }
         } header: {
             Text("today.mood.title", bundle: .main)
         } footer: {
@@ -77,5 +87,43 @@ extension TodayView {
 
     static func formattedTime(minutes: Int) -> String {
         String(format: "%02d:%02d", minutes / 60, minutes % 60)
+    }
+
+    /// Round-20 slice T4.19: floating "Day reset · Undo" capsule. Hidden
+    /// when no snapshot is in flight.
+    @ViewBuilder
+    var resetDayUndoOverlay: some View {
+        if let snapshot = resetDaySnapshot {
+            HStack(spacing: 12) {
+                Text("today.resetDay.undo.message", bundle: .main)
+                    .font(.caption)
+                Button {
+                    viewModel.undoResetDay(snapshot)
+                    resetDaySnapshot = nil
+                    resetDayUndoTimer?.cancel()
+                } label: {
+                    Text("common.undo", bundle: .main)
+                        .font(.caption.bold())
+                }
+                .buttonStyle(.borderless)
+            }
+            .padding(.horizontal, 14)
+            .padding(.vertical, 8)
+            .background(.thinMaterial, in: Capsule())
+            .padding(.bottom, 12)
+            .accessibilityElement(children: .combine)
+        }
+    }
+
+    /// Round-20 slice T4.19: clears the reset-day undo overlay after 10s.
+    /// Called whenever a snapshot is captured by `resetDay()`.
+    func scheduleResetDayUndoExpiry() {
+        resetDayUndoTimer?.cancel()
+        resetDayUndoTimer = Task { @MainActor [self] in
+            try? await Task.sleep(nanoseconds: 10_000_000_000)
+            if !Task.isCancelled {
+                self.resetDaySnapshot = nil
+            }
+        }
     }
 }

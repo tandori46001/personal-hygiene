@@ -43,13 +43,24 @@ struct ItineraryView: View {
                 Section {
                     Text(verbatim: itinerary.summary)
                 }
-                ForEach(Array(itinerary.days.enumerated()), id: \.offset) { _, day in
+                ForEach(Array(itinerary.days.enumerated()), id: \.offset) { offset, day in
                     Section {
                         ForEach(day.activities, id: \.self) { activity in
                             Text(verbatim: activity)
                         }
                     } header: {
-                        Text(verbatim: day.title)
+                        HStack(spacing: 6) {
+                            Text(verbatim: day.title)
+                            // Round-20 slice T3.14: relative-day marker so the
+                            // user sees how far each itinerary day is from
+                            // today. T-3 = three days from today; D+1 = one day
+                            // after trip start; ✈ = trip in progress today.
+                            if let marker = Self.dayMarker(forIndex: offset, tripStart: trip.startDate) {
+                                Text(verbatim: marker)
+                                    .font(.caption2.monospacedDigit())
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
                     }
                 }
                 Section {
@@ -94,6 +105,28 @@ struct ItineraryView: View {
         .sheet(item: $sharePayload) { payload in
             ShareSheet(items: [payload.text])
         }
+    }
+
+    /// Round-20 slice T3.14: relative-day marker for the supplied day index
+    /// vs `tripStart`. Returns `nil` when the trip starts today (any day-0
+    /// marker would be visual noise) or when the index can't be projected
+    /// onto a calendar date. Format:
+    /// - `T-N` for days N before trip start (countdown)
+    /// - `D+N` for days N after trip start (in-trip)
+    /// - `✈` for the start day itself
+    static func dayMarker(
+        forIndex index: Int,
+        tripStart: Date,
+        now: Date = Date(),
+        calendar: Calendar = .autoupdatingCurrent
+    ) -> String? {
+        let dayOfTrip = calendar.date(byAdding: .day, value: index, to: tripStart) ?? tripStart
+        let today = calendar.startOfDay(for: now)
+        let target = calendar.startOfDay(for: dayOfTrip)
+        guard let delta = calendar.dateComponents([.day], from: today, to: target).day else { return nil }
+        if delta == 0 { return "✈" }
+        if delta < 0 { return "D+\(-delta)" }
+        return "T-\(delta)"
     }
 
     static func plainText(for itinerary: TripItinerary, trip: Trip) -> String {

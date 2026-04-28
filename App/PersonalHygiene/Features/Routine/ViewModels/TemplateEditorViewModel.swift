@@ -37,6 +37,15 @@ final class TemplateEditorViewModel {
         try repository.upsert(block, in: template)
     }
 
+    /// Round-20 slice T4.20: list of recently-used distinct titles (up to 5)
+    /// for the supplied category, drawn from every template the repository
+    /// knows about. Wired into `BlockEditorView.titleSuggestions` so the user
+    /// can re-enter a familiar title with a single tap.
+    func titleSuggestions(for category: BlockCategory, limit: Int = 5) -> [String] {
+        let templates = (try? repository.allTemplates()) ?? []
+        return BlockTitleSuggestions.recent(in: templates, category: category, limit: limit)
+    }
+
     func update(_ block: Block, with editor: BlockEditorViewModel) throws {
         editor.apply(to: block)
         try repository.upsert(block, in: template)
@@ -67,6 +76,23 @@ final class TemplateEditorViewModel {
             isDeepFocus: block.isDeepFocus
         )
         try repository.upsert(clone, in: template)
+    }
+
+    /// Round-20 slice T4.18: re-anchor every block's start time so blocks are
+    /// laid out back-to-back starting from the supplied `firstStart` (default
+    /// = current first block's start). Each block keeps its own duration; the
+    /// gap *between* blocks collapses to zero. Useful after manual edits left
+    /// awkward gaps. No-op when there are fewer than 2 blocks.
+    func renumberStartTimes(from firstStart: Int? = nil) throws {
+        let sorted = sortedBlocks
+        guard sorted.count >= 2 else { return }
+        let baseStart = firstStart ?? sorted[0].startMinutesFromMidnight
+        var cursor = baseStart
+        for block in sorted {
+            block.startMinutesFromMidnight = min(24 * 60 - 1, cursor)
+            cursor = min(24 * 60 - 1, cursor + max(1, block.durationMinutes))
+        }
+        try repository.upsert(template)
     }
 
     /// Drag-to-reorder semantics for a time-anchored schedule: the sequence

@@ -5,10 +5,11 @@ struct CurrencyView: View {
     let service: any CurrencyService
 
     /// Round-10 extra: G7-ish destination shortlist so the user can tap a
-    /// currency without typing on iPhone. Order matches the rough frequency
-    /// of the user's actual trips (USD/CAD first since they border, then
-    /// the European cluster, then JPY for the Asian leg).
-    static let supportedCodes = ["USD", "EUR", "GBP", "CAD", "CHF", "AUD", "JPY"]
+    /// currency without typing on iPhone. Round-20 slice T3.13 reorder: JPY
+    /// promoted to 3rd position (was 7th) because the user's diving-trip
+    /// pattern includes Japan/Asia legs more often than CAD/CHF/AUD. EUR
+    /// stays first as the home currency.
+    static let supportedCodes = ["EUR", "USD", "JPY", "GBP", "CAD", "CHF", "AUD"]
 
     @AppStorage("currencyFromCode") private var fromCode = "EUR"
     @AppStorage("currencyToCode") private var toCode = "USD"

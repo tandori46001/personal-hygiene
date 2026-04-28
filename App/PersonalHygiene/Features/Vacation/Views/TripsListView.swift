@@ -11,6 +11,10 @@ struct TripsListView: View {
 
     @State private var pendingDuplicateSource: Trip?
     @State private var duplicateNameDraft: String = ""
+    /// Round-20 slice T3.12: year filter for the past-trips section. `nil` =
+    /// "all years". The chip row is hidden if past trips span fewer than two
+    /// distinct years (no point filtering one year).
+    @State private var pastTripsYearFilter: Int?
 
     var body: some View {
         // L004: no inner `NavigationStack` here. This view lives inside the
@@ -76,8 +80,25 @@ struct TripsListView: View {
                 }
 
                 if !past.isEmpty {
+                    let availableYears = Self.distinctYears(in: past)
+                    let filteredPast = pastTripsYearFilter
+                        .map { year in past.filter { Calendar.current.component(.year, from: $0.startDate) == year } }
+                        ?? past
                     Section {
-                        ForEach(past) { trip in
+                        // Round-20 slice T3.12: year chips. Hidden when there's
+                        // only one year of past trips — chip row would be noise.
+                        if availableYears.count >= 2 {
+                            ScrollView(.horizontal, showsIndicators: false) {
+                                HStack(spacing: 6) {
+                                    yearChip(label: "common.all", year: nil)
+                                    ForEach(availableYears, id: \.self) { year in
+                                        yearChip(label: nil, year: year)
+                                    }
+                                }
+                            }
+                            .listRowBackground(Color.clear)
+                        }
+                        ForEach(filteredPast) { trip in
                             tripLink(for: trip, nearestID: nil)
                                 .foregroundStyle(.secondary)
                                 .swipeActions(edge: .leading) {
@@ -94,7 +115,7 @@ struct TripsListView: View {
                                     .tint(.blue)
                                 }
                         }
-                        .onDelete { offsets in delete(past, at: offsets) }
+                        .onDelete { offsets in delete(filteredPast, at: offsets) }
                     } header: {
                         Text("trips.section.past", bundle: .main)
                     }
@@ -233,6 +254,34 @@ struct TripsListView: View {
                 daysUntilStart: nearestID == trip.id ? viewModel.daysUntilNearest()?.1 : nil
             )
         }
+    }
+
+    /// Round-20 slice T3.12: chip used by the past-trips year filter row.
+    /// Pass `year: nil` for the "All" reset chip.
+    @ViewBuilder
+    private func yearChip(label: LocalizedStringKey?, year: Int?) -> some View {
+        Button {
+            pastTripsYearFilter = year
+        } label: {
+            Group {
+                if let label {
+                    Text(label, bundle: .main)
+                } else if let year {
+                    Text(verbatim: String(year))
+                }
+            }
+            .font(.caption.bold())
+            .padding(.horizontal, 10)
+            .padding(.vertical, 4)
+        }
+        .buttonStyle(.bordered)
+        .tint(pastTripsYearFilter == year ? .accentColor : .secondary)
+    }
+
+    /// Round-20 slice T3.12: distinct years (descending) of the supplied trips.
+    static func distinctYears(in trips: [Trip], calendar: Calendar = .autoupdatingCurrent) -> [Int] {
+        let years = trips.map { calendar.component(.year, from: $0.startDate) }
+        return Array(Set(years)).sorted(by: >)
     }
 }
 

@@ -92,6 +92,23 @@ struct TemplateEditorView: View {
                     }
                 }
 
+                if viewModel.sortedBlocks.count >= 2 {
+                    // Round-20 slice T4.18: collapse manual-edit gaps by
+                    // re-anchoring every block back-to-back from the current
+                    // first start time.
+                    Button {
+                        do { try viewModel.renumberStartTimes() } catch {
+                            errorMessage = error.localizedDescription
+                        }
+                    } label: {
+                        Label {
+                            Text("templateEditor.action.renumber", bundle: .main)
+                        } icon: {
+                            Image(systemName: "arrow.up.arrow.down.circle")
+                        }
+                    }
+                }
+
                 if let key = lastInsertedPresetTitleKey {
                     HStack(spacing: 8) {
                         Image(systemName: "wand.and.stars")
@@ -148,7 +165,8 @@ struct TemplateEditorView: View {
             BlockEditorView(
                 viewModel: editor,
                 onSave: { saveBlock(from: $0) },
-                onCancel: {}
+                onCancel: {},
+                titleSuggestions: { viewModel.titleSuggestions(for: $0) }
             )
         }
         .alert(

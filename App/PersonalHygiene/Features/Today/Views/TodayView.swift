@@ -10,6 +10,8 @@ struct TodayView: View {
     @State private var categoryFilter: BlockCategory?
     @State var showingResetDayConfirm = false
     @State private var refreshToast: String?
+    @State var resetDaySnapshot: TodayViewModel.ResetDaySnapshot?
+    @State var resetDayUndoTimer: Task<Void, Never>?
     @State private var minuteTickTimer: Task<Void, Never>?
     /// Round-18 slice 5: visible after the device time zone changes mid-session
     /// (e.g. landing in another country) so the user knows Today's day boundary
@@ -49,6 +51,7 @@ struct TodayView: View {
         NavigationStack {
             Group {
                 if let template = viewModel.activeTemplate {
+                    ScrollViewReader { proxy in
                     List {
                         staleDayBannerSection
                         if let focus = viewModel.activeFocusWindow() {
@@ -109,7 +112,13 @@ struct TodayView: View {
                                     in: template.sortedBlocks,
                                     nowMinutes: nowMinutes
                                 ) {
-                                    NowMarkerRow(nowMinutes: nowMinutes)
+                                    NowMarkerRow(nowMinutes: nowMinutes) {
+                                        // Round-20 slice T4.17: tap → snap back
+                                        // to the current/next block.
+                                        if let target = viewModel.currentBlock() ?? viewModel.nextBlock() {
+                                            withAnimation { proxy.scrollTo(target.id, anchor: .center) }
+                                        }
+                                    }
                                 }
                                 BlockTimelineRow(
                                     block: block,
@@ -119,6 +128,7 @@ struct TodayView: View {
                                     compact: compactMode,
                                     onToggle: { viewModel.toggleDone(block) }
                                 )
+                                .id(block.id) // Round-20 slice T4.17: ScrollViewReader anchor.
                                 .contentShape(Rectangle())
                                 .onTapGesture {
                                     detailBlock = block
@@ -201,6 +211,7 @@ struct TodayView: View {
                         moodQuickLogSection
                         tomorrowSection
                     }
+                    } // ScrollViewReader (round-20 slice T4.17)
                 } else {
                     ContentUnavailableView {
                         Label {
@@ -239,7 +250,11 @@ struct TodayView: View {
                 titleVisibility: .visible
             ) {
                 Button(role: .destructive) {
-                    viewModel.resetDay()
+                    let snapshot = viewModel.resetDay()
+                    if !snapshot.isEmpty {
+                        resetDaySnapshot = snapshot
+                        scheduleResetDayUndoExpiry()
+                    }
                 } label: {
                     Text("today.resetDay.confirm.action", bundle: .main)
                 }
@@ -259,6 +274,7 @@ struct TodayView: View {
                         .padding(.top, 8)
                 }
             }
+            .overlay(alignment: .bottom) { resetDayUndoOverlay }
             .onAppear {
                 viewModel.reload()
                 nowMinutes = Self.currentMinutesFromMidnight()

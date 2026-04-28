@@ -79,6 +79,8 @@ struct SettingsView: View {
             aboutSection
             backupSection
             backupAutoFrequencySection
+            moodLogSection
+            everythingBundleRow
             resetOnboardingTipsRow
             aboutFooterSection
         }

@@ -111,17 +111,50 @@ final class TodayViewModel {
         completedBlockIDs.contains(block.id)
     }
 
-    /// Round-12 slice 25: clear today's completions + skips so the user can
-    /// "start over" after a Reset Day confirmation. Per-day snoozes roll off
-    /// at midnight so we leave them alone.
-    func resetDay(now: Date = Date()) {
-        for block in blocks where completedBlockIDs.contains(block.id) {
+    /// Round-12 slice 25 / round-20 slice T4.19: clear today's completions +
+    /// skips so the user can "start over". Returns a `ResetDaySnapshot` that
+    /// `undoResetDay(snapshot:)` can replay so a misclick is recoverable
+    /// within the 10-second toast window.
+    @discardableResult
+    func resetDay(now: Date = Date()) -> ResetDaySnapshot {
+        let priorCompletions = blocks.filter { completedBlockIDs.contains($0.id) }
+        let priorSkips = blocks.filter { skipStore?.isSkipped(blockID: $0.id, on: now, calendar: calendar) ?? false }
+        for block in priorCompletions {
             try? repository.unmarkDone(block, on: now, calendar: calendar)
         }
         completedBlockIDs.removeAll()
         for block in blocks {
             skipStore?.unskip(blockID: block.id, on: now, calendar: calendar)
         }
+        return ResetDaySnapshot(
+            completionBlockIDs: priorCompletions.map(\.id),
+            skipBlockIDs: priorSkips.map(\.id),
+            capturedAt: now
+        )
+    }
+
+    /// Round-20 slice T4.19: replay a snapshot returned by `resetDay`.
+    /// Re-marks each block done + re-skips those that were skipped at capture
+    /// time. No-op when there is nothing to restore.
+    func undoResetDay(_ snapshot: ResetDaySnapshot) {
+        let blocksByID = Dictionary(uniqueKeysWithValues: blocks.map { ($0.id, $0) })
+        for id in snapshot.completionBlockIDs {
+            if let block = blocksByID[id] {
+                try? repository.markDone(block, on: snapshot.capturedAt, calendar: calendar)
+                completedBlockIDs.insert(id)
+            }
+        }
+        for id in snapshot.skipBlockIDs {
+            skipStore?.skip(blockID: id, on: snapshot.capturedAt, calendar: calendar)
+        }
+    }
+
+    public struct ResetDaySnapshot: Sendable, Equatable {
+        public let completionBlockIDs: [UUID]
+        public let skipBlockIDs: [UUID]
+        public let capturedAt: Date
+
+        public var isEmpty: Bool { completionBlockIDs.isEmpty && skipBlockIDs.isEmpty }
     }
 
     func toggleDone(_ block: Block, now: Date = Date()) {

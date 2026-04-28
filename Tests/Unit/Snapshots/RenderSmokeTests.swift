@@ -366,6 +366,9 @@ final class RenderSmokeTests: XCTestCase {
         )
         XCTAssertNotNil(image)
     }
+
+    // Round-20 tests live in RenderSmokeTestsRound20.swift to keep this
+    // class body under SwiftLint's type_body_length cap.
 }
 
 @MainActor
@@ -374,4 +377,13 @@ private final class StubRenderNotificationService: NotificationService {
     func requestAuthorization(criticalAlerts _: Bool) async throws -> Bool { false }
     func scheduleAll(_: [ScheduledNotification], cancellingPrefix _: String) async throws {}
     func cancelAll(withPrefix _: String) async {}
+}
+
+/// Round-20 slice T1.2 fixture: never hits the network. Returns a fixed
+/// 1.10 EUR→USD rate for any pair so the render exercises both the
+/// quick-pick row + the result row without external dependencies.
+private struct StubRenderCurrencyService: CurrencyService {
+    func convert(amount: Double, from: String, to: String) async throws -> CurrencyConversion {
+        CurrencyConversion(from: from, to: to, rate: 1.1, amountConverted: amount * 1.1)
+    }
 }

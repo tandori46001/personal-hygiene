@@ -4,6 +4,10 @@ struct BlockEditorView: View {
     @Bindable var viewModel: BlockEditorViewModel
     let onSave: (BlockEditorViewModel) -> Void
     let onCancel: () -> Void
+    /// Round-20 slice T4.20: optional provider returning up to 5 recent
+    /// titles for the currently-selected category. When nil, the
+    /// "Suggest from history" menu is hidden.
+    var titleSuggestions: ((BlockCategory) -> [String])?
 
     @Environment(\.dismiss) private var dismiss
     @State private var showingDiscardConfirm = false
@@ -24,6 +28,26 @@ struct BlockEditorView: View {
                         }
                     } label: {
                         Text("blockEditor.field.category", bundle: .main)
+                    }
+                    if let titleSuggestions {
+                        let suggestions = titleSuggestions(viewModel.category)
+                        if !suggestions.isEmpty {
+                            Menu {
+                                ForEach(suggestions, id: \.self) { title in
+                                    Button {
+                                        viewModel.title = title
+                                    } label: {
+                                        Text(verbatim: title)
+                                    }
+                                }
+                            } label: {
+                                Label {
+                                    Text("blockEditor.action.suggest", bundle: .main)
+                                } icon: {
+                                    Image(systemName: "wand.and.stars")
+                                }
+                            }
+                        }
                     }
                 } header: {
                     Text("blockEditor.section.basics", bundle: .main)

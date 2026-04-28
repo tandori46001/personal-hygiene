@@ -19,16 +19,22 @@ public struct BackupSnapshot: Codable, Sendable {
     /// diagnostics one-pager — so the user only needs to attach one file to
     /// a bug report. Restore ignores this field; it's purely informational.
     public let diagnostics: DiagnosticsSnapshot?
+    /// Round-20 slice T2.10: optional mood log bundled at export time so a
+    /// device migration via JSON backup carries mood history forward. Older
+    /// v1/v2 backups have no `mood` field and decode as nil/empty — restore
+    /// is no-op when nil, importing the entries into UserDefaults otherwise.
+    public let mood: [MoodEntryPayload]?
 
     public init(
-        version: Int = 2,
+        version: Int = 3,
         exportedAt: Date = Date(),
         templates: [TemplatePayload],
         completions: [CompletionPayload],
         hydration: [HydrationLogPayload],
         housekeeping: [HousekeepingTaskPayload],
         trips: [TripPayload],
-        diagnostics: DiagnosticsSnapshot? = nil
+        diagnostics: DiagnosticsSnapshot? = nil,
+        mood: [MoodEntryPayload]? = nil
     ) {
         self.version = version
         self.exportedAt = exportedAt
@@ -38,6 +44,19 @@ public struct BackupSnapshot: Codable, Sendable {
         self.housekeeping = housekeeping
         self.trips = trips
         self.diagnostics = diagnostics
+        self.mood = mood
+    }
+}
+
+extension BackupSnapshot {
+    public struct MoodEntryPayload: Codable, Sendable, Equatable {
+        public let mood: String
+        public let recordedAt: Date
+
+        public init(mood: String, recordedAt: Date) {
+            self.mood = mood
+            self.recordedAt = recordedAt
+        }
     }
 }
 
@@ -137,7 +156,8 @@ public enum BackupService {
 
     public static func export(
         from context: ModelContext,
-        diagnostics: DiagnosticsSnapshot? = nil
+        diagnostics: DiagnosticsSnapshot? = nil,
+        moodEntries: [MoodLogStore.Entry] = MoodLogStore.entries()
     ) throws -> BackupSnapshot {
         let templates = try context.fetch(FetchDescriptor<RoutineTemplate>())
         let completions = try context.fetch(FetchDescriptor<BlockCompletion>())
@@ -145,13 +165,18 @@ public enum BackupService {
         let housekeeping = try context.fetch(FetchDescriptor<HousekeepingTask>())
         let trips = try context.fetch(FetchDescriptor<Trip>())
 
+        let moodPayload = moodEntries.map { entry in
+            BackupSnapshot.MoodEntryPayload(mood: entry.mood, recordedAt: entry.recordedAt)
+        }
+
         return BackupSnapshot(
             templates: templates.map(payload(from:)),
             completions: completions.map(payload(from:)),
             hydration: hydration.map(payload(from:)),
             housekeeping: housekeeping.map(payload(from:)),
             trips: trips.map(payload(from:)),
-            diagnostics: diagnostics
+            diagnostics: diagnostics,
+            mood: moodPayload.isEmpty ? nil : moodPayload
         )
     }
 
@@ -181,6 +206,17 @@ public enum BackupService {
         snapshot.housekeeping.forEach { restoreHousekeeping($0, into: context) }
         snapshot.trips.forEach { restoreTrip($0, into: context) }
         try context.save()
+        // Round-20 slice T2.10: mood log lives in UserDefaults, not SwiftData.
+        // Replace the existing log with the snapshot's payload (newest-first
+        // ordering preserved). v1/v2 backups have nil here and we leave the
+        // existing log untouched.
+        if let moodPayload = snapshot.mood {
+            MoodLogStore.clear()
+            for payload in moodPayload.reversed() {
+                guard let mood = MoodLogStore.Mood(rawValue: payload.mood) else { continue }
+                MoodLogStore.record(mood, now: payload.recordedAt)
+            }
+        }
     }
 
     private static func restoreTemplate(_ payload: BackupSnapshot.TemplatePayload, into context: ModelContext) {

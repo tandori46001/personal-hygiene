@@ -122,6 +122,43 @@ extension TripDetailView {
 struct TripNotesSection: View {
     @Bindable var viewModel: TripDetailViewModel
 
+    /// Round-20 slice T3.15: pre-baked Markdown templates the user can drop
+    /// into draftNotes. Each template appends to the existing draft (with
+    /// a separator) rather than overwriting — that way "Insert preparation +
+    /// day-D" is additive, not destructive.
+    enum NotesTemplate: String, CaseIterable {
+        case preparation
+        case dayD
+        case returnHome
+
+        func body(localized: (String) -> String) -> String {
+            switch self {
+            case .preparation:
+                return [
+                    localized("trip.notes.template.prep.headline"),
+                    "- " + localized("trip.notes.template.prep.passport"),
+                    "- " + localized("trip.notes.template.prep.insurance"),
+                    "- " + localized("trip.notes.template.prep.cash"),
+                    "- " + localized("trip.notes.template.prep.medications"),
+                ].joined(separator: "\n")
+            case .dayD:
+                return [
+                    localized("trip.notes.template.dayD.headline"),
+                    "- " + localized("trip.notes.template.dayD.checkin"),
+                    "- " + localized("trip.notes.template.dayD.luggage"),
+                    "- " + localized("trip.notes.template.dayD.transport"),
+                ].joined(separator: "\n")
+            case .returnHome:
+                return [
+                    localized("trip.notes.template.return.headline"),
+                    "- " + localized("trip.notes.template.return.unpack"),
+                    "- " + localized("trip.notes.template.return.expenses"),
+                    "- " + localized("trip.notes.template.return.followups"),
+                ].joined(separator: "\n")
+            }
+        }
+    }
+
     var body: some View {
         Section {
             TextField(
@@ -132,6 +169,26 @@ struct TripNotesSection: View {
                 Text("trip.notes.label", bundle: .main)
             }
             .lineLimit(3...8)
+            Menu {
+                ForEach(NotesTemplate.allCases, id: \.rawValue) { template in
+                    Button {
+                        let localized: (String) -> String = { key in
+                            NSLocalizedString(key, comment: "")
+                        }
+                        let appended = template.body(localized: localized)
+                        let separator = viewModel.draftNotes.isEmpty ? "" : "\n\n"
+                        viewModel.draftNotes += "\(separator)\(appended)"
+                    } label: {
+                        Text(localizedKey: "trip.notes.template.\(template.rawValue)")
+                    }
+                }
+            } label: {
+                Label {
+                    Text("trip.notes.action.insertTemplate", bundle: .main)
+                } icon: {
+                    Image(systemName: "doc.text.below.ecg")
+                }
+            }
             ForEach(Array(viewModel.notesParagraphs.enumerated()), id: \.offset) { _, paragraph in
                 Text(.init(paragraph))
                     .font(.callout)
@@ -198,10 +255,21 @@ struct TripCarbonSection: View {
                 } label: {
                     Text("trip.carbon.mode.label", bundle: .main)
                 }
+                // Round-20 slice T3.16: caption showing the kg/passenger·km
+                // factor for the selected mode + source so the user can
+                // judge how rough the estimate is.
+                Text(verbatim: factorCaption(for: mode))
+                    .font(.caption2.monospacedDigit())
+                    .foregroundStyle(.tertiary)
             } footer: {
                 Text("trip.carbon.footer", bundle: .main)
             }
         }
+    }
+
+    private func factorCaption(for mode: TripCarbonEstimate.TransportMode) -> String {
+        let factor = mode.kgPerPassengerKm
+        return String(format: "%.3f kg CO₂ / passenger·km · DEFRA 2023", factor)
     }
 
     private func formattedValue(kg: Double) -> String {
@@ -334,116 +402,5 @@ struct TripCurrencySnapshotSection: View {
     }
 }
 
-/// Round-13 slice 10: free-form trip expenses list.
-struct TripExpensesSection: View {
-    @Bindable var viewModel: TripDetailViewModel
-    @Binding var newLabel: String
-    @Binding var newAmount: String
-    @Binding var newCurrency: String
-
-    var body: some View {
-        Section {
-            ForEach(viewModel.expenses) { expense in
-                HStack {
-                    Text(verbatim: expense.label)
-                    Spacer()
-                    Text(verbatim: String(format: "%.2f %@", expense.amount, expense.currencyCode))
-                        .font(.caption.monospacedDigit())
-                        .foregroundStyle(.secondary)
-                }
-                .accessibilityElement(children: .combine)
-                .swipeActions(edge: .trailing) {
-                    Button(role: .destructive) {
-                        viewModel.deleteExpense(expense)
-                    } label: {
-                        Label {
-                            Text("common.delete", bundle: .main)
-                        } icon: {
-                            Image(systemName: "trash")
-                        }
-                    }
-                }
-            }
-            HStack {
-                TextField(
-                    text: $newLabel,
-                    prompt: Text("trip.expense.label.placeholder", bundle: .main)
-                ) {
-                    Text("trip.expense.label", bundle: .main)
-                }
-                TextField(
-                    text: $newAmount,
-                    prompt: Text(verbatim: "0.00")
-                ) {
-                    Text("trip.expense.amount", bundle: .main)
-                }
-                .keyboardType(.decimalPad)
-                .frame(maxWidth: 80)
-                TextField(
-                    text: $newCurrency,
-                    prompt: Text(verbatim: "USD")
-                ) {
-                    Text("trip.expense.currency", bundle: .main)
-                }
-                .textInputAutocapitalization(.characters)
-                .frame(maxWidth: 60)
-                Button {
-                    if let amount = Double(newAmount) {
-                        viewModel.addExpense(
-                            label: newLabel,
-                            amount: amount,
-                            currencyCode: newCurrency
-                        )
-                        newLabel = ""
-                        newAmount = ""
-                    }
-                } label: {
-                    Image(systemName: "plus.circle.fill")
-                }
-                .accessibilityLabel(Text("trip.expense.action.add", bundle: .main))
-                .disabled(newLabel.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                    || Double(newAmount) == nil
-                    || newCurrency.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-            }
-            // Round-18 slice 14: monthly summary disclosure.
-            let buckets = TripExpenseMonthlySummary.buckets(from: viewModel.expenses)
-            if !buckets.isEmpty {
-                DisclosureGroup {
-                    ForEach(buckets) { bucket in
-                        HStack {
-                            Text(verbatim: TripExpenseMonthlySummary.formattedMonth(
-                                year: bucket.year,
-                                month: bucket.month
-                            ))
-                            .font(.caption.monospacedDigit())
-                            Spacer()
-                            Text(verbatim: String(format: "%.2f %@ · %d",
-                                                  bucket.total, bucket.currencyCode, bucket.count))
-                                .font(.caption.monospacedDigit())
-                                .foregroundStyle(.secondary)
-                        }
-                        .accessibilityElement(children: .combine)
-                    }
-                } label: {
-                    Text("trip.expense.monthly.title", bundle: .main)
-                }
-            }
-            // Round-19 slice T4.15: per-trip "convert all expenses" button
-            // that prints + copies a per-currency total using the last
-            // recorded conversion rate (offline, single-tap).
-            if !viewModel.expenses.isEmpty {
-                Button {
-                    UIPasteboard.general.string = viewModel.convertedExpensesSummary()
-                } label: {
-                    Label {
-                        Text("trip.expense.convertAll.action", bundle: .main)
-                    } icon: {
-                        Image(systemName: "arrow.left.arrow.right")
-                    }
-                }
-            }
-        } header: {
-            Text("trip.detail.section.expenses", bundle: .main)
-        }
-    }
-}
+// `TripExpensesSection` moved to `TripDetailViewRound20.swift` in round 20
+// to keep this file under the 500-line SwiftLint cap.
