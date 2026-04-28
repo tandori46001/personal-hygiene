@@ -318,6 +318,25 @@ private struct SettingsGlanceWatchView: View {
                 Text("watch.settings.section.about", bundle: .main)
             }
 
+            // Round-24 slice T6.33: pending hydration reset (mirrors the
+            // iPhone-side reconciler).
+            let pending = WatchHydrationGlanceStore.pendingTaps(in: sharedDefaults)
+            if !pending.isEmpty {
+                Section {
+                    Button(role: .destructive) {
+                        WatchHydrationGlanceStore.clearPending(in: sharedDefaults)
+                    } label: {
+                        Label {
+                            Text("watch.settings.hydration.resetPending \(pending.count)", bundle: .main)
+                        } icon: {
+                            Image(systemName: "trash")
+                        }
+                    }
+                } footer: {
+                    Text("watch.settings.hydration.resetPending.footer", bundle: .main)
+                }
+            }
+
             // Round-22 slice T6.33: 7-day mood strip mirrored from the
             // iPhone Today view — gives the wearer a quick read of mood
             // history without opening the iPhone app.

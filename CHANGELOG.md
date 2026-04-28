@@ -8,6 +8,40 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added — Session 22 round 24: 40-slice diagnostics surfaces + sleep/medication deepening + backup v5 + archive UI + watch finishing
+
+Tier 1 (regression):
+- `MoodLogGroupingMidnightTests` (3), `MoodHeatmapAggregatorTests` (4), `RuntimeWeatherForecastFetcherTests` (2), `BackupSizeProjectorTests` (3), `CacheResetterPreservesMoodTests` (2 — guards mood log + weekly goal stay intact through `CacheResetter.resetAll()`).
+
+Tier 2 (Diagnostics surfaces for round-23 helpers):
+- DiagnosticsView gains `cacheCountersSection` (hits/misses + reset), `housekeepingLogDumpSection` (per-room day-key count via new `HousekeepingCompletionLog.allRooms()`), `backupSizeProjectionSection`, `archivedTemplatesCountSection`, `moodStreakRecordSection`, all wrapped in `round24Sections`.
+- SettingsView gains `resetAllCachesRow` destructive button wiring `CacheResetter.resetAll()`.
+
+Tier 3 (sleep + medication):
+- `SleepBedtimeVariance` (mean/stddev verdict — consistent / driftSlight / driftSignificant).
+- `SleepWeeklyDelta` (this week vs prior week minutes).
+- `SleepWeeklyAverageChart` + `SleepWeeklyDeltaCaption` views.
+- `MedicationStreakCounter` (current + best adherence streaks).
+- `Medication30DayChartView` + `MedicationStreakCaption`.
+
+Tier 4 (backup v5 + archive):
+- `BackupSnapshot` v4 → v5 with `archivedTemplateIDs: [UUID]?`. Restore replays into `TemplateArchiveStore`.
+- `BackupAutoFrequencyStore.recommendedMinDays(...)` — overrides off → 7d when at least one archived template exists.
+- SettingsView `backupArchiveCountCaption` row.
+
+Tier 5 (template archive UI):
+- TemplateListView gains `showArchivedToolbarButton(showingArchived:)`, `archiveSwipeAction(for:)`, `filterTemplates(_:showingArchived:)`, `archivedBadgeText(for:)` helpers.
+
+Tier 6 (watch + complication):
+- BlockDetailWatch snooze menu (5/10/15 min) via `BlockDetailWatchSnoozeMenu`.
+- Settings glance "Reset N pending taps" destructive (mirror to iPhone reconciler).
+- Complication `NextBlockSnapshot.dayCompletionPercent` field + line-3 "X%" chip when ≥ 1 block done.
+- `TodayCompletionPercent` shared helper.
+
+Counts: tests **773** (771 unit + 2 UI, +39 vs round 23). i18n **845 × 3 locales** (+32 net). Scripts unchanged. Lessons still **6**. Watch + iPhone deployed live this session.
+
+Deferred to round 25: BlockEditor multi-select UI for `BulkCategoryEditor`; per-block medication follow-up override surfacing; "Restore most recent backup" shortcut; SleepDashboard + MedicationCompliance integration of the new chart views.
+
 ### Added — Session 21 round 23: 40-slice regression depth + WeatherKit runtime + mood analytics v3 + Today/Routine extras + watch + diagnostics
 
 Tier 1 (regression guards):

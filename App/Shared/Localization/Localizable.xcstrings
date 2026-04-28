@@ -17560,6 +17560,262 @@
         "es": { "stringUnit": { "state": "translated", "value": "Reanudar notificaciones" } },
         "fr": { "stringUnit": { "state": "translated", "value": "Reprendre les notifications" } }
       }
+    },
+    "diagnostics.cacheCounters.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Forecast cache" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Caché de pronóstico" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Cache de prévisions" } }
+      }
+    },
+    "diagnostics.cacheCounters.hits": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Hits" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Aciertos" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Réussites" } }
+      }
+    },
+    "diagnostics.cacheCounters.misses": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Misses" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Fallos" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Échecs" } }
+      }
+    },
+    "diagnostics.cacheCounters.reset": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Reset counters" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Reiniciar contadores" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Réinitialiser les compteurs" } }
+      }
+    },
+    "diagnostics.cacheCounters.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Process-local since launch." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Por proceso desde el arranque." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Local au processus depuis le lancement." } }
+      }
+    },
+    "diagnostics.housekeepingLog.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Housekeeping log" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Registro de tareas" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Journal des tâches" } }
+      }
+    },
+    "diagnostics.housekeepingLog.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Day count per room recorded since round 22." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Días por habitación desde la ronda 22." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Jours par pièce depuis le round 22." } }
+      }
+    },
+    "diagnostics.backupSize.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Next backup size" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Tamaño de la próxima copia" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Taille de la prochaine sauvegarde" } }
+      }
+    },
+    "diagnostics.backupSize.label": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Projected" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Estimado" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Estimé" } }
+      }
+    },
+    "diagnostics.backupSize.unavailable": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Cannot project size right now." } },
+        "es": { "stringUnit": { "state": "translated", "value": "No se puede estimar el tamaño ahora." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Estimation impossible pour l'instant." } }
+      }
+    },
+    "diagnostics.backupSize.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Encoded JSON byte size — actual share-sheet payload may differ slightly." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Tamaño JSON codificado — el archivo final puede variar ligeramente." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Taille JSON encodée — le fichier final peut varier légèrement." } }
+      }
+    },
+    "diagnostics.archivedTemplates.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Archived templates" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Plantillas archivadas" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Modèles archivés" } }
+      }
+    },
+    "diagnostics.archivedTemplates.label": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Count" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Cantidad" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Total" } }
+      }
+    },
+    "diagnostics.moodStreak.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Mood streak" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Racha de ánimo" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Série d'humeur" } }
+      }
+    },
+    "diagnostics.moodStreak.current": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Current days" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Días actuales" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Jours actuels" } }
+      }
+    },
+    "settings.caches.resetAll": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Reset all caches" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Reiniciar todas las cachés" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Réinitialiser tous les caches" } }
+      }
+    },
+    "settings.caches.resetAll.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Clears weather + currency caches. Mood log + weekly goal stay intact." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Borra cachés de tiempo + divisas. Registro de ánimo y objetivo se mantienen." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Efface les caches météo + devise. Journal d'humeur et objectif intacts." } }
+      }
+    },
+    "settings.backup.archivedCount.label": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Archived templates included" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Plantillas archivadas incluidas" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Modèles archivés inclus" } }
+      }
+    },
+    "settings.backup.archivedCount.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Backup version 5 carries archived-template IDs." } },
+        "es": { "stringUnit": { "state": "translated", "value": "La versión 5 incluye IDs de plantillas archivadas." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "La version 5 inclut les IDs des modèles archivés." } }
+      }
+    },
+    "templateList.archived.show": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Show archived" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Mostrar archivadas" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Afficher archivés" } }
+      }
+    },
+    "templateList.archived.hide": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Hide archived" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Ocultar archivadas" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Masquer archivés" } }
+      }
+    },
+    "templateList.action.archive": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Archive" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Archivar" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Archiver" } }
+      }
+    },
+    "templateList.action.unarchive": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Unarchive" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Desarchivar" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Désarchiver" } }
+      }
+    },
+    "sleep.weeklyAverage.a11y": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Weekly sleep average chart" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Gráfico de media semanal de sueño" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Graphique moyenne sommeil hebdomadaire" } }
+      }
+    },
+    "sleep.weeklyDelta.caption %@ %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Sleep %@ %@ vs last week" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Sueño %@ %@ vs semana pasada" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Sommeil %@ %@ vs semaine passée" } }
+      }
+    },
+    "medication.thirtyDayChart.a11y": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "30-day medication chart" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Gráfico de medicación 30 días" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Graphique médication 30 jours" } }
+      }
+    },
+    "medication.streak.current %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "%lld-day streak" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Racha de %lld días" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Série de %lld jours" } }
+      }
+    },
+    "medication.streak.best %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Best %lld" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Mejor %lld" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Meilleur %lld" } }
+      }
+    },
+    "watch.detail.snooze.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Snooze" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Posponer" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Reporter" } }
+      }
+    },
+    "watch.detail.snooze.minutes %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "%lld min" } },
+        "es": { "stringUnit": { "state": "translated", "value": "%lld min" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "%lld min" } }
+      }
+    },
+    "watch.settings.hydration.resetPending %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Reset %lld pending taps" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Borrar %lld toques pendientes" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Effacer %lld touches en attente" } }
+      }
+    },
+    "watch.settings.hydration.resetPending.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "iPhone reconciler will skip the cleared queue." } },
+        "es": { "stringUnit": { "state": "translated", "value": "El reconciliador del iPhone saltará la cola borrada." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Le réconciliateur iPhone sautera la file effacée." } }
+      }
     }
   }
 }

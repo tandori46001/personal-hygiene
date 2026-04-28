@@ -35,6 +35,12 @@ public enum HousekeepingCompletionLog {
         defaults.removeObject(forKey: key)
     }
 
+    /// Round-24 slice T2.9: every room (string key) currently tracked.
+    /// Used by the Diagnostics dump section to enumerate streaks.
+    public static func allRooms(in defaults: UserDefaults = .standard) -> [String] {
+        readMap(in: defaults).keys.sorted()
+    }
+
     /// Streak-aware suggestion convenience: combines the round-13 streak
     /// counter with the round-21 auto-snooze threshold so the banner can
     /// render in one call.

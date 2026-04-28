@@ -2561,3 +2561,160 @@ Verify by running `./scripts/check-tests.sh`.
 ### Manual verification
 1. `CacheResetter.resetAll()` should be wired to a destructive Settings button in round 24 — currently helper only.
 2. Test smoke: helper does not throw.
+
+## [T-241] — Mood log midnight boundary (round 24)
+
+**Module:** mood · **Shipped in:** round 24 (T1.3)
+
+### Manual verification (smoke)
+1. `MoodLogGroupingMidnightTests` 3 cases pass — split across midnight, collapse same-day, today-section excludes prior-day late-night.
+
+## [T-242] — Mood heatmap row guarantees (round 24)
+
+**Module:** mood · **Shipped in:** round 24 (T1.4)
+
+### Manual verification (smoke)
+1. `MoodHeatmapAggregatorTests` 4 cases pass — exact week count, 7 columns each, future cells nil, scored cells present.
+
+## [T-243] — Runtime WeatherKit fetcher (round 24)
+
+**Module:** vacation · **Shipped in:** round 24 (T1.5)
+
+### Manual verification (smoke)
+1. `RuntimeWeatherForecastFetcherTests` 2 cases pass — make() returns a fetcher; stub injection round-trips.
+
+## [T-244] — Backup size projector (round 24)
+
+**Module:** settings/diagnostics · **Shipped in:** round 24 (T1.6)
+
+### Manual verification (smoke)
+1. `BackupSizeProjectorTests` 3 cases pass — positive bytes for seeded + empty container, formatted output uses KB units.
+
+## [T-245] — Cache resetter preserves mood (round 24)
+
+**Module:** settings · **Shipped in:** round 24 (T1.7)
+
+### Manual verification
+1. Log a mood + set a weekly goal.
+2. Settings → "Reset all caches".
+3. Mood log + weekly goal must remain intact.
+
+## [T-246] — Diagnostics cache counters (round 24)
+
+**Module:** diagnostics · **Shipped in:** round 24 (T2.8)
+
+### Manual verification
+1. DiagnosticsView → "Forecast cache" section shows hits/misses + reset button.
+2. Reset → counters return to 0.
+
+## [T-247] — Diagnostics housekeeping log dump (round 24)
+
+**Module:** diagnostics · **Shipped in:** round 24 (T2.9)
+
+### Manual verification
+1. Mark a few housekeeping tasks done.
+2. DiagnosticsView → "Housekeeping log" section shows day-key count per room.
+
+## [T-248] — Diagnostics backup size projection (round 24)
+
+**Module:** diagnostics · **Shipped in:** round 24 (T2.10)
+
+### Manual verification
+1. DiagnosticsView → "Next backup size" section shows projected KB.
+2. Add data → projection updates on next view re-render.
+
+## [T-249] — Diagnostics archived templates count (round 24)
+
+**Module:** diagnostics · **Shipped in:** round 24 (T2.11)
+
+### Manual verification
+1. Archive a template via TemplateListView swipe.
+2. DiagnosticsView shows the count.
+
+## [T-250] — Settings reset all caches (round 24)
+
+**Module:** settings · **Shipped in:** round 24 (T2.12)
+
+### Manual verification
+1. Settings → "Reset all caches" destructive button visible.
+2. Tap → weather + currency caches cleared; mood log untouched (cross-check via T-245).
+
+## [T-251] — Diagnostics mood streak record (round 24)
+
+**Module:** diagnostics · **Shipped in:** round 24 (T2.13)
+
+### Manual verification
+1. Log moods on consecutive days.
+2. DiagnosticsView shows current streak count.
+
+## [T-252] — Sleep weekly average chart (round 24)
+
+**Module:** sleep · **Shipped in:** round 24 (T3.14)
+
+### Manual verification (smoke)
+1. `SleepWeeklyAverageChart` renders one BarMark per data point; empty data hides the chart.
+2. Wired into SleepDashboardView in round 25.
+
+## [T-253] — Sleep weekly delta caption (round 24)
+
+**Module:** sleep · **Shipped in:** round 24 (T3.15)
+
+### Manual verification (smoke)
+1. `SleepWeeklyDeltaTests` 3 cases pass — nil for empty windows, positive delta for better week, nil for empty prior week.
+
+## [T-254] — Medication 30-day chart (round 24)
+
+**Module:** medication · **Shipped in:** round 24 (T3.16)
+
+### Manual verification (smoke)
+1. `Medication30DayChartView` renders binary BarMark per day.
+2. Wired into MedicationComplianceView in round 25.
+
+## [T-255] — Medication adherence streak (round 24)
+
+**Module:** medication · **Shipped in:** round 24 (T3.17)
+
+### Manual verification (smoke)
+1. `MedicationStreakCounterTests` 3 cases pass — current/best streak walk, gaps break, longest run wins.
+
+## [T-256] — Sleep bedtime variance (round 24)
+
+**Module:** sleep · **Shipped in:** round 24 (T3.18)
+
+### Manual verification (smoke)
+1. `SleepBedtimeVarianceTests` 4 cases pass — empty nil, identical-zero stddev, threshold verdicts, single-sample.
+
+## [T-257] — Backup v5 + archive (round 24)
+
+**Module:** backup · **Shipped in:** round 24 (T4.20+T4.21)
+
+### Manual verification
+1. Archive a template → Settings → Export backup → JSON contains `"version": 5` + `"archivedTemplateIDs": […]`.
+2. Clear archive → Restore from JSON → archive returns to original set.
+3. Strip `archivedTemplateIDs` field manually → Restore still succeeds (downgrade safe).
+
+## [T-258] — Backup auto-frequency override (round 24)
+
+**Module:** backup · **Shipped in:** round 24 (T4.22)
+
+### Manual verification (smoke)
+1. `BackupAutoFrequencyRecommendedTests` 3 cases pass — defaults to off, follows user choice, archive present forces 7d.
+
+## [T-259] — Template archive UI (round 24)
+
+**Module:** routine · **Shipped in:** round 24 (T5.25, T5.26, T5.28)
+
+### Manual verification
+1. TemplateListView toolbar gains "Show archived" toggle.
+2. Swipe-action "Archive" hides the template; toggling Show archived reveals with 📁 badge.
+3. `TemplateListFilterTests` covers the filtering helper.
+
+## [T-260] — Watch round-24 surfaces bundle (round 24)
+
+**Module:** watch · **Shipped in:** round 24 (T6.30, T6.31, T6.32, T6.33)
+
+### Manual verification
+1. BlockDetailWatchView snooze menu (5/10/15 min).
+2. Watch settings: "Reset N pending taps" destructive button.
+3. Complication: line-3 shows "X%" day-completion when ≥ 1 done.
+4. `TodayCompletionPercent` helper covered by 3 tests.

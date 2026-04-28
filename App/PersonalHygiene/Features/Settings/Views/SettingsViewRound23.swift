@@ -15,6 +15,27 @@ extension SettingsView {
         moodHistogramSection
         moodHeatmapSection
         streakShareSection
+        resetAllCachesRow
+    }
+
+    /// Round-24 slice T2.12: surface for `CacheResetter.resetAll()`.
+    /// Mood log + weekly goal are intentionally untouched
+    /// (`CacheResetterPreservesMoodTests` guards).
+    @ViewBuilder
+    var resetAllCachesRow: some View {
+        Section {
+            Button(role: .destructive) {
+                CacheResetter.resetAll()
+            } label: {
+                Label {
+                    Text("settings.caches.resetAll", bundle: .main)
+                } icon: {
+                    Image(systemName: "trash.slash")
+                }
+            }
+        } footer: {
+            Text("settings.caches.resetAll.footer", bundle: .main)
+        }
     }
 
     @ViewBuilder

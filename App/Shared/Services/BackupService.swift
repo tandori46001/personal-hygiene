@@ -30,8 +30,13 @@ public struct BackupSnapshot: Codable, Sendable {
     /// backups omit this; restore preserves the existing goal when nil.
     public let moodWeeklyGoal: Int?
 
+    /// Round-24 slice T4.20: optional list of archived template IDs. v4
+    /// backups omit this; restore replays the set into
+    /// `TemplateArchiveStore` when present.
+    public let archivedTemplateIDs: [UUID]?
+
     public init(
-        version: Int = 4,
+        version: Int = 5,
         exportedAt: Date = Date(),
         templates: [TemplatePayload],
         completions: [CompletionPayload],
@@ -40,7 +45,8 @@ public struct BackupSnapshot: Codable, Sendable {
         trips: [TripPayload],
         diagnostics: DiagnosticsSnapshot? = nil,
         mood: [MoodEntryPayload]? = nil,
-        moodWeeklyGoal: Int? = nil
+        moodWeeklyGoal: Int? = nil,
+        archivedTemplateIDs: [UUID]? = nil
     ) {
         self.version = version
         self.exportedAt = exportedAt
@@ -52,6 +58,7 @@ public struct BackupSnapshot: Codable, Sendable {
         self.diagnostics = diagnostics
         self.mood = mood
         self.moodWeeklyGoal = moodWeeklyGoal
+        self.archivedTemplateIDs = archivedTemplateIDs
     }
 }
 
@@ -165,7 +172,8 @@ public enum BackupService {
         from context: ModelContext,
         diagnostics: DiagnosticsSnapshot? = nil,
         moodEntries: [MoodLogStore.Entry] = MoodLogStore.entries(),
-        moodWeeklyGoal: Int? = MoodWeeklyGoalStore.isActive() ? MoodWeeklyGoalStore.goal() : nil
+        moodWeeklyGoal: Int? = MoodWeeklyGoalStore.isActive() ? MoodWeeklyGoalStore.goal() : nil,
+        archivedTemplateIDs: [UUID]? = Array(TemplateArchiveStore.archivedIDs())
     ) throws -> BackupSnapshot {
         let templates = try context.fetch(FetchDescriptor<RoutineTemplate>())
         let completions = try context.fetch(FetchDescriptor<BlockCompletion>())
@@ -185,7 +193,8 @@ public enum BackupService {
             trips: trips.map(payload(from:)),
             diagnostics: diagnostics,
             mood: moodPayload.isEmpty ? nil : moodPayload,
-            moodWeeklyGoal: moodWeeklyGoal
+            moodWeeklyGoal: moodWeeklyGoal,
+            archivedTemplateIDs: (archivedTemplateIDs?.isEmpty ?? true) ? nil : archivedTemplateIDs
         )
     }
 
@@ -229,6 +238,13 @@ public enum BackupService {
         // Round-22 slice T4.23: replay mood weekly goal when present.
         if let goal = snapshot.moodWeeklyGoal {
             MoodWeeklyGoalStore.setGoal(goal)
+        }
+        // Round-24 slice T4.20: replay archived template IDs.
+        if let archived = snapshot.archivedTemplateIDs {
+            TemplateArchiveStore.clear()
+            for id in archived {
+                TemplateArchiveStore.setArchived(true, for: id)
+            }
         }
     }
 

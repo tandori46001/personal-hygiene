@@ -82,6 +82,7 @@ struct SettingsView: View {
             moodLogSection
             round22Sections
             round23Sections
+            round24Sections
             everythingBundleRow
             resetOnboardingTipsRow
             aboutFooterSection

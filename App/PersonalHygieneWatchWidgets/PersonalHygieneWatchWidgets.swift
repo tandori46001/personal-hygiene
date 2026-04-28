@@ -66,6 +66,10 @@ struct NextBlockSnapshot: Sendable, Hashable {
     /// iPhone (`"light"` / `"dark"` / `"system"`). Drives the complication
     /// fill tint via `complicationTint(for:)`.
     var themeOverride: String = "system"
+    /// Round-24 slice T6.32: today's completion percentage. Renders on
+    /// line-3 of the rectangular complication when at least one block has
+    /// been marked done. Zero hides the chip.
+    var dayCompletionPercent: Int = 0
 }
 
 struct NextBlockProvider: TimelineProvider {
@@ -123,8 +127,25 @@ struct NextBlockProvider: TimelineProvider {
             isPaused: isPaused,
             todayMoodRaw: moodRaw,
             moodStreakDays: MoodLogStore.streakDays(now: now, defaults: pauseDefaults),
-            themeOverride: pauseDefaults.string(forKey: "settings.theme") ?? "system"
+            themeOverride: pauseDefaults.string(forKey: "settings.theme") ?? "system",
+            dayCompletionPercent: Self.dayCompletionPercent(
+                template: template,
+                repository: repository,
+                now: now
+            )
         )
+    }
+
+    @MainActor
+    private static func dayCompletionPercent(
+        template: RoutineTemplate,
+        repository: any RoutineRepository,
+        now: Date
+    ) -> Int {
+        let total = template.sortedBlocks.count
+        guard total > 0 else { return 0 }
+        let done = (try? repository.completions(on: now, calendar: .autoupdatingCurrent))?.count ?? 0
+        return TodayCompletionPercent.percent(done: done, total: total)
     }
 }
 
@@ -179,6 +200,12 @@ struct NextBlockEntryView: View {
                             Text(verbatim: "· \(block.durationMinutes) min")
                                 .font(.caption2)
                                 .foregroundStyle(.tertiary)
+                        }
+                        // Round-24 slice T6.32: day-completion % chip.
+                        if block.dayCompletionPercent > 0 {
+                            Text(verbatim: "· \(block.dayCompletionPercent)%")
+                                .font(.caption2.monospacedDigit())
+                                .foregroundStyle(.green)
                         }
                     }
                 }

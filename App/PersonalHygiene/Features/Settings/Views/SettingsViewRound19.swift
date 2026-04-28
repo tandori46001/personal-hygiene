@@ -74,5 +74,5 @@ extension SettingsView {
 /// `BundleLocalizationLookupTests` cross-check guards correctness, and
 /// `scripts/check-i18n-coverage.sh` keeps the per-locale count in sync.
 public enum LocalizationKeyCount {
-    public static let total = 813
+    public static let total = 845
 }

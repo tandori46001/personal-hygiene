@@ -23,4 +23,22 @@ public enum BackupAutoFrequencyStore {
     public static func set(_ value: Frequency, in defaults: UserDefaults = .standard) {
         defaults.set(value.rawValue, forKey: key)
     }
+
+    /// Round-24 slice T4.22: minimum gap (in days) between auto-backups.
+    /// When at least one template has been archived, the store recommends
+    /// a tighter cadence (7d) so the archive payload makes it into the
+    /// next backup soon. Otherwise falls back to the user's chosen
+    /// `Frequency`.
+    public static func recommendedMinDays(
+        defaults: UserDefaults = .standard
+    ) -> Int {
+        if !TemplateArchiveStore.archivedIDs(in: defaults).isEmpty {
+            return 7
+        }
+        switch current(defaults: defaults) {
+        case .off: return Int.max
+        case .weekly: return 7
+        case .daily: return 1
+        }
+    }
 }

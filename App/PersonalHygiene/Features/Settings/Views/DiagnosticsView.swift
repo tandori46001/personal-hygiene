@@ -108,6 +108,10 @@ struct DiagnosticsView: View {
             healthBadgeSection
             uptimeSection
             advancedDisclosureSection
+            // Round-24 wrapper for the round-23 helpers (cache counters,
+            // housekeeping log dump, backup size projection, archived
+            // templates, mood streak record).
+            round24Sections
 
             devToolsSection
 

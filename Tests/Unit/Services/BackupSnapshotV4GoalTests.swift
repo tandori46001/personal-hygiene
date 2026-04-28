@@ -25,7 +25,8 @@ final class BackupSnapshotV4GoalTests: XCTestCase {
         MoodWeeklyGoalStore.setGoal(4)
         let snapshot = try BackupService.export(from: container.mainContext)
         XCTAssertEqual(snapshot.moodWeeklyGoal, 4)
-        XCTAssertEqual(snapshot.version, 4)
+        // Round 24 bumped version to 5 (added archivedTemplateIDs).
+        XCTAssertGreaterThanOrEqual(snapshot.version, 4)
     }
 
     func test_export_omitsGoalWhenInactive() throws {
