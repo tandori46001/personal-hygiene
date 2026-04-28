@@ -104,6 +104,23 @@ struct BlockDetailSheet: View {
                     Image(systemName: "moon.zzz")
                 }
             }
+            // Round-18 slice 11: medication-aware skip with explicit "skip
+            // this dose" wording so the user understands the follow-up
+            // notification will be suppressed (skipping the block strips
+            // the followup from the day's schedule via NotificationCoordinator).
+            if block.medicationConceptIdentifier != nil, !isDone {
+                Button(role: .destructive) {
+                    if !isSkipped { onToggleSkip() }
+                    dismiss()
+                } label: {
+                    Label {
+                        Text("today.action.skipDose", bundle: .main)
+                    } icon: {
+                        Image(systemName: "pills.circle")
+                    }
+                }
+                .disabled(isSkipped)
+            }
         }
     }
 

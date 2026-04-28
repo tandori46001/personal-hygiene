@@ -83,6 +83,19 @@ final class HydrationDashboardViewModel {
         lastDeleted = nil
     }
 
+    /// Round-18 slice 22: returns the number of full calendar days since the
+    /// most recent log, or `nil` if `recentLogs` is empty. The view shows a
+    /// "comeback nudge" caption when this exceeds 2 days.
+    func daysSinceLastLog(now: Date = Date()) -> Int? {
+        guard let mostRecent = recentLogs.map(\.drankAt).max() else { return nil }
+        let lastDay = calendar.startOfDay(for: mostRecent)
+        let today = calendar.startOfDay(for: now)
+        guard let delta = calendar.dateComponents([.day], from: lastDay, to: today).day else {
+            return nil
+        }
+        return max(0, delta)
+    }
+
     var totalMilliliters: Int {
         HydrationCompliance.totalMilliliters(on: Date(), logs: todayLogs, calendar: calendar)
     }

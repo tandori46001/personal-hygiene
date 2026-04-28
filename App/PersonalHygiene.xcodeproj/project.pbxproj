@@ -159,6 +159,7 @@
 		40D3F66B18A48999863A453B /* ItineraryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A26E16CF370FBA0155A488FE /* ItineraryStore.swift */; };
 		41135715937706F3E2A84B3F /* MedicationDoseHistoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628FE9ABD0C93F501253D061 /* MedicationDoseHistoryTests.swift */; };
 		412712B2AC558BE963D51D06 /* MedicationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F2E746124742819F23D63A4 /* MedicationService.swift */; };
+		417D4A37989535D5F89F2D9F /* BlockConflictDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AF7EB9E54BB71E83C06B2E /* BlockConflictDetector.swift */; };
 		41EB1A2E96817B8F28ACE0CB /* HomeLocationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6E0FA22F887BB223629773 /* HomeLocationStore.swift */; };
 		4218D0F8617549D9FDFDF1F2 /* RefreshTraceLogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F06D495BE42747DA1DFF249E /* RefreshTraceLogTests.swift */; };
 		42714E4C80185776499D0761 /* BirthdayIdeaStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = FD9B95B3BFC80E13F083D3D8 /* BirthdayIdeaStore.swift */; };
@@ -166,7 +167,11 @@
 		42BF9F9D22223AE8F8B4925C /* PendingNotificationsByCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F29DBDF1F031DFB170BA5EC /* PendingNotificationsByCategory.swift */; };
 		4370F04F4F7F28047DC46A2E /* TripEmergencyContact.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7956957D5820BBC522D4F42 /* TripEmergencyContact.swift */; };
 		43744829A8E5B780683E07E3 /* PersonalHygieneWatchApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 03B2F3900B8AA9251273F093 /* PersonalHygieneWatchApp.swift */; };
+		44156997B4102AD3CB53E3AC /* BlockConflictDetectorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A8D99E3C3FC2A059F4BAC2C /* BlockConflictDetectorTests.swift */; };
+		4439374A2C2C05049F925C55 /* DiagnosticsPendingByGroupCSVTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74A239489E6487B38DADF64F /* DiagnosticsPendingByGroupCSVTests.swift */; };
 		448083BF196E668EB6C8B9FA /* CurrencyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2F3DECAA2114CB1342EC37B /* CurrencyService.swift */; };
+		453939D53EFFD237C057973B /* BlockConflictDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AF7EB9E54BB71E83C06B2E /* BlockConflictDetector.swift */; };
+		4583D43BAB305D1E7079E14F /* TripExpenseMonthlySummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3922D1E50833B146B207133E /* TripExpenseMonthlySummary.swift */; };
 		45ACC5BE925DCC5E2C09EE32 /* HomeLocationSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F785A48F0078152688043B0 /* HomeLocationSection.swift */; };
 		45B231AD0CE191470DFEE857 /* BlockSnoozeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02FE39F914F22E90D9E738B /* BlockSnoozeStore.swift */; };
 		45B42CCB8E6E3F3BEE67493A /* HydrationCompliance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63821CA8C548D983DE625643 /* HydrationCompliance.swift */; };
@@ -234,6 +239,7 @@
 		5EDF9D5D9320E751752F9408 /* TripsListViewModelDuplicationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619E20318DEDEFAE1F014903 /* TripsListViewModelDuplicationTests.swift */; };
 		5F0577EC49473FBE13718355 /* DayType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 018597A028807D4803454994 /* DayType.swift */; };
 		5F4C7CA2F526F3EDF91F003D /* WhatsNextDialogBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B09D23E7AEDB178EACF5500 /* WhatsNextDialogBuilder.swift */; };
+		5F5A9FEE0DF5596A3E010D3D /* DiagnosticsViewRound18Sections.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A1E8CB2051699C9071CD835 /* DiagnosticsViewRound18Sections.swift */; };
 		5F6B8C0EA9F9975FDD71B1B9 /* TripMilestoneNotificationFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DD0CEB8A8F13D5728EADCBF4 /* TripMilestoneNotificationFactoryTests.swift */; };
 		5FA713EFF3FB98562DE3A688 /* PendingNotificationsGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4DE5648F3ECAD5C9AF23AF0 /* PendingNotificationsGroup.swift */; };
 		60C82C6973850DB073601C88 /* TripDetailViewModelRound13Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EA12F1F76EA05C593F1DCA8 /* TripDetailViewModelRound13Tests.swift */; };
@@ -281,6 +287,7 @@
 		6F428B3A79246476FC8F2DD7 /* RefreshTraceLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70DA9D9CD931A58862ECB58A /* RefreshTraceLog.swift */; };
 		6FDD6C6E98E0F93138BF6C7D /* DestinationSlug.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15F3F7BDD501ED85D62B5F6 /* DestinationSlug.swift */; };
 		7003C3330CC9CA1E3FB4F2DE /* SettingsViewRound12.swift in Sources */ = {isa = PBXBuildFile; fileRef = 099ED2DB62EB05D0E3569D6F /* SettingsViewRound12.swift */; };
+		70393AC6A1BAFD5C563D36A4 /* TripExpenseMonthlySummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3922D1E50833B146B207133E /* TripExpenseMonthlySummary.swift */; };
 		709C7D61DFD9C0EF9E996297 /* PreferredAdvisorySourceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 177077A94038E00A9993A6D7 /* PreferredAdvisorySourceStore.swift */; };
 		716FA22E19ED933CA74840AA /* BlockEditorViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90B51EECB8573E877BC9C9C1 /* BlockEditorViewModelTests.swift */; };
 		71B43C986F2B0E8AE7C90E09 /* PerBlockFollowUpOverrideStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E410791C31C7CB5D5A239213 /* PerBlockFollowUpOverrideStoreTests.swift */; };
@@ -373,6 +380,7 @@
 		9AB7DCD988439A04E568A3A5 /* DeliveredNotificationsGrouper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95070F8E0B12432BD917236D /* DeliveredNotificationsGrouper.swift */; };
 		9C18FF110B379294ECE808FE /* PersonalHygieneWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = A416D138EFCC3B100C488468 /* PersonalHygieneWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		9C2F4B1B4B6A17DE5DF121DF /* NextBlockResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2FC99C764A6B3A7034D3B1 /* NextBlockResolver.swift */; };
+		9D272EE9CB0170456667F7F0 /* BlockConflictDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AF7EB9E54BB71E83C06B2E /* BlockConflictDetector.swift */; };
 		9DE8AA351B04B685D9D39F1E /* ShareSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35C73220A71429E371C3F70 /* ShareSheet.swift */; };
 		9E03FB12E3F9FF333DA91040 /* BackupAutoFrequencyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63870917B5733FA96CAABF2 /* BackupAutoFrequencyStore.swift */; };
 		9E4314FF2F5E48E243A6D2AA /* TripsListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E00D497A61B140A78BEBC11 /* TripsListView.swift */; };
@@ -389,6 +397,7 @@
 		A246B60E58E8DD3E7A4A09D3 /* HousekeepingRoomIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BD31A60DD68AD4BE15448C4 /* HousekeepingRoomIcons.swift */; };
 		A27B1F8370D2B70C50206E8C /* TravelTimeService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6225759542A5B4D3E911E35A /* TravelTimeService.swift */; };
 		A2C1AB79DF511AEC663FF17C /* CategoryMuteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725FB309EACD5B3F9CA796BD /* CategoryMuteStore.swift */; };
+		A2EE0FBA0C4326292E90E16D /* TripEmergencyContactsTelURLTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 59031E5F6BAB542C7B428529 /* TripEmergencyContactsTelURLTests.swift */; };
 		A2F4B0C6B3F9A9755C4D8CB6 /* HydrationWeeklyAverage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8DD89CA310C976B87EA9AD /* HydrationWeeklyAverage.swift */; };
 		A3006D6B09A9D47C068C2431 /* CachedMarineWeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14F4E7F23174D00046E98CE /* CachedMarineWeatherService.swift */; };
 		A3549C746870EB4CF017531C /* ItineraryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A5209944255EB82E4B207D /* ItineraryStoreTests.swift */; };
@@ -403,6 +412,7 @@
 		A798F4B0DA55920AE2C4A279 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D857E2973DD7DB00C327D6DD /* NotificationService.swift */; };
 		A7D9E1BB521F9E10EE4AF844 /* CategoryMuteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725FB309EACD5B3F9CA796BD /* CategoryMuteStore.swift */; };
 		A7EDB2F90330794EFB4A0BC9 /* CategoryMuteStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 725FB309EACD5B3F9CA796BD /* CategoryMuteStore.swift */; };
+		A9D89A60A57866E777904175 /* TripExpenseMonthlySummaryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C57F42F91FFA57FBFE03819 /* TripExpenseMonthlySummaryTests.swift */; };
 		A9ED1D59876E10CE5634C47F /* MedicationFollowUpFactoryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670BAB8DA0279AFA097EE358 /* MedicationFollowUpFactoryTests.swift */; };
 		AA65BF82146BB79B58AFA270 /* RecentConversionsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66BEA8471F3ED2BF6F5D125C /* RecentConversionsStore.swift */; };
 		AA904D46BF2F3DF1E8B70D0B /* DestinationSlug.swift in Sources */ = {isa = PBXBuildFile; fileRef = E15F3F7BDD501ED85D62B5F6 /* DestinationSlug.swift */; };
@@ -460,6 +470,7 @@
 		C5D31AB87C499A008D3D8F80 /* CurrencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 78282BEB856188E32419812A /* CurrencyView.swift */; };
 		C64394845914F8DA746DE87F /* RecentlyDeliveredNotificationsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E4040C3997160AB3641CCF /* RecentlyDeliveredNotificationsView.swift */; };
 		C6BC558EB773369B97D8FE07 /* BirthdaysView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5077526B02AB76ABF1198BD /* BirthdaysView.swift */; };
+		C6EB61B5DF737877C4894746 /* TripExpenseMonthlySummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3922D1E50833B146B207133E /* TripExpenseMonthlySummary.swift */; };
 		C7976F29B81D1BD084756175 /* MarineForecastFreshnessStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F0325E594B632225B6691BC0 /* MarineForecastFreshnessStore.swift */; };
 		C7EB5C9AF45EFD0C862B9ABD /* AustraliaAdvisoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 975A901E62A7FA056727DF82 /* AustraliaAdvisoryService.swift */; };
 		C806F6E013CD6123F3B34BF1 /* BlockSnoozeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E02FE39F914F22E90D9E738B /* BlockSnoozeStore.swift */; };
@@ -478,6 +489,7 @@
 		CAE4CECF76EA420958B1DA42 /* BlockLocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 337B6DAD7C25B99941041664 /* BlockLocationTests.swift */; };
 		CB5409D0C60F104771EA3A0F /* BlockCompletion.swift in Sources */ = {isa = PBXBuildFile; fileRef = B57416A608867A6A25E96429 /* BlockCompletion.swift */; };
 		CB603C4B67C346E176B37C08 /* TravelAdvisoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5E0CE92F5EFC9375FAF899 /* TravelAdvisoryService.swift */; };
+		CC3D53055FB247AB13F07DD3 /* TripExpenseMonthlySummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3922D1E50833B146B207133E /* TripExpenseMonthlySummary.swift */; };
 		CD5C6F35B9A28152ECF8022B /* BirthdayRelationshipStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F50E17FD9B135536169563C /* BirthdayRelationshipStore.swift */; };
 		CD69C07C74BF83FA402C2D30 /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C43B93323DA8D77A17E36E2 /* Trip.swift */; };
 		CD762811239C086F34E2F589 /* AustraliaAdvisoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 975A901E62A7FA056727DF82 /* AustraliaAdvisoryService.swift */; };
@@ -497,6 +509,7 @@
 		D58E758E0A2B435BF82DEC7B /* PersonalHygieneWatchWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = E55AD4BBE099C629664D352C /* PersonalHygieneWatchWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		D5D642DE4DD036C2C32B91A2 /* PersonalHygieneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45E12146599CB7B994CFF2A /* PersonalHygieneApp.swift */; };
 		D688419AEF95993CD4B48600 /* TravelTimeServiceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A42595C053FA63B9C86121A /* TravelTimeServiceTests.swift */; };
+		D7137B0CBDE0B9AC7A2FDDA1 /* HydrationDaysSinceLastLogTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C11C72E3DAAA91AAB85A80AE /* HydrationDaysSinceLastLogTests.swift */; };
 		D76D271C282C12F521DCE512 /* WhatsNewHistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = A45DB7C25FF8980E70CD577C /* WhatsNewHistoryStore.swift */; };
 		D912A84E80D6274FDCE8ED23 /* TemplateBackup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D18B3287A8C7CA74E13ABEC /* TemplateBackup.swift */; };
 		D98D01F5B2258F64DBB22437 /* BedtimeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4325233FA9F02871FCDA344 /* BedtimeCalculator.swift */; };
@@ -539,6 +552,7 @@
 		E670674061442BD4E55D67C8 /* UpcomingBirthdays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE1F2759BBDB34451AB30BD /* UpcomingBirthdays.swift */; };
 		E863416DC18BBBA1CFF0A52A /* RoutineTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD16FF8317F205F6929F8F70 /* RoutineTemplate.swift */; };
 		E8B96EF68E84AFBA11DEC5F0 /* MedicationObserving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F885405457F7DB37A0D27CE /* MedicationObserving.swift */; };
+		E987E4DCACC6AA5475A347C3 /* BlockConflictDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6AF7EB9E54BB71E83C06B2E /* BlockConflictDetector.swift */; };
 		E9F73E17E5AB2305643C5C6C /* HydrationCompliance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63821CA8C548D983DE625643 /* HydrationCompliance.swift */; };
 		EA6172A3F41984E15DDBDE1A /* NotificationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 685542340D132BBBD5D1B0F6 /* NotificationCoordinator.swift */; };
 		EA8567B892E1FC97B906FD41 /* NextBlockResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B2FC99C764A6B3A7034D3B1 /* NextBlockResolver.swift */; };
@@ -675,6 +689,7 @@
 		0AD448CC6DDECC5C5D628BA8 /* DeepFocusFilterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeepFocusFilterTests.swift; sourceTree = "<group>"; };
 		0B4D88BD5D07D48B8F4A8382 /* BackupService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupService.swift; sourceTree = "<group>"; };
 		0B9666F2DEE039616A5BC049 /* TemplatePresetSeeds.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplatePresetSeeds.swift; sourceTree = "<group>"; };
+		0C57F42F91FFA57FBFE03819 /* TripExpenseMonthlySummaryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripExpenseMonthlySummaryTests.swift; sourceTree = "<group>"; };
 		0C64106DA67190278C29DBDB /* ObservabilityHealthCheckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ObservabilityHealthCheckTests.swift; sourceTree = "<group>"; };
 		0C86859E08647D58470B18D1 /* TripDocumentStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripDocumentStore.swift; sourceTree = "<group>"; };
 		0CCDFE1032F58597D5ECC644 /* HydrationNotificationFactoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HydrationNotificationFactoryTests.swift; sourceTree = "<group>"; };
@@ -698,7 +713,9 @@
 		2958201BAEB1591D5DFEDD78 /* WidgetReloadCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetReloadCounter.swift; sourceTree = "<group>"; };
 		29C729DC4E68975938DC2913 /* PendingNotificationsGroupTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingNotificationsGroupTests.swift; sourceTree = "<group>"; };
 		2A0AD60A7964896B8C2BDE06 /* WidgetReloadCounterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetReloadCounterTests.swift; sourceTree = "<group>"; };
+		2A1E8CB2051699C9071CD835 /* DiagnosticsViewRound18Sections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsViewRound18Sections.swift; sourceTree = "<group>"; };
 		2A42595C053FA63B9C86121A /* TravelTimeServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelTimeServiceTests.swift; sourceTree = "<group>"; };
+		2A8D99E3C3FC2A059F4BAC2C /* BlockConflictDetectorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockConflictDetectorTests.swift; sourceTree = "<group>"; };
 		2B1ADABFC9F8D9CE86300920 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
 		2B2FC99C764A6B3A7034D3B1 /* NextBlockResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NextBlockResolver.swift; sourceTree = "<group>"; };
 		2BD31A60DD68AD4BE15448C4 /* HousekeepingRoomIcons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousekeepingRoomIcons.swift; sourceTree = "<group>"; };
@@ -728,6 +745,7 @@
 		3778FBEE4C86424C35D262DF /* NetworkActivityCounterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkActivityCounterTests.swift; sourceTree = "<group>"; };
 		37920AD09275C7782DBDFAE3 /* FocusFilterPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusFilterPreview.swift; sourceTree = "<group>"; };
 		3819B42FA6232518D5A98D5A /* HousekeepingRoomOrderStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousekeepingRoomOrderStore.swift; sourceTree = "<group>"; };
+		3922D1E50833B146B207133E /* TripExpenseMonthlySummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripExpenseMonthlySummary.swift; sourceTree = "<group>"; };
 		39CA59C249EF5BC8CDBD6115 /* BirthdayLeadStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdayLeadStore.swift; sourceTree = "<group>"; };
 		3B0DA38D6BF0668B6B35E476 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		3BCB9A6E9C1AC234DD71A32D /* HousekeepingTask.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousekeepingTask.swift; sourceTree = "<group>"; };
@@ -755,6 +773,7 @@
 		55EE3DE715D9243BB57BF7FC /* TripsListViewModelSearchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripsListViewModelSearchTests.swift; sourceTree = "<group>"; };
 		573124FA212F02AE358DE857 /* HousekeepingNotificationFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousekeepingNotificationFactory.swift; sourceTree = "<group>"; };
 		57F86C0070A0F11D03F5A574 /* MedicationComplianceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationComplianceView.swift; sourceTree = "<group>"; };
+		59031E5F6BAB542C7B428529 /* TripEmergencyContactsTelURLTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripEmergencyContactsTelURLTests.swift; sourceTree = "<group>"; };
 		5AF643DB2F814E7651D040F8 /* TripMilestoneNotificationFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripMilestoneNotificationFactory.swift; sourceTree = "<group>"; };
 		5B09D23E7AEDB178EACF5500 /* WhatsNextDialogBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhatsNextDialogBuilder.swift; sourceTree = "<group>"; };
 		5B581EEDBA132781CB2F461F /* DocumentPreviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentPreviewView.swift; sourceTree = "<group>"; };
@@ -786,6 +805,7 @@
 		70DA9D9CD931A58862ECB58A /* RefreshTraceLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshTraceLog.swift; sourceTree = "<group>"; };
 		72299130B717DD6E0DDEACFD /* MedicationDoseHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MedicationDoseHistory.swift; sourceTree = "<group>"; };
 		725FB309EACD5B3F9CA796BD /* CategoryMuteStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryMuteStore.swift; sourceTree = "<group>"; };
+		74A239489E6487B38DADF64F /* DiagnosticsPendingByGroupCSVTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsPendingByGroupCSVTests.swift; sourceTree = "<group>"; };
 		751ED14F0B1E3B719EC177B5 /* DiagnosticsViewRound17Sections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsViewRound17Sections.swift; sourceTree = "<group>"; };
 		757F7B808F6ED88D37AFB308 /* TripMilestoneScheduler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripMilestoneScheduler.swift; sourceTree = "<group>"; };
 		75E5D7C2C1DB27941694663D /* TripPDFExporterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripPDFExporterTests.swift; sourceTree = "<group>"; };
@@ -847,6 +867,7 @@
 		B57416A608867A6A25E96429 /* BlockCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockCompletion.swift; sourceTree = "<group>"; };
 		B63870917B5733FA96CAABF2 /* BackupAutoFrequencyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupAutoFrequencyStore.swift; sourceTree = "<group>"; };
 		B650DEC888DF2D199B6B460A /* PendingNotificationsByCategoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingNotificationsByCategoryTests.swift; sourceTree = "<group>"; };
+		B6AF7EB9E54BB71E83C06B2E /* BlockConflictDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockConflictDetector.swift; sourceTree = "<group>"; };
 		BB2D75D5BB16D734F3D3DED1 /* SnapshotHistoryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotHistoryStoreTests.swift; sourceTree = "<group>"; };
 		BBEC60DE989BBD3377AE6FF3 /* OnboardingFlagStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlagStoreTests.swift; sourceTree = "<group>"; };
 		BCA24C458087BB27C384E556 /* PauseNotificationsStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PauseNotificationsStoreTests.swift; sourceTree = "<group>"; };
@@ -858,6 +879,7 @@
 		BFC05394EC5A6EB86F475464 /* HomeLocationStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeLocationStoreTests.swift; sourceTree = "<group>"; };
 		C0195A73ABBC44A35ED469E6 /* TripCarbonEstimateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripCarbonEstimateTests.swift; sourceTree = "<group>"; };
 		C0EB689DF4CA67CBC258438C /* TripExpense.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripExpense.swift; sourceTree = "<group>"; };
+		C11C72E3DAAA91AAB85A80AE /* HydrationDaysSinceLastLogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HydrationDaysSinceLastLogTests.swift; sourceTree = "<group>"; };
 		C3B74997F968BEEF3A796ACE /* DestinationSlugTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationSlugTests.swift; sourceTree = "<group>"; };
 		C4285CE2A6DE82DABC589094 /* PersonalHygieneTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PersonalHygieneTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		C43EB8FA6C6AABA8128E4D32 /* TripCarbonEstimate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripCarbonEstimate.swift; sourceTree = "<group>"; };
@@ -1055,6 +1077,7 @@
 				54CDF9CE5659845C4CF1D67F /* DiagnosticsViewRound12Sections.swift */,
 				82372A5795A3694C035690FD /* DiagnosticsViewRound13Sections.swift */,
 				751ED14F0B1E3B719EC177B5 /* DiagnosticsViewRound17Sections.swift */,
+				2A1E8CB2051699C9071CD835 /* DiagnosticsViewRound18Sections.swift */,
 				A09B6A3C944E0A99EB5BE781 /* DiagnosticsViewSections.swift */,
 				368835748FB83D6467F23505 /* FocusScheduleView.swift */,
 				1F785A48F0078152688043B0 /* HomeLocationSection.swift */,
@@ -1235,6 +1258,7 @@
 				FD9B95B3BFC80E13F083D3D8 /* BirthdayIdeaStore.swift */,
 				39CA59C249EF5BC8CDBD6115 /* BirthdayLeadStore.swift */,
 				8F50E17FD9B135536169563C /* BirthdayRelationshipStore.swift */,
+				B6AF7EB9E54BB71E83C06B2E /* BlockConflictDetector.swift */,
 				CF7B22EAA6894D510EA6C7A4 /* BlockSkipStore.swift */,
 				E02FE39F914F22E90D9E738B /* BlockSnoozeStore.swift */,
 				7FE520D0DE7818DE937FA635 /* BuildInfo.swift */,
@@ -1305,6 +1329,7 @@
 				0C86859E08647D58470B18D1 /* TripDocumentStore.swift */,
 				D7956957D5820BBC522D4F42 /* TripEmergencyContact.swift */,
 				C0EB689DF4CA67CBC258438C /* TripExpense.swift */,
+				3922D1E50833B146B207133E /* TripExpenseMonthlySummary.swift */,
 				5AF643DB2F814E7651D040F8 /* TripMilestoneNotificationFactory.swift */,
 				757F7B808F6ED88D37AFB308 /* TripMilestoneScheduler.swift */,
 				D30A487C9362610E6302985F /* TripPDFExporter.swift */,
@@ -1424,6 +1449,7 @@
 				2E808FBBB7A47F28FC2B1933 /* BirthdayIdeaStoreTests.swift */,
 				1649481DB6FC723908F58D9E /* BirthdayLeadStoreTests.swift */,
 				EDB09B67156279BA81C6C123 /* BirthdayRelationshipStoreTests.swift */,
+				2A8D99E3C3FC2A059F4BAC2C /* BlockConflictDetectorTests.swift */,
 				A9E3095DD1AD09CF6D2D0A43 /* BlockSkipStoreTests.swift */,
 				D045C9393BA34359C1CCAC90 /* BlockSnoozeStoreTests.swift */,
 				D071438E62C39A43103393B8 /* BuildInfoTests.swift */,
@@ -1436,6 +1462,7 @@
 				0AD448CC6DDECC5C5D628BA8 /* DeepFocusFilterTests.swift */,
 				F8095181374ADC6BBC88847D /* DeliveredNotificationsGrouperTests.swift */,
 				C3B74997F968BEEF3A796ACE /* DestinationSlugTests.swift */,
+				74A239489E6487B38DADF64F /* DiagnosticsPendingByGroupCSVTests.swift */,
 				A33059002914E29312653AD7 /* DiagnosticsSnapshotDiffTests.swift */,
 				E32FA5CC356BBC8FAA45B086 /* DiagnosticsSnapshotTests.swift */,
 				BF144C62E8939ECDF2551A51 /* DoseHistoryViewIntegrationTests.swift */,
@@ -1451,6 +1478,7 @@
 				5D9ED449793E3F94C0C2F63D /* HousekeepingServiceTests.swift */,
 				093A15666BBD0D9042330256 /* HousekeepingStreakCounterTests.swift */,
 				F86510F75C6CA64C5BC6AA1C /* HydrationComplianceTests.swift */,
+				C11C72E3DAAA91AAB85A80AE /* HydrationDaysSinceLastLogTests.swift */,
 				0CCDFE1032F58597D5ECC644 /* HydrationNotificationFactoryTests.swift */,
 				7C60BB97B3DF5358A08BB2E3 /* HydrationServiceTests.swift */,
 				C805D7E18C34E5AB6E281DF3 /* HydrationWeeklyAverageTests.swift */,
@@ -1491,6 +1519,8 @@
 				2A42595C053FA63B9C86121A /* TravelTimeServiceTests.swift */,
 				C0195A73ABBC44A35ED469E6 /* TripCarbonEstimateTests.swift */,
 				35749025F0764A6347355475 /* TripDocumentStoreTests.swift */,
+				59031E5F6BAB542C7B428529 /* TripEmergencyContactsTelURLTests.swift */,
+				0C57F42F91FFA57FBFE03819 /* TripExpenseMonthlySummaryTests.swift */,
 				DD0CEB8A8F13D5728EADCBF4 /* TripMilestoneNotificationFactoryTests.swift */,
 				75E5D7C2C1DB27941694663D /* TripPDFExporterTests.swift */,
 				C6667FC15B2416991F9DE600 /* UpcomingBirthdaysTests.swift */,
@@ -1930,6 +1960,7 @@
 				B0885D4926F6DA65D5BEA7B3 /* Block.swift in Sources */,
 				5C4C158A605F002079D5781D /* BlockCategory.swift in Sources */,
 				971E22F19DEE8918391CA1B5 /* BlockCompletion.swift in Sources */,
+				453939D53EFFD237C057973B /* BlockConflictDetector.swift in Sources */,
 				4A3E9027497029BCC1103016 /* BlockLocation.swift in Sources */,
 				150DB4A159F8220D9E20570F /* BlockSkipStore.swift in Sources */,
 				C806F6E013CD6123F3B34BF1 /* BlockSnoozeStore.swift in Sources */,
@@ -2012,6 +2043,7 @@
 				8EC43BFE174188B77A66C341 /* TripDocumentStore.swift in Sources */,
 				201866D1060DD0D9A065FAB6 /* TripEmergencyContact.swift in Sources */,
 				68C9F56FCD9B31347933AC54 /* TripExpense.swift in Sources */,
+				70393AC6A1BAFD5C563D36A4 /* TripExpenseMonthlySummary.swift in Sources */,
 				DDF46139036D1215A2C546D7 /* TripItinerary.swift in Sources */,
 				1045BCDBE8762791562447DB /* TripMilestone.swift in Sources */,
 				F86AD571EBE0471BD70D2512 /* TripMilestoneNotificationFactory.swift in Sources */,
@@ -2043,6 +2075,7 @@
 				23CDE61F1E74CF94B530D657 /* Block.swift in Sources */,
 				6CA30F0928411B0EC729AB58 /* BlockCategory.swift in Sources */,
 				3F488315D70843A6BED0DEE5 /* BlockCompletion.swift in Sources */,
+				E987E4DCACC6AA5475A347C3 /* BlockConflictDetector.swift in Sources */,
 				E14FF840F899E9341AA5BBDF /* BlockLocation.swift in Sources */,
 				FF39AD6BF0EFF696D769BA7F /* BlockSkipStore.swift in Sources */,
 				52BC414AFCA779B6E0B21430 /* BlockSnoozeStore.swift in Sources */,
@@ -2124,6 +2157,7 @@
 				3CE2359466FF97190B1CACE8 /* TripDocumentStore.swift in Sources */,
 				14E3E35266373D0AA3917ADF /* TripEmergencyContact.swift in Sources */,
 				B4C561AE05E854397E3829EF /* TripExpense.swift in Sources */,
+				4583D43BAB305D1E7079E14F /* TripExpenseMonthlySummary.swift in Sources */,
 				53C88CCBCE4B1E207C97BB25 /* TripItinerary.swift in Sources */,
 				6A1418969B13A3E891516D88 /* TripMilestone.swift in Sources */,
 				FCE0EE35017457DE1AC9CFD2 /* TripMilestoneNotificationFactory.swift in Sources */,
@@ -2157,6 +2191,7 @@
 				15A0491E9B36A24B00A3565C /* BirthdayLeadStoreTests.swift in Sources */,
 				64753ADD101C68D06940CE44 /* BirthdayRelationshipStoreTests.swift in Sources */,
 				54F92EB62231DC517398D2CB /* BirthdaysViewModelTests.swift in Sources */,
+				44156997B4102AD3CB53E3AC /* BlockConflictDetectorTests.swift in Sources */,
 				716FA22E19ED933CA74840AA /* BlockEditorViewModelTests.swift in Sources */,
 				CAE4CECF76EA420958B1DA42 /* BlockLocationTests.swift in Sources */,
 				903DD4044741F596E49E479D /* BlockSkipStoreTests.swift in Sources */,
@@ -2172,6 +2207,7 @@
 				4C7B66D9453EE7869DB1D75A /* DeepFocusFilterTests.swift in Sources */,
 				21C916629DA50A9E648633B3 /* DeliveredNotificationsGrouperTests.swift in Sources */,
 				35DEF94A3A2F984567F35C2B /* DestinationSlugTests.swift in Sources */,
+				4439374A2C2C05049F925C55 /* DiagnosticsPendingByGroupCSVTests.swift in Sources */,
 				D52B98EE108C2DF65FCA7565 /* DiagnosticsSnapshotDiffTests.swift in Sources */,
 				9104289696C6206474473E21 /* DiagnosticsSnapshotTests.swift in Sources */,
 				C85A6B2ABE726ACF2C2FB462 /* DoseHistoryViewIntegrationTests.swift in Sources */,
@@ -2189,6 +2225,7 @@
 				982534075397AD41A6B02235 /* HousekeepingStreakCounterTests.swift in Sources */,
 				BD15E9FBD65D4287E06E4B13 /* HydrationComplianceTests.swift in Sources */,
 				77260F85608551C7D1D9999D /* HydrationDashboardViewModelTests.swift in Sources */,
+				D7137B0CBDE0B9AC7A2FDDA1 /* HydrationDaysSinceLastLogTests.swift in Sources */,
 				1E457D3CA846A04E1231607F /* HydrationNotificationFactoryTests.swift in Sources */,
 				31CB266D8CD430FEA2958239 /* HydrationServiceTests.swift in Sources */,
 				BEF786E4D68CF6B28A0584FD /* HydrationWeeklyAverageTests.swift in Sources */,
@@ -2238,6 +2275,8 @@
 				58DC0FF54272B17385BBA7DB /* TripDetailViewModelRound14Tests.swift in Sources */,
 				058AC12BE5497BDCEB019EF6 /* TripDetailViewModelTests.swift in Sources */,
 				6D5B6751653A9E1B9EDDC2ED /* TripDocumentStoreTests.swift in Sources */,
+				A2EE0FBA0C4326292E90E16D /* TripEmergencyContactsTelURLTests.swift in Sources */,
+				A9D89A60A57866E777904175 /* TripExpenseMonthlySummaryTests.swift in Sources */,
 				5F6B8C0EA9F9975FDD71B1B9 /* TripMilestoneNotificationFactoryTests.swift in Sources */,
 				561A145B336670B03DBF9A5E /* TripPDFExporterTests.swift in Sources */,
 				5EDF9D5D9320E751752F9408 /* TripsListViewModelDuplicationTests.swift in Sources */,
@@ -2273,6 +2312,7 @@
 				197BB847B9FF176068AD1459 /* BlockCategory.swift in Sources */,
 				79FF6F67209DAEA914681650 /* BlockCategoryColor.swift in Sources */,
 				CB5409D0C60F104771EA3A0F /* BlockCompletion.swift in Sources */,
+				9D272EE9CB0170456667F7F0 /* BlockConflictDetector.swift in Sources */,
 				82CA1F3B1416F09FAF34DA85 /* BlockDetailSheet.swift in Sources */,
 				802C99AA8D6647108D2D8A51 /* BlockEditorView.swift in Sources */,
 				87D6221EB6E9BE29179A6EB6 /* BlockEditorViewModel.swift in Sources */,
@@ -2299,6 +2339,7 @@
 				5E3A1A77BA776CC620EA8F8E /* DiagnosticsViewRound12Sections.swift in Sources */,
 				3CAED1F0ABA1177A150C2DF2 /* DiagnosticsViewRound13Sections.swift in Sources */,
 				5D433BE2D7116C40A8FC6137 /* DiagnosticsViewRound17Sections.swift in Sources */,
+				5F5A9FEE0DF5596A3E010D3D /* DiagnosticsViewRound18Sections.swift in Sources */,
 				F76DD07EA3C7CB202EDAF3F7 /* DiagnosticsViewSections.swift in Sources */,
 				913E7910B858F41D75ABD103 /* DocumentMetadataSheet.swift in Sources */,
 				BE286986C1844818AF426A9C /* DocumentPreviewView.swift in Sources */,
@@ -2408,6 +2449,7 @@
 				EF015E589529CBA62F63E8A5 /* TripDocumentStore.swift in Sources */,
 				4370F04F4F7F28047DC46A2E /* TripEmergencyContact.swift in Sources */,
 				A610360E446CFFCEC1C37F41 /* TripExpense.swift in Sources */,
+				C6EB61B5DF737877C4894746 /* TripExpenseMonthlySummary.swift in Sources */,
 				1B67D0989BAC95AF89D6C4BF /* TripItinerary.swift in Sources */,
 				1BB4DDDD260EDFB58AB0D62E /* TripMilestone.swift in Sources */,
 				F90854BE36DF6A684BE9C45D /* TripMilestoneNotificationFactory.swift in Sources */,
@@ -2443,6 +2485,7 @@
 				34CC9F47222DBB3F80BED636 /* Block.swift in Sources */,
 				0EC39DBD33AE82788E02AA61 /* BlockCategory.swift in Sources */,
 				26045A7515484060642A73A5 /* BlockCompletion.swift in Sources */,
+				417D4A37989535D5F89F2D9F /* BlockConflictDetector.swift in Sources */,
 				0CF8BDD7F0CA4228EDA273D6 /* BlockLocation.swift in Sources */,
 				5E4AC257A15E1F0750A70D9D /* BlockSkipStore.swift in Sources */,
 				472A21AF3E907F41DC7853F0 /* BlockSnoozeStore.swift in Sources */,
@@ -2524,6 +2567,7 @@
 				C853C37CF7095267CEAC0624 /* TripDocumentStore.swift in Sources */,
 				98C3428843CBDDFD053FA277 /* TripEmergencyContact.swift in Sources */,
 				6A5537EB981AC0AC66F4498C /* TripExpense.swift in Sources */,
+				CC3D53055FB247AB13F07DD3 /* TripExpenseMonthlySummary.swift in Sources */,
 				323CCEEBDCFFA60184A4CF68 /* TripItinerary.swift in Sources */,
 				B98C9CABA6164651EAD4139B /* TripMilestone.swift in Sources */,
 				665A9666C1AF5875048DFD6D /* TripMilestoneNotificationFactory.swift in Sources */,

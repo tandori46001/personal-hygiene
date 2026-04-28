@@ -276,6 +276,96 @@ final class RenderSmokeTests: XCTestCase {
         )
         XCTAssertNotNil(image)
     }
+
+    /// Round 18 slice 1: render-smoke for the round-17 medication compliance
+    /// view (now hosts a NavigationLink to DoseHistoryView).
+    func test_medicationComplianceView_render_smoke() {
+        let repo = SwiftDataRoutineRepository(context: container.mainContext)
+        let template = RoutineTemplate(name: "T", dayType: .weekday)
+        try? repo.upsert(template)
+        try? repo.upsert(
+            Block(
+                title: "Pill A",
+                category: .medication,
+                startMinutesFromMidnight: 9 * 60,
+                durationMinutes: 5,
+                medicationConceptIdentifier: "concept-a"
+            ),
+            in: template
+        )
+        let viewModel = MedicationComplianceViewModel(
+            service: InMemoryMedicationService(),
+            repository: repo
+        )
+        let image = render(MedicationComplianceView(viewModel: viewModel))
+        XCTAssertNotNil(image)
+    }
+
+    /// Round 18 slice 1: render-smoke for the round-16 dose history view
+    /// with seeded entries that include long concept identifiers.
+    func test_doseHistoryView_render_smoke() {
+        let entries = [
+            MedicationDoseHistory.Entry(
+                blockID: UUID(),
+                blockTitle: "Pill A",
+                conceptIdentifier: "concept-a-very-long-identifier-name",
+                completedAt: Date().addingTimeInterval(-3600)
+            ),
+            MedicationDoseHistory.Entry(
+                blockID: UUID(),
+                blockTitle: "Pill B",
+                conceptIdentifier: nil,
+                completedAt: Date().addingTimeInterval(-7200)
+            ),
+        ]
+        let image = render(NavigationStack { DoseHistoryView(entries: entries) })
+        XCTAssertNotNil(image)
+    }
+
+    /// Round 18 slice 2: DynamicType regression for DoseHistoryView with
+    /// long concept identifiers at .accessibility5.
+    func test_doseHistoryView_render_atAccessibilityXXXL() {
+        let entries = (0..<5).map { index in
+            MedicationDoseHistory.Entry(
+                blockID: UUID(),
+                blockTitle: "Pill \(index)",
+                conceptIdentifier: "concept-\(index)-with-a-medium-length-id",
+                completedAt: Date().addingTimeInterval(TimeInterval(-index * 3600))
+            )
+        }
+        let image = render(
+            NavigationStack { DoseHistoryView(entries: entries) }
+                .environment(\.dynamicTypeSize, .accessibility5)
+        )
+        XCTAssertNotNil(image)
+    }
+
+    /// Round 18 slice 2: DynamicType regression for round-17 medication
+    /// compliance view at .accessibility5.
+    func test_medicationComplianceView_render_atAccessibilityXXXL() {
+        let repo = SwiftDataRoutineRepository(context: container.mainContext)
+        let template = RoutineTemplate(name: "T", dayType: .weekday)
+        try? repo.upsert(template)
+        try? repo.upsert(
+            Block(
+                title: "Pill A",
+                category: .medication,
+                startMinutesFromMidnight: 9 * 60,
+                durationMinutes: 5,
+                medicationConceptIdentifier: "concept-a"
+            ),
+            in: template
+        )
+        let viewModel = MedicationComplianceViewModel(
+            service: InMemoryMedicationService(),
+            repository: repo
+        )
+        let image = render(
+            MedicationComplianceView(viewModel: viewModel)
+                .environment(\.dynamicTypeSize, .accessibility5)
+        )
+        XCTAssertNotNil(image)
+    }
 }
 
 @MainActor

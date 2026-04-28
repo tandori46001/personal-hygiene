@@ -11,6 +11,10 @@ final class MedicationComplianceViewModel {
 
     var summaries: [DailyCompliance] = []
     var overall: Double = 1.0
+    /// Round-18 slice 12: rolling 30-day adherence so the user can see a
+    /// longer trend than the 7-day overall row provides. `nil` until the
+    /// first reload completes.
+    var thirtyDayAdherence: Double?
     var isAvailable: Bool = false
     var errorMessage: String?
 
@@ -52,6 +56,20 @@ final class MedicationComplianceViewModel {
                 calendar: calendar
             )
             overall = MedicationCompliance.overallAdherence(from: allLogs, between: start, and: now)
+
+            // Round-18 slice 12: 30-day adherence rolls up the same overall
+            // formula across a longer window, fetched once per reload.
+            let monthStart = calendar.date(byAdding: .day, value: -29, to: end) ?? start
+            var monthLogs: [MedicationDoseLog] = []
+            for conceptID in medicationConceptIDs {
+                let logs = try await service.doseLogs(for: conceptID, from: monthStart, to: now)
+                monthLogs.append(contentsOf: logs)
+            }
+            thirtyDayAdherence = MedicationCompliance.overallAdherence(
+                from: monthLogs,
+                between: monthStart,
+                and: now
+            )
         } catch {
             errorMessage = error.localizedDescription
         }

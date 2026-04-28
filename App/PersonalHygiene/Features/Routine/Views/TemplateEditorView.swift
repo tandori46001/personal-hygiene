@@ -6,6 +6,8 @@ struct TemplateEditorView: View {
     @State private var blockEditor: BlockEditorViewModel?
     @State private var editingExistingBlock: Block?
     @State private var errorMessage: String?
+    @State private var undoToastTimer: Task<Void, Never>?
+    @State private var lastInsertedPresetTitleKey: String?
 
     var body: some View {
         Form {
@@ -33,11 +35,12 @@ struct TemplateEditorView: View {
                         .foregroundStyle(.secondary)
                 }
                 ForEach(viewModel.sortedBlocks) { block in
+                    let conflicts = BlockConflictDetector.conflictingIDs(in: viewModel.sortedBlocks)
                     Button {
                         editingExistingBlock = block
                         blockEditor = BlockEditorViewModel(editing: block)
                     } label: {
-                        BlockSummaryRow(block: block)
+                        BlockSummaryRow(block: block, hasConflict: conflicts.contains(block.id))
                     }
                     .buttonStyle(.plain)
                 }
@@ -60,6 +63,7 @@ struct TemplateEditorView: View {
                         Button {
                             do {
                                 try viewModel.insertPreset(preset)
+                                showUndoToast(for: preset)
                             } catch {
                                 errorMessage = error.localizedDescription
                             }
@@ -73,6 +77,29 @@ struct TemplateEditorView: View {
                     } icon: {
                         Image(systemName: "wand.and.stars")
                     }
+                }
+
+                if let key = lastInsertedPresetTitleKey {
+                    HStack(spacing: 8) {
+                        Image(systemName: "wand.and.stars")
+                            .foregroundStyle(.tint)
+                            .accessibilityHidden(true)
+                        Text(LocalizedStringKey("templateEditor.preset.inserted.\(key)"), bundle: .main)
+                            .font(.caption)
+                        Spacer()
+                        Button {
+                            do {
+                                try viewModel.undoLastPresetInsertion()
+                            } catch {
+                                errorMessage = error.localizedDescription
+                            }
+                            cancelUndoToast()
+                        } label: {
+                            Text("common.undo", bundle: .main)
+                        }
+                        .buttonStyle(.borderless)
+                    }
+                    .accessibilityElement(children: .combine)
                 }
             } header: {
                 Text("templateEditor.section.blocks", bundle: .main)
@@ -122,6 +149,24 @@ struct TemplateEditorView: View {
         )
     }
 
+    /// Round-18 slice 8: shows the inserted-preset toast for 4s, then dismisses.
+    private func showUndoToast(for preset: TemplatePresetSeeds.Preset) {
+        lastInsertedPresetTitleKey = preset.rawValue
+        undoToastTimer?.cancel()
+        undoToastTimer = Task { @MainActor in
+            try? await Task.sleep(nanoseconds: 4_000_000_000)
+            if !Task.isCancelled {
+                lastInsertedPresetTitleKey = nil
+            }
+        }
+    }
+
+    private func cancelUndoToast() {
+        undoToastTimer?.cancel()
+        undoToastTimer = nil
+        lastInsertedPresetTitleKey = nil
+    }
+
     private func saveMetadata() {
         do {
             try viewModel.saveMetadata()
@@ -168,14 +213,27 @@ struct TemplateEditorView: View {
 
 private struct BlockSummaryRow: View {
     let block: Block
+    var hasConflict: Bool = false
 
     var body: some View {
         HStack {
             BlockCategoryDot(category: block.category)
             VStack(alignment: .leading, spacing: 2) {
-                Text(block.title)
-                    .font(.body)
-                    .foregroundStyle(.primary)
+                HStack(spacing: 6) {
+                    Text(block.title)
+                        .font(.body)
+                        .foregroundStyle(.primary)
+                    if hasConflict {
+                        Label {
+                            Text("templateEditor.conflict.chip", bundle: .main)
+                        } icon: {
+                            Image(systemName: "exclamationmark.triangle.fill")
+                        }
+                        .labelStyle(.iconOnly)
+                        .foregroundStyle(.orange)
+                        .accessibilityLabel(Text("templateEditor.conflict.chip", bundle: .main))
+                    }
+                }
                 Text(LocalizedStringKey("category.\(block.category.rawValue)"))
                     .font(.caption)
                     .foregroundStyle(.secondary)

@@ -144,6 +144,21 @@ struct BirthdaysView: View {
                             leadDays: viewModel.leadDays(for: entry.contact),
                             hasOverride: viewModel.hasOverride(entry.contact)
                         )
+                        .contextMenu {
+                            // Round-18 slice 23: copy stored gift idea to clipboard.
+                            if let idea = BirthdayIdeaStore.idea(for: entry.contact.identifier),
+                               !idea.isEmpty {
+                                Button {
+                                    UIPasteboard.general.string = idea
+                                } label: {
+                                    Label {
+                                        Text("birthdays.action.copyIdeas", bundle: .main)
+                                    } icon: {
+                                        Image(systemName: "doc.on.doc")
+                                    }
+                                }
+                            }
+                        }
                         .swipeActions(edge: .trailing) {
                             Button {
                                 leadEditing = entry.contact

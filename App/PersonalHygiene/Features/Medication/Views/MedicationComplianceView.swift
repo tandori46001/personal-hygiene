@@ -41,6 +41,15 @@ struct MedicationComplianceView: View {
                                     .font(.headline)
                                     .foregroundStyle(adherenceColor(viewModel.overall))
                             }
+                            if let thirtyDay = viewModel.thirtyDayAdherence {
+                                HStack {
+                                    Text("medication.adherence.30day", bundle: .main)
+                                    Spacer()
+                                    Text(percentageString(thirtyDay))
+                                        .font(.subheadline.monospacedDigit())
+                                        .foregroundStyle(adherenceColor(thirtyDay))
+                                }
+                            }
                         }
 
                         Section {
@@ -53,7 +62,10 @@ struct MedicationComplianceView: View {
 
                         Section {
                             NavigationLink {
-                                DoseHistoryView(entries: viewModel.doseHistory())
+                                DoseHistoryView(
+                                    entries: viewModel.doseHistory(),
+                                    loader: { viewModel.doseHistory() }
+                                )
                             } label: {
                                 Label {
                                     Text("medication.dose.history.title", bundle: .main)

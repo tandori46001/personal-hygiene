@@ -8,6 +8,45 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added — Session 16 round 18: 25-slice quality + polish round
+
+Tier 1 (test infrastructure):
+- 4 new render-smoke + DynamicType (`.accessibility5`) snapshots covering the round-17 medication compliance / dose-history surfaces. No third-party dep — extends the existing `RenderSmokeTests.swift`.
+- `scripts/check-i18n-coverage.sh` — fails if any literal `Text("…", bundle:)`, `LocalizedStringKey("…")`, `LocalizedStringResource("…")`, or `String(localized:)` references a key missing from `Localizable.xcstrings`.
+- `scripts/check-localization-orphans.py` — reports keys declared in xcstrings but unreferenced in Swift sources. Warning-by-default; pass `--fail-on-orphans` for hard fail.
+
+Tier 2 (Today / Routine):
+- TodayView: stale-day banner appears after `NSSystemTimeZoneDidChange` so the user sees their day boundary shifted. Tap to dismiss.
+- TemplateEditor: per-block conflict chip when two blocks overlap inside the same template (`BlockConflictDetector` helper).
+- TemplateList: each row gets a compact "Start–End · N · Total" caption.
+- TemplateEditor: 4-second "Inserted X · Undo" toast after `insertPreset(_:)` (new `TemplateEditorViewModel.undoLastPresetInsertion()`).
+
+Tier 3 (Medication):
+- DoseHistoryView: pull-to-refresh + filter chip row by `conceptIdentifier`.
+- BlockDetailSheet: medication-aware "Skip this dose" action (separate label from generic skip-today).
+- MedicationCompliance: rolling 30-day adherence row (`MedicationComplianceViewModel.thirtyDayAdherence`).
+
+Tier 4 (Trips):
+- Trip emergency contacts: tap-to-call green button (sanitizes to `tel:` URL).
+- Trip expenses: monthly-summary disclosure (`TripExpenseMonthlySummary` helper, per-month per-currency totals).
+- Trip carbon: kg/lb segmented unit toggle (persisted via `@AppStorage`).
+- Trip itinerary: "Copy as plain text" menu action (new `TripDetailViewModel.itineraryPlainText(...)`).
+
+Tier 5 (Settings / Diagnostics):
+- Quiet hours: "Reset to defaults" button.
+- Diagnostics → Pending IDs by group: tap any identifier row to copy.
+- Diagnostics: "Export pending IDs (CSV)" button (`DiagnosticsView.pendingByGroupCSV(...)`).
+- Diagnostics: "Export one-pager (PDF)" button — single page with snapshot + 50 refresh-trace + 10 auth-timeline rows.
+
+Tier 6 (Secondary modules):
+- Housekeeping: long-press a task with a room → "Change room icon" sheet (works on existing tasks, not just on creation).
+- Hydration: red comeback-nudge caption when ≥3 calendar days have passed since the last log.
+- Birthdays: long-press a row → "Copy gift ideas" action when ideas are stored.
+
+**Tests:** 538 → ~553 (+15: 4 render smokes + BlockConflictDetector × 4 + TripExpenseMonthlySummary × 4 + TemplateEditor undo × 2 + TripEmergencyContactsTelURL × 3 + DiagnosticsPendingByGroupCSV × 2 + HydrationDaysSinceLastLog × 3 — counts may vary slightly with build-runtime).
+**i18n:** 653 → 675 (+22 keys × 3 locales).
+**Files added:** `BlockConflictDetector.swift`, `TripExpenseMonthlySummary.swift`, `DiagnosticsViewRound18Sections.swift`, plus 5 new test files and 2 scripts.
+
 ### Added — Session 15 round 17: deferred-UI close-out (7 wires)
 
 Round 17 surfaces every deferred-UI item from rounds 13-16. No new infra — just wires onto stores/helpers that already shipped.

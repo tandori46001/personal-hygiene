@@ -10,6 +10,8 @@ struct HousekeepingListView: View {
     @State private var newRoom = ""
     @State private var addingCustomRoom = false
     @State private var newRoomIconID: String = ""
+    @State private var iconChangeRoom: String?
+    @State private var iconChangeSelection: String = ""
 
     var body: some View {
         NavigationStack {
@@ -56,6 +58,20 @@ struct HousekeepingListView: View {
                             status: viewModel.status(for: task),
                             onComplete: { viewModel.markDone(task) }
                         )
+                        .contextMenu {
+                            if let room = task.room {
+                                Button {
+                                    iconChangeRoom = room
+                                    iconChangeSelection = HousekeepingRoomIconStore.iconID(forRoom: room) ?? ""
+                                } label: {
+                                    Label {
+                                        Text("housekeeping.action.changeIcon", bundle: .main)
+                                    } icon: {
+                                        Image(systemName: "square.and.pencil")
+                                    }
+                                }
+                            }
+                        }
                         .swipeActions(edge: .leading) {
                             Button {
                                 viewModel.markDone(task)
@@ -96,6 +112,57 @@ struct HousekeepingListView: View {
             .onAppear { viewModel.reload() }
             .sheet(isPresented: $showingNewSheet) {
                 newTaskSheet
+            }
+            .sheet(item: Binding(
+                get: { iconChangeRoom.map { IconChangeContext(room: $0) } },
+                set: { _ in iconChangeRoom = nil }
+            )) { context in
+                changeIconSheet(for: context.room)
+            }
+        }
+    }
+
+    private struct IconChangeContext: Identifiable {
+        let room: String
+        var id: String { room }
+    }
+
+    @ViewBuilder
+    private func changeIconSheet(for room: String) -> some View {
+        NavigationStack {
+            Form {
+                Picker(selection: $iconChangeSelection) {
+                    Text("housekeeping.icon.none", bundle: .main).tag("")
+                    ForEach(HousekeepingRoomIcons.palette) { choice in
+                        Label {
+                            Text(LocalizedStringKey(choice.displayKey), bundle: .main)
+                        } icon: {
+                            Image(systemName: choice.id)
+                        }
+                        .tag(choice.id)
+                    }
+                } label: {
+                    Text(verbatim: room)
+                }
+                .pickerStyle(.inline)
+            }
+            .navigationTitle(Text("housekeeping.action.changeIcon", bundle: .main))
+            .navigationBarTitleDisplayMode(.inline)
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button { iconChangeRoom = nil } label: {
+                        Text("common.cancel", bundle: .main)
+                    }
+                }
+                ToolbarItem(placement: .confirmationAction) {
+                    Button {
+                        let id: String? = iconChangeSelection.isEmpty ? nil : iconChangeSelection
+                        HousekeepingRoomIconStore.setIconID(id, forRoom: room)
+                        iconChangeRoom = nil
+                    } label: {
+                        Text("common.save", bundle: .main)
+                    }
+                }
             }
         }
     }

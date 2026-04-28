@@ -114,6 +114,36 @@ extension TripDetailViewModel {
         return lines.joined(separator: "\n")
     }
 
+    /// Round-18 slice 16: plain-text equivalent of `itineraryMarkdown(...)`.
+    /// Strips Markdown syntax (`#` headings, `**bold**`, `[ ]` checkboxes)
+    /// so the output is suitable for pasting into chat / SMS / email body
+    /// where Markdown wouldn't render.
+    func itineraryPlainText(calendar: Calendar = .autoupdatingCurrent) -> String {
+        let markdown = itineraryMarkdown(calendar: calendar)
+        var lines: [String] = []
+        for line in markdown.components(separatedBy: "\n") {
+            var stripped = line
+            // Remove leading "## " / "# " heading markers.
+            if stripped.hasPrefix("# ") {
+                stripped = String(stripped.dropFirst(2))
+            } else if stripped.hasPrefix("## ") {
+                stripped = String(stripped.dropFirst(3))
+            }
+            // Remove **bold** wrappers but keep their inner text.
+            stripped = stripped.replacingOccurrences(of: "**", with: "")
+            // Convert "- [x] foo" / "- [ ] foo" into "✓ foo" / "• foo".
+            if stripped.hasPrefix("- [x] ") {
+                stripped = "✓ " + stripped.dropFirst(6)
+            } else if stripped.hasPrefix("- [ ] ") {
+                stripped = "• " + stripped.dropFirst(6)
+            } else if stripped.hasPrefix("- ") {
+                stripped = "• " + stripped.dropFirst(2)
+            }
+            lines.append(stripped)
+        }
+        return lines.joined(separator: "\n")
+    }
+
     // MARK: - Round 14 helpers
 
     /// Round-14 slice 3: total expenses grouped by currency. Returns

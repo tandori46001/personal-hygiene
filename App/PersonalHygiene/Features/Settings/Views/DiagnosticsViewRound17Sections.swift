@@ -1,4 +1,7 @@
 import SwiftUI
+#if canImport(UIKit) && !os(watchOS)
+import UIKit
+#endif
 
 /// Round-17 wires for `DiagnosticsView`: surfaces the `PendingNotificationsGroup`
 /// classifier (round 14) by re-grouping the already-loaded `pendingDetails`
@@ -15,10 +18,22 @@ extension DiagnosticsView {
                     ForEach(grouped, id: \.category) { entry in
                         DisclosureGroup {
                             ForEach(entry.identifiers, id: \.self) { identifier in
-                                Text(verbatim: identifier)
-                                    .font(.caption2.monospaced())
-                                    .lineLimit(1)
-                                    .truncationMode(.middle)
+                                Button {
+                                    UIPasteboard.general.string = identifier
+                                } label: {
+                                    HStack {
+                                        Text(verbatim: identifier)
+                                            .font(.caption2.monospaced())
+                                            .lineLimit(1)
+                                            .truncationMode(.middle)
+                                        Spacer()
+                                        Image(systemName: "doc.on.doc")
+                                            .font(.caption2)
+                                            .foregroundStyle(.secondary)
+                                    }
+                                }
+                                .buttonStyle(.plain)
+                                .accessibilityHint(Text("settings.diagnostics.tapToCopy", bundle: .main))
                             }
                         } label: {
                             HStack {

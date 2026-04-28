@@ -52,6 +52,11 @@ final class TemplateEditorViewModel {
     /// keeps its own `durationMinutes`; only `startMinutesFromMidnight` is
     /// reassigned, so a 30-min block dragged into the 09:00 slot becomes a
     /// 30-min block at 09:00.
+    /// Round-18 slice 8: tracks blocks created by the most recent successful
+    /// `insertPreset(_:)` so the editor can offer a 4-second "Undo" affordance.
+    /// Cleared by `undoLastPresetInsertion()` or by any subsequent insertion.
+    private(set) var lastInsertedPresetBlockIDs: [UUID] = []
+
     /// Round-17 wire: append every `BlockSeed` in `preset` to this template,
     /// shifting their start times so the bundle starts after the last existing
     /// block. The bundle's relative time spacing (offsets between seeds) is
@@ -65,6 +70,7 @@ final class TemplateEditorViewModel {
             let firstSeed = seeds.map(\.startMinutesFromMidnight).min() ?? 0
             return max(0, lastEnd - firstSeed)
         }()
+        var insertedIDs: [UUID] = []
         for seed in seeds {
             let block = Block(
                 title: seed.title,
@@ -73,7 +79,21 @@ final class TemplateEditorViewModel {
                 durationMinutes: seed.durationMinutes
             )
             try repository.upsert(block, in: template)
+            insertedIDs.append(block.id)
         }
+        lastInsertedPresetBlockIDs = insertedIDs
+    }
+
+    /// Round-18 slice 8: deletes the blocks created by the last
+    /// `insertPreset(_:)` and clears the tracker. No-op if there's nothing to
+    /// undo or the blocks were already removed.
+    func undoLastPresetInsertion() throws {
+        guard !lastInsertedPresetBlockIDs.isEmpty else { return }
+        let ids = Set(lastInsertedPresetBlockIDs)
+        for block in sortedBlocks where ids.contains(block.id) {
+            try repository.delete(block)
+        }
+        lastInsertedPresetBlockIDs = []
     }
 
     func move(fromOffsets source: IndexSet, toOffset destination: Int) throws {

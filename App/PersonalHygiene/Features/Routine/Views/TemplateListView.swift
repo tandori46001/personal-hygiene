@@ -147,6 +147,25 @@ private struct TemplateRow: View {
     let template: RoutineTemplate
     let onActivate: () -> Void
 
+    /// Round-18 slice 7: compact summary string "Start–End · N blocks · Total Xh".
+    private var summary: String? {
+        let blocks = template.sortedBlocks
+        guard let first = blocks.first, let last = blocks.last else { return nil }
+        let endMinutes = last.startMinutesFromMidnight + last.durationMinutes
+        let totalMinutes = TemplateDurationCalculator.totalMinutes(blocks)
+        let totalString = TemplateDurationCalculator.formatted(totalMinutes)
+        let startStr = Self.format(minutes: first.startMinutesFromMidnight)
+        let endStr = Self.format(minutes: endMinutes)
+        return "\(startStr)–\(endStr) · \(blocks.count) · \(totalString)"
+    }
+
+    private static func format(minutes: Int) -> String {
+        let bounded = min(24 * 60 - 1, max(0, minutes))
+        let hours = bounded / 60
+        let mins = bounded % 60
+        return String(format: "%02d:%02d", hours, mins)
+    }
+
     var body: some View {
         HStack {
             VStack(alignment: .leading, spacing: 2) {
@@ -155,6 +174,11 @@ private struct TemplateRow: View {
                 Text(LocalizedStringKey("dayType.\(template.dayType.rawValue)"))
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                if let summary {
+                    Text(verbatim: summary)
+                        .font(.caption2.monospacedDigit())
+                        .foregroundStyle(.tertiary)
+                }
             }
             Spacer()
             if template.isActive {

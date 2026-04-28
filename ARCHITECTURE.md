@@ -493,8 +493,46 @@ Round 17 is wires-only: every store / helper added in rounds 13-16 that didn't y
 - `DoseHistoryViewIntegrationTests.test_viewModel_doseHistory_returnsMedicationCompletionsFromRollingWindow` — end-to-end wire from the new view-model loader through to filtered entries.
 - `HousekeepingRoomIconsTests.test_palette_displayKeysAreNonEmpty` — rounds out the existing palette tests.
 
+## 32. Round 18 — quality + polish (25 slices)
+
+Round 18 is a polish + observability round across all 9 modules. No new SwiftData migrations, no new domain models, no new services with persistent state outside `UserDefaults`. Three pure helpers added (`BlockConflictDetector`, `TripExpenseMonthlySummary`, `DiagnosticsView.pendingByGroupCSV / onePagerPDF`). Two new shell scripts (`check-i18n-coverage.sh`, `check-localization-orphans.py`). Five new test files.
+
+**Test infrastructure (slices 1-4):**
+- `RenderSmokeTests.swift` extended with 4 new render checks (MedicationComplianceView · DoseHistoryView at default + `.accessibility5` size). Continues using `ImageRenderer` + non-empty `UIImage` assertion (no third-party snapshot library — CLAUDE.md still bans dependencies).
+- `scripts/check-i18n-coverage.sh` greps for every `Text("…", bundle:)`, `LocalizedStringKey("…")`, `LocalizedStringResource("…")`, `String(localized: "…")` literal in `App/**/*.swift`, strips interpolated keys, then comm-23s against the xcstrings key set. Exits non-zero on any miss.
+- `scripts/check-localization-orphans.py` does the inverse — declared keys never referenced. Honors dynamic prefixes by detecting `LocalizedStringKey("foo.\(bar)")` style construction and skipping any key that starts with `foo.`. Warning by default; `--fail-on-orphans` for hard fail.
+
+**Today / Routine (slices 5-8):**
+- TodayView subscribes to `NotificationCenter.publisher(for: .NSSystemTimeZoneDidChange)`. On fire it reloads + sets a transient banner state. The banner is a single tap-to-dismiss row (no auto-dismiss timer — TZ shifts are rare enough to merit explicit acknowledgement).
+- `BlockConflictDetector.conflictingIDs(in:)` is an O(n²) sweep with an early break when the next block's start ≥ the current block's end. Touching boundaries (one ends exactly when the next starts) are not flagged; only true overlaps. Conflict chip is a triangle SF Symbol next to the block title.
+- TemplateList row gains a "Start–End · N · Total" caption derived from `TemplateDurationCalculator` (round 15) + `Block.startMinutesFromMidnight + duration` for the end edge.
+- `TemplateEditorViewModel.insertPreset(_:)` now records `lastInsertedPresetBlockIDs`. The view runs a 4-second `Task.sleep` toast after each insertion exposing an "Undo" button that calls `undoLastPresetInsertion()` — deletes those exact IDs, no-op if user already navigated away or did anything that reset the array.
+
+**Medication (slices 9-12):**
+- `DoseHistoryView` rewritten to take a `loader: () -> [Entry]` closure (defaults to the seeded `entries` so existing callers keep working). `.refreshable` rebuilds the list. New filter chip row over `Set(entries.compactMap(\.conceptIdentifier)).sorted()`. Filter auto-clears after a refresh that no longer contains the active concept.
+- `MedicationComplianceViewModel.thirtyDayAdherence` runs a second `service.doseLogs(...)` over the trailing 30 days during reload and feeds `MedicationCompliance.overallAdherence(...)`. Surfaces as a compact monospaced row below the 7-day overall row.
+- BlockDetailSheet renders a medication-specific "Skip this dose" button (only when `block.medicationConceptIdentifier != nil` and the block isn't already done). Wired to the same `onToggleSkip` closure as the generic skip-today; semantically distinct UI prompt that emphasizes the medication-follow-up notification will be suppressed (which it is, by `NotificationCoordinator` skipping the block + its followup).
+
+**Trips (slices 13-16):**
+- `TripEmergencyContactsSection.telURL(from:)` keeps the first `+` and every digit. Renders a green `phone.circle.fill` `Link` to `tel:…` when the URL builds.
+- `TripExpenseMonthlySummary.buckets(...)` groups expenses by `(year, month, currency)` via `Calendar.dateComponents`. Sorts newest-first then by currency. Surfaces as a `DisclosureGroup` inside `TripExpensesSection` when ≥1 expense.
+- `TripCarbonSection` gains a segmented kg/lb picker bound to `@AppStorage("trip.carbon.unit")` (default "kg"). Conversion factor 2.2046226218.
+- `TripDetailViewModel.itineraryPlainText(...)` post-processes `itineraryMarkdown(...)` line-by-line: strips `# ` / `## ` heading markers, removes `**` bold delimiters, converts `[x]` / `[ ]` checkboxes to `✓` / `•` bullets. Wired to a "Copy as plain text" menu action that writes to `UIPasteboard.general`.
+
+**Settings / Diagnostics (slices 17-20):**
+- Quiet hours "Reset to defaults" button restores 22:00 → 07:00 + sets enabled to false.
+- Pending-by-group identifier rows are now `Button`s that copy to `UIPasteboard.general`. Accessibility hint says "Tap to copy identifier."
+- `DiagnosticsView.pendingByGroupCSV(pendingDetails:)` is a static method that emits `category,identifier,triggerDate` rows. Identifier sanitization replaces `,` with `;` so the CSV stays parseable.
+- `DiagnosticsView.onePagerPDF(snapshotHistory:refreshTrace:authTimeline:)` uses `UIGraphicsPDFRenderer` (US Letter, 612 × 792 @ 72 dpi). Three sections (snapshot history × 3, refresh-trace × 50, auth timeline × 10) drawn with Menlo 9pt monospaced rows. `#if canImport(UIKit) && !os(watchOS)` so the watch target doesn't pull in `UIGraphicsPDFRenderer`.
+
+**Secondary modules (slices 21-23):**
+- HousekeepingListView: long-press a task (via `.contextMenu`) → "Change room icon" → sheet with the same palette picker as the new-task sheet, persisting via `HousekeepingRoomIconStore.setIconID(_:forRoom:)`.
+- HydrationDashboardViewModel.daysSinceLastLog(now:): computes `Calendar.dateComponents(.day, from: lastDayStart, to: today)`. Returns 0 when last log is today, nil when no logs. View shows a red caption ("X days since last log — drink up.") when ≥3.
+- Birthdays row long-press → "Copy gift ideas" copies the stored `BirthdayIdeaStore.idea(for:)` to clipboard. Hidden when no idea is stored.
+
 **Version history:**
 
+- **v0.13 (2026-04-28)** — added §32 reflecting round 18: 25 slices polish + observability + test infra. New helpers `BlockConflictDetector` (O(n²) overlap detector), `TripExpenseMonthlySummary` (year-month-currency buckets), `DiagnosticsView.pendingByGroupCSV` + `onePagerPDF` (static UIGraphicsPDFRenderer single-page export). New scripts `check-i18n-coverage.sh` (literal ↔ xcstrings parity) + `check-localization-orphans.py` (declared but unreferenced). DoseHistoryView refactored to accept a `loader` closure for `.refreshable`. Today subscribes to `NSSystemTimeZoneDidChange`.
 - **v0.12 (2026-04-28)** — added §31 reflecting round 17: 7 deferred UI wires onto stores/helpers shipped in rounds 13-16. New `RoutineRepository.recentCompletions(days:)`, `MedicationComplianceViewModel.doseHistory(...)`, `TemplateEditorViewModel.insertPreset(_:)`. SettingsView gained `routineRepository` parameter; FocusScheduleView gained `blocksProvider` closure.
 - **v0.11 (2026-04-27)** — added §30 reflecting rounds 14, 15, 16: TripCarbonEstimate (haversine + 0.255 kg CO₂/passenger·km), TripEmergencyContact + section UI, QuietHoursStore (recurring complement of round-12 pause), PendingNotificationsGroup classifier, TemplatePresetSeeds bundles, HydrationWeeklyAverage caption, MilestoneDefaultBundle one-tap action, TemplateDurationCalculator footer, MedicationDoseHistory aggregator + DoseHistoryView, HousekeepingRoomIcons palette + store, FocusFilterPreview helper, TripCarbonSection UI.
 - **v0.10 (2026-04-27)** — added §29 reflecting round 13: round-12 caveat closure (notes paragraphs, snapshot fallback, `RefreshTraceKind.paused`, ObservabilityHealthCheck pause-aware, Today minute-tick); trip cost log + Markdown share + duplicate-with-shifted-dates + notes templates; SnapshotHistoryStore + NotificationAuthTimelineLog + NetworkActivityCounter + pending-details disclosure; HousekeepingStreakCounter + BirthdayIdeaStore + BirthdayRelationshipStore; BedtimeMute helper.

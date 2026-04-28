@@ -139,6 +139,7 @@ extension DiagnosticsView {
                 networkActivitySection
                 pendingDetailsSection
                 pendingByGroupSection
+                round18ExportSection
                 Section {
                     Button {
                         Task {

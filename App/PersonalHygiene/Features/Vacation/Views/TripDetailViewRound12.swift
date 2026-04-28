@@ -30,6 +30,16 @@ extension TripDetailView {
                     Image(systemName: "doc.text")
                 }
             }
+            // Round-18 slice 16: plain-text variant for paste into chat/SMS/email.
+            Button {
+                UIPasteboard.general.string = viewModel.itineraryPlainText()
+            } label: {
+                Label {
+                    Text("trip.action.copyPlainText", bundle: .main)
+                } icon: {
+                    Image(systemName: "doc.on.doc")
+                }
+            }
             if viewModel.isStillActive() {
                 Button(role: .destructive) {
                     showingArchiveConfirm = true
@@ -139,6 +149,12 @@ struct TripCarbonSection: View {
     let viewModel: TripDetailViewModel
     let homeLocation: BlockLocation?
 
+    /// Round-18 slice 15: persisted user preference for the displayed unit.
+    /// "kg" = kilograms (default), "lb" = pounds. 1 kg ≈ 2.2046 lb.
+    @AppStorage("trip.carbon.unit") private var unit: String = "kg"
+
+    private static let kgToLb = 2.2046226218
+
     var body: some View {
         if let kg = viewModel.roundTripCO2Kg(home: homeLocation) {
             Section {
@@ -149,16 +165,33 @@ struct TripCarbonSection: View {
                     VStack(alignment: .leading, spacing: 2) {
                         Text("trip.carbon.title", bundle: .main)
                             .font(.body.bold())
-                        Text(verbatim: String(format: "%.0f kg CO₂", kg))
+                        Text(verbatim: formattedValue(kg: kg))
                             .font(.caption.monospacedDigit())
                             .foregroundStyle(.secondary)
                     }
                     Spacer()
+                    Picker(selection: $unit) {
+                        Text("trip.carbon.unit.kg", bundle: .main).tag("kg")
+                        Text("trip.carbon.unit.lb", bundle: .main).tag("lb")
+                    } label: {
+                        Text("trip.carbon.unit.label", bundle: .main)
+                    }
+                    .pickerStyle(.segmented)
+                    .frame(maxWidth: 110)
                 }
                 .accessibilityElement(children: .combine)
             } footer: {
                 Text("trip.carbon.footer", bundle: .main)
             }
+        }
+    }
+
+    private func formattedValue(kg: Double) -> String {
+        switch unit {
+        case "lb":
+            return String(format: "%.0f lb CO₂", kg * Self.kgToLb)
+        default:
+            return String(format: "%.0f kg CO₂", kg)
         }
     }
 }
@@ -169,16 +202,41 @@ struct TripEmergencyContactsSection: View {
     @Binding var newLabel: String
     @Binding var newPhone: String
 
+    /// Round-18 slice 13: builds a `tel:` URL by stripping every char except
+    /// digits and a leading `+` so common formatting ("+34 600 11 22 33")
+    /// doesn't break the dialer hand-off.
+    static func telURL(from phone: String) -> URL? {
+        var digits = phone.filter { $0.isNumber || $0 == "+" }
+        if digits.contains("+") {
+            // Keep only the first '+' and strip any others.
+            let prefix = digits.first == "+" ? "+" : ""
+            digits = prefix + digits.filter(\.isNumber)
+        }
+        guard !digits.isEmpty else { return nil }
+        return URL(string: "tel:\(digits)")
+    }
+
     var body: some View {
         Section {
             ForEach(viewModel.emergencyContacts) { contact in
-                VStack(alignment: .leading, spacing: 2) {
-                    Text(verbatim: contact.label)
-                        .font(.body)
-                    Text(verbatim: contact.phone)
-                        .font(.caption.monospacedDigit())
-                        .foregroundStyle(.secondary)
-                        .textSelection(.enabled)
+                HStack(alignment: .top) {
+                    VStack(alignment: .leading, spacing: 2) {
+                        Text(verbatim: contact.label)
+                            .font(.body)
+                        Text(verbatim: contact.phone)
+                            .font(.caption.monospacedDigit())
+                            .foregroundStyle(.secondary)
+                            .textSelection(.enabled)
+                    }
+                    Spacer()
+                    if let url = Self.telURL(from: contact.phone) {
+                        Link(destination: url) {
+                            Image(systemName: "phone.circle.fill")
+                                .font(.title3)
+                                .foregroundStyle(.green)
+                        }
+                        .accessibilityLabel(Text("trip.emergency.action.call", bundle: .main))
+                    }
                 }
                 .accessibilityElement(children: .combine)
                 .swipeActions(edge: .trailing) {
@@ -328,6 +386,29 @@ struct TripExpensesSection: View {
                 .disabled(newLabel.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
                     || Double(newAmount) == nil
                     || newCurrency.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+            }
+            // Round-18 slice 14: monthly summary disclosure.
+            let buckets = TripExpenseMonthlySummary.buckets(from: viewModel.expenses)
+            if !buckets.isEmpty {
+                DisclosureGroup {
+                    ForEach(buckets) { bucket in
+                        HStack {
+                            Text(verbatim: TripExpenseMonthlySummary.formattedMonth(
+                                year: bucket.year,
+                                month: bucket.month
+                            ))
+                            .font(.caption.monospacedDigit())
+                            Spacer()
+                            Text(verbatim: String(format: "%.2f %@ · %d",
+                                                  bucket.total, bucket.currencyCode, bucket.count))
+                                .font(.caption.monospacedDigit())
+                                .foregroundStyle(.secondary)
+                        }
+                        .accessibilityElement(children: .combine)
+                    }
+                } label: {
+                    Text("trip.expense.monthly.title", bundle: .main)
+                }
             }
         } header: {
             Text("trip.detail.section.expenses", bundle: .main)

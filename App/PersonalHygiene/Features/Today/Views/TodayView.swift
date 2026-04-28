@@ -11,6 +11,10 @@ struct TodayView: View {
     @State var showingResetDayConfirm = false
     @State private var refreshToast: String?
     @State private var minuteTickTimer: Task<Void, Never>?
+    /// Round-18 slice 5: visible after the device time zone changes mid-session
+    /// (e.g. landing in another country) so the user knows Today's day boundary
+    /// shifted under their feet. User dismisses by tapping the row.
+    @State var staleDayBannerVisible = false
     @AppStorage("today.compactMode") var compactMode = false
     @AppStorage("today.collapseDone") var collapseDoneBlocks = false
     @Environment(\.scenePhase) private var scenePhase
@@ -46,6 +50,7 @@ struct TodayView: View {
             Group {
                 if let template = viewModel.activeTemplate {
                     List {
+                        staleDayBannerSection
                         if let focus = viewModel.activeFocusWindow() {
                             Section {
                                 FocusActiveBanner(window: focus)
@@ -270,6 +275,11 @@ struct TodayView: View {
                     minuteTickTimer?.cancel()
                     minuteTickTimer = nil
                 }
+            }
+            .onReceive(NotificationCenter.default.publisher(for: .NSSystemTimeZoneDidChange)) { _ in
+                viewModel.reload()
+                nowMinutes = Self.currentMinutesFromMidnight()
+                staleDayBannerVisible = true
             }
             .sheet(isPresented: $showingProgressDetail) {
                 if let template = viewModel.activeTemplate {

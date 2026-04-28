@@ -19,6 +19,17 @@ extension SettingsView {
             if QuietHoursStore.isEnabled() {
                 quietHoursStartRow
                 quietHoursEndRow
+                Button(role: .destructive) {
+                    QuietHoursStore.setStartMinutes(QuietHoursStore.defaultStartMinutes)
+                    QuietHoursStore.setEndMinutes(QuietHoursStore.defaultEndMinutes)
+                    QuietHoursStore.setEnabled(false)
+                } label: {
+                    Label {
+                        Text("settings.quietHours.reset", bundle: .main)
+                    } icon: {
+                        Image(systemName: "arrow.counterclockwise")
+                    }
+                }
             }
         } header: {
             Text("settings.section.quietHours", bundle: .main)

@@ -1633,3 +1633,161 @@ None — purely build-time guard.
 2. Pick or type a room → "Room icon" picker appears below. Choose any of the 8 icons → row icon updates in the picker.
 3. Save → row in the list shows the chosen SF Symbol next to the room name.
 4. Re-open the new-task sheet, type the same room name → the picker auto-loads the previously-chosen icon (round-trip via `HousekeepingRoomIconStore`).
+
+## [T-123] — Today: stale-day banner on time-zone change (round 18)
+
+**Module:** today · **Shipped in:** round 18
+
+### Manual verification
+1. Settings → General → Date & Time → toggle off "Set Automatically" → change time zone manually. Return to the app.
+2. Today tab shows a tap-to-dismiss banner "Day boundary shifted · Time zone changed — Today recalculated."
+3. Tap the row → banner disappears.
+
+## [T-124] — TemplateEditor: block conflict chip (round 18)
+
+**Module:** routine · **Shipped in:** round 18
+
+### Manual verification
+1. Templates → editor → create two blocks whose time windows overlap (e.g. 09:00 + 30 min and 09:15 + 30 min).
+2. Both rows render an orange triangle next to the title. Touching boundaries (09:00–09:30 + 09:30–10:00) do NOT trigger the chip.
+
+## [T-125] — TemplateList: summary chip (round 18)
+
+**Module:** routine · **Shipped in:** round 18
+
+### Manual verification
+1. Templates list → each non-empty template row shows a tertiary monospaced caption "HH:MM–HH:MM · N · Xh".
+
+## [T-126] — TemplateEditor: undo preset insertion (round 18)
+
+**Module:** routine · **Shipped in:** round 18
+
+### Manual verification
+1. Templates → editor → "Insert preset bundle" → pick any preset.
+2. A row appears below "Insert preset bundle" with "Preset inserted · Undo" within 4 seconds.
+3. Tap "Undo" → the inserted blocks disappear and the row collapses.
+4. Wait 4 seconds without tapping → the row auto-dismisses (insertions stay).
+
+## [T-127] — DoseHistoryView: pull-to-refresh + filter chips (round 18)
+
+**Module:** medication · **Shipped in:** round 18
+
+### Manual verification
+1. Medication → Dose history → pull down to refresh. List re-fetches.
+2. Chip row at top: tap a concept ID chip → only entries for that ID are shown. "All" clears the filter.
+
+## [T-128] — Today: skip this dose (round 18)
+
+**Module:** today/medication · **Shipped in:** round 18
+
+### Manual verification
+1. Today → tap a medication block → BlockDetailSheet opens.
+2. New "Skip this dose" button visible (only for blocks with a medication concept identifier, only when the block is not already done).
+3. Tap → block marked as skipped today; the medication-followup notification for today is suppressed (verify in Diagnostics → Pending IDs).
+
+## [T-129] — Medication: 30-day adherence row (round 18)
+
+**Module:** medication · **Shipped in:** round 18
+
+### Manual verification
+1. Medication tab → below "Overall" row a "30-day adherence" row appears (only when the view-model has loaded the data).
+
+## [T-130] — Trip emergency contacts: tap-to-call (round 18)
+
+**Module:** trip · **Shipped in:** round 18
+
+### Manual verification
+1. Trips → open any trip → Emergency contacts section. Each row with a phone shows a green phone icon.
+2. Tap → iOS dialer prompts to call the (sanitized) number.
+
+## [T-131] — Trip expenses: monthly summary disclosure (round 18)
+
+**Module:** trip · **Shipped in:** round 18
+
+### Manual verification
+1. Trips → open any trip with ≥1 expense → Expenses section now ends with a "Monthly summary" disclosure.
+2. Expand → one row per `(year, month, currency)` with total + count.
+
+## [T-132] — Trip carbon: kg/lb toggle (round 18)
+
+**Module:** trip · **Shipped in:** round 18
+
+### Manual verification
+1. Trips → open trip with destination geocoded + home location set → Carbon section shows segmented kg/lb picker.
+2. Switch to lb → value updates to `kg × 2.2046` rounded.
+3. Switch back to kg → value reverts.
+
+## [T-133] — Trip itinerary: copy as plain text (round 18)
+
+**Module:** trip · **Shipped in:** round 18
+
+### Manual verification
+1. Trips → open trip → toolbar `…` menu → "Copy as plain text".
+2. Paste into Notes / Messages → output is plain (no `**bold**`, no `[ ]` checkboxes; uses `✓` and `•` instead).
+
+## [T-134] — Settings → Quiet hours reset (round 18)
+
+**Module:** settings · **Shipped in:** round 18
+
+### Manual verification
+1. Settings → Quiet hours → enable + change times → tap "Reset to defaults".
+2. Toggle is off, start/end revert to 22:00 / 07:00.
+
+## [T-135] — Diagnostics: tap-to-copy identifier (round 18)
+
+**Module:** settings/diagnostics · **Shipped in:** round 18
+
+### Manual verification
+1. Diagnostics → Advanced → Pending IDs by group → expand a category → tap any identifier row.
+2. Identifier is copied to clipboard (verify with paste).
+
+## [T-136] — Diagnostics: export pending CSV (round 18)
+
+**Module:** settings/diagnostics · **Shipped in:** round 18
+
+### Manual verification
+1. Diagnostics → Advanced → "Export pending IDs (CSV)" → share sheet opens with a `.csv` file.
+2. Open the CSV → header is `category,identifier,triggerDate`; one row per pending identifier.
+
+## [T-137] — Diagnostics: one-pager PDF (round 18)
+
+**Module:** settings/diagnostics · **Shipped in:** round 18
+
+### Manual verification
+1. Diagnostics → Advanced → "Export one-pager (PDF)" → share sheet opens with a single-page PDF.
+2. Page contains: title, build descriptor, snapshot history (≤3), refresh trace (≤50), auth timeline (≤10).
+
+## [T-138] — Housekeeping: change room icon (round 18)
+
+**Module:** housekeeping · **Shipped in:** round 18
+
+### Manual verification
+1. Housekeeping → long-press a task whose room is set → "Change room icon" context menu item.
+2. Tap → sheet with the 8 SF Symbol palette + "No icon" option. Save → row icon updates.
+
+## [T-139] — Hydration: comeback nudge (round 18)
+
+**Module:** hydration · **Shipped in:** round 18
+
+### Manual verification
+1. Don't log hydration for 3+ days. Open the Hydration tab.
+2. Top of the list shows a red caption "X days since last log — drink up." X matches actual day delta.
+3. Log water → the caption disappears on next reload (since `daysSinceLastLog` falls below 3).
+
+## [T-140] — Birthdays: copy gift ideas (round 18)
+
+**Module:** birthdays · **Shipped in:** round 18
+
+### Manual verification
+1. Birthdays → store a gift idea for any contact (via existing flow).
+2. Long-press that contact's row → "Copy gift ideas" context menu item appears (and only for contacts with ideas).
+3. Tap → idea is on the clipboard.
+
+## [T-141…T-145] — Round 18 test infrastructure (no manual case)
+
+The following slices ship purely automated artifacts and have no manual case:
+- Slice 1: 4 new render-smoke tests in `RenderSmokeTests.swift` (covered by `./scripts/check-tests.sh`).
+- Slice 2: 2 new DynamicType tests at `.accessibility5` (same).
+- Slice 3: `scripts/check-i18n-coverage.sh` — covered by running the script.
+- Slice 4: `scripts/check-localization-orphans.py` — covered by running the script.
+- (Reserved for round 19+.)

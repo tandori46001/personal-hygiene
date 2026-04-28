@@ -109,6 +109,30 @@ final class TemplateEditorViewModelTests: XCTestCase {
         XCTAssertEqual(inserted.first?.startMinutesFromMidnight, 10 * 60 + 30)
     }
 
+    /// Round 18 slice 8: undoLastPresetInsertion deletes only the blocks
+    /// that the most recent insertPreset added — pre-existing blocks remain.
+    func test_undoLastPresetInsertion_removesOnlyJustInsertedBlocks() throws {
+        let template = try makeTemplate(starts: [8 * 60])
+        let viewModel = TemplateEditorViewModel(template: template, repository: repo)
+        let preexistingIDs = Set(viewModel.sortedBlocks.map(\.id))
+
+        try viewModel.insertPreset(.workday)
+        XCTAssertGreaterThan(viewModel.sortedBlocks.count, preexistingIDs.count)
+
+        try viewModel.undoLastPresetInsertion()
+        let remaining = Set(viewModel.sortedBlocks.map(\.id))
+        XCTAssertEqual(remaining, preexistingIDs)
+        XCTAssertTrue(viewModel.lastInsertedPresetBlockIDs.isEmpty)
+    }
+
+    func test_undoLastPresetInsertion_isNoOpWhenNothingTracked() throws {
+        let template = try makeTemplate(starts: [8 * 60])
+        let viewModel = TemplateEditorViewModel(template: template, repository: repo)
+        let countBefore = viewModel.sortedBlocks.count
+        try viewModel.undoLastPresetInsertion()
+        XCTAssertEqual(viewModel.sortedBlocks.count, countBefore)
+    }
+
     func test_move_preservesEachBlockDurationWhenSwapped() throws {
         let template = RoutineTemplate(name: "Durations", dayType: .weekday)
         try repo.upsert(template)

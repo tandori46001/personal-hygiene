@@ -2708,6 +2708,99 @@
     "settings.focus.preview.silenced.%lld" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "%lld silenced" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "%lld silenciados" } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "%lld silencieux" } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "%lld silencieux" } } } },
+
+    "today.staleDay.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Day boundary shifted" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "El cambio de día se ha desplazado" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Limite du jour décalée" } } } },
+    "today.staleDay.dismiss" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Time zone changed — Today recalculated. Tap to dismiss." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Cambió la zona horaria — Today recalculado. Pulsa para descartar." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Fuseau horaire modifié — Today recalculé. Touchez pour fermer." } } } },
+    "templateEditor.conflict.chip" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Conflict" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Conflicto" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Conflit" } } } },
+    "templateEditor.preset.inserted.morningRoutine" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Morning routine inserted" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Rutina matinal insertada" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Routine du matin insérée" } } } },
+    "templateEditor.preset.inserted.workday" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Workday inserted" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Día laboral insertado" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Journée de travail insérée" } } } },
+    "templateEditor.preset.inserted.weekendChores" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Weekend chores inserted" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Tareas del finde insertadas" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Tâches du week-end insérées" } } } },
+    "common.undo" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Undo" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Deshacer" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Annuler" } } } },
+    "medication.dose.history.filter.all" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "All" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Todas" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Toutes" } } } },
+    "today.action.skipDose" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Skip this dose" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Saltar esta dosis" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Sauter cette dose" } } } },
+    "medication.adherence.30day" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "30-day adherence" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Adherencia 30 días" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Adhérence 30 jours" } } } },
+    "trip.emergency.action.call" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Call" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Llamar" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Appeler" } } } },
+    "trip.expense.monthly.title" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Monthly summary" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Resumen mensual" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Résumé mensuel" } } } },
+    "trip.carbon.unit.label" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Unit" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Unidad" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Unité" } } } },
+    "trip.carbon.unit.kg" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "kg" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "kg" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "kg" } } } },
+    "trip.carbon.unit.lb" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "lb" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "lb" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "lb" } } } },
+    "trip.action.copyPlainText" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Copy as plain text" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Copiar como texto" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Copier en texte" } } } },
+    "settings.quietHours.reset" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Reset to defaults" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Restablecer valores" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Réinitialiser" } } } },
+    "settings.diagnostics.tapToCopy" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Tap to copy identifier." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Pulsa para copiar identificador." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Touchez pour copier l'identifiant." } } } },
+    "settings.diagnostics.exportPendingCSV" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Export pending IDs (CSV)" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Exportar IDs pendientes (CSV)" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Exporter IDs en attente (CSV)" } } } },
+    "settings.diagnostics.exportOnePagerPDF" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Export one-pager (PDF)" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Exportar resumen (PDF)" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Exporter le résumé (PDF)" } } } },
+    "housekeeping.action.changeIcon" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Change room icon" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Cambiar icono de la sala" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Changer l'icône" } } } },
+    "hydration.comeback.%lld" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "%lld days since last log — drink up." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "%lld días sin registrar — bebe agua." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "%lld jours sans entrée — buvez de l'eau." } } } },
+    "birthdays.action.copyIdeas" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Copy gift ideas" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Copiar ideas de regalo" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Copier les idées" } } } }
   }
 }

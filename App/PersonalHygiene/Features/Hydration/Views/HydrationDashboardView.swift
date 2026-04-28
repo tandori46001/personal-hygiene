@@ -26,6 +26,21 @@ struct HydrationDashboardView: View {
                     }
                 }
 
+                // Round-18 slice 22: comeback nudge after 3+ silent days.
+                if let days = viewModel.daysSinceLastLog(), days >= 3 {
+                    Section {
+                        HStack(spacing: 8) {
+                            Image(systemName: "drop.triangle.fill")
+                                .foregroundStyle(.red)
+                                .accessibilityHidden(true)
+                            Text("hydration.comeback.\(days)", bundle: .main)
+                                .font(.callout)
+                                .foregroundStyle(.red)
+                        }
+                        .accessibilityElement(children: .combine)
+                    }
+                }
+
                 if let lastDeleted = viewModel.lastDeleted {
                     Section {
                         HStack {
