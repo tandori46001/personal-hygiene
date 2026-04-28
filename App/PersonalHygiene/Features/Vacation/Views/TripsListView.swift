@@ -248,20 +248,31 @@ private struct TripRow: View {
     var daysUntilStart: Int?
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(alignment: .top, spacing: 12) {
             thumbnail
                 .accessibilityHidden(true)
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: 4) {
+                Text(trip.name)
+                    .font(.body)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.leading)
                 HStack(spacing: 6) {
-                    Text(trip.name)
-                        .font(.body)
                     if isNearest, let days = daysUntilStart {
                         countdownBadge(days: days)
                     }
+                    Text(trip.startDate, format: .dateTime.day().month(.abbreviated))
+                    Text(verbatim: "→")
+                        .accessibilityHidden(true)
+                    Text(trip.endDate, format: .dateTime.day().month(.abbreviated))
                 }
-                Text(trip.destinationName)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                .font(.caption.monospacedDigit())
+                .foregroundStyle(.secondary)
+                if !trip.destinationName.isEmpty {
+                    Text(trip.destinationName)
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
                 if !trip.packingItems.isEmpty {
                     let packed = trip.packingItems.filter(\.isPacked).count
                     let total = trip.packingItems.count
@@ -279,17 +290,7 @@ private struct TripRow: View {
                     )
                 }
             }
-            Spacer()
-            VStack(alignment: .trailing, spacing: 2) {
-                Text(trip.startDate, format: .dateTime.day().month(.abbreviated))
-                    .font(.caption)
-                Text(verbatim: "→")
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-                    .accessibilityHidden(true)
-                Text(trip.endDate, format: .dateTime.day().month(.abbreviated))
-                    .font(.caption)
-            }
+            Spacer(minLength: 0)
         }
         .accessibilityElement(children: .combine)
     }

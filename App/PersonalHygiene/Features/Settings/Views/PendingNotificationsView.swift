@@ -54,7 +54,7 @@ struct PendingNotificationsView: View {
                         Section {
                             ForEach(group) { row in PendingRow(row: row) }
                         } header: {
-                            Text(LocalizedStringKey("settings.pendingNotifications.source.\(source.rawValue)"))
+                            Text(localizedKey: "settings.pendingNotifications.source.\(source.rawValue)")
                         }
                     }
                 }

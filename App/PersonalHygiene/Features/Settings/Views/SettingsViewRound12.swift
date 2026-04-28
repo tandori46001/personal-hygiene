@@ -15,7 +15,7 @@ extension SettingsView {
                         set: { NotificationCategoryMuteStore.setMuted(!$0, for: cat) }
                     )
                 ) {
-                    Text(LocalizedStringKey("settings.mute.\(cat.rawValue)"), bundle: .main)
+                    Text(localizedKey: "settings.mute.\(cat.rawValue)")
                 }
             }
         } header: {
@@ -102,7 +102,7 @@ extension SettingsView {
             }
             Picker(selection: $marineHours) {
                 ForEach(MarineForecastFreshnessStore.allowedHours, id: \.self) { hours in
-                    Text(LocalizedStringResource("settings.marine.freshness.\(hours)"))
+                    Text(localizedKey: "settings.marine.freshness.\(hours)")
                         .tag(hours)
                 }
             } label: {

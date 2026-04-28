@@ -71,7 +71,7 @@ struct BlockTimelineRow: View {
                     .font(.body)
                     .strikethrough(isDone || isSkipped, color: .secondary)
                 if !compact {
-                    Text(LocalizedStringKey("category.\(block.category.rawValue)"))
+                    Text(localizedKey: "category.\(block.category.rawValue)")
                         .font(.caption)
                         .foregroundStyle(.secondary)
                 }

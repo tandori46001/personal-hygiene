@@ -74,7 +74,7 @@ extension SettingsView {
                 )
             ) {
                 ForEach(BackupAutoFrequencyStore.Frequency.allCases, id: \.self) { freq in
-                    Text(LocalizedStringKey("settings.backup.autoFrequency.\(freq.rawValue)"), bundle: .main)
+                    Text(localizedKey: "settings.backup.autoFrequency.\(freq.rawValue)")
                         .tag(freq)
                 }
             } label: {

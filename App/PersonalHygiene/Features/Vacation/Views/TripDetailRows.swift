@@ -129,7 +129,7 @@ struct PackingListSection: View {
                             viewModel.packingCategoryFilter = cat
                         } label: {
                             Label {
-                                Text(LocalizedStringKey("trip.packing.category.\(cat.rawValue)"))
+                                Text(localizedKey: "trip.packing.category.\(cat.rawValue)")
                                     .font(.caption.bold())
                             } icon: {
                                 Image(systemName: cat.systemImage)
@@ -177,7 +177,7 @@ struct PackingListSection: View {
                 Picker(selection: $newItemCategory) {
                     ForEach(PackingCategory.allCases, id: \.self) { cat in
                         Label {
-                            Text(LocalizedStringKey("trip.packing.category.\(cat.rawValue)"))
+                            Text(localizedKey: "trip.packing.category.\(cat.rawValue)")
                         } icon: {
                             Image(systemName: cat.systemImage)
                         }
@@ -352,7 +352,7 @@ struct DocumentRow: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(document.name)
                     .font(.body)
-                Text(LocalizedStringKey("trip.document.kind.\(document.kind.rawValue)"))
+                Text(localizedKey: "trip.document.kind.\(document.kind.rawValue)")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

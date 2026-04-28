@@ -8,6 +8,23 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed — Session 16 hotfix: localization regression + layout polish
+
+User screenshotted round-18 install on the iPhone and surfaced 9 places where raw localization keys rendered instead of translations (`category.work`, `housekeeping.recurrence.weekly`, `settings.snooze.duration.5`, `settings.medication.followup.30`, `settings.marine.freshness.24`, `trip.packing.category.clothing`, `birthdays.daysUntil 28`, `settings.backup.autoFrequency.off`, `birthdays.lead.preview ...`).
+
+Root cause: SwiftUI's `Text(LocalizedStringKey("prefix.\(rawValue)"))` and `Text(LocalizedStringResource("prefix.\(rawValue)"))` track the `\(...)` interpolation as a `%@` / `%lld` *placeholder* — the lookup key SwiftUI hands to the bundle becomes `"prefix.%@"` (the format), not the literal runtime string. The xcstrings file holds discrete-suffix keys (`"prefix.work"` etc.), so the lookup misses and SwiftUI falls back to rendering the formatted string verbatim — exactly the raw key the dev intended to localize. Captured as **L006** in `LESSONS.md` with `BundleLocalizationLookupTests` as the guard test.
+
+Fix:
+- Added `Text(localizedKey:)` extension in `App/Shared/Localization/TextLocalizedKey.swift` that calls `NSLocalizedString` directly and renders the result `verbatim` so SwiftUI doesn't re-interpret it.
+- Replaced 23 `Text(LocalizedStringKey(...))` discrete-suffix call sites + 4 `Text(LocalizedStringResource(...))` ones across Today / TemplateEditor / TemplateList / Housekeeping / Birthdays / Settings / SettingsViewRound12 / SettingsViewRound17 / TripDetailRows / DocumentMetadataSheet / PendingNotifications / Watch / Widgets.
+- Renamed xcstrings `birthdays.daysUntil` → `birthdays.daysUntil %lld`; `hydration.action.add` → `hydration.action.add %lld`. Added missing format keys `birthdays.lead.preview %@`, `a11y.birthdays.leadPreview %@`, `sleep.deficit %lld`, `a11y.trip.packing %lld %lld`. xcstrings count: 675 → 679.
+
+Layout polish:
+- `TripCountdownRow` (Today): trip name now `lineLimit(2) · multilineTextAlignment(.leading)`; destination moved inline next to the day-countdown (separated by `·`) instead of pushing the row wide.
+- `TripsListView.TripRow`: title `lineLimit(2)`; date range moved into the same line as the countdown badge; destination shown below; `Spacer(minLength: 0)` so the row no longer crops long names like *Punta Cana (despedida de soltero de Croquette)*.
+
+Tests: +1 file (`BundleLocalizationLookupTests`) covering 6 enum families + 6 format keys.
+
 ### Added — Session 16 round 18: 25-slice quality + polish round
 
 Tier 1 (test infrastructure):

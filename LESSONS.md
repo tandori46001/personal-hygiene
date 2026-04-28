@@ -136,3 +136,21 @@ Mirror as a one-line entry in:
 **Where it was caught.** 2026-04-26, session 10 round 8 deploy — user took a screenshot of `Settings → Diagnostics` showing two stacked `<` chevrons. Fixed in commit `5b038d0` by dropping the inner `NavigationStack` from `SettingsView`.
 
 **Interaction with other lessons.** None.
+
+---
+
+## L006 — `Text(LocalizedStringKey("prefix.\(rawValue)"))` looks up `"prefix.%@"`, not the runtime key
+
+**Class of bug.** SwiftUI's `LocalizedStringKey` (and `LocalizedStringResource`) initializers built from a string with interpolation **track the interpolation as a `%@` / `%lld` placeholder**, not as part of the lookup key. The runtime then asks the bundle for the format key — e.g. `"category.%@"` — instead of the literal runtime string `"category.work"`. If the xcstrings file stores discrete suffix keys (`"category.work"`, `"category.hygiene"`), the lookup misses and SwiftUI falls back to rendering the *raw resolved string verbatim* (`"category.work"`), which is exactly the user-facing key the developer intended to localize.
+
+**Symptom.** UI shows raw localization keys like `category.work`, `housekeeping.recurrence.weekly`, `settings.snooze.duration.5`, `birthdays.relationship.family`. The xcstrings file contains all of those keys translated correctly, but they never resolve.
+
+**Fix.**
+- For dynamic enum-rawValue keys (discrete suffix), bypass `LocalizedStringKey`/`LocalizedStringResource` entirely. Use `NSLocalizedString` directly via the `Text(localizedKey: String)` extension shipped in `App/Shared/Localization/TextLocalizedKey.swift`. Always pass the runtime-built string; the extension resolves against `Bundle.main` and renders the result `verbatim`.
+- For format-string keys (`"prefix \(int)"`), make sure the xcstrings file stores the key with the matching placeholder suffix — e.g. `"birthdays.daysUntil %lld"`, NOT `"birthdays.daysUntil"`. SwiftUI's lookup converts interpolations into `%@` (string), `%lld` (Int), `%f` (Double), etc.
+
+**Guard test.** `BundleLocalizationLookupTests` in `Tests/Unit/Services/` exercises both the discrete-suffix and format-string variants against the live `Bundle.main` lookup. Adding a new dynamic key without translating it (or with a typo) fails the suite.
+
+**Where it was caught.** 2026-04-28, session 16 post-round-18 deploy — user ran the app on the iPhone and screenshotted Today / Settings / Trips / Birthdays showing 9 separate raw keys: `category.work`, `category.hygiene`, `housekeeping.recurrence.weekly`, `settings.snooze.duration.5`, `settings.medication.followup.30`, `settings.marine.freshness.24`, `trip.packing.category.clothing`, `birthdays.daysUntil 28`, `settings.backup.autoFrequency.off`.
+
+**Interaction with other lessons.** Independent of L001-L005. Reinforces the analysis-first workflow: dynamic keys must be paired with a deliberate xcstrings shape (discrete suffix vs format) and the call-site initializer must match.

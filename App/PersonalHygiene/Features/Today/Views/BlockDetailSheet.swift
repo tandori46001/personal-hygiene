@@ -48,7 +48,7 @@ struct BlockDetailSheet: View {
                 Text("blockDetail.label.duration", bundle: .main)
             }
             LabeledContent {
-                Text(LocalizedStringKey("category.\(block.category.rawValue)"))
+                Text(localizedKey: "category.\(block.category.rawValue)")
             } label: {
                 Text("blockDetail.label.category", bundle: .main)
             }

@@ -196,7 +196,7 @@ struct SettingsView: View {
 
             Picker(selection: $snoozeMinutes) {
                 ForEach(SnoozeDurationStore.allowedMinutes, id: \.self) { minutes in
-                    Text(LocalizedStringResource("settings.snooze.duration.\(minutes)"))
+                    Text(localizedKey: "settings.snooze.duration.\(minutes)")
                         .tag(minutes)
                 }
             } label: {
@@ -205,7 +205,7 @@ struct SettingsView: View {
 
             Picker(selection: $followUpMinutes) {
                 ForEach(MedicationFollowUpDelayStore.allowedMinutes, id: \.self) { minutes in
-                    Text(LocalizedStringResource("settings.medication.followup.\(minutes)"))
+                    Text(localizedKey: "settings.medication.followup.\(minutes)")
                         .tag(minutes)
                 }
             } label: {

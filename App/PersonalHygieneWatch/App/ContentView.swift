@@ -233,7 +233,7 @@ private struct BlockDetailWatchView: View {
                 Text(block.title)
                     .font(.headline)
                 Label {
-                    Text(LocalizedStringKey("category.\(block.category.rawValue)"))
+                    Text(localizedKey: "category.\(block.category.rawValue)")
                 } icon: {
                     Image(systemName: "tag")
                 }

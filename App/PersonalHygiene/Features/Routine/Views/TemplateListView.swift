@@ -171,7 +171,7 @@ private struct TemplateRow: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text(template.name)
                     .font(.body)
-                Text(LocalizedStringKey("dayType.\(template.dayType.rawValue)"))
+                Text(localizedKey: "dayType.\(template.dayType.rawValue)")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 if let summary {
@@ -218,7 +218,7 @@ private struct NewTemplateSheet: View {
                 }
                 Picker(selection: $dayType) {
                     ForEach(DayType.allCases, id: \.self) { type in
-                        Text(LocalizedStringKey("dayType.\(type.rawValue)")).tag(type)
+                        Text(localizedKey: "dayType.\(type.rawValue)").tag(type)
                     }
                 } label: {
                     Text("templateList.new.dayType", bundle: .main)

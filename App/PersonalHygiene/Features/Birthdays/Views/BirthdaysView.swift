@@ -117,7 +117,7 @@ struct BirthdaysView: View {
                                     relationshipFilter = rel
                                 } label: {
                                     Label {
-                                        Text(LocalizedStringKey("birthdays.relationship.\(rel.rawValue)"))
+                                        Text(localizedKey: "birthdays.relationship.\(rel.rawValue)")
                                             .font(.caption.bold())
                                     } icon: {
                                         Image(systemName: rel.systemImage)

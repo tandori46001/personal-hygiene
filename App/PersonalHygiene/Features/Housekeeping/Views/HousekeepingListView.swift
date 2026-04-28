@@ -235,7 +235,7 @@ struct HousekeepingListView: View {
                 }
                 Picker(selection: $newRecurrence) {
                     ForEach(HousekeepingRecurrence.allCases, id: \.self) { recurrence in
-                        Text(LocalizedStringKey("housekeeping.recurrence.\(recurrence.rawValue)"))
+                        Text(localizedKey: "housekeeping.recurrence.\(recurrence.rawValue)")
                             .tag(recurrence)
                     }
                 } label: {
@@ -303,7 +303,7 @@ private struct HousekeepingRow: View {
                 Text(task.title)
                     .font(.body)
                 HStack(spacing: 6) {
-                    Text(LocalizedStringKey("housekeeping.recurrence.\(task.recurrence.rawValue)"))
+                    Text(localizedKey: "housekeeping.recurrence.\(task.recurrence.rawValue)")
                     if let room = task.room {
                         Text(verbatim: "•")
                         if let iconID = HousekeepingRoomIconStore.iconID(forRoom: room) {

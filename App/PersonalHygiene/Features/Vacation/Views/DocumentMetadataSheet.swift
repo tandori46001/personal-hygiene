@@ -22,7 +22,7 @@ struct DocumentMetadataSheet: View {
                 }
                 Picker(selection: $kind) {
                     ForEach(TripDocumentKind.allCases, id: \.self) { value in
-                        Text(LocalizedStringKey("trip.document.kind.\(value.rawValue)"))
+                        Text(localizedKey: "trip.document.kind.\(value.rawValue)")
                             .tag(value)
                     }
                 } label: {

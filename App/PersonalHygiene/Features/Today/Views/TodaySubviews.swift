@@ -51,27 +51,32 @@ struct TripCountdownRow: View {
     let daysUntil: Int
 
     var body: some View {
-        HStack(spacing: 12) {
+        HStack(alignment: .top, spacing: 12) {
             Image(systemName: "airplane")
                 .foregroundStyle(Color.accentColor)
                 .accessibilityHidden(true)
             VStack(alignment: .leading, spacing: 2) {
                 Text(trip.name)
                     .font(.headline)
-                if daysUntil == 0 {
-                    Text("today.trip.departingToday", bundle: .main)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
-                } else {
-                    Text("today.trip.daysUntil.\(daysUntil)", bundle: .main)
-                        .font(.caption)
-                        .foregroundStyle(.secondary)
+                    .lineLimit(2)
+                    .multilineTextAlignment(.leading)
+                HStack(spacing: 6) {
+                    if daysUntil == 0 {
+                        Text("today.trip.departingToday", bundle: .main)
+                    } else {
+                        Text("today.trip.daysUntil.\(daysUntil)", bundle: .main)
+                    }
+                    if !trip.destinationName.isEmpty {
+                        Text(verbatim: "·")
+                            .accessibilityHidden(true)
+                        Text(verbatim: trip.destinationName)
+                            .lineLimit(1)
+                    }
                 }
-            }
-            Spacer()
-            Text(verbatim: trip.destinationName)
                 .font(.caption)
                 .foregroundStyle(.secondary)
+            }
+            Spacer(minLength: 0)
         }
         .accessibilityElement(children: .combine)
     }
@@ -156,7 +161,7 @@ struct BlockNowRow: View {
                 Text(block.title)
                     .font(.title3)
                     .bold()
-                Text(LocalizedStringKey("category.\(block.category.rawValue)"))
+                Text(localizedKey: "category.\(block.category.rawValue)")
                     .font(.caption)
                     .foregroundStyle(.secondary)
                 if let until = minutesUntilStart {

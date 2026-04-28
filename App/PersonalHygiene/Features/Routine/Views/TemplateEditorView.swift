@@ -68,7 +68,7 @@ struct TemplateEditorView: View {
                                 errorMessage = error.localizedDescription
                             }
                         } label: {
-                            Text(LocalizedStringKey("templateEditor.preset.\(preset.rawValue)"), bundle: .main)
+                            Text(localizedKey: "templateEditor.preset.\(preset.rawValue)")
                         }
                     }
                 } label: {
@@ -84,7 +84,7 @@ struct TemplateEditorView: View {
                         Image(systemName: "wand.and.stars")
                             .foregroundStyle(.tint)
                             .accessibilityHidden(true)
-                        Text(LocalizedStringKey("templateEditor.preset.inserted.\(key)"), bundle: .main)
+                        Text(localizedKey: "templateEditor.preset.inserted.\(key)")
                             .font(.caption)
                         Spacer()
                         Button {
@@ -234,7 +234,7 @@ private struct BlockSummaryRow: View {
                         .accessibilityLabel(Text("templateEditor.conflict.chip", bundle: .main))
                     }
                 }
-                Text(LocalizedStringKey("category.\(block.category.rawValue)"))
+                Text(localizedKey: "category.\(block.category.rawValue)")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }

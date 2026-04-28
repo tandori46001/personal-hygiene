@@ -148,7 +148,7 @@ struct CategoryFilterChips: View {
                     Button {
                         selected = cat
                     } label: {
-                        Text(LocalizedStringKey("category.\(cat.rawValue)"))
+                        Text(localizedKey: "category.\(cat.rawValue)")
                             .font(.caption.bold())
                             .padding(.horizontal, 10)
                             .padding(.vertical, 4)

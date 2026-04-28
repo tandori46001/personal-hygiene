@@ -132,7 +132,7 @@ struct NextBlockHomeView: View {
             Text(block.title)
                 .font(.caption)
                 .lineLimit(2)
-            Text(LocalizedStringKey("category.\(block.category)"))
+            Text(localizedKey: "category.\(block.category)")
                 .font(.caption2)
                 .foregroundStyle(.secondary)
         }
@@ -154,7 +154,7 @@ struct NextBlockHomeView: View {
                 Text(block.title)
                     .font(.headline)
                     .lineLimit(2)
-                Text(LocalizedStringKey("category.\(block.category)"))
+                Text(localizedKey: "category.\(block.category)")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
