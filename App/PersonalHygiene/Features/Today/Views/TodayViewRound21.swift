@@ -10,6 +10,46 @@ import SwiftUI
 ///   trailing-7-day count renders as `n / target` instead of the bare count.
 extension TodayView {
 
+    /// Round-22 slice T4.22: thin caption shown beneath the mood quick-log
+    /// when the user has a 3+ day positive streak. Hidden otherwise so the
+    /// row stays compact for new / disengaged users.
+    @ViewBuilder
+    var moodStreakCaption: some View {
+        let streak = MoodLogStore.streakDays(atLeast: .okay)
+        if streak >= 3 {
+            Text("today.mood.streak \(streak)", bundle: .main)
+                .font(.caption2)
+                .foregroundStyle(.green)
+                .frame(maxWidth: .infinity, alignment: .center)
+        }
+    }
+
+    /// Round-22 slice T5.27 (extracted to keep TodayView body under
+    /// SwiftLint's 300-line cap): progress summary row + the day-completion
+    /// bar as a single view returned to the host body.
+    @ViewBuilder
+    func progressSummarySection(showingDetail: Binding<Bool>) -> some View {
+        if viewModel.totalCount > 0 {
+            Section {
+                Button {
+                    showingDetail.wrappedValue = true
+                } label: {
+                    ProgressSummaryRow(
+                        done: viewModel.doneCount,
+                        total: viewModel.totalCount,
+                        nextBlock: viewModel.nextBlock()
+                    )
+                }
+                .buttonStyle(.plain)
+                .accessibilityHint(Text("today.summary.tapHint", bundle: .main))
+                TodayDayCompletionBar(
+                    done: viewModel.doneCount,
+                    total: viewModel.totalCount
+                )
+            }
+        }
+    }
+
     @ViewBuilder
     var moodWeekStripSection: some View {
         let strip = TodayView.moodWeekStrip()
@@ -132,17 +172,6 @@ extension TodayView {
     }
 }
 
-extension MoodTrendAggregator {
-    /// Round-21 slice T2.9: rounds a daily average score to the nearest mood
-    /// emoji so the Today week-strip can render a single glyph per day.
-    public static func symbol(for score: Double) -> String {
-        let rounded = Int(score.rounded())
-        switch rounded {
-        case 5: return MoodLogStore.Mood.great.emoji
-        case 4: return MoodLogStore.Mood.good.emoji
-        case 3: return MoodLogStore.Mood.okay.emoji
-        case 2: return MoodLogStore.Mood.bad.emoji
-        default: return MoodLogStore.Mood.awful.emoji
-        }
-    }
-}
+// `MoodTrendAggregator.symbol(for:)` lives in `App/Shared/Services/MoodTrendAggregator.swift`
+// so the watch target (which only compiles Shared/) can reuse it for the
+// settings glance mood strip (round-22 slice T6.33).

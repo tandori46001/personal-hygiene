@@ -17208,6 +17208,262 @@
         "es": { "stringUnit": { "state": "translated", "value": "registradoEn,ánimo" } },
         "fr": { "stringUnit": { "state": "translated", "value": "enregistréLe,humeur" } }
       }
+    },
+    "settings.birthdays.giftIdeas.copyCSV %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Copy gift ideas (%lld) as CSV" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Copiar ideas de regalo (%lld) como CSV" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Copier idées cadeaux (%lld) en CSV" } }
+      }
+    },
+    "settings.birthdays.giftIdeas.copyCSV.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Header `contactID,idea`. Quotes commas + newlines automatically." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Cabecera `contactID,idea`. Escapa comas y saltos de línea." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "En-tête `contactID,idea`. Échappe virgules + sauts de ligne." } }
+      }
+    },
+    "settings.birthdays.leadDefault.value %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "%lld days before birthday" } },
+        "es": { "stringUnit": { "state": "translated", "value": "%lld días antes del cumpleaños" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "%lld jours avant l'anniversaire" } }
+      }
+    },
+    "settings.birthdays.leadDefault.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Default lead time" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Antelación por defecto" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Délai par défaut" } }
+      }
+    },
+    "settings.birthdays.leadDefault.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Per-contact overrides take precedence." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Las overrides por contacto tienen prioridad." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Les remplacements par contact priment." } }
+      }
+    },
+    "settings.moodLog.weekStrip.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "This week" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Esta semana" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Cette semaine" } }
+      }
+    },
+    "settings.moodLog.weekStrip.a11y": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Last 7 days mood overview" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Ánimo de los últimos 7 días" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Vue d'humeur des 7 derniers jours" } }
+      }
+    },
+    "settings.moodLog.trend.window.7": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "7d" } },
+        "es": { "stringUnit": { "state": "translated", "value": "7d" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "7j" } }
+      }
+    },
+    "settings.moodLog.trend.window.30": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "30d" } },
+        "es": { "stringUnit": { "state": "translated", "value": "30d" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "30j" } }
+      }
+    },
+    "settings.moodLog.trend.window.label": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Window" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Ventana" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Fenêtre" } }
+      }
+    },
+    "settings.moodLog.trend.weeklyDelta %@ %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Week-over-week %@ %@" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Semana vs anterior %@ %@" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Semaine vs précédente %@ %@" } }
+      }
+    },
+    "today.mood.streak %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "%lld-day positive streak" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Racha positiva de %lld días" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Série positive de %lld jours" } }
+      }
+    },
+    "today.dayCompletion.caption %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "%lld%% of day done" } },
+        "es": { "stringUnit": { "state": "translated", "value": "%lld%% del día hecho" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "%lld%% de la journée faite" } }
+      }
+    },
+    "templateEditor.gantt.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Day timeline" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Línea del día" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Frise du jour" } }
+      }
+    },
+    "templateEditor.gantt.a11y": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Block timeline showing overlaps in red" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Línea de bloques con solapes en rojo" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Frise des blocs avec chevauchements en rouge" } }
+      }
+    },
+    "templateEditor.csvImport.action": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Import CSV from clipboard" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Importar CSV del portapapeles" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Importer CSV du presse-papiers" } }
+      }
+    },
+    "templateEditor.csvImport.empty": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Clipboard is empty" } },
+        "es": { "stringUnit": { "state": "translated", "value": "El portapapeles está vacío" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Le presse-papiers est vide" } }
+      }
+    },
+    "templateEditor.csvImport.warnings.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Warnings" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Avisos" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Avertissements" } }
+      }
+    },
+    "templateEditor.csvImport.warnings.empty.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "All rows imported cleanly" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Todas las filas se importaron sin problemas" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Toutes les lignes importées proprement" } }
+      }
+    },
+    "templateEditor.csvImport.warnings.empty.description": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "No warnings to show." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Sin avisos." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Aucun avertissement." } }
+      }
+    },
+    "templateEditor.cascadeShift.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Shift all blocks" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Mover todos los bloques" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Décaler tous les blocs" } }
+      }
+    },
+    "templateEditor.cascadeShift.minus": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "−15 min" } },
+        "es": { "stringUnit": { "state": "translated", "value": "−15 min" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "−15 min" } }
+      }
+    },
+    "templateEditor.cascadeShift.plus": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "+15 min" } },
+        "es": { "stringUnit": { "state": "translated", "value": "+15 min" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "+15 min" } }
+      }
+    },
+    "templateEditor.cascadeShift.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Each press shifts every block by 15 minutes (clamped to the day)." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Cada pulsación mueve todos los bloques 15 minutos (limitado al día)." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Chaque pression décale tous les blocs de 15 min (borné à la journée)." } }
+      }
+    },
+    "housekeeping.streak.banner.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Streak suggestions" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Sugerencias de racha" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Suggestions de série" } }
+      }
+    },
+    "housekeeping.streak.banner.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "After a long streak, give yourself a few days off without breaking the habit cleanly." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Tras una racha larga, date días libres sin romper el hábito de golpe." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Après une longue série, accordez-vous quelques jours sans casser la routine." } }
+      }
+    },
+    "housekeeping.streak.banner %lld %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "%lld-day streak — suggested snooze: %lld days" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Racha de %lld días — descanso sugerido: %lld días" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Série de %lld jours — pause suggérée : %lld jours" } }
+      }
+    },
+    "trip.itinerary.action.refreshForecast": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Refresh forecast" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Actualizar pronóstico" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Actualiser la météo" } }
+      }
+    },
+    "trip.itinerary.forecast.lastUpdated %@": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Last updated %@" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Última actualización %@" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Dernière mise à jour %@" } }
+      }
+    },
+    "watch.hydration.pending.count %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "%lld taps" } },
+        "es": { "stringUnit": { "state": "translated", "value": "%lld toques" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "%lld touches" } }
+      }
+    },
+    "watch.hydration.pending.clear": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Clear pending" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Borrar pendientes" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Effacer en attente" } }
+      }
+    },
+    "watch.settings.section.moodStrip": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Mood — last 7 days" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Ánimo — últimos 7 días" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Humeur — 7 derniers jours" } }
+      }
     }
   }
 }

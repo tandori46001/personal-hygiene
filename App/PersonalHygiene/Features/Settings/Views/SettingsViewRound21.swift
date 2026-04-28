@@ -13,17 +13,9 @@ extension SettingsView {
 
     @ViewBuilder
     var moodTrendSection: some View {
-        let bins = MoodTrendAggregator.bins(from: MoodLogStore.entries())
-        let hasData = bins.contains { $0.score != nil }
-        if hasData {
-            Section {
-                MoodTrendChartView(bins: bins)
-            } header: {
-                Text("settings.moodLog.trend.title", bundle: .main)
-            } footer: {
-                Text("settings.moodLog.trend.footer", bundle: .main)
-            }
-        }
+        // Round-22 slice T4.19: 7d/30d toggle persisted via @AppStorage so
+        // user preference survives navigation. Round 21 emitted 30d only.
+        MoodTrendSectionView()
     }
 
     @ViewBuilder

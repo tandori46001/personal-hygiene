@@ -71,6 +71,12 @@ final class HousekeepingListViewModel {
     func markDone(_ task: HousekeepingTask, now: Date = Date()) {
         do {
             try service.markDone(task, at: now)
+            // Round-22 slice T2.10: append the completion to
+            // `HousekeepingCompletionLog` so the streak counter has the
+            // day-key set the round-13 helper already required. Tasks
+            // without a room land under "" so the unsorted bucket still
+            // accumulates streaks for the auto-snooze suggestion.
+            HousekeepingCompletionLog.record(room: task.room ?? "", on: now)
             reload()
         } catch {
             errorMessage = error.localizedDescription

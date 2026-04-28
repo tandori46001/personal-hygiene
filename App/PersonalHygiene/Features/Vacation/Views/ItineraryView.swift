@@ -5,21 +5,41 @@ struct ItineraryView: View {
     let trip: Trip
     let generator: any ItineraryGenerator
     let store: (any ItineraryStore)?
+    /// Round-22 slice T3.14: forecast bridge. Defaults to the stub so the
+    /// surface compiles without WeatherKit entitlement; production code
+    /// passes `WeatherKitForecastService()` when iOS 16+ runtime confirms
+    /// availability.
+    let forecastFetcher: any WeatherForecastFetching
 
     @State private var itinerary: TripItinerary?
     @State private var errorMessage: String?
     @State private var isGenerating = false
     @State private var sharePayload: SharePayload?
+    /// Round-22 slice T3.15: per-day forecasts keyed by `Calendar.startOfDay`.
+    @State private var forecastsByDay: [Date: WeatherForecast] = [:]
+    /// Round-22 slice T3.18: `true` when the only data we could surface
+    /// came from `cachedIgnoringTTL` (offline / fetch failed).
+    @State private var forecastIsStale = false
+    /// Round-22 slice T3.17: timestamp of the last successful fetch, used
+    /// for the "última actualización HH:mm" caption.
+    @State private var forecastFetchedAt: Date?
+    @State private var forecastErrorBanner: String?
 
     private struct SharePayload: Identifiable {
         let id = UUID()
         let text: String
     }
 
-    init(trip: Trip, generator: any ItineraryGenerator, store: (any ItineraryStore)? = nil) {
+    init(
+        trip: Trip,
+        generator: any ItineraryGenerator,
+        store: (any ItineraryStore)? = nil,
+        forecastFetcher: any WeatherForecastFetching = StubWeatherForecastService()
+    ) {
         self.trip = trip
         self.generator = generator
         self.store = store
+        self.forecastFetcher = forecastFetcher
     }
 
     var body: some View {
@@ -60,6 +80,14 @@ struct ItineraryView: View {
                                     .font(.caption2.monospacedDigit())
                                     .foregroundStyle(.secondary)
                             }
+                            // Round-22 slice T3.15: forecast chip pulled
+                            // from `forecastsByDay` keyed by the index's
+                            // calendar day. Stale variant rendered
+                            // semi-transparent.
+                            if let forecast = self.forecast(forIndex: offset) {
+                                ItineraryDayForecastChip(forecast: forecast)
+                                    .opacity(forecastIsStale ? 0.55 : 1)
+                            }
                         }
                     }
                 }
@@ -95,16 +123,109 @@ struct ItineraryView: View {
                     }
                     .accessibilityLabel(Text("trip.itinerary.action.share", bundle: .main))
                 }
+                // Round-22 slice T3.17: refresh forecast button + caption.
+                ToolbarItem(placement: .secondaryAction) {
+                    Button {
+                        Task { await refreshForecast(force: true) }
+                    } label: {
+                        Label {
+                            Text("trip.itinerary.action.refreshForecast", bundle: .main)
+                        } icon: {
+                            Image(systemName: "cloud.sun.fill")
+                        }
+                    }
+                }
+            }
+        }
+        .safeAreaInset(edge: .bottom) {
+            if let fetchedAt = forecastFetchedAt {
+                Text(
+                    "trip.itinerary.forecast.lastUpdated \(forecastCaption(fetchedAt))",
+                    bundle: .main
+                )
+                .font(.caption2.monospacedDigit())
+                .foregroundStyle(forecastIsStale ? Color.orange : Color.secondary)
+                .padding(.bottom, 4)
             }
         }
         .onAppear {
             if itinerary == nil, let cached = store?.load(for: trip.id) {
                 itinerary = cached
             }
+            Task { await refreshForecast(force: false) }
         }
         .sheet(item: $sharePayload) { payload in
             ShareSheet(items: [payload.text])
         }
+    }
+
+    /// Round-22 slice T3.15: lookup the forecast for itinerary day `index`
+    /// against the trip's start date. Returns nil when no forecast was
+    /// fetched for that calendar day.
+    private func forecast(forIndex index: Int) -> WeatherForecast? {
+        let calendar = Calendar.autoupdatingCurrent
+        guard let day = calendar.date(byAdding: .day, value: index, to: trip.startDate) else {
+            return nil
+        }
+        return forecastsByDay[calendar.startOfDay(for: day)]
+    }
+
+    /// Round-22 slices T3.14 + T3.18: fetch forecasts via the injected
+    /// fetcher and bin them by `Calendar.startOfDay`. On failure, falls
+    /// back to `WeatherForecastCache.cachedIgnoringTTL(...)` so the user
+    /// still sees something useful offline (rendered with `forecastIsStale`).
+    @MainActor
+    private func refreshForecast(force: Bool) async {
+        guard let lat = trip.destinationLatitude,
+              let lon = trip.destinationLongitude
+        else { return }
+        let cache = WeatherForecastCache.shared
+        if !force, let warm = cache.cached(latitude: lat, longitude: lon) {
+            forecastsByDay = Self.bin(warm)
+            forecastIsStale = false
+            forecastFetchedAt = Date()
+            return
+        }
+        do {
+            let days = max(1, min(10, daysSpanned()))
+            let fresh = try await forecastFetcher.forecast(latitude: lat, longitude: lon, days: days)
+            cache.store(fresh, latitude: lat, longitude: lon)
+            forecastsByDay = Self.bin(fresh)
+            forecastIsStale = false
+            forecastFetchedAt = Date()
+            forecastErrorBanner = nil
+        } catch {
+            if let stale = cache.cachedIgnoringTTL(latitude: lat, longitude: lon) {
+                forecastsByDay = Self.bin(stale.forecasts)
+                forecastIsStale = true
+                forecastFetchedAt = stale.storedAt
+            }
+            forecastErrorBanner = error.localizedDescription
+        }
+    }
+
+    private static func bin(_ forecasts: [WeatherForecast]) -> [Date: WeatherForecast] {
+        let calendar = Calendar.autoupdatingCurrent
+        var result: [Date: WeatherForecast] = [:]
+        for forecast in forecasts {
+            result[calendar.startOfDay(for: forecast.day)] = forecast
+        }
+        return result
+    }
+
+    private func daysSpanned() -> Int {
+        let calendar = Calendar.autoupdatingCurrent
+        let start = calendar.startOfDay(for: trip.startDate)
+        let end = calendar.startOfDay(for: trip.endDate)
+        let delta = calendar.dateComponents([.day], from: start, to: end).day ?? 1
+        return max(1, delta + 1)
+    }
+
+    private func forecastCaption(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.timeStyle = .short
+        formatter.dateStyle = .none
+        return formatter.string(from: date)
     }
 
     /// Round-20 slice T3.14: relative-day marker for the supplied day index

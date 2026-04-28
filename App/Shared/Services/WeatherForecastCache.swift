@@ -40,6 +40,17 @@ public final class WeatherForecastCache: @unchecked Sendable {
         return entry.forecasts
     }
 
+    /// Round-22 slice T3.18: read the cache without TTL — used when the
+    /// network is unreachable so the user still sees the most-recent
+    /// forecast with a "stale" badge instead of nothing.
+    public func cachedIgnoringTTL(latitude: Double, longitude: Double) -> Entry? {
+        let storeKey = key(latitude: latitude, longitude: longitude)
+        guard let data = defaults.data(forKey: storeKey),
+              let entry = try? JSONDecoder().decode(Entry.self, from: data)
+        else { return nil }
+        return entry
+    }
+
     public func store(_ forecasts: [WeatherForecast], latitude: Double, longitude: Double, now: Date = Date()) {
         let entry = Entry(storedAt: now, forecasts: forecasts)
         guard let data = try? JSONEncoder().encode(entry) else { return }

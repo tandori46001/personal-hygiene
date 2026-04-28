@@ -27,7 +27,14 @@ public enum TripFootprintAggregator {
         for contribution in contributions {
             counts[contribution.mode, default: 0] += 1
         }
-        let dominant = counts.max { $0.value < $1.value }?.key
+        // Round-22 slice T1.6: tie-break by `rawValue` so callers get a
+        // deterministic dominant mode when multiple modes are tied on count.
+        let dominant = counts.max { lhs, rhs in
+            if lhs.value != rhs.value { return lhs.value < rhs.value }
+            // For equal counts, the alphabetically smaller rawValue wins —
+            // `max` returns the *largest*, so invert here.
+            return lhs.key.rawValue > rhs.key.rawValue
+        }?.key
         return Summary(totalKgCO2: total, tripCount: contributions.count, dominantMode: dominant)
     }
 }

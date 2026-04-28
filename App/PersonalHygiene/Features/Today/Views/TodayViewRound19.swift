@@ -78,6 +78,9 @@ extension TodayView {
                     .foregroundStyle(.secondary)
                     .frame(maxWidth: .infinity, alignment: .center)
             }
+            // Round-22 slice T4.22: positive streak caption under the
+            // chip row.
+            moodStreakCaption
         } header: {
             Text("today.mood.title", bundle: .main)
         } footer: {

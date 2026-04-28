@@ -8,6 +8,52 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added — Session 20 round 22: 40-slice helpers→UI + WeatherKit real path + mood deepening v2 + Today/Routine QoL + watch finishing
+
+Tier 1 (regression guards):
+- `MoodTrendAggregatorSymbolTests` — clamps the round-21 helper to [1,5] (3 cases).
+- `RefreshTraceToastTests` — empty path + entry formatting + paused vs refresh + composer wraps base line (4 cases).
+- `BlockConflictAPIConsistencyTests` — boolean detector ↔ pair overlap APIs must agree (4 cases).
+- `TripFootprintTieBreakTests` + patched aggregator — deterministic tie-break by `rawValue` (2 cases).
+- `scripts/check-localized-string-resource.py` — sister scan to L006 catching `LocalizedStringResource("...\(...)")` referencing missing format keys.
+
+Tier 2 (round-21 helpers wired into UI):
+- Settings → "Copy gift ideas (N) as CSV" via `BirthdayGiftIdeaCSVExporter`.
+- Settings → "Default lead time" stepper via `BirthdayLeadDefaultStore` (0…60).
+- HousekeepingListView → streak suggestion banner when a room hits 7+ consecutive days; new `HousekeepingCompletionLog` records day-keys per room on `markDone`.
+- `NotificationCategoryMuteStore.setMuted` auto-mirrors via `FocusCategoryMuteMirror.mirror(...)` on every change (no manual UI button).
+- `WatchHydrationReconciler` drains `WatchHydrationGlanceStore.pendingTaps()` into `HydrationService` on iPhone foreground (`scenePhase` change).
+- Settings 7-day mood week strip mirroring the Today section.
+
+Tier 3 (WeatherKit real path):
+- `ItineraryView` accepts injected `WeatherForecastFetching` (default `StubWeatherForecastService`).
+- ItineraryView fetches forecast on appear + binds chip per day section.
+- Stale-graceful: `WeatherForecastCache.cachedIgnoringTTL(...)` returns last stored entry on fetch failure with `forecastIsStale` opacity.
+- "Refresh forecast" toolbar item + bottom safe-area inset "Last updated HH:mm" caption.
+
+Tier 4 (mood deepening):
+- `MoodTrendChartView` 7d/30d toggle persisted via `@AppStorage` + week-over-week delta caption.
+- `MoodTrendAggregator.windowAverage(...)` + `weeklyDelta(...)` helpers.
+- `MoodLogStore.streakDays(atLeast:)` — consecutive days at or above mood threshold.
+- Today positive-streak caption ("3-day positive streak") under the mood quick-log.
+- `BackupSnapshot` v3 → v4 with optional `moodWeeklyGoal` payload; restore replays it into `MoodWeeklyGoalStore`.
+
+Tier 5 (Today / Routine QoL):
+- TemplateEditor "Import CSV from clipboard" toolbar button + `CSVImportWarningsSheet` bottom sheet.
+- `BlockOverlapGanttView` graphical Gantt strip (overlap segments rendered in red); textual round-21 list still surfaces below.
+- Today `TodayDayCompletionBar` (linear progress + percentage caption + tier-coloured tint).
+- TemplateListViewModel `duplicate(_:renamedTo:)` variant.
+- TemplateEditorViewModel `cascadeShift(byMinutes:)` + ±15 min UI rows.
+- TemplateEditor body extracted into round-22 `progressSummarySection(showingDetail:)` to keep TodayView body under SwiftLint's 300-line cap.
+
+Tier 6 (watch parity):
+- Watch hydration glance: pending count + destructive "Clear pending"; goal proportion reads via App Group `hydration.goal.ml`.
+- Watch complication: rectangular line shows today's mood emoji alongside the block title.
+- Settings glance mood week strip via new `WatchMoodStrip` shared helper (`MoodTrendAggregator.symbol(for:)` moved from iPhone-only round-21 file into Shared so the watch target can call it).
+- BlockDetailWatchView swipe-back: light click haptic on disappear.
+
+Counts: tests **684** (682 unit + 2 UI, +35 from round 21). i18n keys **801** × 3 locales (+32 net; one duplicate `common.done` removed during cleanup). Lessons captured: still **6** (L001-L006). Lint clean after refactors (TripFootprintAggregator switched from `sorted().first` to `max(by:)`, do/catch blocks reformatted, TodayView + SettingsView body lengths trimmed by extracting round-22 wrappers).
+
 ### Added — Session 19 round 21: 40-slice regression guards + mood deepening + WeatherKit scaffolding + Today QoL + watch parity + housekeeping
 
 Tier 1 (regression guards):

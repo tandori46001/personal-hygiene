@@ -8,6 +8,9 @@ struct TemplateEditorView: View {
     @State private var errorMessage: String?
     @State private var undoToastTimer: Task<Void, Never>?
     @State private var lastInsertedPresetTitleKey: String?
+    /// Round-22 slice T5.25: warnings list emitted by the CSV importer.
+    /// Non-nil = sheet visible.
+    @State private var csvImportWarnings: [String]?
 
     var body: some View {
         Form {
@@ -109,6 +112,13 @@ struct TemplateEditorView: View {
                     }
                 }
 
+                // Round-22 slice T5.24: paste a CSV from clipboard +
+                // surface warnings via the round-22 sheet.
+                csvImportFromClipboardButton(
+                    warningsBinding: $csvImportWarnings,
+                    errorBinding: $errorMessage
+                )
+
                 if let key = lastInsertedPresetTitleKey {
                     HStack(spacing: 8) {
                         Image(systemName: "wand.and.stars")
@@ -167,6 +177,18 @@ struct TemplateEditorView: View {
                 onSave: { saveBlock(from: $0) },
                 onCancel: {},
                 titleSuggestions: { viewModel.titleSuggestions(for: $0) }
+            )
+        }
+        // Round-22 slice T5.25: warnings sheet for the CSV import flow.
+        .sheet(
+            isPresented: Binding(
+                get: { csvImportWarnings != nil },
+                set: { if !$0 { csvImportWarnings = nil } }
+            )
+        ) {
+            CSVImportWarningsSheet(
+                warnings: csvImportWarnings ?? [],
+                onDismiss: { csvImportWarnings = nil }
             )
         }
         .alert(

@@ -80,6 +80,7 @@ struct SettingsView: View {
             backupSection
             backupAutoFrequencySection
             moodLogSection
+            round22Sections
             everythingBundleRow
             resetOnboardingTipsRow
             aboutFooterSection

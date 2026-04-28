@@ -33,6 +33,11 @@ public enum NotificationCategoryMuteStore {
         in defaults: UserDefaults = .standard
     ) {
         defaults.set(value, forKey: category.defaultsKey)
+        // Round-22 slice T2.11: every mute change auto-mirrors the full
+        // set into the App Group suite so the watch's
+        // `FocusCategoryMuteMirror.mirroredCategories(...)` reflects the
+        // change without an extra UI surface.
+        FocusCategoryMuteMirror.mirror(from: defaults)
     }
 
     public static func clearAll(in defaults: UserDefaults = .standard) {

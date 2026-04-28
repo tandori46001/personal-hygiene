@@ -290,6 +290,27 @@ private struct SettingsGlanceWatchView: View {
             } header: {
                 Text("watch.settings.section.about", bundle: .main)
             }
+
+            // Round-22 slice T6.33: 7-day mood strip mirrored from the
+            // iPhone Today view — gives the wearer a quick read of mood
+            // history without opening the iPhone app.
+            let strip = WatchMoodStrip.cells(
+                defaults: sharedDefaults
+            )
+            if strip.contains(where: { $0.symbol != "·" }) {
+                Section {
+                    HStack(spacing: 4) {
+                        ForEach(strip, id: \.day) { cell in
+                            Text(verbatim: cell.symbol)
+                                .font(.caption)
+                                .frame(maxWidth: .infinity)
+                        }
+                    }
+                    .accessibilityElement(children: .combine)
+                } header: {
+                    Text("watch.settings.section.moodStrip", bundle: .main)
+                }
+            }
         }
         .navigationTitle(Text("watch.settings.title", bundle: .main))
         .task {
@@ -393,6 +414,12 @@ private struct BlockDetailWatchView: View {
             .padding(.horizontal, 4)
         }
         .navigationTitle(Text("watch.detail.title", bundle: .main))
+        .onDisappear {
+            // Round-22 slice T6.34: light "click" haptic on swipe-back so
+            // the user gets a confirmation that the navigation popped
+            // without an explicit done-tap.
+            WKInterfaceDevice.current().play(.click)
+        }
     }
 
     private func formattedTime(minutes: Int) -> String {

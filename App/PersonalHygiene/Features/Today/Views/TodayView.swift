@@ -60,21 +60,7 @@ struct TodayView: View {
                             }
                         }
                         tripCountdownSection
-                        if viewModel.totalCount > 0 {
-                            Section {
-                                Button {
-                                    showingProgressDetail = true
-                                } label: {
-                                    ProgressSummaryRow(
-                                        done: viewModel.doneCount,
-                                        total: viewModel.totalCount,
-                                        nextBlock: viewModel.nextBlock()
-                                    )
-                                }
-                                .buttonStyle(.plain)
-                                .accessibilityHint(Text("today.summary.tapHint", bundle: .main))
-                            }
-                        }
+                        progressSummarySection(showingDetail: $showingProgressDetail)
                         if let current = viewModel.currentBlock() {
                             Section {
                                 BlockNowRow(

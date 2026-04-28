@@ -84,4 +84,23 @@ final class TemplateListViewModel {
             return nil
         }
     }
+
+    /// Round-22 slice T5.28: variant of `duplicate(_:)` that takes an
+    /// explicit replacement name so the swipe-action can pre-fill the
+    /// rename sheet without forcing the user through TemplateEditor.
+    @discardableResult
+    func duplicate(_ source: RoutineTemplate, renamedTo newName: String) -> RoutineTemplate? {
+        let trimmed = newName.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !trimmed.isEmpty else { return nil }
+        guard let copy = duplicate(source) else { return nil }
+        copy.name = trimmed
+        do {
+            try repository.upsert(copy)
+            reload()
+            return copy
+        } catch {
+            errorMessage = error.localizedDescription
+            return nil
+        }
+    }
 }

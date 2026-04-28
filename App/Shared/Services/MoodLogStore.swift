@@ -74,6 +74,33 @@ public enum MoodLogStore {
         defaults.removeObject(forKey: key)
     }
 
+    /// Round-22 slice T4.21: number of consecutive days ending on `now`
+    /// where the dominant mood is at least `minimum` (defaults to `.okay`).
+    /// "Dominant" = first entry recorded that day. A day with no entry
+    /// breaks the streak.
+    public static func streakDays(
+        atLeast minimum: Mood = .okay,
+        now: Date = Date(),
+        calendar: Calendar = .autoupdatingCurrent,
+        defaults: UserDefaults = .standard
+    ) -> Int {
+        let log = entries(defaults: defaults)
+        var cursor = calendar.startOfDay(for: now)
+        var streak = 0
+        let minimumScore = MoodTrendAggregator.score(for: minimum)
+        while true {
+            let entry = log.first {
+                calendar.startOfDay(for: $0.recordedAt) == cursor
+            }
+            guard let mood = entry?.moodCase else { break }
+            guard MoodTrendAggregator.score(for: mood) >= minimumScore else { break }
+            streak += 1
+            guard let prior = calendar.date(byAdding: .day, value: -1, to: cursor) else { break }
+            cursor = prior
+        }
+        return streak
+    }
+
     /// Round-20 slice T2.7: count of entries marked `.good` or `.great` whose
     /// `recordedAt` falls within the trailing `days` (default 7) up to `now`.
     /// Multiple records on the same day count once each — the user explicitly

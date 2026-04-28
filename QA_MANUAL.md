@@ -2236,3 +2236,176 @@ Verify by running `./scripts/check-tests.sh`.
 1. **HousekeepingStreakAutoSnooze**: pure helper covered by 4 tests; threshold 7d, scales to 7d cap.
 2. **BirthdayLeadDefaultStore**: 0…60 clamp + fallback to legacy constant covered by 3 tests.
 3. **FocusCategoryMuteMirror**: writes iOS-side mute state to App Group suite; watch reads via `mirroredCategories(in:)`. 2 tests.
+
+## [T-201] — MoodTrendAggregator.symbol rounding (round 22)
+
+**Module:** mood · **Shipped in:** round 22 (T1.3)
+
+### Manual verification (smoke)
+1. Test suite: `MoodTrendAggregatorSymbolTests` 3 cases pass.
+2. Boundary check: 4.6 rounds up to great, 4.5 rounds to good (banker's).
+
+## [T-202] — RefreshTraceLog toast guard (round 22)
+
+**Module:** today · **Shipped in:** round 22 (T1.4)
+
+### Manual verification (smoke)
+1. Test suite: `RefreshTraceToastTests` 4 cases pass.
+2. Live: pull-to-refresh on Today shows kind + count after at least one refresh has been recorded.
+
+## [T-203] — BlockConflict API consistency (round 22)
+
+**Module:** routine · **Shipped in:** round 22 (T1.5)
+
+### Manual verification (smoke)
+1. Test suite: `BlockConflictAPIConsistencyTests` 4 cases pass.
+2. Drift between detector and overlap APIs would now fail loudly in CI.
+
+## [T-204] — TripFootprint deterministic tie-break (round 22)
+
+**Module:** vacation · **Shipped in:** round 22 (T1.6)
+
+### Manual verification (smoke)
+1. Test suite: `TripFootprintTieBreakTests` 2 cases pass.
+2. Two trips with equal CO₂ and different modes always pick the alphabetically smaller mode.
+
+## [T-205] — LocalizedStringResource interpolation scan (round 22)
+
+**Module:** ci · **Shipped in:** round 22 (T1.7)
+
+### Manual verification
+1. Run `python3 scripts/check-localized-string-resource.py`.
+2. "✓ no LocalizedStringResource interpolation violations (scanned 801 keys in catalogue)".
+3. Add a `LocalizedStringResource("foo.bar \(value)")` site referencing a missing key → script exits 1.
+
+## [T-206] — Settings gift ideas CSV (round 22)
+
+**Module:** birthdays · **Shipped in:** round 22 (T2.8)
+
+### Manual verification
+1. Add at least one gift idea.
+2. Settings → "Copy gift ideas (N) as CSV".
+3. Paste in Notes → header `contactID,idea` + rows; commas/newlines properly quoted.
+
+## [T-207] — Settings global lead default (round 22)
+
+**Module:** birthdays · **Shipped in:** round 22 (T2.9)
+
+### Manual verification
+1. Settings → "Default lead time" stepper.
+2. Change to 14 → caption updates to "14 days before birthday".
+3. Restart app → value persists; per-contact overrides still take precedence.
+
+## [T-208] — Housekeeping streak banner (round 22)
+
+**Module:** housekeeping · **Shipped in:** round 22 (T2.10)
+
+### Manual verification
+1. Mark a task done in the same room every day for 7+ consecutive days.
+2. Top of HousekeepingListView shows "7-day streak — suggested snooze: 3 days" banner.
+3. Banner disappears after the streak is broken or below threshold.
+
+## [T-209] — Auto-mirror focus mute (round 22)
+
+**Module:** focus/watch · **Shipped in:** round 22 (T2.11)
+
+### Manual verification
+1. Toggle a category mute on iPhone.
+2. App Group suite contains updated `focus.categoryMute.mirror.v1` array (visible in Diagnostics if surfaced; tested in unit test).
+
+## [T-210] — Watch hydration reconciler (round 22)
+
+**Module:** watch/hydration · **Shipped in:** round 22 (T2.12)
+
+### Manual verification
+1. On watch: tap "+250 ml" three times.
+2. Bring iPhone to foreground → pending taps are flushed into HydrationDashboard total.
+3. Watch glance shows "0 pending taps" after reconciliation.
+
+## [T-211] — Settings mood week strip (round 22)
+
+**Module:** settings · **Shipped in:** round 22 (T2.13)
+
+### Manual verification
+1. Log moods for several recent days.
+2. Settings → "This week" section shows 7 columns matching the Today week strip.
+
+## [T-212] — ItineraryView injected forecast fetcher (round 22)
+
+**Module:** vacation · **Shipped in:** round 22 (T3.14)
+
+### Manual verification (smoke)
+1. Default `StubWeatherForecastService` returns canned 24°C/18°C / 10% rain.
+2. Production callers can swap in `WeatherKitForecastService()` at iOS 16+ runtime.
+
+## [T-213] — Itinerary forecast chip per day (round 22)
+
+**Module:** vacation · **Shipped in:** round 22 (T3.15)
+
+### Manual verification
+1. Generate AI itinerary for a trip with geocoded destination.
+2. Each day section header shows the forecast chip from cached/stub data.
+
+## [T-214] — Forecast unavailable variant (round 22)
+
+**Module:** vacation · **Shipped in:** round 22 (T3.16)
+
+### Manual verification
+1. Force the fetcher to throw → chip falls back to `cachedIgnoringTTL` data with `forecastIsStale` opacity.
+
+## [T-215] — Refresh forecast toolbar + last-updated caption (round 22)
+
+**Module:** vacation · **Shipped in:** round 22 (T3.17)
+
+### Manual verification
+1. ItineraryView toolbar → "Refresh forecast".
+2. Bottom safe-area inset shows "Last updated HH:mm" caption (orange when stale).
+
+## [T-216] — Stale-graceful forecast cache (round 22)
+
+**Module:** vacation · **Shipped in:** round 22 (T3.18)
+
+### Manual verification (smoke)
+1. Test suite: `WeatherForecastCacheTests` covers TTL respect.
+2. New `cachedIgnoringTTL(...)` path returns last stored entry even when TTL expired.
+
+## [T-217] — Mood trend 7d/30d toggle (round 22)
+
+**Module:** settings · **Shipped in:** round 22 (T4.19)
+
+### Manual verification
+1. Settings → Mood trend → segmented Picker 7d / 30d.
+2. Selection persists via @AppStorage across navigation.
+3. Week-over-week delta caption appears below the chart when at least 2 weeks of data exist.
+
+## [T-218] — Today positive streak caption (round 22)
+
+**Module:** today · **Shipped in:** round 22 (T4.22)
+
+### Manual verification
+1. Log mood ≥ okay for 3+ consecutive days.
+2. Today mood quick-log section shows "3-day positive streak" caption in green.
+
+## [T-219] — Backup v4 + mood weekly goal (round 22)
+
+**Module:** settings · **Shipped in:** round 22 (T4.23)
+
+### Manual verification
+1. Set mood weekly goal to 4.
+2. Settings → Export backup → JSON contains `"version": 4` + `"moodWeeklyGoal": 4`.
+3. Clear goal → restore from JSON → goal returns to 4.
+
+## [T-220] — Round 22 visual + watch surfaces (round 22)
+
+**Module:** various · **Shipped in:** round 22 (T5.24, T5.26, T5.27, T5.29, T6.30..T6.34)
+
+### Manual verification
+1. **CSV import**: TemplateEditor → "Import CSV from clipboard" with valid CSV → blocks inserted; sheet lists warnings if any.
+2. **Conflict gantt**: TemplateEditor with overlapping blocks → "Day timeline" Gantt strip renders red bars over conflicts.
+3. **Day completion bar**: Today below the progress summary → colored progress bar + "X% of day done" caption.
+4. **Cascade shift**: TemplateEditor with ≥2 blocks → ±15 min buttons shift every block.
+5. **Watch hydration goal proportion**: HydrationGlance shows `total / goal ml`.
+6. **Watch pending count + clear**: pending taps row + destructive "Clear pending" button.
+7. **Watch complication mood emoji**: complication line-2 shows today's mood emoji alongside title.
+8. **Watch mood week strip**: Settings glance → 7-day mood emoji strip.
+9. **Swipe-back haptic**: BlockDetailWatchView → swipe back → light click haptic.

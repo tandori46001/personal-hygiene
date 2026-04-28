@@ -54,6 +54,11 @@ struct NextBlockSnapshot: Sendable, Hashable {
     /// phone. Watch complication renders a small `pause.circle.fill` glyph
     /// so the wearer knows alerts are suppressed without opening the app.
     var isPaused: Bool = false
+    /// Round-22 slice T6.32: today's mood emoji (raw value resolved to
+    /// `MoodLogStore.Mood`) so the rectangular complication can render the
+    /// user's most-recent mood alongside the next block. Empty when the
+    /// user hasn't logged a mood today.
+    var todayMoodRaw: String = ""
 }
 
 struct NextBlockProvider: TimelineProvider {
@@ -101,13 +106,15 @@ struct NextBlockProvider: TimelineProvider {
         )
         let pauseDefaults = UserDefaults(suiteName: AppGroup.suiteName) ?? .standard
         let isPaused = PauseNotificationsStore.isPaused(now: now, defaults: pauseDefaults)
+        let moodRaw = MoodLogStore.todayEntry(now: now, defaults: pauseDefaults)?.mood ?? ""
         return NextBlockSnapshot(
             title: next.title,
             startMinutes: next.startMinutesFromMidnight,
             isFocusActive: focusActive,
             categoryRawValue: next.category.rawValue,
             durationMinutes: next.durationMinutes,
-            isPaused: isPaused
+            isPaused: isPaused,
+            todayMoodRaw: moodRaw
         )
     }
 }
@@ -137,9 +144,16 @@ struct NextBlockEntryView: View {
                             .accessibilityHidden(true)
                     }
                 }
-                Text(block.title)
-                    .font(.caption)
-                    .lineLimit(1)
+                HStack(spacing: 4) {
+                    Text(block.title)
+                        .font(.caption)
+                        .lineLimit(1)
+                    if let mood = MoodLogStore.Mood(rawValue: block.todayMoodRaw) {
+                        // Round-22 slice T6.32: mood-of-today inline glyph.
+                        Text(verbatim: mood.emoji)
+                            .font(.caption2)
+                    }
+                }
                 if !block.categoryRawValue.isEmpty {
                     HStack(spacing: 4) {
                         Text(localizedKey: "category.\(block.categoryRawValue)")

@@ -155,4 +155,27 @@ final class TemplateEditorViewModel {
         }
         try repository.upsert(template)
     }
+
+    /// Round-22 slice T5.24: insert every well-formed block in the parsed
+    /// CSV. Returns the warnings so the caller can surface them.
+    @discardableResult
+    func importCSV(_ csv: String) throws -> [String] {
+        let result = BlockCSVImporter.parse(csv)
+        for block in result.blocks {
+            try repository.upsert(block, in: template)
+        }
+        return result.warnings
+    }
+
+    /// Round-22 slice T5.29: shift every block's start time by `minutes`
+    /// (positive = later, negative = earlier). Clamped to [0, 23:59]. The
+    /// per-block durations stay intact.
+    func cascadeShift(byMinutes minutes: Int) throws {
+        guard minutes != 0 else { return }
+        for block in sortedBlocks {
+            let shifted = block.startMinutesFromMidnight + minutes
+            block.startMinutesFromMidnight = max(0, min(24 * 60 - 1, shifted))
+        }
+        try repository.upsert(template)
+    }
 }

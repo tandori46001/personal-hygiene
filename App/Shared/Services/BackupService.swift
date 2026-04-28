@@ -25,8 +25,13 @@ public struct BackupSnapshot: Codable, Sendable {
     /// is no-op when nil, importing the entries into UserDefaults otherwise.
     public let mood: [MoodEntryPayload]?
 
+    /// Round-22 slice T4.23: optional mood weekly goal value (0...7) so the
+    /// device migration also carries the user's goal preference. v1...v3
+    /// backups omit this; restore preserves the existing goal when nil.
+    public let moodWeeklyGoal: Int?
+
     public init(
-        version: Int = 3,
+        version: Int = 4,
         exportedAt: Date = Date(),
         templates: [TemplatePayload],
         completions: [CompletionPayload],
@@ -34,7 +39,8 @@ public struct BackupSnapshot: Codable, Sendable {
         housekeeping: [HousekeepingTaskPayload],
         trips: [TripPayload],
         diagnostics: DiagnosticsSnapshot? = nil,
-        mood: [MoodEntryPayload]? = nil
+        mood: [MoodEntryPayload]? = nil,
+        moodWeeklyGoal: Int? = nil
     ) {
         self.version = version
         self.exportedAt = exportedAt
@@ -45,6 +51,7 @@ public struct BackupSnapshot: Codable, Sendable {
         self.trips = trips
         self.diagnostics = diagnostics
         self.mood = mood
+        self.moodWeeklyGoal = moodWeeklyGoal
     }
 }
 
@@ -157,7 +164,8 @@ public enum BackupService {
     public static func export(
         from context: ModelContext,
         diagnostics: DiagnosticsSnapshot? = nil,
-        moodEntries: [MoodLogStore.Entry] = MoodLogStore.entries()
+        moodEntries: [MoodLogStore.Entry] = MoodLogStore.entries(),
+        moodWeeklyGoal: Int? = MoodWeeklyGoalStore.isActive() ? MoodWeeklyGoalStore.goal() : nil
     ) throws -> BackupSnapshot {
         let templates = try context.fetch(FetchDescriptor<RoutineTemplate>())
         let completions = try context.fetch(FetchDescriptor<BlockCompletion>())
@@ -176,7 +184,8 @@ public enum BackupService {
             housekeeping: housekeeping.map(payload(from:)),
             trips: trips.map(payload(from:)),
             diagnostics: diagnostics,
-            mood: moodPayload.isEmpty ? nil : moodPayload
+            mood: moodPayload.isEmpty ? nil : moodPayload,
+            moodWeeklyGoal: moodWeeklyGoal
         )
     }
 
@@ -216,6 +225,10 @@ public enum BackupService {
                 guard let mood = MoodLogStore.Mood(rawValue: payload.mood) else { continue }
                 MoodLogStore.record(mood, now: payload.recordedAt)
             }
+        }
+        // Round-22 slice T4.23: replay mood weekly goal when present.
+        if let goal = snapshot.moodWeeklyGoal {
+            MoodWeeklyGoalStore.setGoal(goal)
         }
     }
 

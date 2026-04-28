@@ -42,7 +42,9 @@
 
 ---
 
-### Phase 1 — MVP daily routine (iOS only) ✅ feature-complete (~99.95%)
+### Phase 1 — MVP daily routine (iOS only) ✅ feature-complete (~99.97%)
+
+> **Session 20 polish (2026-04-28 round 22, 40 slices):** regression guards (mood symbol, refresh-trace toast, conflict API consistency, footprint tie-break, LocalizedStringResource scan); helpers→UI (gift CSV button, lead-time stepper, streak banner + completion log, auto-mirror mute, hydration reconciler, mood week strip in Settings); WeatherKit real path through `ItineraryView` (injection, forecast chips, stale-graceful, refresh button + last-updated caption); mood deepening (7d/30d toggle, weekly delta, streak helper, Today caption, backup v4); Today QoL (CSV import + warnings sheet, gantt visualizer, completion bar, duplicate-with-rename, cascade shift); watch finishing (pending count + clear, goal proportion, complication mood emoji, settings mood strip, swipe-back haptic). Tests **684** (+35), i18n **801 × 3** (+32 net). Watch deployed live this session.
 
 > **Session 19 polish (2026-04-28 round 21, 40 slices):** mood log analytics (`MoodTrendAggregator` + 30-day Swift Charts trend, 7-day Today week strip, emoji filter, `MoodWeeklyGoalStore` + caption, `MoodLogStore.exportLocalizedCSV`); WeatherKit scaffolding (`WeatherForecast` value type, entitlement-gated `WeatherKitForecastService`, `WeatherForecastCache` 6h TTL App-Group-aware, `ItineraryDayForecastChip`, `TripNotesWeatherTemplate`, `TripFootprintAggregator` + 30-day footprint summary, `CurrencyRatesCSV` + table copy); Today QoL (`BlockConflictOverlap` visualizer, long-press skip+snooze chain, refresh-trace toast, `BlockCSVImporter`, ⌘D iPad shortcut, `TemplateListView` search suggestions); watch parity (`WatchHydrationGlanceStore` + glance view, `MoodQuickLogWatchView`, complication pause badge, mark-done undo capsule, `WatchThemeSyncTests`); housekeeping (`HousekeepingStreakAutoSnooze`, `BirthdayGiftIdeaCSVExporter`, `BirthdayLeadDefaultStore`, ad-hoc Focus toggle, `FocusCategoryMuteMirror`). Tests **649** (+64), i18n **769 × 3** (+32). L006 scan extended with explicit REQUIRED_TARGETS.
 

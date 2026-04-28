@@ -12,6 +12,7 @@ struct ContentView: View {
     @AppStorage("whatsNew.lastSeenCommitSHA") private var lastSeenCommitSHA = ""
     @AppStorage("settings.theme") private var themeOverride: String = "system"
     @State private var showingWhatsNewAuto = false
+    @Environment(\.scenePhase) private var scenePhase
 
     /// Round-12 slice 27: optional dark/light override applied at app root.
     private var preferredColorScheme: ColorScheme? {
@@ -36,6 +37,13 @@ struct ContentView: View {
             }
         }
         .preferredColorScheme(preferredColorScheme)
+        .onChange(of: scenePhase) { _, phase in
+            // Round-22 slice T2.12: drain pending watch hydration taps
+            // each time the iPhone foregrounds.
+            if phase == .active {
+                _ = WatchHydrationReconciler.drain(into: env.hydrationService)
+            }
+        }
         .task {
             // Round-12 slice 19: record this launch in the rolling history.
             ProcessLaunchHistoryStore.recordLaunch()

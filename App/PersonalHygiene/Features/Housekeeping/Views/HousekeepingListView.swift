@@ -22,6 +22,12 @@ struct HousekeepingListView: View {
                     }
                 }
 
+                // Round-22 slice T2.10: streak-aware auto-snooze banner.
+                // Hidden until at least one room hits the threshold.
+                HousekeepingStreakBanner(
+                    rooms: viewModel.availableRooms + (viewModel.hasUnsortedTasks ? [""] : [])
+                )
+
                 if viewModel.tasks.isEmpty {
                     ContentUnavailableView {
                         Label {

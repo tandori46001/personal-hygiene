@@ -38,7 +38,8 @@ public enum BlockCSVImporter {
         _ lines: [Substring],
         warnings: inout [String]
     ) -> ArraySlice<Substring> {
-        if lines[0].trimmingCharacters(in: .whitespaces).lowercased() == header {
+        let normalized = lines[0].trimmingCharacters(in: .whitespaces).lowercased()
+        if normalized == header.lowercased() {
             return lines.dropFirst()
         }
         warnings.append("missing or unexpected header — first row treated as data")
