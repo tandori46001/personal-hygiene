@@ -1567,3 +1567,69 @@ None — purely build-time guard.
 1. Settings → Diagnostics → Advanced → expand. Tap "Export diagnostics snapshot" twice → "Snapshot history" disclosure shows 2 entries with build SHA + pending count + widget reload count.
 2. Toggle notification permission off in iOS Settings, back to app → "Auth timeline" section shows the change with timestamp.
 3. Use Currency convert (with network) → "Network activity" section count for `frankfurter` goes up by 1. Cache hits don't increment.
+
+## [T-116] — Medication tab → DoseHistoryView NavigationLink (round 17 wire)
+
+**Module:** medication · **Shipped in:** round 17
+
+### Manual verification
+1. Open Medication tab while at least one block has `medicationConceptIdentifier` set. Below the 7-day compliance section, a "Dose history" row appears.
+2. Tap the row → DoseHistoryView pushes onto the stack and lists every medication-only completion from the last 30 days, newest first. Concept identifiers truncate-middle and are text-selectable.
+3. With no medication completions in 30 days, the empty state ("No dose recorded yet") renders instead of an empty list.
+
+## [T-117] — TemplateEditor → "Insert preset bundle" menu (round 17 wire)
+
+**Module:** routine · **Shipped in:** round 17
+
+### Manual verification
+1. Templates → open or create a template. In the blocks section, the "Insert preset bundle" menu sits below "Add block".
+2. Tap "Workday" on a template whose last block ends before 9:00 → 3 blocks (Deep work / Stand-up / Lunch) append at 9:00 / 10:30 / 13:00.
+3. Tap "Morning routine" on a template whose last block ends at 10:30 → 3 blocks (Wake up / Brush + shower / Breakfast) append shifted by `(10:30 − 7:00) = 3h 30min`, so first inserted block sits at 10:30, preserving 10/20-min spacing.
+4. Inserted blocks survive a kill-launch cycle (SwiftData persistence).
+
+## [T-118] — FocusScheduleView "Right now" preview (round 17 wire)
+
+**Module:** focus/settings · **Shipped in:** round 17
+
+### Manual verification
+1. Settings → Focus → at least one window covering the current minute, with at least one deep-focus block + one non-deep-focus block in the active template scheduled inside that window.
+2. The "Right now" section appears at the top with the active block's title + a "X silenced" caption matching `FocusFilterPreview.preview(...)`.
+3. Outside any active focus window: section is hidden entirely.
+4. With no `routineRepository` (e.g. directly previewed), section stays hidden — `blocksProvider` returns empty.
+
+## [T-119] — Settings → Quiet hours section (round 17 wire)
+
+**Module:** settings · **Shipped in:** round 17
+
+### Manual verification
+1. Settings → Quiet hours section: toggle off → only the toggle row + footer.
+2. Toggle on → start (default 22:00) + end (default 07:00) DatePickers appear. Edit each — values persist across kill-launch.
+3. Footer reads "Suppresses non-medication notifications during this window every day." Medication still fires.
+
+## [T-120] — Settings → Backup schedule picker (round 17 wire)
+
+**Module:** settings/backup · **Shipped in:** round 17
+
+### Manual verification
+1. Settings → Backup schedule section (below Backup actions): picker with Off / Weekly / Daily.
+2. Pick a value → reopen Settings → value persists.
+3. Footer notes the auto-backup engine is future-phase. (No actual backup runs yet — this only stores intent.)
+
+## [T-121] — Diagnostics → Pending IDs by group disclosure (round 17 wire)
+
+**Module:** settings/diagnostics · **Shipped in:** round 17
+
+### Manual verification
+1. Settings → Diagnostics → Advanced → expand. Below "Pending IDs" disclosure, a new "Pending IDs by group" disclosure renders with total count.
+2. Expand → one sub-disclosure per non-empty category (Routine / Medication follow-up / Hydration / Trip milestones / Housekeeping / Other) with each category's identifier list.
+3. With zero pending requests, the section is hidden entirely.
+
+## [T-122] — Housekeeping → Room icon picker (round 17 wire)
+
+**Module:** housekeeping · **Shipped in:** round 17
+
+### Manual verification
+1. Housekeeping tab → tap +. Sheet opens. Type a title.
+2. Pick or type a room → "Room icon" picker appears below. Choose any of the 8 icons → row icon updates in the picker.
+3. Save → row in the list shows the chosen SF Symbol next to the room name.
+4. Re-open the new-task sheet, type the same room name → the picker auto-loads the previously-chosen icon (round-trip via `HousekeepingRoomIconStore`).

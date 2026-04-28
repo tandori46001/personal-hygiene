@@ -9,6 +9,7 @@ struct HousekeepingListView: View {
     @State private var newEscalationDays = 2
     @State private var newRoom = ""
     @State private var addingCustomRoom = false
+    @State private var newRoomIconID: String = ""
 
     var body: some View {
         NavigationStack {
@@ -131,6 +132,31 @@ struct HousekeepingListView: View {
     }
 
     @ViewBuilder
+    private var roomIconPickerSection: some View {
+        let trimmed = newRoom.trimmingCharacters(in: .whitespacesAndNewlines)
+        if !trimmed.isEmpty {
+            Picker(selection: $newRoomIconID) {
+                Text("housekeeping.icon.none", bundle: .main).tag("")
+                ForEach(HousekeepingRoomIcons.palette) { choice in
+                    Label {
+                        Text(LocalizedStringKey(choice.displayKey), bundle: .main)
+                    } icon: {
+                        Image(systemName: choice.id)
+                    }
+                    .tag(choice.id)
+                }
+            } label: {
+                Text("housekeeping.field.roomIcon", bundle: .main)
+            }
+            .onAppear {
+                if newRoomIconID.isEmpty {
+                    newRoomIconID = HousekeepingRoomIconStore.iconID(forRoom: trimmed) ?? ""
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
     private var newTaskSheet: some View {
         NavigationStack {
             Form {
@@ -157,6 +183,7 @@ struct HousekeepingListView: View {
                     }
                 }
                 roomFieldSection
+                roomIconPickerSection
             }
             .navigationTitle(Text("housekeeping.new.title", bundle: .main))
             .navigationBarTitleDisplayMode(.inline)
@@ -170,18 +197,22 @@ struct HousekeepingListView: View {
                 }
                 ToolbarItem(placement: .confirmationAction) {
                     Button {
+                        let trimmedRoom = newRoom.trimmingCharacters(in: .whitespacesAndNewlines)
+                        let resolvedRoom = trimmedRoom.isEmpty ? nil : trimmedRoom
                         viewModel.add(
                             title: newTitle,
                             recurrence: newRecurrence,
                             escalationDays: newEscalationDays,
-                            room: newRoom.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                                ? nil
-                                : newRoom
+                            room: resolvedRoom
                         )
+                        if let resolvedRoom, !newRoomIconID.isEmpty {
+                            HousekeepingRoomIconStore.setIconID(newRoomIconID, forRoom: resolvedRoom)
+                        }
                         newTitle = ""
                         newRecurrence = .weekly
                         newEscalationDays = 2
                         newRoom = ""
+                        newRoomIconID = ""
                         addingCustomRoom = false
                         showingNewSheet = false
                     } label: {
@@ -208,6 +239,10 @@ private struct HousekeepingRow: View {
                     Text(LocalizedStringKey("housekeeping.recurrence.\(task.recurrence.rawValue)"))
                     if let room = task.room {
                         Text(verbatim: "•")
+                        if let iconID = HousekeepingRoomIconStore.iconID(forRoom: room) {
+                            Image(systemName: iconID)
+                                .accessibilityHidden(true)
+                        }
                         Text(verbatim: room)
                     }
                 }

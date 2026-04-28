@@ -24,6 +24,10 @@ public protocol RoutineRepository {
     func isDone(_ block: Block, on now: Date, calendar: Calendar) throws -> Bool
     /// All completion records on the calendar day of `now`, in insertion order.
     func completions(on now: Date, calendar: Calendar) throws -> [BlockCompletion]
+    /// Round-17: completions in the trailing `days` window ending at `now`,
+    /// newest first by `completedAt`. Used by `MedicationDoseHistory` to
+    /// render the 30-day dose history feed.
+    func recentCompletions(days: Int, now: Date, calendar: Calendar) throws -> [BlockCompletion]
 }
 
 @MainActor
@@ -114,6 +118,20 @@ public final class SwiftDataRoutineRepository: RoutineRepository {
         let descriptor = FetchDescriptor<BlockCompletion>(
             predicate: #Predicate { $0.dayStart == day },
             sortBy: [SortDescriptor(\.completedAt)]
+        )
+        return try context.fetch(descriptor)
+    }
+
+    public func recentCompletions(
+        days: Int,
+        now: Date = Date(),
+        calendar: Calendar = .autoupdatingCurrent
+    ) throws -> [BlockCompletion] {
+        let cutoff = calendar.date(byAdding: .day, value: -max(0, days), to: now)
+            ?? now.addingTimeInterval(-Double(days * 86_400))
+        let descriptor = FetchDescriptor<BlockCompletion>(
+            predicate: #Predicate { $0.completedAt >= cutoff },
+            sortBy: [SortDescriptor(\.completedAt, order: .reverse)]
         )
         return try context.fetch(descriptor)
     }

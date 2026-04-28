@@ -54,6 +54,26 @@ struct TemplateEditorView: View {
                         Image(systemName: "plus.circle")
                     }
                 }
+
+                Menu {
+                    ForEach(TemplatePresetSeeds.Preset.allCases, id: \.self) { preset in
+                        Button {
+                            do {
+                                try viewModel.insertPreset(preset)
+                            } catch {
+                                errorMessage = error.localizedDescription
+                            }
+                        } label: {
+                            Text(LocalizedStringKey("templateEditor.preset.\(preset.rawValue)"), bundle: .main)
+                        }
+                    }
+                } label: {
+                    Label {
+                        Text("templateEditor.action.insertPreset", bundle: .main)
+                    } icon: {
+                        Image(systemName: "wand.and.stars")
+                    }
+                }
             } header: {
                 Text("templateEditor.section.blocks", bundle: .main)
             } footer: {

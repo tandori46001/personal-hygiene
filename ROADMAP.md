@@ -42,7 +42,7 @@
 
 ---
 
-### Phase 1 — MVP daily routine (iOS only) ✅ feature-complete (~99.6%)
+### Phase 1 — MVP daily routine (iOS only) ✅ feature-complete (~99.7%)
 
 **Goal:** end user follows full daily routine on iPhone for 14 consecutive days using only this app's notifications.
 

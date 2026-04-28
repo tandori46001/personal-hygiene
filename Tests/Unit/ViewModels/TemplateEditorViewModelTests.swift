@@ -74,6 +74,41 @@ final class TemplateEditorViewModelTests: XCTestCase {
         XCTAssertTrue(viewModel.sortedBlocks.isEmpty)
     }
 
+    /// Round 17 wire: insertPreset appends every seed block, shifting their
+    /// start minutes so the bundle starts after the existing last block's end.
+    func test_insertPreset_appendsSeedsShiftedAfterLastBlock() throws {
+        let template = try makeTemplate(starts: [8 * 60])  // last block ends at 8:30
+        let viewModel = TemplateEditorViewModel(template: template, repository: repo)
+        let beforeCount = viewModel.sortedBlocks.count
+
+        try viewModel.insertPreset(.workday)  // seeds at 9:00, 10:30, 13:00
+
+        let after = viewModel.sortedBlocks
+        let workdaySeeds = TemplatePresetSeeds.Preset.workday.seeds
+        XCTAssertEqual(after.count, beforeCount + workdaySeeds.count)
+        // First seed was at 9:00 (540 min) and lastEnd was 510 min → no shift
+        // since 9:00 > lastEnd. Spacing between inserted seeds is preserved.
+        let inserted = Array(after.dropFirst(beforeCount))
+        let insertedStarts = inserted.map(\.startMinutesFromMidnight)
+        let seedStarts = workdaySeeds.map(\.startMinutesFromMidnight)
+        let insertedDeltas = zip(insertedStarts.dropFirst(), insertedStarts).map { $0 - $1 }
+        let seedDeltas = zip(seedStarts.dropFirst(), seedStarts).map { $0 - $1 }
+        XCTAssertEqual(insertedDeltas, seedDeltas, "preset relative spacing preserved")
+    }
+
+    /// Round 17: when the template's last block ends after the preset's first
+    /// seed, every seed shifts by `(lastEnd - firstSeed)` so they fit at the end.
+    func test_insertPreset_shiftsSeedsWhenTemplateExtendsPastFirstSeed() throws {
+        let template = try makeTemplate(starts: [10 * 60])  // last ends at 10:30 = 630
+        let viewModel = TemplateEditorViewModel(template: template, repository: repo)
+
+        try viewModel.insertPreset(.morningRoutine)  // seeds start 7:00, 7:10, 7:30
+
+        let inserted = viewModel.sortedBlocks.dropFirst()  // skip the original block
+        // First inserted seed should be at 10:30 = 630, not 7:00 = 420.
+        XCTAssertEqual(inserted.first?.startMinutesFromMidnight, 10 * 60 + 30)
+    }
+
     func test_move_preservesEachBlockDurationWhenSwapped() throws {
         let template = RoutineTemplate(name: "Durations", dayType: .weekday)
         try repo.upsert(template)

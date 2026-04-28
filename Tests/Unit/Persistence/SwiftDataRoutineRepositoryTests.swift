@@ -131,6 +131,28 @@ final class SwiftDataRoutineRepositoryTests: XCTestCase {
         XCTAssertTrue(try repo.completions(on: now, calendar: gregorianUTC()).isEmpty)
     }
 
+    /// Round 17: `recentCompletions(days:)` filters by completedAt cutoff,
+    /// returning newest-first across days.
+    func test_recentCompletions_returnsRollingWindowNewestFirst() throws {
+        let block = Block(title: "x", category: .hygiene, startMinutesFromMidnight: 7 * 60, durationMinutes: 30)
+        let template = RoutineTemplate(name: "T", dayType: .weekday, blocks: [block])
+        try repo.upsert(template)
+
+        let cal = gregorianUTC()
+        let day1 = date(year: 2026, month: 4, day: 1)
+        let day25 = date(year: 2026, month: 4, day: 25)
+        let day26 = date(year: 2026, month: 4, day: 26)
+        try repo.markDone(block, on: day1, calendar: cal)
+        try repo.markDone(block, on: day25, calendar: cal)
+        try repo.markDone(block, on: day26, calendar: cal)
+
+        let now = date(year: 2026, month: 4, day: 27)
+        let recent = try repo.recentCompletions(days: 7, now: now, calendar: cal)
+
+        XCTAssertEqual(recent.count, 2, "day1 falls outside the 7-day window")
+        XCTAssertGreaterThan(recent[0].completedAt, recent[1].completedAt, "newest-first ordering")
+    }
+
     func test_isDone_isPerCalendarDay() throws {
         let block = Block(title: "x", category: .hygiene, startMinutesFromMidnight: 7 * 60, durationMinutes: 30)
         let template = RoutineTemplate(name: "T", dayType: .weekday, blocks: [block])

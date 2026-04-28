@@ -198,7 +198,8 @@ private struct MainTabs: View {
                     coordinator: env.makeNotificationCoordinator()
                 ),
                 focusScheduleStore: env.focusScheduleStore,
-                diagnosticsActions: makeDiagnosticsActions()
+                diagnosticsActions: makeDiagnosticsActions(),
+                routineRepository: env.routineRepository
             )
             .tag(AppTab.settings)
             .tabItem {

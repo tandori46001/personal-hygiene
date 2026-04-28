@@ -3,6 +3,11 @@ import SwiftUI
 struct FocusScheduleView: View {
 
     let store: any FocusScheduleStore
+    /// Round-17 wire: callback that returns every `Block` across all
+    /// templates so the "Right now" preview can show which blocks would be
+    /// silenced. Defaulted to empty for callers that don't have a routine
+    /// repository handy.
+    var blocksProvider: () -> [Block] = { [] }
 
     @State private var windows: [ScheduledFocusWindow] = []
     @State private var editingWindow: ScheduledFocusWindow?
@@ -51,6 +56,8 @@ struct FocusScheduleView: View {
                     }
                 }
             }
+
+            focusPreviewSection
 
             if !conflictingIDs.isEmpty {
                 Section {
@@ -122,6 +129,43 @@ struct FocusScheduleView: View {
 
     private func reload() {
         windows = store.windows()
+    }
+
+    /// Round-17 wire: shows the block currently inside an active focus window
+    /// plus the count of blocks that would be silenced right now. Hidden when
+    /// no focus is active OR when the caller didn't supply blocks.
+    @ViewBuilder
+    private var focusPreviewSection: some View {
+        let blocks = blocksProvider()
+        if !blocks.isEmpty {
+            let preview = FocusFilterPreview.preview(
+                in: blocks,
+                scheduledWindows: windows
+            )
+            if let active = preview.activeBlock {
+                Section {
+                    HStack(spacing: 8) {
+                        Image(systemName: "moon.zzz.fill")
+                            .foregroundStyle(.tint)
+                            .accessibilityHidden(true)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("settings.focus.preview.active", bundle: .main)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                            Text(verbatim: active.title)
+                                .font(.body.bold())
+                        }
+                        Spacer()
+                        Text("settings.focus.preview.silenced.\(preview.silencedBlocks.count)", bundle: .main)
+                            .font(.caption.monospacedDigit())
+                            .foregroundStyle(.secondary)
+                    }
+                    .accessibilityElement(children: .combine)
+                } header: {
+                    Text("settings.focus.preview.header", bundle: .main)
+                }
+            }
+        }
     }
 
     private func deleteWindows(at offsets: IndexSet) {

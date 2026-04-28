@@ -57,6 +57,30 @@ final class MedicationComplianceViewModel {
         }
     }
 
+    /// Round-17 wire: snapshot of medication-only completions in the trailing
+    /// `days` window for `DoseHistoryView`. Read-once; the view doesn't poll.
+    func doseHistory(days: Int = 30, now: Date = Date()) -> [MedicationDoseHistory.Entry] {
+        do {
+            let templates = try repository.allTemplates()
+            let blocks = templates.flatMap(\.blocks)
+            let completions = try repository.recentCompletions(
+                days: days,
+                now: now,
+                calendar: calendar
+            )
+            return MedicationDoseHistory.recent(
+                completions: completions,
+                blocks: blocks,
+                days: days,
+                now: now,
+                calendar: calendar
+            )
+        } catch {
+            errorMessage = error.localizedDescription
+            return []
+        }
+    }
+
     private func collectLinkedConceptIDs() throws -> Set<String> {
         let templates = try repository.allTemplates()
         var ids: Set<String> = []

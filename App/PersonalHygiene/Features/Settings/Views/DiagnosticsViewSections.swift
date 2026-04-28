@@ -138,6 +138,7 @@ extension DiagnosticsView {
                 authTimelineSection
                 networkActivitySection
                 pendingDetailsSection
+                pendingByGroupSection
                 Section {
                     Button {
                         Task {

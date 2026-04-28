@@ -48,6 +48,7 @@ struct DiagnosticsView: View {
     @State var pendingDetails: [DiagnosticsSnapshot.PendingNotificationSummary] = []
     @State var snapshotHistoryExpanded = false
     @State var pendingDetailsExpanded = false
+    @State var pendingByGroupExpanded = false
 
     var body: some View {
         List {

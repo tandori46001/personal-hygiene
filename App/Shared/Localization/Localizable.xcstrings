@@ -2599,6 +2599,115 @@
     "housekeeping.icon.outdoor" : { "extractionState" : "manual", "localizations" : {
       "en" : { "stringUnit" : { "state" : "translated", "value" : "Outdoor" } },
       "es" : { "stringUnit" : { "state" : "translated", "value" : "Exterior" } },
-      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Extérieur" } } } }
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Extérieur" } } } },
+
+    "housekeeping.icon.none" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "No icon" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Sin icono" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Aucune icône" } } } },
+    "housekeeping.field.roomIcon" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Room icon" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Icono de la sala" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Icône de la pièce" } } } },
+    "templateEditor.action.insertPreset" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Insert preset bundle" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Insertar paquete predefinido" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Insérer un paquet prédéfini" } } } },
+    "templateEditor.preset.morningRoutine" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Morning routine" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Rutina matinal" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Routine du matin" } } } },
+    "templateEditor.preset.workday" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Workday" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Día laboral" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Journée de travail" } } } },
+    "templateEditor.preset.weekendChores" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Weekend chores" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Tareas del finde" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Tâches du week-end" } } } },
+    "settings.section.quietHours" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Quiet hours" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Horas de silencio" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Heures de silence" } } } },
+    "settings.section.quietHours.footer" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Suppresses non-medication notifications during this window every day." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Silencia las notificaciones no médicas en esta ventana todos los días." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Coupe les notifications non médicales chaque jour pendant cette plage." } } } },
+    "settings.quietHours.toggle" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Enable quiet hours" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Activar horas de silencio" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Activer les heures de silence" } } } },
+    "settings.quietHours.start" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Start" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Inicio" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Début" } } } },
+    "settings.quietHours.end" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "End" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Fin" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Fin" } } } },
+    "settings.section.backup.autoFrequency" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Backup schedule" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Programa de respaldo" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Sauvegarde programmée" } } } },
+    "settings.section.backup.autoFrequency.footer" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "The auto-backup engine ships in a future phase. This setting captures the intent today." } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "El motor de respaldo automático llega en una fase futura. Este ajuste guarda la intención hoy." } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Le moteur de sauvegarde automatique arrive plus tard. Ce réglage capte l'intention aujourd'hui." } } } },
+    "settings.backup.autoFrequency.label" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Frequency" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Frecuencia" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Fréquence" } } } },
+    "settings.backup.autoFrequency.off" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Off" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Desactivado" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Désactivé" } } } },
+    "settings.backup.autoFrequency.weekly" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Weekly" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Semanal" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Hebdomadaire" } } } },
+    "settings.backup.autoFrequency.daily" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Daily" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Diario" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Quotidien" } } } },
+    "settings.diagnostics.section.pendingByGroup" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Pending IDs by group" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "IDs pendientes por grupo" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "IDs en attente par groupe" } } } },
+    "settings.diagnostics.pendingByGroup.routine" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Routine" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Rutina" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Routine" } } } },
+    "settings.diagnostics.pendingByGroup.medicationFollowUp" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Medication follow-up" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Seguimiento de medicación" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Suivi médicament" } } } },
+    "settings.diagnostics.pendingByGroup.hydration" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Hydration" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hidratación" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Hydratation" } } } },
+    "settings.diagnostics.pendingByGroup.milestones" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Trip milestones" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Hitos de viaje" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Jalons de voyage" } } } },
+    "settings.diagnostics.pendingByGroup.housekeeping" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Housekeeping" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Limpieza" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Ménage" } } } },
+    "settings.diagnostics.pendingByGroup.other" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Other" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Otros" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Autres" } } } },
+    "settings.focus.preview.header" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Right now" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Ahora mismo" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "En ce moment" } } } },
+    "settings.focus.preview.active" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "Active focus block" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "Bloque en foco activo" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "Bloc en focus actif" } } } },
+    "settings.focus.preview.silenced.%lld" : { "extractionState" : "manual", "localizations" : {
+      "en" : { "stringUnit" : { "state" : "translated", "value" : "%lld silenced" } },
+      "es" : { "stringUnit" : { "state" : "translated", "value" : "%lld silenciados" } },
+      "fr" : { "stringUnit" : { "state" : "translated", "value" : "%lld silencieux" } } } }
   }
 }

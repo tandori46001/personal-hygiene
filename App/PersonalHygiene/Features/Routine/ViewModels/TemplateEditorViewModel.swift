@@ -52,6 +52,30 @@ final class TemplateEditorViewModel {
     /// keeps its own `durationMinutes`; only `startMinutesFromMidnight` is
     /// reassigned, so a 30-min block dragged into the 09:00 slot becomes a
     /// 30-min block at 09:00.
+    /// Round-17 wire: append every `BlockSeed` in `preset` to this template,
+    /// shifting their start times so the bundle starts after the last existing
+    /// block. The bundle's relative time spacing (offsets between seeds) is
+    /// preserved. No-op if `seeds` is empty.
+    func insertPreset(_ preset: TemplatePresetSeeds.Preset) throws {
+        let seeds = preset.seeds
+        guard !seeds.isEmpty else { return }
+        let baseOffset: Int = {
+            guard let last = sortedBlocks.last else { return 0 }
+            let lastEnd = last.startMinutesFromMidnight + last.durationMinutes
+            let firstSeed = seeds.map(\.startMinutesFromMidnight).min() ?? 0
+            return max(0, lastEnd - firstSeed)
+        }()
+        for seed in seeds {
+            let block = Block(
+                title: seed.title,
+                category: seed.category,
+                startMinutesFromMidnight: min(24 * 60 - 1, seed.startMinutesFromMidnight + baseOffset),
+                durationMinutes: seed.durationMinutes
+            )
+            try repository.upsert(block, in: template)
+        }
+    }
+
     func move(fromOffsets source: IndexSet, toOffset destination: Int) throws {
         var blocks = sortedBlocks
         guard !blocks.isEmpty else { return }

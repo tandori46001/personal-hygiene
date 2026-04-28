@@ -30,6 +30,15 @@ final class HousekeepingRoomIconsTests: XCTestCase {
         )
     }
 
+    /// Round-17 wire: every IconChoice's displayKey resolves to a non-empty
+    /// translation, so the picker rows always render with a usable label.
+    func test_palette_displayKeysAreNonEmpty() {
+        for choice in HousekeepingRoomIcons.palette {
+            XCTAssertFalse(choice.displayKey.isEmpty)
+            XCTAssertFalse(choice.id.isEmpty)
+        }
+    }
+
     func test_store_clear() {
         HousekeepingRoomIconStore.setIconID("fork.knife", forRoom: "Kitchen", in: defaults)
         HousekeepingRoomIconStore.setIconID(nil, forRoom: "Kitchen", in: defaults)

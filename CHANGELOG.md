@@ -8,6 +8,21 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added — Session 15 round 17: deferred-UI close-out (7 wires)
+
+Round 17 surfaces every deferred-UI item from rounds 13-16. No new infra — just wires onto stores/helpers that already shipped.
+
+- **Medication:** `DoseHistoryView` is now reachable from the Medication tab via a "Dose history" `NavigationLink` row beneath the 7-day compliance section. New `MedicationComplianceViewModel.doseHistory(days:now:)` plumbs `RoutineRepository.recentCompletions(days:)` (new) into `MedicationDoseHistory.recent(...)`.
+- **Templates:** TemplateEditor blocks section gains an "Insert preset bundle" menu (Morning routine / Workday / Weekend chores) backed by `TemplatePresetSeeds` (round 14). New `TemplateEditorViewModel.insertPreset(_:)` appends every seed shifted to fit after the last existing block, preserving relative seed spacing.
+- **Focus:** `FocusScheduleView` gains a "Right now" preview section showing the currently-active focus block + count of silenced blocks. Wired through `SettingsView`'s new `routineRepository` parameter; inert if no blocks are provided.
+- **Settings → Quiet hours:** new section toggling `QuietHoursStore` (round 14) with start/end `DatePicker`s. Footer explains medication notifications stay on.
+- **Settings → Backup schedule:** new picker section bound to `BackupAutoFrequencyStore.Frequency` (off / weekly / daily). Footer notes the auto-backup engine ships in a future phase.
+- **Diagnostics:** new "Pending IDs by group" disclosure inside Advanced — re-classifies the already-loaded `pendingDetails` list via `PendingNotificationsGroup` (round 14). Each category opens a sub-disclosure with the actual identifiers.
+- **Housekeeping:** new task sheet adds a "Room icon" picker once a room is chosen, persisting to `HousekeepingRoomIconStore` (round 16). Existing room rows render the chosen SF Symbol next to the room name.
+- **Repository API:** `RoutineRepository.recentCompletions(days:now:calendar:)` — fetches `BlockCompletion` over the trailing window, newest-first.
+- **Tests:** +5 (recentCompletions window/order, insertPreset shift+spacing, dose-history view-model end-to-end, palette display-key non-empty, palette display-key parity). 533 → 538 total.
+- **i18n:** +27 keys × 3 locales = 626 → 653 total (housekeeping icon picker, template preset menu, quiet hours, backup auto-frequency, diagnostics pending-by-group, focus preview).
+
 ### Added — Session 14 round 16 (`61c0a1a`): DoseHistoryView + TripCarbonSection + HousekeepingRoomIcons + FocusFilterPreview
 
 - **Medication:** new `DoseHistoryView` reads from `MedicationDoseHistory` aggregator (round 15) — 30-day medication-only completion list, text-selectable concept identifier, empty state. (NavigationLink wire from MedicationView deferred to round 17.)

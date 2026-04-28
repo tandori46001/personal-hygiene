@@ -6,6 +6,9 @@ struct SettingsView: View {
     @Bindable var viewModel: SettingsViewModel
     var focusScheduleStore: (any FocusScheduleStore)?
     var diagnosticsActions: DiagnosticsActions?
+    /// Round-17 wire: optional routine repository so the Focus schedule
+    /// screen can preview which blocks would be silenced right now.
+    var routineRepository: (any RoutineRepository)?
 
     @Environment(\.modelContext) private var modelContext
 
@@ -49,12 +52,19 @@ struct SettingsView: View {
 
             categoryMuteSection
             pauseSection
+            quietHoursSection
             themeSection
             HomeLocationSection()
             if let focusScheduleStore {
                 Section {
                     NavigationLink {
-                        FocusScheduleView(store: focusScheduleStore)
+                        FocusScheduleView(
+                            store: focusScheduleStore,
+                            blocksProvider: {
+                                guard let repository = routineRepository else { return [] }
+                                return (try? repository.allTemplates().flatMap(\.blocks)) ?? []
+                            }
+                        )
                     } label: {
                         Label {
                             Text("settings.focus.entry", bundle: .main)
@@ -68,6 +78,7 @@ struct SettingsView: View {
             }
             aboutSection
             backupSection
+            backupAutoFrequencySection
         }
         .navigationTitle(Text("settings.title", bundle: .main))
         .task { await viewModel.reloadStatus() }

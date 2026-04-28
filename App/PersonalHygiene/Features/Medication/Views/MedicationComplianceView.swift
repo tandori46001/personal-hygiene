@@ -50,6 +50,18 @@ struct MedicationComplianceView: View {
                         } header: {
                             Text("medication.section.last7days", bundle: .main)
                         }
+
+                        Section {
+                            NavigationLink {
+                                DoseHistoryView(entries: viewModel.doseHistory())
+                            } label: {
+                                Label {
+                                    Text("medication.dose.history.title", bundle: .main)
+                                } icon: {
+                                    Image(systemName: "clock.arrow.circlepath")
+                                }
+                            }
+                        }
                     }
                 }
             }
