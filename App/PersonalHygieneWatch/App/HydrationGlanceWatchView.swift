@@ -35,7 +35,7 @@ struct HydrationGlanceWatchView: View {
                     Text("watch.hydration.todayTotal", bundle: .main)
                 }
                 ProgressView(value: progressFraction)
-                    .tint(.tint)
+                    .tint(Color.accentColor)
                 if !pending.isEmpty {
                     HStack {
                         let totalPending = pending.reduce(0, +)

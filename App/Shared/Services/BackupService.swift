@@ -35,8 +35,14 @@ public struct BackupSnapshot: Codable, Sendable {
     /// `TemplateArchiveStore` when present.
     public let archivedTemplateIDs: [UUID]?
 
+    /// Round-25 slice T4.25: optional per-room housekeeping completion log
+    /// (`[room: [dayKey]]`). v5 backups omit this; restore replays the
+    /// dictionary into `HousekeepingCompletionLog` when present so a
+    /// device migration carries the streak history.
+    public let housekeepingCompletionLog: [String: [String]]?
+
     public init(
-        version: Int = 5,
+        version: Int = 6,
         exportedAt: Date = Date(),
         templates: [TemplatePayload],
         completions: [CompletionPayload],
@@ -46,7 +52,8 @@ public struct BackupSnapshot: Codable, Sendable {
         diagnostics: DiagnosticsSnapshot? = nil,
         mood: [MoodEntryPayload]? = nil,
         moodWeeklyGoal: Int? = nil,
-        archivedTemplateIDs: [UUID]? = nil
+        archivedTemplateIDs: [UUID]? = nil,
+        housekeepingCompletionLog: [String: [String]]? = nil
     ) {
         self.version = version
         self.exportedAt = exportedAt
@@ -59,6 +66,7 @@ public struct BackupSnapshot: Codable, Sendable {
         self.mood = mood
         self.moodWeeklyGoal = moodWeeklyGoal
         self.archivedTemplateIDs = archivedTemplateIDs
+        self.housekeepingCompletionLog = housekeepingCompletionLog
     }
 }
 
@@ -173,7 +181,8 @@ public enum BackupService {
         diagnostics: DiagnosticsSnapshot? = nil,
         moodEntries: [MoodLogStore.Entry] = MoodLogStore.entries(),
         moodWeeklyGoal: Int? = MoodWeeklyGoalStore.isActive() ? MoodWeeklyGoalStore.goal() : nil,
-        archivedTemplateIDs: [UUID]? = Array(TemplateArchiveStore.archivedIDs())
+        archivedTemplateIDs: [UUID]? = Array(TemplateArchiveStore.archivedIDs()),
+        housekeepingCompletionLog: [String: [String]]? = Self.housekeepingLogPayload()
     ) throws -> BackupSnapshot {
         let templates = try context.fetch(FetchDescriptor<RoutineTemplate>())
         let completions = try context.fetch(FetchDescriptor<BlockCompletion>())
@@ -194,8 +203,27 @@ public enum BackupService {
             diagnostics: diagnostics,
             mood: moodPayload.isEmpty ? nil : moodPayload,
             moodWeeklyGoal: moodWeeklyGoal,
-            archivedTemplateIDs: (archivedTemplateIDs?.isEmpty ?? true) ? nil : archivedTemplateIDs
+            archivedTemplateIDs: (archivedTemplateIDs?.isEmpty ?? true) ? nil : archivedTemplateIDs,
+            housekeepingCompletionLog: (housekeepingCompletionLog?.isEmpty ?? true) ? nil : housekeepingCompletionLog
         )
+    }
+
+    /// Round-25 slice T4.25: dump the per-room day-key map from
+    /// `HousekeepingCompletionLog` for inclusion in a backup. Marked
+    /// `nonisolated` so it can be invoked as a default-argument value
+    /// from non-MainActor call sites (e.g. the widget target compiled
+    /// in Swift 5 mode).
+    nonisolated public static func housekeepingLogPayload(
+        in defaults: UserDefaults = .standard
+    ) -> [String: [String]]? {
+        let rooms = HousekeepingCompletionLog.allRooms(in: defaults)
+        guard !rooms.isEmpty else { return nil }
+        var map: [String: [String]] = [:]
+        for room in rooms {
+            let days = HousekeepingCompletionLog.days(room: room, in: defaults)
+            map[room] = Array(days).sorted()
+        }
+        return map.isEmpty ? nil : map
     }
 
     public static func encode(_ snapshot: BackupSnapshot) throws -> Data {
@@ -244,6 +272,25 @@ public enum BackupService {
             TemplateArchiveStore.clear()
             for id in archived {
                 TemplateArchiveStore.setArchived(true, for: id)
+            }
+        }
+        // Round-25 slice T4.25: replay per-room day keys into the
+        // housekeeping log. Existing rooms NOT present in the snapshot are
+        // left untouched (the snapshot is additive, not destructive).
+        if let logMap = snapshot.housekeepingCompletionLog {
+            for (room, days) in logMap {
+                for dayKey in days {
+                    let formatter = DateFormatter()
+                    formatter.calendar = Calendar(identifier: .gregorian)
+                    formatter.dateFormat = "yyyy-MM-dd"
+                    if let date = formatter.date(from: dayKey) {
+                        HousekeepingCompletionLog.record(
+                            room: room,
+                            on: date,
+                            calendar: formatter.calendar
+                        )
+                    }
+                }
             }
         }
     }

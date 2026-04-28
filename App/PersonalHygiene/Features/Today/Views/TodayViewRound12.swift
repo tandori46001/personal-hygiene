@@ -75,6 +75,15 @@ extension TodayView {
 
     @ToolbarContentBuilder
     var todayToolbar: some ToolbarContent {
+        // Round-25 slice T2.15: completion-percent chip in the topBarLeading
+        // slot so the user reads progress at a glance without scrolling
+        // back up to the summary row.
+        ToolbarItem(placement: .topBarLeading) {
+            TodayDayCompletionChip(
+                done: viewModel.doneCount,
+                total: viewModel.totalCount
+            )
+        }
         ToolbarItem(placement: .primaryAction) {
             Menu {
                 Button {

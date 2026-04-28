@@ -112,6 +112,9 @@ struct DiagnosticsView: View {
             // housekeeping log dump, backup size projection, archived
             // templates, mood streak record).
             round24Sections
+            // Round-25 wrapper for missed-dose probe, latency histogram,
+            // last-error log, and the everything-v2 export.
+            round25Sections
 
             devToolsSection
 

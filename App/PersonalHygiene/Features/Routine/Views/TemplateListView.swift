@@ -86,6 +86,14 @@ struct TemplateListView: View {
         }
         .navigationTitle(Text("templateList.title", bundle: .main))
         .toolbar {
+            // Round-25 slice T2.16: mirror the Today completion-percent chip
+            // here so the user reads progress without bouncing tabs. Reads
+            // the snapshot store written by TodayView on each reload.
+            if let snap = TodayCompletionSnapshotStore.readForToday() {
+                ToolbarItem(placement: .topBarLeading) {
+                    TodayDayCompletionChip(done: snap.done, total: snap.total)
+                }
+            }
             ToolbarItem(placement: .primaryAction) {
                 Button {
                     showingNewTemplateSheet = true

@@ -17904,6 +17904,326 @@
         "es": { "stringUnit": { "state": "translated", "value": "Aplicar" } },
         "fr": { "stringUnit": { "state": "translated", "value": "Appliquer" } }
       }
+    },
+    "sleep.section.weeklyAverage": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Weekly average" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Promedio semanal" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Moyenne hebdomadaire" } }
+      }
+    },
+    "sleep.bedtime.variance.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Bedtime consistency" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Constancia al acostarse" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Régularité du coucher" } }
+      }
+    },
+    "sleep.bedtime.variance.label": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Std. deviation" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Desv. estándar" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Écart-type" } }
+      }
+    },
+    "sleep.bedtime.verdict.consistent": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Bedtime is consistent." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Te acuestas con constancia." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Heure de coucher régulière." } }
+      }
+    },
+    "sleep.bedtime.verdict.driftSlight": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Slight drift in bedtime." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Ligera variación al acostarte." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Léger décalage du coucher." } }
+      }
+    },
+    "sleep.bedtime.verdict.driftSignificant": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Significant bedtime drift." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Fuerte variación al acostarte." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Forte irrégularité du coucher." } }
+      }
+    },
+    "sleep.weeklyDelta.shareImage": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Share weekly delta as image" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Compartir variación semanal como imagen" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Partager la variation hebdo en image" } }
+      }
+    },
+    "medication.section.thirtyDayChart": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "30-day chart" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Gráfico de 30 días" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Graphique 30 jours" } }
+      }
+    },
+    "medication.section.streak": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Streak" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Racha" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Série" } }
+      }
+    },
+    "medication.export.csv30d": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Copy 30-day dose CSV" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Copiar CSV de dosis (30 días)" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Copier CSV des doses (30 j)" } }
+      }
+    },
+    "medication.export.csv30d.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Copies the trailing 30-day medication-completion log to the clipboard." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Copia el registro de medicación de los últimos 30 días al portapapeles." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Copie le journal des 30 derniers jours dans le presse-papiers." } }
+      }
+    },
+    "today.dayCompletion.chip.a11y %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Today completion %lld percent" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Avance del día %lld por ciento" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Avancement du jour %lld pour cent" } }
+      }
+    },
+    "sleep.consistency.score %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Consistency score %lld" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Puntuación de constancia %lld" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Score de régularité %lld" } }
+      }
+    },
+    "sleep.consistency.tier.excellent": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Excellent" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Excelente" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Excellent" } }
+      }
+    },
+    "sleep.consistency.tier.good": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Good" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Bueno" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Bien" } }
+      }
+    },
+    "sleep.consistency.tier.poor": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Needs work" } },
+        "es": { "stringUnit": { "state": "translated", "value": "A mejorar" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "À améliorer" } }
+      }
+    },
+    "sleep.debt.label": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "7-day sleep debt" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Deuda de sueño (7 d)" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Dette de sommeil (7 j)" } }
+      }
+    },
+    "trips.document.expiresIn %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "in %lld days" } },
+        "es": { "stringUnit": { "state": "translated", "value": "en %lld días" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "dans %lld jours" } }
+      }
+    },
+    "trips.document.expiry.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Document expirations" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Caducidad de documentos" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Expiration des documents" } }
+      }
+    },
+    "trips.document.expiry.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Documents expiring within the next 30 days are listed here." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Aquí ves los documentos que caducan en los próximos 30 días." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Documents expirant dans les 30 prochains jours." } }
+      }
+    },
+    "diagnostics.missedDose.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Missed dose probe" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Sonda de dosis perdida" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Sonde de dose manquée" } }
+      }
+    },
+    "diagnostics.missedDose.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Latest medication block past its window without a logged completion." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Último bloque de medicación pasado su hora sin marcar como hecho." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Dernier bloc de médicament en retard sans validation." } }
+      }
+    },
+    "diagnostics.latency.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Recent refresh trace" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Trazas recientes de refresco" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Traces récentes de rafraîchissement" } }
+      }
+    },
+    "diagnostics.latency.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Last 10 refresh events with notification counts." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Últimos 10 refrescos con conteos de notificaciones." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "10 derniers rafraîchissements avec nombre de notifications." } }
+      }
+    },
+    "diagnostics.lastError.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Recent errors" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Errores recientes" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Erreurs récentes" } }
+      }
+    },
+    "diagnostics.everythingV2.copy": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Copy diagnostics bundle" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Copiar paquete de diagnóstico" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Copier le paquet de diagnostic" } }
+      }
+    },
+    "diagnostics.everythingV2.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Copies a multi-section diagnostics bundle to the clipboard." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Copia un paquete de diagnóstico multisección al portapapeles." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Copie un paquet de diagnostic multi-sections dans le presse-papiers." } }
+      }
+    },
+    "diagnostics.cacheCounters.reset.confirm.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Reset cache counters?" } },
+        "es": { "stringUnit": { "state": "translated", "value": "¿Reiniciar contadores de caché?" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Réinitialiser les compteurs de cache ?" } }
+      }
+    },
+    "diagnostics.cacheCounters.reset.confirm.button": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Reset" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Reiniciar" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Réinitialiser" } }
+      }
+    },
+    "diagnostics.cacheCounters.reset.confirm.message": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "This wipes the in-memory cache hits/misses counters." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Borra los contadores de aciertos/fallos de caché en memoria." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Cela efface les compteurs hits/misses du cache en mémoire." } }
+      }
+    },
+    "medication.adherence.trend.a11y": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "30-day adherence trend chart" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Gráfico de tendencia de adherencia (30 días)" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Graphique de tendance d'adhésion (30 j)" } }
+      }
+    },
+    "today.shortcut.jumpNext": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Jump to next block" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Saltar al siguiente bloque" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Aller au bloc suivant" } }
+      }
+    },
+    "blockEditor.shortcut.duplicate": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Duplicate block" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Duplicar bloque" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Dupliquer le bloc" } }
+      }
+    },
+    "settings.theme.system": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "System" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Sistema" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Système" } }
+      }
+    },
+    "settings.theme.light": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Light" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Claro" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Clair" } }
+      }
+    },
+    "settings.theme.dark": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Dark" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Oscuro" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Sombre" } }
+      }
+    },
+    "watch.settings.theme.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Theme" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Tema" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Thème" } }
+      }
+    },
+    "watch.sleep.weeklyAverage": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Sleep avg (7d)" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Sueño media (7 d)" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Moy. sommeil (7 j)" } }
+      }
+    },
+    "watch.medication.streak.current": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Current" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Actual" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Actuel" } }
+      }
+    },
+    "watch.medication.streak.best": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Best" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Mejor" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Record" } }
+      }
     }
   }
 }

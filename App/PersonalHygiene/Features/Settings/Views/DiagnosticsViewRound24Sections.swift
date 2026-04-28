@@ -38,15 +38,9 @@ extension DiagnosticsView {
             } label: {
                 Text("diagnostics.cacheCounters.misses", bundle: .main)
             }
-            Button(role: .destructive) {
-                WeatherForecastCacheCounters.shared.reset()
-            } label: {
-                Label {
-                    Text("diagnostics.cacheCounters.reset", bundle: .main)
-                } icon: {
-                    Image(systemName: "arrow.counterclockwise")
-                }
-            }
+            // Round-25 slice T8.56: confirm-dialog wrapping the destructive
+            // reset so a single accidental tap can't wipe counters.
+            CacheCounterResetButton()
         } header: {
             Text("diagnostics.cacheCounters.title", bundle: .main)
         } footer: {
@@ -115,6 +109,41 @@ extension DiagnosticsView {
             } header: {
                 Text("diagnostics.moodStreak.title", bundle: .main)
             }
+        }
+    }
+}
+
+/// Round-25 slice T8.56: confirm-dialog reset wrapping the destructive
+/// cache-counters reset button. Renders as a destructive Button + a
+/// `confirmationDialog` so accidental taps require a confirm step.
+private struct CacheCounterResetButton: View {
+    @State private var showingConfirm = false
+
+    var body: some View {
+        Button(role: .destructive) {
+            showingConfirm = true
+        } label: {
+            Label {
+                Text("diagnostics.cacheCounters.reset", bundle: .main)
+            } icon: {
+                Image(systemName: "arrow.counterclockwise")
+            }
+        }
+        .confirmationDialog(
+            Text("diagnostics.cacheCounters.reset.confirm.title", bundle: .main),
+            isPresented: $showingConfirm,
+            titleVisibility: .visible
+        ) {
+            Button(role: .destructive) {
+                WeatherForecastCacheCounters.shared.reset()
+            } label: {
+                Text("diagnostics.cacheCounters.reset.confirm.button", bundle: .main)
+            }
+            Button(role: .cancel) {} label: {
+                Text("common.cancel", bundle: .main)
+            }
+        } message: {
+            Text("diagnostics.cacheCounters.reset.confirm.message", bundle: .main)
         }
     }
 }

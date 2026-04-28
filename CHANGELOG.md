@@ -8,6 +8,81 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Added — Session 23 round 25: 62-slice regression depth + r24 wiring + backup v6 + sleep/med deepening + watch surfaces + Today/Routine QoL + diagnostics polish
+
+Tier 1 (regression guards, 8):
+- `BackupSnapshotV5RoundTripTests` (2 — full encode→decode→restore→re-export across containers + stable encode).
+- `MostRecentBackupStoreOrderTests` (1 — second record overwrites first).
+- `BulkCategoryEditorIdempotencyTests` (2 — apply twice == once + unrelated fields preserved).
+- `BlockEditorFollowupOverrideTests` (3 — override beats default + per-block scoping).
+- `TodayCompletionPercentBoundaryTests` (4 — never >100, half-rounding, % suffix).
+- `MedicationStreakRolloverTests` (3 — zero when today missing, gap break, future days ignored).
+- `SleepWeeklyDeltaSignTests` (2 — negative + zero deltas).
+- `ArchivedTemplateFilterPersistenceTests` (2 — toggle survives, badge present).
+
+Tier 2 (wire r24 helpers into UI, 8):
+- `MedicationDoseHistoryCSV` + tests; CSV exporter for the dose history view.
+- `SleepWeeklyDeltaImageRenderer` (PNG share card via `ImageRenderer`).
+- `TodayCompletionSnapshotStore` (lightweight snapshot for cross-tab chip rendering).
+- `TodayDayCompletionChip` (header pill mirroring `TodayDayCompletionBar`).
+- SleepDashboardView gains `round25WeeklyAverageSection` (chart + delta caption), `round25BedtimeVarianceSection` (verdict caption), `round25ShareDeltaSection` (PNG share button).
+- MedicationComplianceView gains `round25MonthlyChartSection`, `round25StreakSection`, `round25ExportRow` (CSV clipboard).
+- TodayView toolbar gains `TodayDayCompletionChip` in topBarLeading; TemplateListView mirrors via the snapshot store.
+
+Tier 3 (sleep + medication deepening, 8):
+- `SleepConsistencyScore` (0…100 score blending bedtime variance + duration adherence) + tier (excellent/good/poor).
+- `SleepConsistencyScoreCaption` view.
+- `MedicationDoseHistoryFilter` (7d / 30d / 90d window enum).
+- `MedicationAdherence30dTrendChart` (rolling 7-day adherence line+area).
+- `SleepDebtTracker` (rolling 7-day deficit vs target).
+- `SleepDebtTrackerCaption` view.
+- `MedicationMissedDoseAlertHelper` (next missed-dose probe).
+- DiagnosticsView gains a Round-25 missed-dose section.
+
+Tier 4 (backup v6, 6):
+- `BackupSnapshot` v5 → v6 with `housekeepingCompletionLog: [String: [String]]?` (per-room day-key map). Restore replays into `HousekeepingCompletionLog`.
+- `BackupSnapshotV6RoundTripTests` (4 cases incl. v5 downgrade).
+- `BackupAutoFrequencySuggestion` helper (banner threshold).
+- `BackupRestorePreview` counts helper (templates / completions / mood / archive / log keys).
+- `BackupArchiveExporter` (export only archived templates).
+- `BackupSnapshotChecksum` (SHA-256 over the canonical encoded JSON).
+
+Tier 5 (vacation polish, 8):
+- `TripCountdown` (next-trip days-until summary).
+- `TripFootprintYTD` (year-to-date carbon).
+- `TripBudgetVsActual` (budget/actual + status: under/on/over).
+- `ItineraryDayWeatherFallback` (closest cached forecast).
+- `TripDocumentExpiryReminder` (lead-day filter).
+- `TripDocumentExpirySection` view (Diagnostics-style row).
+- `EmergencyContactsExporter` (vCard 3.0).
+
+Tier 6 (watch + complication, 8):
+- `WatchSleepWeeklyAverageGlance`, `WatchMedicationStreakGlance`, `WatchTodayCompletionRing` views.
+- `ComplicationLine3Choice` (line-3 picker — mood / dayCompletion / medicationStreak).
+- `HydrationGoalReachedHaptic` (one-buzz-per-day store).
+- `PauseRemainingCaption` (pause time-left helper).
+- `WatchSettingsThemePicker` (mirror system/light/dark).
+- `WatchShowCompletedToggleStore` (show/hide completed blocks).
+- `BlockDetailWatchSnoozeMenu` refactored from `Menu` (unavailable in watchOS) to a vertical button stack.
+
+Tier 7 (Today/Routine QoL, 6):
+- `BlockTitleHistoryAutocompleteV2` (recency-weighted prefix match).
+- `BlockTagAutocompleteStore` (50-entry ring buffer for #tags).
+- `TodayViewRound25` extension: ⌘N "jump to next active block" shortcut, refresh haptic confirmation, long-press conflict overlap helper.
+- `BlockEditorViewRound25Shortcut`: ⌘⇧D duplicate shortcut.
+
+Tier 8 (Diagnostics, 4):
+- `DiagnosticsErrorLog` (capped ring buffer).
+- `DiagnosticsEverythingV2` (Markdown bundle for clipboard).
+- DiagnosticsView gains `round25Sections` wrapper (missed dose, refresh trace histogram, last-error rows, everything-v2 export).
+- Cache-counters reset wrapped in a confirm dialog.
+
+Tier 9 (build + deploy + docs):
+- Counts: **880 tests** (878 unit + 2 UI), 0 failures, 0 process-crashes (+0 vs round 24.5; new tests added = +25 across all tiers).
+- i18n keys: **893 × 3 locales** (+40 net vs round 24.5's 856 baseline; minus dedupe).
+- `LocalizationKeyCount` moved to `Shared/` so widget + watch targets can read it.
+- iPhone + Watch both deployed live this session.
+
 ### Added — Session 22 round 24: 40-slice diagnostics surfaces + sleep/medication deepening + backup v5 + archive UI + watch finishing
 
 Tier 1 (regression):

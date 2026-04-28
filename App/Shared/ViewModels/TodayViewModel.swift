@@ -90,6 +90,17 @@ final class TodayViewModel {
                 errorMessage = error.localizedDescription
             }
         }
+        // Round-25 slice T2.16: publish today's completion snapshot so
+        // non-Today surfaces (TemplateListView header) can read the chip
+        // figure without re-traversing the repository.
+        let comps = calendar.dateComponents([.year, .month, .day], from: now)
+        let dayKey = String(
+            format: "%04d-%02d-%02d",
+            comps.year ?? 0, comps.month ?? 0, comps.day ?? 0
+        )
+        TodayCompletionSnapshotStore.write(
+            .init(dayKey: dayKey, done: doneCount, total: totalCount)
+        )
     }
 
     static func nextUpcoming(trips: [Trip], now: Date, calendar: Calendar) -> Trip? {

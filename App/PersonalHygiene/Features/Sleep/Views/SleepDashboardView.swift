@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SleepDashboardView: View {
     @Bindable var viewModel: SleepDashboardViewModel
+    @State private var sharedImageData: Data?
 
     var body: some View {
         NavigationStack {
@@ -76,6 +77,12 @@ struct SleepDashboardView: View {
                         Text("sleep.unavailable", bundle: .main)
                             .foregroundStyle(.secondary)
                     }
+                }
+
+                round25WeeklyAverageSection(nights: viewModel.recentNights)
+                round25BedtimeVarianceSection(bedtimeMinutes: viewModel.recentBedtimeMinutes)
+                round25ShareDeltaSection(nights: viewModel.recentNights) { png in
+                    sharedImageData = png
                 }
 
                 Section {

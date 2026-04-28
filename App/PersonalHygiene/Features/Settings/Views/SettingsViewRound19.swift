@@ -69,10 +69,6 @@ extension SettingsView {
     }
 }
 
-/// Round-19 slice T3.14: source-of-truth constant for the i18n catalog size.
-/// Bumped manually when `Localizable.xcstrings` adds/removes keys; the
-/// `BundleLocalizationLookupTests` cross-check guards correctness, and
-/// `scripts/check-i18n-coverage.sh` keeps the per-locale count in sync.
-public enum LocalizationKeyCount {
-    public static let total = 856
-}
+// `LocalizationKeyCount` lives in `App/Shared/Services/LocalizationKeyCount.swift`
+// since round 25 — the widget + watch targets need to read it for
+// diagnostics bundles, and they only compile `Shared/`.

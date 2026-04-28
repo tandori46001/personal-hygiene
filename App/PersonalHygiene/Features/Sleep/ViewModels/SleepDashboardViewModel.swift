@@ -12,6 +12,16 @@ final class SleepDashboardViewModel {
     var lastNight: SleepNight?
     var isAvailable: Bool = false
     var errorMessage: String?
+    /// Round-25 slice T2.9/T2.10: trailing 14-night history fed into the
+    /// weekly-average chart, weekly-delta caption, and bedtime variance
+    /// verdict. Populated from `lastNight` for now (1 entry); will fill out
+    /// once `SleepService` exposes a ranged fetch alongside HealthKit
+    /// observer wiring. Empty array = sections render nothing.
+    var recentNights: [SleepNight] = []
+    /// Round-25 slice T2.10: minute-of-midnight bedtime samples for the
+    /// `SleepBedtimeVariance` verdict. Sources from `recentNights` once
+    /// the service exposes per-night start times.
+    var recentBedtimeMinutes: [Int] = []
 
     init(
         service: any SleepService,
@@ -39,6 +49,9 @@ final class SleepDashboardViewModel {
         guard isAvailable else { return }
         do {
             lastNight = try await service.lastNight()
+            if let night = lastNight {
+                recentNights = [night]
+            }
         } catch {
             errorMessage = error.localizedDescription
         }

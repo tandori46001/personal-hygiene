@@ -2746,3 +2746,93 @@ Verify by running `./scripts/check-tests.sh`.
 3. Pick blocks (checkmarks toggle), pick target category, Apply.
 4. Sheet dismisses; selected blocks now carry the new category; others untouched.
 5. `TemplateEditorBulkCategoryTests` 2 cases cover the VM path.
+
+## [T-264] — Round-25 regression depth (round 25)
+
+**Module:** all · **Shipped in:** round 25 (T1.1–T1.8)
+
+### Manual verification (test-only)
+1. `BackupSnapshotV5RoundTripTests` (2), `MostRecentBackupStoreOrderTests` (1), `BulkCategoryEditorIdempotencyTests` (2), `BlockEditorFollowupOverrideTests` (3), `TodayCompletionPercentBoundaryTests` (4), `MedicationStreakRolloverTests` (3), `SleepWeeklyDeltaSignTests` (2), `ArchivedTemplateFilterPersistenceTests` (2) — all green.
+
+## [T-265] — Sleep dashboard wires r24 helpers (round 25)
+
+**Module:** sleep · **Shipped in:** round 25 (T2.9, T2.10, T2.14)
+
+### Manual verification
+1. SleepDashboard renders weekly average chart + delta caption when `recentNights` is non-empty.
+2. Bedtime variance section renders verdict (consistent / driftSlight / driftSignificant) with a colored caption.
+3. Share-as-image button appears when a delta summary is computable; tapping the button captures a PNG via `ImageRenderer`.
+
+## [T-266] — Medication compliance wires r24 helpers (round 25)
+
+**Module:** medication · **Shipped in:** round 25 (T2.11, T2.12, T2.13)
+
+### Manual verification
+1. MedicationComplianceView shows 30-day chart section when dose history is non-empty.
+2. Streak section shows current + best from `MedicationStreakCounter`.
+3. "Copy 30-day dose CSV" puts a CSV with the documented header on the clipboard.
+
+## [T-267] — Today + Routine completion-percent chip (round 25)
+
+**Module:** today, routine · **Shipped in:** round 25 (T2.15, T2.16)
+
+### Manual verification
+1. Today header shows a colored `XX%` pill when there are scheduled blocks.
+2. TemplateListView header mirrors the same pill once `TodayViewModel.reload()` writes a snapshot.
+3. Pill color tiers: green ≥85%, blue 50…84%, orange <50%.
+
+## [T-268] — Sleep + medication deepening helpers (round 25)
+
+**Module:** sleep, medication · **Shipped in:** round 25 (T3.17–T3.24)
+
+### Manual verification (test-only)
+1. `SleepConsistencyScoreTests`, `SleepDebtTrackerTests`, `MedicationDoseHistoryFilterTests`, `MedicationMissedDoseAlertHelperTests` — all green.
+
+## [T-269] — Backup v6 + archive exporter + checksum (round 25)
+
+**Module:** settings · **Shipped in:** round 25 (T4.25–T4.30)
+
+### Manual verification
+1. Export → JSON contains `version: 6` and (when housekeeping log is non-empty) a `housekeepingCompletionLog` map.
+2. Restore from a v6 file replays per-room day keys into `HousekeepingCompletionLog`.
+3. Restore from a v5 file (no `housekeepingCompletionLog`) decodes cleanly with the field absent.
+4. `BackupSnapshotChecksum.sha256(of:)` returns a 64-char hex digest; `verify(_:matches:)` round-trips.
+
+## [T-270] — Vacation polish helpers (round 25)
+
+**Module:** trips · **Shipped in:** round 25 (T5.31–T5.38)
+
+### Manual verification (test-only)
+1. `TripCountdownTests`, `TripFootprintYTDTests`, `TripBudgetVsActualTests`, `ItineraryDayWeatherFallbackTests`, `TripDocumentExpiryReminderTests`, `EmergencyContactsExporterTests` — all green.
+
+## [T-271] — Watch surfaces bundle (round 25)
+
+**Module:** watch · **Shipped in:** round 25 (T6.39–T6.46)
+
+### Manual verification
+1. `WatchSleepWeeklyAverageGlance`, `WatchMedicationStreakGlance`, `WatchTodayCompletionRing` render gracefully when input is empty (sections collapse).
+2. `ComplicationLine3Choice` defaults to `.dayCompletion`; setting persists.
+3. `HydrationGoalReachedHaptic.shouldPlay(...)` returns true once per day-bucket and resets on day rollover.
+4. `PauseRemainingCaption.caption(...)` shows `Nm` under an hour and `Nh MMm` over.
+5. `WatchSettingsThemePicker` mirrors `settings.theme` AppStorage in the App Group suite.
+6. `BlockDetailWatchSnoozeMenu` shows three Buttons (5/10/15) — `Menu` is unavailable on watchOS.
+
+## [T-272] — Today/Routine QoL helpers (round 25)
+
+**Module:** today, routine · **Shipped in:** round 25 (T7.47–T7.52)
+
+### Manual verification
+1. `BlockTitleHistoryAutocompleteV2.suggest(...)` ranks prefix > " word " > contains > recency.
+2. `BlockTagAutocompleteStore.record(...)` normalizes lowercased + dedupes; capacity caps at 50.
+3. ⌘N (TodayView) posts `.todayJumpToBlock` Notification.
+4. ⌘⇧D (BlockEditorView) posts `.blockEditorDuplicateRequested` Notification.
+
+## [T-273] — Diagnostics polish (round 25)
+
+**Module:** settings · **Shipped in:** round 25 (T8.53–T8.56)
+
+### Manual verification
+1. DiagnosticsView "Recent refresh trace" lists the last 10 entries.
+2. "Recent errors" lists the last 3 captures from `DiagnosticsErrorLog.shared`.
+3. "Copy diagnostics bundle" copies a Markdown multi-section text via `DiagnosticsEverythingV2`.
+4. Cache-counter reset surfaces a confirm dialog before wiping.

@@ -74,6 +74,10 @@ struct MedicationComplianceView: View {
                                 }
                             }
                         }
+
+                        round25MonthlyChartSection(history: viewModel.doseHistory())
+                        round25StreakSection(history: viewModel.doseHistory())
+                        round25ExportRow(history: viewModel.doseHistory())
                     }
                 }
             }
