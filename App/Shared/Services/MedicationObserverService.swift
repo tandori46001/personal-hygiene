@@ -1,6 +1,6 @@
 import Foundation
 #if canImport(HealthKit) && !os(watchOS)
-import HealthKit
+@preconcurrency import HealthKit
 #endif
 
 /// Production-side `MedicationObserving` shell. Returns `isAvailable == false`

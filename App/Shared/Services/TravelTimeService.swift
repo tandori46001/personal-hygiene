@@ -1,7 +1,7 @@
 import Foundation
 
 #if canImport(MapKit)
-import MapKit
+@preconcurrency import MapKit
 #endif
 
 /// Mode of transport used to estimate the travel time between two locations.

@@ -1,8 +1,8 @@
 import Foundation
 
 #if canImport(WeatherKit) && !os(watchOS)
-import CoreLocation
-import WeatherKit
+@preconcurrency import CoreLocation
+@preconcurrency import WeatherKit
 
 /// Round-21 slice T3.13: bridges Apple WeatherKit into the
 /// `WeatherForecastFetching` protocol so itinerary days can render a real
