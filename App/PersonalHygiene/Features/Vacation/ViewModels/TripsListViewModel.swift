@@ -116,10 +116,21 @@ final class TripsListViewModel {
     func daysUntilNearest(now: Date = Date(), calendar: Calendar = .autoupdatingCurrent) -> (Trip, Int)? {
         let upcoming = upcomingTrips(now: now, calendar: calendar)
         guard let nearest = upcoming.min(by: { $0.startDate < $1.startDate }) else { return nil }
-        let today = calendar.startOfDay(for: now)
-        let target = calendar.startOfDay(for: nearest.startDate)
-        let days = calendar.dateComponents([.day], from: today, to: target).day ?? 0
+        let days = Self.daysUntilStart(of: nearest, now: now, calendar: calendar)
         return (nearest, days)
+    }
+
+    /// Round-27 helper: pure days-until-start computation for any trip,
+    /// callable without a viewModel instance. Used by TripRow to render
+    /// every trip's own countdown badge.
+    static func daysUntilStart(
+        of trip: Trip,
+        now: Date = Date(),
+        calendar: Calendar = .autoupdatingCurrent
+    ) -> Int {
+        let today = calendar.startOfDay(for: now)
+        let target = calendar.startOfDay(for: trip.startDate)
+        return calendar.dateComponents([.day], from: today, to: target).day ?? 0
     }
 
     /// Build a *new* `Trip` cloned from `source` — packing list + milestones

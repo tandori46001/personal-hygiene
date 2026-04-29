@@ -101,7 +101,7 @@ struct TripsListView: View {
                             .listRowBackground(Color.clear)
                         }
                         ForEach(filteredPast) { trip in
-                            tripLink(for: trip, nearestID: nil)
+                            tripLink(for: trip, nearestID: trip.id)
                                 .foregroundStyle(.secondary)
                                 .swipeActions(edge: .leading) {
                                     Button {
@@ -263,8 +263,14 @@ struct TripsListView: View {
         } label: {
             TripRow(
                 trip: trip,
-                isNearest: nearestID == trip.id,
-                daysUntilStart: nearestID == trip.id ? viewModel.daysUntilNearest()?.1 : nil
+                // Round-27 fix: every upcoming trip gets its own
+                // countdown badge — previously only the single
+                // "nearest" trip showed days-until, leaving secondary
+                // upcoming trips visually unanchored. Past trips
+                // (daysUntilStart < 0) get the existing "underway"
+                // / negative-day handling inside `countdownBadge`.
+                isNearest: true,
+                daysUntilStart: TripsListViewModel.daysUntilStart(of: trip)
             )
         }
     }

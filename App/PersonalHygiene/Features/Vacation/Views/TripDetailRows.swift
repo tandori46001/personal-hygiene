@@ -165,6 +165,10 @@ struct PackingListSection: View {
                 ) {
                     Text("trip.packing.field.label", bundle: .main)
                 }
+                // Round-27 fix: icon-only picker so "Other" doesn't get
+                // squeezed into a 2-line vertical wrap when the TextField
+                // is being typed into (the menu's button width was too
+                // narrow to fit the longest category label).
                 Picker(selection: $newItemCategory) {
                     ForEach(PackingCategory.allCases, id: \.self) { cat in
                         Label {
@@ -175,10 +179,11 @@ struct PackingListSection: View {
                         .tag(cat)
                     }
                 } label: {
-                    Text("trip.packing.field.category", bundle: .main)
+                    Image(systemName: newItemCategory.systemImage)
                 }
                 .labelsHidden()
                 .pickerStyle(.menu)
+                .fixedSize()
                 Button {
                     let item = PackingItem(
                         title: newItemTitle.trimmingCharacters(in: .whitespacesAndNewlines),

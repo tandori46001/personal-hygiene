@@ -508,6 +508,16 @@
     "settings.page.mood": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Mood" } }, "es": { "stringUnit": { "state": "translated", "value": "Estado de ánimo" } }, "fr": { "stringUnit": { "state": "translated", "value": "Humeur" } } } },
     "settings.page.data": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Backup & Data" } }, "es": { "stringUnit": { "state": "translated", "value": "Copia de seguridad" } }, "fr": { "stringUnit": { "state": "translated", "value": "Sauvegarde et données" } } } },
     "settings.page.about": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "About" } }, "es": { "stringUnit": { "state": "translated", "value": "Acerca de" } }, "fr": { "stringUnit": { "state": "translated", "value": "À propos" } } } },
+    "settings.advisory.sources.entry": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Advisory sources" } }, "es": { "stringUnit": { "state": "translated", "value": "Fuentes de avisos" } }, "fr": { "stringUnit": { "state": "translated", "value": "Sources d'avis" } } } },
+    "settings.advisory.sources.title": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Advisory sources" } }, "es": { "stringUnit": { "state": "translated", "value": "Fuentes de avisos" } }, "fr": { "stringUnit": { "state": "translated", "value": "Sources d'avis" } } } },
+    "settings.advisory.sources.header": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Order" } }, "es": { "stringUnit": { "state": "translated", "value": "Orden" } }, "fr": { "stringUnit": { "state": "translated", "value": "Ordre" } } } },
+    "settings.advisory.sources.footer": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Drag to reorder. The first source is queried first; the trip-detail advisory section shows them in this order." } }, "es": { "stringUnit": { "state": "translated", "value": "Arrastra para reordenar. La primera fuente se consulta primero; la sección de avisos del viaje las muestra en este orden." } }, "fr": { "stringUnit": { "state": "translated", "value": "Glissez pour réordonner. La première source est consultée en premier ; la section avis du voyage les affiche dans cet ordre." } } } },
+    "settings.advisory.sources.reset": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Reset to default" } }, "es": { "stringUnit": { "state": "translated", "value": "Restablecer predeterminado" } }, "fr": { "stringUnit": { "state": "translated", "value": "Réinitialiser" } } } },
+    "settings.advisory.source.us": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "United States — State Dept" } }, "es": { "stringUnit": { "state": "translated", "value": "Estados Unidos — Depto. de Estado" } }, "fr": { "stringUnit": { "state": "translated", "value": "États-Unis — Dept. d'État" } } } },
+    "settings.advisory.source.canada": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Canada — Travel.gc.ca" } }, "es": { "stringUnit": { "state": "translated", "value": "Canadá — Travel.gc.ca" } }, "fr": { "stringUnit": { "state": "translated", "value": "Canada — Voyage.gc.ca" } } } },
+    "settings.advisory.source.uk": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "United Kingdom — FCDO" } }, "es": { "stringUnit": { "state": "translated", "value": "Reino Unido — FCDO" } }, "fr": { "stringUnit": { "state": "translated", "value": "Royaume-Uni — FCDO" } } } },
+    "settings.advisory.source.australia": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Australia — Smartraveller" } }, "es": { "stringUnit": { "state": "translated", "value": "Australia — Smartraveller" } }, "fr": { "stringUnit": { "state": "translated", "value": "Australie — Smartraveller" } } } },
+    "settings.advisory.source.spain": { "extractionState": "manual", "localizations": { "en": { "stringUnit": { "state": "translated", "value": "Spain — Exteriores" } }, "es": { "stringUnit": { "state": "translated", "value": "España — Exteriores" } }, "fr": { "stringUnit": { "state": "translated", "value": "Espagne — Exteriores" } } } },
     "today.action.markDone": {
       "extractionState": "manual",
       "localizations": {
@@ -10818,19 +10828,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "in %lld d"
+            "value": "in %lld days"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "en %lld d"
+            "value": "en %lld días"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "dans %lld j"
+            "value": "dans %lld jours"
           }
         }
       }

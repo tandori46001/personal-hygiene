@@ -5,16 +5,20 @@ import Foundation
 /// but the user can pick a different lead source from Settings → Scheduling.
 /// We store the preferred *lead* source key; everything else preserves
 /// `MultiSourceAdvisorySource.allCases` order behind it.
-public enum AdvisorySource: String, CaseIterable, Sendable {
+public enum AdvisorySource: String, CaseIterable, Codable, Sendable, Identifiable {
     case exteriores = "exteriores.gob.es"
     case stateDept = "travel.state.gov"
     case canada = "travel.gc.ca"
     case ukFCDO = "gov.uk · FCDO"
     case australia = "smartraveller.gov.au"
 
-    /// Default lineup matches `MultiSourceAdvisoryService.standard()` order.
+    public var id: String { rawValue }
+
+    /// Round-27: previously ES-led; now US-led per user request. Stays
+    /// here so any callers using `defaultOrder` directly pick up the
+    /// new ordering automatically.
     public static let defaultOrder: [Self] = [
-        .exteriores, .stateDept, .canada, .ukFCDO, .australia,
+        .stateDept, .canada, .ukFCDO, .australia, .exteriores,
     ]
 }
 

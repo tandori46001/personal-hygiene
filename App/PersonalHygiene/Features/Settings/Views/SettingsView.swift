@@ -191,6 +191,19 @@ struct SettingsView: View {
         }
         birthdayLeadDefaultSection
         giftIdeasCSVRow
+        Section {
+            NavigationLink {
+                AdvisorySourcesSettingsView()
+            } label: {
+                Label {
+                    Text("settings.advisory.sources.entry", bundle: .main)
+                } icon: {
+                    Image(systemName: "globe")
+                }
+            }
+        } header: {
+            Text("settings.advisory.sources.header", bundle: .main)
+        }
         if let focusScheduleStore {
             Section {
                 NavigationLink {

@@ -65,12 +65,32 @@ struct TodayView: View {
         )
     }
 
+    /// Round-27 fix: previously Today showed only the *next* upcoming
+    /// trip, so a user with several future trips couldn't see them all
+    /// at a glance. Surfaces every upcoming trip (start date >= today)
+    /// sorted ascending. Past trips and currently-underway trips are
+    /// filtered out so the section stays a "look-ahead" pane.
+    private var queriedAllUpcomingTrips: [Trip] {
+        let calendar = Calendar.autoupdatingCurrent
+        let today = calendar.startOfDay(for: Date())
+        return allTrips
+            .filter { calendar.startOfDay(for: $0.startDate) >= today }
+            .sorted { $0.startDate < $1.startDate }
+    }
+
     private func daysUntilQueriedUpcomingTrip() -> Int? {
         guard let trip = queriedUpcomingTrip else { return nil }
         let calendar = Calendar.autoupdatingCurrent
         let today = calendar.startOfDay(for: Date())
         let target = calendar.startOfDay(for: trip.startDate)
         return calendar.dateComponents([.day], from: today, to: target).day
+    }
+
+    private func daysUntil(_ trip: Trip) -> Int {
+        let calendar = Calendar.autoupdatingCurrent
+        let today = calendar.startOfDay(for: Date())
+        let target = calendar.startOfDay(for: trip.startDate)
+        return calendar.dateComponents([.day], from: today, to: target).day ?? 0
     }
 
     static func currentMinutesFromMidnight(
@@ -92,9 +112,12 @@ struct TodayView: View {
 
     @ViewBuilder
     private var tripCountdownSection: some View {
-        if let trip = queriedUpcomingTrip, let days = daysUntilQueriedUpcomingTrip() {
+        let upcoming = queriedAllUpcomingTrips
+        if !upcoming.isEmpty {
             Section {
-                TripCountdownRow(trip: trip, daysUntil: days)
+                ForEach(upcoming) { trip in
+                    TripCountdownRow(trip: trip, daysUntil: daysUntil(trip))
+                }
             }
         }
     }

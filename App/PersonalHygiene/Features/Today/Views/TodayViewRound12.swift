@@ -175,7 +175,7 @@ struct CategoryFilterChips: View {
     }
 
     var body: some View {
-        FlowLayout(spacing: 6) {
+        FlowLayout(spacing: 6, alignment: .center) {
             CategoryChip(
                 label: Text("today.filter.all", bundle: .main),
                 dotColor: nil,

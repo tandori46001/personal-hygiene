@@ -164,17 +164,22 @@ public struct MultiSourceAdvisoryService: TravelAdvisoryService {
         self.upstreams = upstreams
     }
 
-    /// Default lineup: ES → US → CA → UK → AU. Single-user app, so there's
-    /// no need to make this dynamic per-user yet; revisit if other locales
-    /// become primary.
+    /// Round-27 update: lineup follows the user-configurable order in
+    /// `AdvisoryOrderStore`. New default = US → Canada → UK → Australia
+    /// → Spain. User can drag-to-reorder via Settings → Days & Reminders
+    /// → "Advisory sources".
     public static func standard() -> Self {
-        Self(upstreams: [
-            ExterioresAdvisoryService(),
-            StateDepartmentAdvisoryService(),
-            CanadaTravelAdvisoryService(),
-            UKFCDOAdvisoryService(),
-            AustraliaAdvisoryService(),
-        ])
+        Self(upstreams: AdvisoryOrderStore.currentOrder().map(Self.service(for:)))
+    }
+
+    private static func service(for source: AdvisorySource) -> any TravelAdvisoryService {
+        switch source {
+        case .stateDept: return StateDepartmentAdvisoryService()
+        case .canada: return CanadaTravelAdvisoryService()
+        case .ukFCDO: return UKFCDOAdvisoryService()
+        case .australia: return AustraliaAdvisoryService()
+        case .exteriores: return ExterioresAdvisoryService()
+        }
     }
 
     public func advisory(forDestination name: String) -> TravelAdvisoryLink {
