@@ -47,7 +47,7 @@ struct DocumentScannerView: UIViewControllerRepresentable {
                     pdf.insert(page, at: index)
                 }
             }
-            controller.dismiss(animated: true)
+            MainActor.assumeIsolated { controller.dismiss(animated: true) }
             if let data = pdf.dataRepresentation() {
                 onFinish(.success(data))
             } else {
@@ -56,7 +56,7 @@ struct DocumentScannerView: UIViewControllerRepresentable {
         }
 
         func documentCameraViewControllerDidCancel(_ controller: VNDocumentCameraViewController) {
-            controller.dismiss(animated: true)
+            MainActor.assumeIsolated { controller.dismiss(animated: true) }
             onFinish(.cancelled)
         }
 
@@ -64,7 +64,7 @@ struct DocumentScannerView: UIViewControllerRepresentable {
             _ controller: VNDocumentCameraViewController,
             didFailWithError error: Error
         ) {
-            controller.dismiss(animated: true)
+            MainActor.assumeIsolated { controller.dismiss(animated: true) }
             onFinish(.failure(error))
         }
     }
