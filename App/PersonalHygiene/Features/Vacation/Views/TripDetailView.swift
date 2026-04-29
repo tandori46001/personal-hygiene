@@ -62,16 +62,12 @@ struct TripDetailView: View {
                 ) {
                     Text("trips.field.destination", bundle: .main)
                 }
-                DatePicker(
-                    selection: $viewModel.draftStartDate,
-                    displayedComponents: .date
-                ) {
+                DismissingDatePicker(selection: $viewModel.draftStartDate) {
                     Text("trips.field.startDate", bundle: .main)
                 }
-                DatePicker(
+                DismissingDatePicker(
                     selection: $viewModel.draftEndDate,
-                    in: viewModel.draftStartDate...,
-                    displayedComponents: .date
+                    minimumDate: viewModel.draftStartDate
                 ) {
                     Text("trips.field.endDate", bundle: .main)
                 }

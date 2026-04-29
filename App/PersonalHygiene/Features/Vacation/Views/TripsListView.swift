@@ -186,10 +186,10 @@ struct TripsListView: View {
                 ) {
                     Text("trips.field.destination", bundle: .main)
                 }
-                DatePicker(selection: $newStart, displayedComponents: .date) {
+                DismissingDatePicker(selection: $newStart) {
                     Text("trips.field.startDate", bundle: .main)
                 }
-                DatePicker(selection: $newEnd, in: newStart..., displayedComponents: .date) {
+                DismissingDatePicker(selection: $newEnd, minimumDate: newStart) {
                     Text("trips.field.endDate", bundle: .main)
                 }
             }
