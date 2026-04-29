@@ -8,6 +8,36 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed — Session 23 (post-round-25): Today active-template + Templates toolbar + import-corruption defenses
+
+User-visible bugs found via real-device testing on `a7ae3ae` (round 24.5):
+
+- **Templates tab**: "+" add button + entire toolbar/title were missing (commit `d954bfd`). Round-12's L004 fix had removed the inner `NavigationStack` from `TemplateListView` because `scripts/check-tabroots.py` mistakenly listed it as a More-overflow tab — but it's actually direct-tab #2. Restored `NavigationStack`, removed from `TAB_ROOTS`, captured as L007.
+- **Today tab**: "No active template" persisted even after creating + activating a Weekday template (commit `ec105a5`). `repository.activeTemplate(for: .weekday)` returned nil despite the template existing in the same `ModelContext`. Refactored `TodayView` to use SwiftData `@Query<RoutineTemplate>` directly, bypassing the broken VM/repo cache. Captured as L008.
+
+### Added — Session 23 round 26 prep: backup validation + nuclear reset
+
+Defensive layer against malformed-backup imports + a recovery escape hatch.
+
+- **`BackupSnapshotValidator.validate(_:)`** — pure pre-flight returning `ValidationReport { errors, warnings }`. Catches forward versions (>v6), duplicate UUIDs, unknown DayType / BlockCategory / HousekeepingRecurrence, out-of-range `startMinutesFromMidnight`, non-positive `durationMinutes` / `milliliters`, dangling completion blockIDs, `Trip.startDate > endDate`, malformed yyyy-MM-dd dayKeys, etc.
+- **`BackupService.restore` is now atomic** — refuses fatal errors before the destructive wipe. The live store stays intact when validation fails; the user sees a multi-line `backupError` banner in Settings.
+- **`FullDataResetter.resetEverything(in:)` + Settings → "Reset all data"** destructive button with confirmation dialog. Wipes all SwiftData rows + UserDefaults state (mood log, archive flags, housekeeping completion log, watch hydration pending taps, most-recent-backup pointer, diagnostics error log, weather/currency caches). Keeps onboarding flag + theme preference.
+
+### Added — Session 23 round 26 prep: Apple Developer Program scaffolds + ALL OK upgrade
+
+User paid for Apple Developer Program ($99/yr) via the iOS app. Awaiting welcome email.
+
+- 4 `.entitlements` files scaffolded (iOS host + iOS widget + watch host + watch widget) with App Groups, HealthKit, CloudKit, iCloud KV store. NOT yet wired in `project.yml` (would break Personal Team signing).
+- `docs/critical-alerts-request.md` — Apple form template for the 1-3 week approval pipeline.
+- `docs/round26-activation-checklist.md` — 7-step playbook for the post-activation flip.
+
+`CLAUDE.md §10` `ALL OK ?` protocol expanded: now produces per-platform completion %, drift+incoherency+bug check, **100+ classified tasks** in atomically-deliverable batches, proactive flags, action menu. Memory: `feedback_all_ok_protocol.md`.
+
+### Lessons — L007 + L008 captured (8 total)
+
+- **L007**: "Misclassifying a tab-root as More-overflow silently breaks the entire view chrome." Inverse of L004. `scripts/check-tabroots.py` `TAB_ROOTS` list needs an audit step every time the iOS 18 TabView reorders or grows.
+- **L008**: "Prefer SwiftData `@Query` for cross-tab reactive state, not repository-cached VM properties." iOS 18 TabView keeps tab views alive; `.onAppear` is unreliable on tab switches; `@Query` observes the modelContext directly and auto-refreshes. Repository pattern stays fine for one-shot writes.
+
 ### Added — Session 23 round 25: 62-slice regression depth + r24 wiring + backup v6 + sleep/med deepening + watch surfaces + Today/Routine QoL + diagnostics polish
 
 Tier 1 (regression guards, 8):
