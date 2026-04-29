@@ -36,36 +36,46 @@ struct DismissingDatePicker<Label: View>: View {
                     )
             }
             .buttonStyle(.plain)
-            .popover(isPresented: $isPresented) {
-                pickerContent
-                    .presentationCompactAdaptation(.popover)
+            .sheet(isPresented: $isPresented) {
+                pickerSheet
             }
         } label: {
             label()
         }
     }
 
+    /// Round-26 fix v2: the original popover form rendered as a too-narrow
+    /// vertical strip on iPhone (graphical calendar collapsed to a single
+    /// column). Switched to a bottom sheet with a `.medium` detent so the
+    /// calendar gets full-width room. `onChange` auto-dismisses on the
+    /// first selection, preserving the "tap-and-close" UX.
     @ViewBuilder
-    private var pickerContent: some View {
-        Group {
-            if let minimumDate {
-                DatePicker(
-                    "",
-                    selection: $selection,
-                    in: minimumDate...,
-                    displayedComponents: displayedComponents
-                )
-            } else {
-                DatePicker(
-                    "",
-                    selection: $selection,
-                    displayedComponents: displayedComponents
-                )
+    private var pickerSheet: some View {
+        VStack {
+            Group {
+                if let minimumDate {
+                    DatePicker(
+                        "",
+                        selection: $selection,
+                        in: minimumDate...,
+                        displayedComponents: displayedComponents
+                    )
+                } else {
+                    DatePicker(
+                        "",
+                        selection: $selection,
+                        displayedComponents: displayedComponents
+                    )
+                }
             }
+            .datePickerStyle(.graphical)
+            .labelsHidden()
+            .padding(.horizontal)
+            Spacer(minLength: 0)
         }
-        .datePickerStyle(.graphical)
-        .labelsHidden()
-        .padding()
+        .padding(.top)
+        .presentationDetents([.medium])
+        .presentationDragIndicator(.visible)
         .onChange(of: selection) { _, _ in
             isPresented = false
         }
