@@ -110,38 +110,29 @@ struct PackingListSection: View {
 
     var body: some View {
         Section {
-            // Round-12 slice 7: category filter chips. Always visible (even
-            // empty list) so the user can pick "Toiletries" before adding.
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 6) {
-                    Button {
-                        viewModel.packingCategoryFilter = nil
-                    } label: {
-                        Text("trip.packing.filter.all", bundle: .main)
-                            .font(.caption.bold())
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 4)
-                    }
-                    .buttonStyle(.bordered)
-                    .tint(viewModel.packingCategoryFilter == nil ? .accentColor : .secondary)
-                    ForEach(PackingCategory.allCases, id: \.self) { cat in
-                        Button {
-                            viewModel.packingCategoryFilter = cat
-                        } label: {
-                            Label {
-                                Text(localizedKey: "trip.packing.category.\(cat.rawValue)")
-                                    .font(.caption.bold())
-                            } icon: {
-                                Image(systemName: cat.systemImage)
-                            }
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 4)
-                        }
-                        .buttonStyle(.bordered)
-                        .tint(viewModel.packingCategoryFilter == cat ? .accentColor : .secondary)
+            // Round 27 redesign: wrapping FlowLayout centered, no
+            // horizontal scroll. Fixes "Other" decalado + chip clipping
+            // on smaller widths. Mirrors Today + Birthdays chip style.
+            FlowLayout(spacing: 6, alignment: .center) {
+                PackingChip(
+                    label: Text("trip.packing.filter.all", bundle: .main),
+                    iconName: "tray.full",
+                    isSelected: viewModel.packingCategoryFilter == nil
+                ) {
+                    viewModel.packingCategoryFilter = nil
+                }
+                ForEach(PackingCategory.allCases, id: \.self) { cat in
+                    PackingChip(
+                        label: Text(localizedKey: "trip.packing.category.\(cat.rawValue)"),
+                        iconName: cat.systemImage,
+                        isSelected: viewModel.packingCategoryFilter == cat
+                    ) {
+                        viewModel.packingCategoryFilter = (viewModel.packingCategoryFilter == cat) ? nil : cat
                     }
                 }
             }
+            .frame(maxWidth: .infinity)
+            .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
 
             ForEach(viewModel.filteredSortedPackingItems) { item in
                 Button {
@@ -369,5 +360,39 @@ struct DocumentRow: View {
         case .reservation: "bed.double"
         case .other: "doc"
         }
+    }
+}
+
+private struct PackingChip: View {
+    let label: Text
+    let iconName: String
+    let isSelected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 5) {
+                Image(systemName: iconName)
+                    .font(.caption)
+                label
+                    .font(.caption.bold())
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(background, in: Capsule())
+            .overlay(Capsule().strokeBorder(borderColor, lineWidth: 1))
+            .foregroundStyle(Color.primary)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(label)
+        .accessibilityAddTraits(isSelected ? [.isSelected] : [])
+    }
+
+    private var background: Color {
+        isSelected ? Color.accentColor.opacity(0.25) : Color.gray.opacity(0.12)
+    }
+
+    private var borderColor: Color {
+        isSelected ? Color.accentColor : Color.clear
     }
 }

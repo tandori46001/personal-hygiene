@@ -21,6 +21,8 @@ final class TripDetailViewModel {
     /// reloads the draft from the model.
     var draftName: String
     var draftDestination: String
+    var draftDestinationLatitude: Double?
+    var draftDestinationLongitude: Double?
     var draftStartDate: Date
     var draftEndDate: Date
     /// Round-12 slice 9: editable notes draft. Round-trips like the other
@@ -54,6 +56,8 @@ final class TripDetailViewModel {
         self.advisoryService = advisoryService
         self.draftName = trip.name
         self.draftDestination = trip.destinationName
+        self.draftDestinationLatitude = trip.destinationLatitude
+        self.draftDestinationLongitude = trip.destinationLongitude
         self.draftStartDate = trip.startDate
         self.draftEndDate = trip.endDate
         self.draftNotes = trip.notes
@@ -62,6 +66,8 @@ final class TripDetailViewModel {
     var hasChanges: Bool {
         draftName != trip.name
             || draftDestination != trip.destinationName
+            || draftDestinationLatitude != trip.destinationLatitude
+            || draftDestinationLongitude != trip.destinationLongitude
             || draftStartDate != trip.startDate
             || draftEndDate != trip.endDate
             || draftNotes != trip.notes
@@ -70,6 +76,8 @@ final class TripDetailViewModel {
     func revertDraft() {
         draftName = trip.name
         draftDestination = trip.destinationName
+        draftDestinationLatitude = trip.destinationLatitude
+        draftDestinationLongitude = trip.destinationLongitude
         draftStartDate = trip.startDate
         draftEndDate = trip.endDate
         draftNotes = trip.notes
@@ -81,6 +89,8 @@ final class TripDetailViewModel {
         guard !trimmedName.isEmpty, !trimmedDest.isEmpty else { return }
         trip.name = trimmedName
         trip.destinationName = trimmedDest
+        trip.destinationLatitude = draftDestinationLatitude
+        trip.destinationLongitude = draftDestinationLongitude
         trip.startDate = draftStartDate
         trip.endDate = max(draftStartDate, draftEndDate)
         trip.notes = draftNotes

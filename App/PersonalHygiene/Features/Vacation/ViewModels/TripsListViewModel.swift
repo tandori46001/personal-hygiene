@@ -74,12 +74,26 @@ final class TripsListViewModel {
         }
     }
 
-    func add(name: String, startDate: Date, endDate: Date, destinationName: String) {
+    func add(
+        name: String,
+        startDate: Date,
+        endDate: Date,
+        destinationName: String,
+        destinationLatitude: Double? = nil,
+        destinationLongitude: Double? = nil
+    ) {
         let trimmed = name.trimmingCharacters(in: .whitespacesAndNewlines)
         let dest = destinationName.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty, !dest.isEmpty else { return }
         do {
-            let trip = Trip(name: trimmed, startDate: startDate, endDate: endDate, destinationName: dest)
+            let trip = Trip(
+                name: trimmed,
+                startDate: startDate,
+                endDate: endDate,
+                destinationName: dest,
+                destinationLatitude: destinationLatitude,
+                destinationLongitude: destinationLongitude
+            )
             try repository.upsert(trip)
             reload()
         } catch {

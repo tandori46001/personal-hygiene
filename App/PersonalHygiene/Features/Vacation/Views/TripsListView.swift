@@ -6,6 +6,8 @@ struct TripsListView: View {
     @State private var showingNewSheet = false
     @State private var newName = ""
     @State private var newDestination = ""
+    @State private var newDestinationLatitude: Double?
+    @State private var newDestinationLongitude: Double?
     @State private var newStart = Date()
     @State private var newEnd = Date().addingTimeInterval(7 * 24 * 60 * 60)
 
@@ -180,11 +182,18 @@ struct TripsListView: View {
                 ) {
                     Text("trips.field.name", bundle: .main)
                 }
-                TextField(
-                    text: $newDestination,
-                    prompt: Text("trips.field.destination.placeholder", bundle: .main)
-                ) {
-                    Text("trips.field.destination", bundle: .main)
+                LocationAutocompleteField(
+                    name: $newDestination,
+                    latitude: $newDestinationLatitude,
+                    longitude: $newDestinationLongitude
+                )
+                if newDestinationLatitude != nil {
+                    DestinationMapPreview(
+                        name: newDestination,
+                        latitude: newDestinationLatitude,
+                        longitude: newDestinationLongitude
+                    )
+                    .listRowInsets(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
                 }
                 DismissingDatePicker(selection: $newStart) {
                     Text("trips.field.startDate", bundle: .main)
@@ -209,10 +218,14 @@ struct TripsListView: View {
                             name: newName,
                             startDate: newStart,
                             endDate: newEnd,
-                            destinationName: newDestination
+                            destinationName: newDestination,
+                            destinationLatitude: newDestinationLatitude,
+                            destinationLongitude: newDestinationLongitude
                         )
                         newName = ""
                         newDestination = ""
+                        newDestinationLatitude = nil
+                        newDestinationLongitude = nil
                         showingNewSheet = false
                     } label: {
                         Text("common.create", bundle: .main)

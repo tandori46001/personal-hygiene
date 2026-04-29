@@ -980,6 +980,7 @@
 		EBEDFF3552008DF910A6A9BC /* PauseNotificationsStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD0E8D4FB0BC22F985DB771D /* PauseNotificationsStore.swift */; };
 		EC631D0242DE7D296FD02913 /* ImportantDaySeeder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD79E072DDDF674EFBE595B9 /* ImportantDaySeeder.swift */; };
 		EC7E92A407630C1942FFF568 /* CurrencyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2F3DECAA2114CB1342EC37B /* CurrencyService.swift */; };
+		ECAB63A9ED29CC24D8630AEC /* LocationAutocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C9AE7D8CA6C65DF964960F /* LocationAutocomplete.swift */; };
 		ECB6C4B7A2A51E789D3D4C06 /* FocusCategoryMuteMirror.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE52B704A0C28DF39CD4D0A1 /* FocusCategoryMuteMirror.swift */; };
 		ECE2105DA6145F91D6A23B48 /* MedicationObserverService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A11326766407E39F256CE9B /* MedicationObserverService.swift */; };
 		ECF0312B27E7E12B134A11E3 /* WeatherForecast.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1E4908D95535336F7D443311 /* WeatherForecast.swift */; };
@@ -1209,6 +1210,7 @@
 		2531BFA310C51BF5A34E680E /* DiagnosticsErrorLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsErrorLog.swift; sourceTree = "<group>"; };
 		2689A0A7467DBBFF42494FD3 /* TodaySubviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodaySubviews.swift; sourceTree = "<group>"; };
 		26A7EDF948A99F408FB8F7B5 /* TemplateListViewRound21.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateListViewRound21.swift; sourceTree = "<group>"; };
+		26C9AE7D8CA6C65DF964960F /* LocationAutocomplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAutocomplete.swift; sourceTree = "<group>"; };
 		2733137E21F012AA4268EB85 /* HousekeepingCompletionLogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousekeepingCompletionLogTests.swift; sourceTree = "<group>"; };
 		28EBCF0AF7EAD8F371ACE8DD /* MoodQuickLogWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQuickLogWatchView.swift; sourceTree = "<group>"; };
 		2958201BAEB1591D5DFEDD78 /* WidgetReloadCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WidgetReloadCounter.swift; sourceTree = "<group>"; };
@@ -1778,6 +1780,7 @@
 				F908881C559590AE602D19A4 /* ItineraryOutputView.swift */,
 				20900B3D6A28B3B0903C5D2D /* ItineraryView.swift */,
 				252B3244C79D4B2796FF2D08 /* ItineraryWizardView.swift */,
+				26C9AE7D8CA6C65DF964960F /* LocationAutocomplete.swift */,
 				51FAF9D9731F55E118D58DDF /* MarineConditionsView.swift */,
 				778E4E083674A6875D375C01 /* MilestoneEditorView.swift */,
 				F35C73220A71429E371C3F70 /* ShareSheet.swift */,
@@ -3646,6 +3649,7 @@
 				5DBB7A3EC65F6DE18A767A1A /* KeychainStore.swift in Sources */,
 				0DB281C8307581EA0659C0E1 /* LastConversionStore.swift in Sources */,
 				C9852A289E15557C6D5C3F0F /* LocalizationKeyCount.swift in Sources */,
+				ECAB63A9ED29CC24D8630AEC /* LocationAutocomplete.swift in Sources */,
 				8B944E695A1EE08DC356DC4B /* MarineConditionsView.swift in Sources */,
 				3CF819DDA3A6C5AC7D894E36 /* MarineDivingWindow.swift in Sources */,
 				C7976F29B81D1BD084756175 /* MarineForecastFreshnessStore.swift in Sources */,

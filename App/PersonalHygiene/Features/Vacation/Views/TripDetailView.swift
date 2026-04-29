@@ -57,11 +57,18 @@ struct TripDetailView: View {
                 ) {
                     Text("trips.field.name", bundle: .main)
                 }
-                TextField(
-                    text: $viewModel.draftDestination,
-                    prompt: Text("trips.field.destination.placeholder", bundle: .main)
-                ) {
-                    Text("trips.field.destination", bundle: .main)
+                LocationAutocompleteField(
+                    name: $viewModel.draftDestination,
+                    latitude: $viewModel.draftDestinationLatitude,
+                    longitude: $viewModel.draftDestinationLongitude
+                )
+                if viewModel.draftDestinationLatitude != nil {
+                    DestinationMapPreview(
+                        name: viewModel.draftDestination,
+                        latitude: viewModel.draftDestinationLatitude,
+                        longitude: viewModel.draftDestinationLongitude
+                    )
+                    .listRowInsets(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
                 }
                 DismissingDatePicker(selection: $viewModel.draftStartDate) {
                     Text("trips.field.startDate", bundle: .main)
