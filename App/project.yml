@@ -15,15 +15,17 @@ configs:
 
 settings:
   base:
-    SWIFT_VERSION: "6.0"
-    # Round 29: CI has been red on >30 consecutive commits because Swift 6
-    # language mode at default strict-concurrency level surfaces errors in
-    # pre-Swift-6 Apple SDK call sites (UNUserNotificationCenter, MapKit,
-    # HealthKit, Contacts, CoreLocation, WeatherKit, MainActor-isolated
-    # SwiftUI bodies touching @MainActor viewModels, etc.). Local
-    # Xcode 26.4.1 emits warnings for the same code, masking the gap.
-    # Dial strict-concurrency back to `minimal` so CI matches local. A full
-    # `complete` migration is a future dedicated round (~30+ files).
+    # Round 29: CI was red on >30 consecutive commits at SWIFT_VERSION 6.0
+    # because Swift 6 LANGUAGE MODE surfaces sendability errors in
+    # pre-Swift-6 Apple SDK call sites and SwiftUI ViewBuilder closures
+    # touching @MainActor viewModels — local Xcode 26.4.1 emits warnings
+    # for the same code, masking the gap. SWIFT_STRICT_CONCURRENCY=minimal
+    # alone does NOT relax language-mode checks, so we revert SWIFT_VERSION
+    # to 5 (toolchain stays at Swift 6.x; we just opt out of Swift 6
+    # language-mode enforcement). Full Swift 6 migration is a dedicated
+    # future round (~30+ files to patch — see commit log of round 29 for
+    # the @preconcurrency / @MainActor fixes already landed).
+    SWIFT_VERSION: "5"
     SWIFT_STRICT_CONCURRENCY: minimal
     CURRENT_PROJECT_VERSION: 1
     MARKETING_VERSION: 0.1.0
