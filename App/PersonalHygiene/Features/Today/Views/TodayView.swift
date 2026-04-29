@@ -206,8 +206,30 @@ struct TodayView: View {
                             Image(systemName: "calendar")
                         }
                     } description: {
-                        Text("today.empty.description", bundle: .main)
+                        VStack(spacing: 6) {
+                            Text("today.empty.description", bundle: .main)
+                            // Round-25 diagnostic: surface what the repository
+                            // currently returns so we can tell whether `reload()`
+                            // is firing + whether `activeTemplate(for:)` is
+                            // matching. Hidden once the data flows.
+                            Text(verbatim: TodayView.diagnosticLine(viewModel: viewModel))
+                                .font(.caption2.monospacedDigit())
+                                .foregroundStyle(.tertiary)
+                        }
                     } actions: {
+                        // Round-25 diagnostic: explicit "Refresh" button to
+                        // force `viewModel.reload()` independent of
+                        // notification observers.
+                        Button {
+                            viewModel.reload()
+                        } label: {
+                            Label {
+                                Text("today.empty.action.refresh", bundle: .main)
+                            } icon: {
+                                Image(systemName: "arrow.clockwise")
+                            }
+                        }
+                        .buttonStyle(.bordered)
                         if let onCreateTemplate {
                             Button(action: onCreateTemplate) {
                                 Label {

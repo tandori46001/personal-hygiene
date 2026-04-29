@@ -18224,6 +18224,14 @@
         "es": { "stringUnit": { "state": "translated", "value": "Mejor" } },
         "fr": { "stringUnit": { "state": "translated", "value": "Record" } }
       }
+    },
+    "today.empty.action.refresh": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Refresh" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Recargar" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Actualiser" } }
+      }
     }
   }
 }
