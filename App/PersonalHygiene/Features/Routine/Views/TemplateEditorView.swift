@@ -67,7 +67,8 @@ struct TemplateEditorView: View {
 
                 Button {
                     editingExistingBlock = nil
-                    blockEditor = BlockEditorViewModel()
+                    let nextStart = BlockEditorViewModel.nextAvailableStart(after: viewModel.sortedBlocks)
+                    blockEditor = BlockEditorViewModel(defaultStartMinutesFromMidnight: nextStart)
                 } label: {
                     Label {
                         Text("templateEditor.action.addBlock", bundle: .main)

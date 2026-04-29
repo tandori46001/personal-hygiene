@@ -203,4 +203,74 @@ final class BlockEditorViewModelTests: XCTestCase {
         XCTAssertNil(block.longitude)
         XCTAssertNil(block.locationName)
     }
+
+    // MARK: - Round-26: smart default start time (carry-over from session 23)
+
+    func test_nextAvailableStart_emptyTemplate_returns_7AM() {
+        XCTAssertEqual(BlockEditorViewModel.nextAvailableStart(after: []), 7 * 60)
+    }
+
+    func test_nextAvailableStart_singleBlock_returns_endPlus5() {
+        let block = Block(
+            title: "Cafe",
+            category: .meal,
+            startMinutesFromMidnight: 7 * 60,
+            durationMinutes: 15
+        )
+        XCTAssertEqual(
+            BlockEditorViewModel.nextAvailableStart(after: [block]),
+            7 * 60 + 15 + 5
+        )
+    }
+
+    func test_nextAvailableStart_picksLatestEnding_notFirst() {
+        let early = Block(
+            title: "Cafe",
+            category: .meal,
+            startMinutesFromMidnight: 7 * 60,
+            durationMinutes: 15
+        )
+        let late = Block(
+            title: "Teletravail",
+            category: .work,
+            startMinutesFromMidnight: 9 * 60,
+            durationMinutes: 90
+        )
+        XCTAssertEqual(
+            BlockEditorViewModel.nextAvailableStart(after: [early, late]),
+            10 * 60 + 30 + 5
+        )
+    }
+
+    func test_nextAvailableStart_clamps_to_2355() {
+        let lateBlock = Block(
+            title: "Late",
+            category: .work,
+            startMinutesFromMidnight: 23 * 60 + 30,
+            durationMinutes: 60
+        )
+        XCTAssertEqual(
+            BlockEditorViewModel.nextAvailableStart(after: [lateBlock]),
+            23 * 60 + 55
+        )
+    }
+
+    func test_initWithDefault_setsStartHourAndMinute() {
+        let vm = BlockEditorViewModel(defaultStartMinutesFromMidnight: 9 * 60 + 35)
+        XCTAssertEqual(vm.startHour, 9)
+        XCTAssertEqual(vm.startMinute, 35)
+        // hasUnsavedChanges == false proves the initial-state baseline
+        // was overwritten alongside the live values.
+        XCTAssertFalse(vm.hasUnsavedChanges)
+    }
+
+    func test_initWithDefault_clamps_outOfRange() {
+        let belowZero = BlockEditorViewModel(defaultStartMinutesFromMidnight: -100)
+        XCTAssertEqual(belowZero.startHour, 0)
+        XCTAssertEqual(belowZero.startMinute, 0)
+
+        let beyondDay = BlockEditorViewModel(defaultStartMinutesFromMidnight: 25 * 60)
+        XCTAssertEqual(beyondDay.startHour, 23)
+        XCTAssertEqual(beyondDay.startMinute, 59)
+    }
 }

@@ -24,11 +24,22 @@ final class BlockEditorViewModel {
 
     let editingBlockID: UUID?
 
-    init() {
+    /// Round-26 fix: `defaultStartMinutesFromMidnight` lets the caller
+    /// avoid the "every new block defaults to 07:00" overlap trap. When
+    /// the user adds a second block to a template that already has one
+    /// at 07:00, the editor pre-fills 07:00 again and the user sees a
+    /// collision warning (carry-over from session 23). Pass
+    /// `nextAvailableStart(after: existing)` from `TemplateEditorView`
+    /// so subsequent inserts pre-fill at end-of-last + 5 minutes,
+    /// clamped within the day.
+    init(defaultStartMinutesFromMidnight: Int = 7 * 60) {
+        let clamped = max(0, min(24 * 60 - 1, defaultStartMinutesFromMidnight))
+        let hour = clamped / 60
+        let minute = clamped % 60
         self.title = ""
         self.category = .hygiene
-        self.startHour = 7
-        self.startMinute = 0
+        self.startHour = hour
+        self.startMinute = minute
         self.durationMinutes = 30
         self.notes = ""
         self.notificationLeadMinutes = 15
@@ -39,8 +50,8 @@ final class BlockEditorViewModel {
         self.editingBlockID = nil
         self.initialTitle = ""
         self.initialCategory = .hygiene
-        self.initialStartHour = 7
-        self.initialStartMinute = 0
+        self.initialStartHour = hour
+        self.initialStartMinute = minute
         self.initialDurationMinutes = 30
         self.initialNotes = ""
         self.initialNotificationLeadMinutes = 15
@@ -48,6 +59,21 @@ final class BlockEditorViewModel {
         self.initialLocationName = ""
         self.initialLatitudeText = ""
         self.initialLongitudeText = ""
+    }
+
+    /// Returns the next available start-of-day minute for a fresh block
+    /// inserted into a template whose existing blocks are `blocks`.
+    /// Empty template → 07:00 (unchanged baseline). Otherwise → end of
+    /// the latest block + 5 minutes, clamped to 23:55. Pure for unit testing.
+    static func nextAvailableStart(after blocks: [Block]) -> Int {
+        guard
+            let last = blocks.max(by: {
+                $0.startMinutesFromMidnight + $0.durationMinutes
+                    < $1.startMinutesFromMidnight + $1.durationMinutes
+            })
+        else { return 7 * 60 }
+        let candidate = last.startMinutesFromMidnight + last.durationMinutes + 5
+        return max(0, min(23 * 60 + 55, candidate))
     }
 
     init(editing block: Block) {
