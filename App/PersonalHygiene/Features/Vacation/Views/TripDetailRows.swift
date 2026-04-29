@@ -17,6 +17,10 @@ struct CoverPhotoSection: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                     .accessibilityLabel(Text("trip.cover.label", bundle: .main))
             }
+            let hasCoverPhoto = viewModel.trip.coverPhotoData != nil
+            let pickerTitleKey: LocalizedStringKey = hasCoverPhoto
+                ? "trip.cover.action.replace"
+                : "trip.cover.action.choose"
             HStack {
                 PhotosPicker(
                     selection: $pickerItem,
@@ -24,17 +28,12 @@ struct CoverPhotoSection: View {
                     photoLibrary: .shared()
                 ) {
                     Label {
-                        Text(
-                            viewModel.trip.coverPhotoData == nil
-                                ? "trip.cover.action.choose"
-                                : "trip.cover.action.replace",
-                            bundle: .main
-                        )
+                        Text(pickerTitleKey, bundle: .main)
                     } icon: {
                         Image(systemName: "photo")
                     }
                 }
-                if viewModel.trip.coverPhotoData != nil {
+                if hasCoverPhoto {
                     Spacer()
                     Button(role: .destructive) {
                         viewModel.updateCoverPhoto(nil)
