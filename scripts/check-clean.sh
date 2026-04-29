@@ -32,9 +32,12 @@ TRACKED_FILES=$(git ls-files | grep -v -E '\.(png|jpg|jpeg|gif|pdf|ico|woff|woff
 if [ -z "$TRACKED_FILES" ]; then
   echo "  no tracked text files yet — skipping"
 else
-  # 2a. real-looking emails (excluding placeholders)
+  # 2a. real-looking emails (excluding placeholders + intentionally-public app docs)
+  # docs/PRIVACY.md + docs/LISTING.md legitimately publish a contact email
+  # required by App Store Connect; allowlist them here, not by editing the regex.
   if echo "$TRACKED_FILES" | xargs grep -nIE '\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b' 2>/dev/null \
        | grep -vE 'example\.com|<.*-placeholder@|noreply@|@anthropic\.com' \
+       | grep -vE '^docs/(PRIVACY|LISTING)\.md:' \
        | grep -E '@gmail|@yahoo|@outlook|@hotmail|@icloud|@proton'; then
     echo "  FAIL: real-looking personal email found in tracked files"
     EXIT=1
