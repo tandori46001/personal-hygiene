@@ -9,8 +9,24 @@ cd "$REPO_ROOT"
 
 PROJECT="App/PersonalHygiene.xcodeproj"
 SCHEME="PersonalHygiene"
-# Pick the first available iPhone simulator (iPhone 17 Pro on dev, iPhone 17 on CI, etc.)
-DEVICE="${IOS_SIMULATOR_NAME:-iPhone 17 Pro}"
+
+# Pick the iPhone simulator: explicit override > first available iPhone on
+# this machine. Hard-coding a name burns when GitHub's macos-latest image
+# rolls and the previous default disappears (round 29 incident: CI tried
+# "iPhone 17 Pro" which the runner no longer ships).
+if [ -n "${IOS_SIMULATOR_NAME:-}" ]; then
+  DEVICE="$IOS_SIMULATOR_NAME"
+else
+  DEVICE=$(xcrun simctl list devices available 2>/dev/null \
+    | grep -E '^[[:space:]]+iPhone ' \
+    | head -1 \
+    | sed -E 's/^[[:space:]]+(iPhone[^(]+) \(.*$/\1/' \
+    | sed -E 's/[[:space:]]+$//')
+  if [ -z "$DEVICE" ]; then
+    echo "ERROR: no iPhone simulator available. Install one via Xcode → Settings → Platforms." >&2
+    exit 1
+  fi
+fi
 DESTINATION="platform=iOS Simulator,name=${DEVICE}"
 
 # Pre-flight: project must exist
