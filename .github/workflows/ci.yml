@@ -55,7 +55,33 @@ jobs:
           done
 
   # ───────────────────────────────────────────────────────────────────
-  # 2. Lint — only runs once Swift sources exist
+  # 2. Static scans — Python guard scripts for L004 / L006 / L007.
+  #    Cheap, no Xcode, runs in parallel with hygiene/lint. Fails fast
+  #    on cross-cutting bug classes before the slow build-test job
+  #    consumes a macOS runner.
+  # ───────────────────────────────────────────────────────────────────
+  static-scans:
+    name: Static scans (L004 / L006 / L007)
+    runs-on: ubuntu-latest
+    needs: hygiene
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: check-tabroots.py (L004 / L007 guard)
+        run: python3 scripts/check-tabroots.py
+
+      - name: check-xcstrings-format-consistency.py (L006 guard)
+        run: python3 scripts/check-xcstrings-format-consistency.py
+
+      - name: check-i18n.py (i18n parity ES/EN/FR)
+        run: python3 scripts/check-i18n.py
+
+      - name: check-localized-string-resource.py
+        run: python3 scripts/check-localized-string-resource.py
+
+  # ───────────────────────────────────────────────────────────────────
+  # 3. Lint — only runs once Swift sources exist
   # ───────────────────────────────────────────────────────────────────
   lint:
     name: Lint Swift
