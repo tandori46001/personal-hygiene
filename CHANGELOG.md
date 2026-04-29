@@ -8,6 +8,45 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Round 29 — CI fix + Wizard v2 + App Store prep (2026-04-29)
+
+CI was red on `2c67da7`/`d17f3dc`/`8ec08c4` despite local tests passing — the
+round-28 lint cleanup did not surface the underlying Swift 6 sendability
+error. Root cause: `UNUserNotificationCenterDelegate` protocol requirements
+in the SDK still use pre-Swift-6 sendability, while our overrides annotate
+their completion handlers `@Sendable`. Fixed with `@preconcurrency import
+UserNotifications` in `NotificationService.swift`. Local
+`./scripts/check-tests.sh` already passed (936 unit + 2 UI = 938 tests
+green); the @preconcurrency import keeps that result and silences CI.
+
+**Wizard v2** (vacation, ai):
+- New `Trip.itineraryGeneratedText: String?` + `Trip.itineraryGeneratedAt:
+  Date?` fields. SwiftData lightweight migration handles both as new
+  optional columns.
+- `ItineraryOutputView` now persists Apple-Foundation-Models output to the
+  trip on success and re-loads it on next open with an abbreviated date
+  caption.
+- Three new deep-link buttons: Open in Claude.ai, Open in ChatGPT, Open in
+  Perplexity. Each copies the prompt to the pasteboard *first* and then
+  opens the chat URL — toast tells the user to paste the prompt into the
+  new chat. No third-party SDKs added.
+- Destructive "Clear saved itinerary" button below the result.
+- 5 new xcstrings keys (claude / chatgpt / perplexity / openHint / clear),
+  bringing total to **997**. Updated `LocalizationKeyCount.total` to
+  match.
+- 2 new SwiftData persistence tests
+  (`TripsRepositoryTests.test_round29_itineraryGeneratedText_*`).
+
+**App Store prep** (Phase 6 partial):
+- New `docs/PRIVACY.md` — privacy policy in EN + ES + FR with explicit
+  external-call table, permission matrix, GDPR/CCPA rights section,
+  hosting plan for App Store Connect submission.
+- New `docs/LISTING.md` — listing copy in EN + ES + FR (Subtitle 30 ·
+  Promotional 170 · Description ~1 800 · Keywords 100 · What's New v1.0)
+  + screenshot plan + submission blockers checklist.
+- `QA_MANUAL.md` gains `[T-277]` for Wizard v2 (8-step real-device path
+  + 5 failure modes documented).
+
 ### Round 28 — lint debt cleanup (2 commits, 2026-04-29)
 
 `8ec08c4` (docs: round 27 wrap) + `d17f3dc` (lint debt 65 → 0 errors).
