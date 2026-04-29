@@ -34,17 +34,23 @@ public enum AppModelContainer {
         ImportantDay.self,
     ]
 
-    public static let schema = Schema([
-        Block.self,
-        RoutineTemplate.self,
-        BlockCompletion.self,
-        HydrationLog.self,
-        HousekeepingTask.self,
-        Trip.self,
-        TripMilestone.self,
-        TripDocument.self,
-        ImportantDay.self,
-    ])
+    /// Computed (not `static let`) so we don't trip Swift 6's
+    /// "non-Sendable shared-mutable-state" diagnostic on `Schema`.
+    /// Build cost is negligible — it's a tiny metatype array — and call
+    /// sites are not on a hot path.
+    public static var schema: Schema {
+        Schema([
+            Block.self,
+            RoutineTemplate.self,
+            BlockCompletion.self,
+            HydrationLog.self,
+            HousekeepingTask.self,
+            Trip.self,
+            TripMilestone.self,
+            TripDocument.self,
+            ImportantDay.self,
+        ])
+    }
 
     /// On-disk container used by the running app. Local-only today; pass
     /// `cloudKit: true` once the entitlement is in the project.
