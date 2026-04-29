@@ -117,16 +117,17 @@ struct TodayView: View {
     }
 
     /// Round 27 WS-B B6: locale-seeded + custom important days that match
-    /// today or fall within `windowDays`. Hidden if empty or disabled.
+    /// today or fall within the fixed 7-day window (user requested
+    /// "a partir de una semana antes del evento"). Hidden if empty or
+    /// disabled in Settings.
     @ViewBuilder
     private var importantDaysSection: some View {
         if showImportantDays {
-            let leadDays = BirthdayLeadDefaultStore.effectiveDefault()
             let now = Date()
             let entries = ImportantDayResolver.upcoming(
                 days: allImportantDays.filter(\.enabled),
                 on: now,
-                windowDays: leadDays
+                windowDays: TodayViewModel.todayImportantDaysLeadDays
             )
             if !entries.isEmpty {
                 Section {

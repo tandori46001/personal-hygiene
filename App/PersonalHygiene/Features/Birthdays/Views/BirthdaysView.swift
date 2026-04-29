@@ -99,37 +99,30 @@ struct BirthdaysView: View {
                             Image(systemName: "arrow.clockwise")
                         }
                     }
-                    // Round-15 slice 33: relationship filter chips.
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack(spacing: 6) {
-                            Button {
-                                relationshipFilter = nil
-                            } label: {
-                                Text("birthdays.filter.all", bundle: .main)
-                                    .font(.caption.bold())
-                                    .padding(.horizontal, 10)
-                                    .padding(.vertical, 4)
-                            }
-                            .buttonStyle(.bordered)
-                            .tint(relationshipFilter == nil ? .accentColor : .secondary)
-                            ForEach(BirthdayRelationship.allCases, id: \.self) { rel in
-                                Button {
-                                    relationshipFilter = rel
-                                } label: {
-                                    Label {
-                                        Text(localizedKey: "birthdays.relationship.\(rel.rawValue)")
-                                            .font(.caption.bold())
-                                    } icon: {
-                                        Image(systemName: rel.systemImage)
-                                    }
-                                    .padding(.horizontal, 10)
-                                    .padding(.vertical, 4)
-                                }
-                                .buttonStyle(.bordered)
-                                .tint(relationshipFilter == rel ? .accentColor : .secondary)
+                    // Round-15 slice 33 / round-27 redesign: relationship
+                    // filter chips. Wrapping FlowLayout centered, no
+                    // horizontal scroll — all chips visible on the same
+                    // row + readable.
+                    FlowLayout(spacing: 6, alignment: .center) {
+                        BirthdayRelationshipChip(
+                            label: Text("birthdays.filter.all", bundle: .main),
+                            iconName: "person.3",
+                            isSelected: relationshipFilter == nil
+                        ) {
+                            relationshipFilter = nil
+                        }
+                        ForEach(BirthdayRelationship.allCases, id: \.self) { rel in
+                            BirthdayRelationshipChip(
+                                label: Text(localizedKey: "birthdays.relationship.\(rel.rawValue)"),
+                                iconName: rel.systemImage,
+                                isSelected: relationshipFilter == rel
+                            ) {
+                                relationshipFilter = (relationshipFilter == rel) ? nil : rel
                             }
                         }
                     }
+                    .frame(maxWidth: .infinity)
+                    .listRowInsets(EdgeInsets(top: 4, leading: 0, bottom: 4, trailing: 0))
                 }
                 Section {
                     let filteredUpcoming = viewModel.upcoming.filter { entry in
@@ -296,5 +289,39 @@ private struct BirthdayLeadEditorSheet: View {
                 }
             }
         }
+    }
+}
+
+private struct BirthdayRelationshipChip: View {
+    let label: Text
+    let iconName: String
+    let isSelected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 5) {
+                Image(systemName: iconName)
+                    .font(.caption)
+                label
+                    .font(.caption.bold())
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(background, in: Capsule())
+            .overlay(Capsule().strokeBorder(borderColor, lineWidth: 1))
+            .foregroundStyle(Color.primary)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(label)
+        .accessibilityAddTraits(isSelected ? [.isSelected] : [])
+    }
+
+    private var background: Color {
+        isSelected ? Color.accentColor.opacity(0.25) : Color.gray.opacity(0.12)
+    }
+
+    private var borderColor: Color {
+        isSelected ? Color.accentColor : Color.clear
     }
 }

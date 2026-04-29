@@ -47,6 +47,10 @@ final class TodayViewModel {
 
     /// Round 27 WS-B B1: async-load birthdays from Contacts. Skipped
     /// silently if no service injected or auth not granted.
+    /// Round-27 follow-up: the Today section's visibility window is
+    /// fixed at 30 days regardless of the per-contact notification
+    /// lead-default — user requested birthdays show up "a partir de un
+    /// mes antes del evento" on Today specifically.
     func reloadBirthdays(now: Date = Date()) async {
         guard let service = contactsService else { return }
         let status = service.authorizationStatus()
@@ -56,17 +60,24 @@ final class TodayViewModel {
         }
         do {
             let contacts = try await service.birthdayContacts()
-            let leadDays = BirthdayLeadDefaultStore.effectiveDefault()
             upcomingBirthdays = UpcomingBirthdays.upcoming(
                 from: contacts,
                 on: now,
-                windowDays: leadDays,
+                windowDays: Self.todayBirthdaysLeadDays,
                 calendar: calendar
             )
         } catch {
             upcomingBirthdays = []
         }
     }
+
+    /// Days-before-event window for Today's birthdays section (30 days).
+    /// Separate from `BirthdayLeadDefaultStore` (notifications); this
+    /// only controls when the Today bullet starts appearing.
+    public static let todayBirthdaysLeadDays = 30
+
+    /// Days-before-event window for Today's special-days section (7 days).
+    public static let todayImportantDaysLeadDays = 7
 
     /// Whether the user marked `block` as skipped for today.
     func isSkipped(_ block: Block, now: Date = Date()) -> Bool {
