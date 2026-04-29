@@ -83,6 +83,10 @@ struct SettingsView: View {
             round22Sections
             round23Sections
             round24Sections
+            // Round-26: nuclear "Reset all data" for users whose store
+            // got into a bad state (e.g. malformed-backup import before
+            // pre-flight validation landed).
+            round26ResetAllDataRow
             everythingBundleRow
             resetOnboardingTipsRow
             aboutFooterSection
@@ -315,7 +319,24 @@ struct SettingsView: View {
             defer { if didStartAccessing { url.stopAccessingSecurityScopedResource() } }
             let data = try Data(contentsOf: url)
             let snapshot = try BackupService.decode(data)
+            // Round-26: pre-flight validation. Fatal errors abort the
+            // restore *before* the destructive wipe, so a malformed
+            // backup can't leave the live store empty. Warnings are
+            // surfaced via `backupError` (multi-line) but the restore
+            // still proceeds.
+            let report = BackupSnapshotValidator.validate(snapshot)
+            if report.isFatal {
+                backupError = "Backup rejected (\(report.errors.count) error\(report.errors.count == 1 ? "" : "s")): "
+                    + report.errors.prefix(3).joined(separator: " · ")
+                    + (report.errors.count > 3 ? " …" : "")
+                return
+            }
             try BackupService.restore(snapshot, into: modelContext)
+            if !report.warnings.isEmpty {
+                backupError = "Restored with \(report.warnings.count) warning\(report.warnings.count == 1 ? "" : "s"): "
+                    + report.warnings.prefix(3).joined(separator: " · ")
+                    + (report.warnings.count > 3 ? " …" : "")
+            }
         } catch {
             backupError = error.localizedDescription
         }

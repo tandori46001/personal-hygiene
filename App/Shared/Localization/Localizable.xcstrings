@@ -18232,6 +18232,46 @@
         "es": { "stringUnit": { "state": "translated", "value": "Recargar" } },
         "fr": { "stringUnit": { "state": "translated", "value": "Actualiser" } }
       }
+    },
+    "settings.data.resetAll": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Reset all data" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Borrar todos los datos" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Effacer toutes les données" } }
+      }
+    },
+    "settings.data.resetAll.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Erases templates, completions, hydration, housekeeping, trips, mood log, archive flags, and watch caches. Onboarding + theme preferences are kept." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Borra plantillas, completados, hidratación, limpieza, viajes, registro de ánimo, archivos y cachés del reloj. Onboarding + tema se conservan." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Efface modèles, complétions, hydratation, ménage, voyages, journal d'humeur, archives et caches de la montre. L'onboarding + le thème sont conservés." } }
+      }
+    },
+    "settings.data.resetAll.confirm.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Reset everything?" } },
+        "es": { "stringUnit": { "state": "translated", "value": "¿Borrar todo?" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Tout effacer ?" } }
+      }
+    },
+    "settings.data.resetAll.confirm.button": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Erase all data" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Borrar todo" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Tout effacer" } }
+      }
+    },
+    "settings.data.resetAll.confirm.message": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "This cannot be undone. Export a backup first if you want to keep your current data." } },
+        "es": { "stringUnit": { "state": "translated", "value": "No se puede deshacer. Exporta un backup primero si quieres conservar tus datos actuales." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Action irréversible. Exportez une sauvegarde d'abord si vous voulez garder vos données actuelles." } }
+      }
     }
   }
 }

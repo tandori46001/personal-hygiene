@@ -173,6 +173,20 @@ extension BackupSnapshot {
     }
 }
 
+/// Round-26: errors thrown by `BackupService.restore` when pre-flight
+/// validation fails. The import flow surfaces `errors` to the user
+/// instead of running a destructive wipe.
+public enum BackupRestoreError: Error, LocalizedError {
+    case validationFailed(errors: [String])
+
+    public var errorDescription: String? {
+        switch self {
+        case .validationFailed(let errors):
+            return "Backup validation failed: " + errors.joined(separator: " · ")
+        }
+    }
+}
+
 @MainActor
 public enum BackupService {
 
@@ -244,7 +258,17 @@ public enum BackupService {
     /// Replaces *all* user data in `context` with the contents of `snapshot`.
     /// This is intentionally destructive — JSON backups exist as a safety net
     /// before CloudKit lands; merging would give us silent half-migrations.
+    ///
+    /// Round-26: refuses fatal validation errors **before** the wipe so a
+    /// malformed backup can't leave the live store empty. Use
+    /// `BackupSnapshotValidator.validate(_:)` ahead of this call to surface
+    /// the report to the user; the function is also called here defensively
+    /// to guard against direct callers.
     public static func restore(_ snapshot: BackupSnapshot, into context: ModelContext) throws {
+        let report = BackupSnapshotValidator.validate(snapshot)
+        if report.isFatal {
+            throw BackupRestoreError.validationFailed(errors: report.errors)
+        }
         try wipe(context)
         snapshot.templates.forEach { restoreTemplate($0, into: context) }
         snapshot.completions.forEach { restoreCompletion($0, into: context) }
