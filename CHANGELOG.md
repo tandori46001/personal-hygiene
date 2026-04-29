@@ -8,6 +8,20 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Fixed — Session 24: trips no longer appearing on Today (L008 reapplied)
+
+`50fc7f5`. Same `repository.fetch(...)` cache pattern that broke active-template across iOS 18 TabView switches still in place for the trip-countdown row (`viewModel.upcomingTrip` ← `tripsRepository.allTrips()` on `reload()`). Refactored TodayView to read trips directly via `@Query<Trip>` + `queriedUpcomingTrip` + `daysUntilQueriedUpcomingTrip()` — same pattern session 23 used for the active template. Build green, 893 tests pass.
+
+### Drift cleanup — Session 24
+
+`34e6280`. `LocalizationKeyCount.total` bumped 899 → 902 to match xcstrings reality. ROADMAP.md Phase 2 line synced "~97%" → "~99%" so the three sources of truth (CLAUDE §8, ROADMAP, project_status) agree.
+
+---
+
+## [0.1.0] - 2026-04-29
+
+First dated pre-release snapshot. Pre-1.0, pre-App-Store, pre-TestFlight (blocked on Apple Developer Program activation). Captures rounds 1-25 + session-23 hot fixes + round-26 prep (Apple Developer Program scaffolds, backup pre-flight validator, nuclear reset).
+
 ### Fixed — Session 23 (post-round-25): Today active-template + Templates toolbar + import-corruption defenses
 
 User-visible bugs found via real-device testing on `a7ae3ae` (round 24.5):

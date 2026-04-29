@@ -2836,3 +2836,18 @@ Verify by running `./scripts/check-tests.sh`.
 2. "Recent errors" lists the last 3 captures from `DiagnosticsErrorLog.shared`.
 3. "Copy diagnostics bundle" copies a Markdown multi-section text via `DiagnosticsEverythingV2`.
 4. Cache-counter reset surfaces a confirm dialog before wiping.
+
+
+## [T-274] — Trip countdown reactive on Today (L008 reapplied · session 24)
+
+**Module:** today, trips · **Shipped in:** `50fc7f5`
+
+### Manual verification
+1. From a clean install, create a future-dated trip (Trips tab → "+" → name + destination + start date later than today + end date later than start). Save.
+2. Switch to Today tab. **Expected:** the upcoming-trip section appears between the focus banner and progress summary, showing the trip name + "in N days" (or "today" if start = today).
+3. Edit the trip — change start date to today. Switch back to Today. **Expected:** countdown row updates to "today" without manually pulling-to-refresh.
+4. Switch tabs Today → Routine → Today again, no app restart. **Expected:** trip section still visible (regression guard for the L008 cross-tab pattern).
+5. Delete the trip. **Expected:** trip section disappears from Today on the next render (no app restart).
+
+### Why this case exists
+The pre-fix path went through `viewModel.upcomingTrip` ← `tripsRepository.allTrips()` on `reload()`. iOS 18 keeps tab views alive, and `.onAppear` doesn't reliably re-fire on tab switches, so the cached value went stale. Fix uses `@Query<Trip>` directly in TodayView — observed by SwiftData modelContext, auto-refreshes on every Trip mutation.
