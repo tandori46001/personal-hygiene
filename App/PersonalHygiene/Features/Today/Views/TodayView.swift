@@ -14,6 +14,12 @@ struct TodayView: View {
     /// soon as `isActive` flips on any template.
     @Query(sort: \RoutineTemplate.name) private var allTemplates: [RoutineTemplate]
 
+    /// L008 reapplied: trips also need a reactive observer of the
+    /// modelContext, otherwise the upcoming-trip section disappears
+    /// across tab switches the same way the active-template did before
+    /// the round-26 fix. Computed `upcomingTrip` reads directly here.
+    @Query(sort: \Trip.startDate) private var allTrips: [Trip]
+
     @State private var showingProgressDetail = false
     @State private var nowMinutes: Int = Self.currentMinutesFromMidnight()
     @State private var detailBlock: Block?
@@ -42,6 +48,22 @@ struct TodayView: View {
         return allTemplates.first { $0.dayType == dayType && $0.isActive }
     }
 
+    private var queriedUpcomingTrip: Trip? {
+        TodayViewModel.nextUpcoming(
+            trips: allTrips,
+            now: Date(),
+            calendar: .autoupdatingCurrent
+        )
+    }
+
+    private func daysUntilQueriedUpcomingTrip() -> Int? {
+        guard let trip = queriedUpcomingTrip else { return nil }
+        let calendar = Calendar.autoupdatingCurrent
+        let today = calendar.startOfDay(for: Date())
+        let target = calendar.startOfDay(for: trip.startDate)
+        return calendar.dateComponents([.day], from: today, to: target).day
+    }
+
     static func currentMinutesFromMidnight(
         now: Date = Date(),
         calendar: Calendar = .autoupdatingCurrent
@@ -61,7 +83,7 @@ struct TodayView: View {
 
     @ViewBuilder
     private var tripCountdownSection: some View {
-        if let trip = viewModel.upcomingTrip, let days = viewModel.daysUntilUpcomingTrip() {
+        if let trip = queriedUpcomingTrip, let days = daysUntilQueriedUpcomingTrip() {
             Section {
                 TripCountdownRow(trip: trip, daysUntil: days)
             }
