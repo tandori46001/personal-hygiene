@@ -1,3 +1,4 @@
+import SwiftData
 import SwiftUI
 import UIKit
 
@@ -5,20 +6,22 @@ import UIKit
 import FoundationModels
 #endif
 
-/// Round 27 WS-A A8: post-wizard "Generate" screen. Shows the assembled
-/// prompt + 2 actions:
-/// - Apple Intelligence on-device (when available iOS 18.1+)
-/// - Copy to clipboard for paste into Claude.ai / ChatGPT / Perplexity
+/// Round 27 WS-A A8 (+ round 29 v2): post-wizard "Generate" screen. Shows
+/// the assembled prompt + actions:
+/// - Apple Intelligence on-device (when available iOS 26+) — persists output
+/// - Copy prompt to clipboard
+/// - Open in Claude.ai / ChatGPT / Perplexity (copies prompt + opens new chat)
 struct ItineraryOutputView: View {
 
     let request: TripItineraryRequest
-    let trip: Trip
+    @Bindable var trip: Trip
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
 
     @State private var generatedText: String?
     @State private var isGenerating = false
     @State private var generationError: String?
-    @State private var copiedToast = false
+    @State private var toastKey: LocalizedStringKey?
 
     private var prompt: String {
         ItineraryPromptBuilder.build(request: request, trip: trip)
@@ -42,12 +45,7 @@ struct ItineraryOutputView: View {
 
                     if let result = generatedText {
                         Divider()
-                        Text("itinerary.output.result", bundle: .main)
-                            .font(.subheadline.bold())
-                        Text(verbatim: result)
-                            .padding(12)
-                            .background(Color.green.opacity(0.08), in: RoundedRectangle(cornerRadius: 8))
-                            .textSelection(.enabled)
+                        resultSection(result)
                     }
                     if let err = generationError {
                         Text(verbatim: err)
@@ -69,14 +67,17 @@ struct ItineraryOutputView: View {
                 }
             }
             .overlay(alignment: .top) {
-                if copiedToast {
-                    Text("itinerary.output.copied", bundle: .main)
+                if let key = toastKey {
+                    Text(key, bundle: .main)
                         .font(.caption)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 6)
                         .background(.thinMaterial, in: Capsule())
                         .padding(.top, 8)
                 }
+            }
+            .onAppear {
+                generatedText = trip.itineraryGeneratedText
             }
         }
     }
@@ -102,12 +103,7 @@ struct ItineraryOutputView: View {
             #endif
 
             Button {
-                UIPasteboard.general.string = prompt
-                copiedToast = true
-                Task {
-                    try? await Task.sleep(nanoseconds: 1_500_000_000)
-                    copiedToast = false
-                }
+                copyPrompt(toast: "itinerary.output.copied")
             } label: {
                 Label {
                     Text("itinerary.output.action.copy", bundle: .main)
@@ -118,9 +114,80 @@ struct ItineraryOutputView: View {
             }
             .buttonStyle(.bordered)
 
+            deepLinkButton(
+                titleKey: "itinerary.output.action.claude",
+                icon: "sparkle",
+                url: URL(string: "https://claude.ai/new")
+            )
+            deepLinkButton(
+                titleKey: "itinerary.output.action.chatgpt",
+                icon: "bubble.left.and.text.bubble.right",
+                url: URL(string: "https://chatgpt.com/")
+            )
+            deepLinkButton(
+                titleKey: "itinerary.output.action.perplexity",
+                icon: "magnifyingglass.circle",
+                url: URL(string: "https://www.perplexity.ai/")
+            )
+
             if isGenerating {
                 ProgressView()
             }
+        }
+    }
+
+    @ViewBuilder
+    private func deepLinkButton(titleKey: LocalizedStringKey, icon: String, url: URL?) -> some View {
+        Button {
+            guard let url else { return }
+            UIPasteboard.general.string = prompt
+            UIApplication.shared.open(url)
+            showToast("itinerary.output.openHint")
+        } label: {
+            Label {
+                Text(titleKey, bundle: .main)
+            } icon: {
+                Image(systemName: icon)
+            }
+            .frame(maxWidth: .infinity)
+        }
+        .buttonStyle(.bordered)
+    }
+
+    @ViewBuilder
+    private func resultSection(_ result: String) -> some View {
+        Text("itinerary.output.result", bundle: .main)
+            .font(.subheadline.bold())
+        if let stamp = trip.itineraryGeneratedAt {
+            Text(stamp.formatted(date: .abbreviated, time: .shortened))
+                .font(.caption2)
+                .foregroundStyle(.secondary)
+        }
+        Text(verbatim: result)
+            .padding(12)
+            .background(Color.green.opacity(0.08), in: RoundedRectangle(cornerRadius: 8))
+            .textSelection(.enabled)
+        Button(role: .destructive) {
+            trip.itineraryGeneratedText = nil
+            trip.itineraryGeneratedAt = nil
+            generatedText = nil
+            try? modelContext.save()
+        } label: {
+            Text("itinerary.output.clear", bundle: .main)
+                .font(.caption)
+        }
+    }
+
+    private func copyPrompt(toast key: LocalizedStringKey) {
+        UIPasteboard.general.string = prompt
+        showToast(key)
+    }
+
+    private func showToast(_ key: LocalizedStringKey) {
+        toastKey = key
+        Task {
+            try? await Task.sleep(nanoseconds: 1_500_000_000)
+            toastKey = nil
         }
     }
 
@@ -150,6 +217,9 @@ struct ItineraryOutputView: View {
                 let session = LanguageModelSession()
                 let response = try await session.respond(to: prompt)
                 generatedText = response.content
+                trip.itineraryGeneratedText = response.content
+                trip.itineraryGeneratedAt = .now
+                try? modelContext.save()
             } catch {
                 generationError = error.localizedDescription
             }

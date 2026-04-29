@@ -68,4 +68,35 @@ final class TripsRepositoryTests: XCTestCase {
         XCTAssertTrue(try container.mainContext.fetch(FetchDescriptor<TripMilestone>()).isEmpty)
         XCTAssertTrue(try container.mainContext.fetch(FetchDescriptor<TripDocument>()).isEmpty)
     }
+
+    func test_round29_itineraryGeneratedText_persistsRoundTrip() throws {
+        let trip = tripFixture()
+        try repo.upsert(trip)
+        XCTAssertNil(trip.itineraryGeneratedText)
+        XCTAssertNil(trip.itineraryGeneratedAt)
+
+        let stamp = Date(timeIntervalSince1970: 1_500_000)
+        trip.itineraryGeneratedText = "Day 1: arrive · Day 2: hike"
+        trip.itineraryGeneratedAt = stamp
+        try container.mainContext.save()
+
+        let reloaded = try XCTUnwrap(try repo.allTrips().first)
+        XCTAssertEqual(reloaded.itineraryGeneratedText, "Day 1: arrive · Day 2: hike")
+        XCTAssertEqual(reloaded.itineraryGeneratedAt, stamp)
+    }
+
+    func test_round29_itineraryGeneratedText_clearsOnNil() throws {
+        let trip = tripFixture()
+        trip.itineraryGeneratedText = "stale"
+        trip.itineraryGeneratedAt = .now
+        try repo.upsert(trip)
+
+        trip.itineraryGeneratedText = nil
+        trip.itineraryGeneratedAt = nil
+        try container.mainContext.save()
+
+        let reloaded = try XCTUnwrap(try repo.allTrips().first)
+        XCTAssertNil(reloaded.itineraryGeneratedText)
+        XCTAssertNil(reloaded.itineraryGeneratedAt)
+    }
 }

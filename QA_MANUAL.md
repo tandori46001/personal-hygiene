@@ -2893,3 +2893,24 @@ The pre-fix path went through `viewModel.upcomingTrip` ← `tripsRepository.allT
 - Seeded days don't appear after fresh install → ImportantDaySeeder.seedIfEmpty bundle path; verify seeds are in PersonalHygiene.app root (not subdirectory).
 - Custom anniversary doesn't show on Today → DayRule.anniversary.matches() should ignore stored year, match by month+day only.
 - Settings page doesn't update on toggle → @Query rebroadcast vs @Bindable mismatch.
+
+## [T-277] — Wizard v2: persistence + deep-links (round 29)
+
+**Module:** vacation, ai · **Shipped in:** round 29
+
+### Manual verification
+1. Trips → existing trip → AI itinerary wizard → fill all 5 stages → Generate. Output sheet shows prompt preview.
+2. Verify three new buttons below "Copy prompt to clipboard": "Open in Claude.ai", "Open in ChatGPT", "Open in Perplexity" each with distinct system icon.
+3. Tap "Open in Claude.ai". **Expected:** Safari/Claude.ai opens at `https://claude.ai/new`. Pasteboard now contains the full prompt. Toast at top of sheet says "Prompt copied — paste into the new chat" for ~1.5s. Paste in the chat input to confirm.
+4. Repeat step 3 for ChatGPT (`https://chatgpt.com/`) and Perplexity (`https://www.perplexity.ai/`).
+5. (iOS 26+ only) Tap "Generate with Apple Intelligence". Wait for the LanguageModelSession to respond. **Expected:** generated text appears in green-tinted card below actions, with abbreviated date+time caption above.
+6. Dismiss the output sheet. Re-open the wizard for the same trip → tap Generate to land on the output sheet again. **Expected:** the previously-generated text is still visible (loaded from `Trip.itineraryGeneratedText` on .onAppear), with the original timestamp.
+7. Tap the destructive "Clear saved itinerary" button below the result. **Expected:** the green card disappears immediately. Re-launch the app, re-open the wizard → no saved itinerary card, persistence cleared.
+8. Switch app language ES → EN → FR. Re-open the output sheet. **Expected:** all 3 deep-link button labels + clear-button + open-hint toast are translated.
+
+### Failure modes to watch for
+- Saved itinerary text vanishes between sessions → modelContext.save() not called after assignment; check `runOnDevice()` and `clear`-button branches.
+- Toast doesn't appear → `toastKey` State not updating, OR overlay alignment wrong.
+- Deep-link opens Safari but pasteboard is empty → `UIPasteboard.general.string = prompt` ordered after `UIApplication.shared.open()` (race) — must be assigned first.
+- "Open in ChatGPT" navigates to a logged-out wall and the prompt is lost when user signs in → known external limitation; the toast is the recovery path. Document this in the in-app help if reported.
+- Foundation Models button visible on iOS 18 simulator → `isAppleFMAvailable` gate wrong; should `#available(iOS 26, *)` *and* `SystemLanguageModel.default.availability == .available`.
