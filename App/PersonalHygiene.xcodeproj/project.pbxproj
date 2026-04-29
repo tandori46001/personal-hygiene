@@ -106,6 +106,7 @@
 		182A3603E648640F5D2DA7EE /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = E73879E25833E6C0994E9F07 /* Localizable.xcstrings */; };
 		184C860D72BE521FB44BA524 /* CachedCurrencyService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 798B6ACD066B0646AFF5E79A /* CachedCurrencyService.swift */; };
 		18CFD0344CE92399CAC6EBB0 /* HousekeepingListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 304BB89FC3937D84FC4E539B /* HousekeepingListView.swift */; };
+		193A1A8D76F679ED1E71C5BA /* RoutineDataChangedNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2C3EEEF3872B17B3FCA1E14 /* RoutineDataChangedNotification.swift */; };
 		1969101663146DA07038FFBE /* StreakImageRenderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7853D2E63C1C82834EE78091 /* StreakImageRenderer.swift */; };
 		197BB847B9FF176068AD1459 /* BlockCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4606FE1130F7F17EBC7A28C /* BlockCategory.swift */; };
 		19B8699E75F87ADB440C3D98 /* MedicationDoseHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72299130B717DD6E0DDEACFD /* MedicationDoseHistory.swift */; };
@@ -338,6 +339,7 @@
 		4E458E1A64DCB38CA68DE755 /* NotificationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 685542340D132BBBD5D1B0F6 /* NotificationCoordinator.swift */; };
 		4E7DD545CF1DF26B24DBDA2A /* MarineDivingWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0D17E686CDBAAB380FE28783 /* MarineDivingWindow.swift */; };
 		4EAF0CD8467E96872DD3DFE1 /* UpcomingBirthdays.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BE1F2759BBDB34451AB30BD /* UpcomingBirthdays.swift */; };
+		4EE41AF18DBBC8784F3C6201 /* RoutineDataChangedNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2C3EEEF3872B17B3FCA1E14 /* RoutineDataChangedNotification.swift */; };
 		4F01BAAAB672BA4E6EB8358E /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = E73879E25833E6C0994E9F07 /* Localizable.xcstrings */; };
 		4F509D617F8E3381F646C7D7 /* BuildInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE520D0DE7818DE937FA635 /* BuildInfo.swift */; };
 		4F5CC6E542399FA913883C9D /* ItineraryGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31530A7E54A39B31CB44C245 /* ItineraryGenerator.swift */; };
@@ -660,6 +662,7 @@
 		A2F4B0C6B3F9A9755C4D8CB6 /* HydrationWeeklyAverage.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8DD89CA310C976B87EA9AD /* HydrationWeeklyAverage.swift */; };
 		A3006D6B09A9D47C068C2431 /* CachedMarineWeatherService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14F4E7F23174D00046E98CE /* CachedMarineWeatherService.swift */; };
 		A3549C746870EB4CF017531C /* ItineraryStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60A5209944255EB82E4B207D /* ItineraryStoreTests.swift */; };
+		A35563E465B307870B1BBA48 /* RoutineDataChangedNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2C3EEEF3872B17B3FCA1E14 /* RoutineDataChangedNotification.swift */; };
 		A3F778E9366A371197FF1971 /* BlockTitleHistoryAutocompleteV2Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B91DED79C0F031173FFC6B5 /* BlockTitleHistoryAutocompleteV2Tests.swift */; };
 		A41629EAC1364577C12492B0 /* BackupService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B4D88BD5D07D48B8F4A8382 /* BackupService.swift */; };
 		A43382DD6E5063863AF58B73 /* WeatherForecastCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = E6A74188C557C1F6C7A8774D /* WeatherForecastCache.swift */; };
@@ -837,6 +840,7 @@
 		D5097967AF30E1D543F55CFB /* AustraliaAdvisoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 975A901E62A7FA056727DF82 /* AustraliaAdvisoryService.swift */; };
 		D52B98EE108C2DF65FCA7565 /* DiagnosticsSnapshotDiffTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33059002914E29312653AD7 /* DiagnosticsSnapshotDiffTests.swift */; };
 		D58E758E0A2B435BF82DEC7B /* PersonalHygieneWatchWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = E55AD4BBE099C629664D352C /* PersonalHygieneWatchWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		D598221018895063AF64C8E4 /* RoutineDataChangedNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = C2C3EEEF3872B17B3FCA1E14 /* RoutineDataChangedNotification.swift */; };
 		D598FAEC3AD9B1A2C0098A10 /* BackupSnapshotChecksum.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92577B5465A1ACF7A58BD83B /* BackupSnapshotChecksum.swift */; };
 		D5A51BF2EDDE44641351F242 /* TripBudgetVsActual.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109A9547C768415F21A1809D /* TripBudgetVsActual.swift */; };
 		D5D642DE4DD036C2C32B91A2 /* PersonalHygieneApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B45E12146599CB7B994CFF2A /* PersonalHygieneApp.swift */; };
@@ -1446,6 +1450,7 @@
 		C17D0E19FD61C4A6E3A8AE7C /* WatchHydrationReconciler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHydrationReconciler.swift; sourceTree = "<group>"; };
 		C2214CB64DCC7C5D62424D4E /* MostRecentBackupStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MostRecentBackupStoreTests.swift; sourceTree = "<group>"; };
 		C2AFC7D1672910F3D1CCFA7E /* ComplicationLine3ChoiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComplicationLine3ChoiceTests.swift; sourceTree = "<group>"; };
+		C2C3EEEF3872B17B3FCA1E14 /* RoutineDataChangedNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutineDataChangedNotification.swift; sourceTree = "<group>"; };
 		C3B74997F968BEEF3A796ACE /* DestinationSlugTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestinationSlugTests.swift; sourceTree = "<group>"; };
 		C3FE661A74A1AA7C1934598A /* WatchHydrationReconcilerTailTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchHydrationReconcilerTailTests.swift; sourceTree = "<group>"; };
 		C4285CE2A6DE82DABC589094 /* PersonalHygieneTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = PersonalHygieneTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2143,6 +2148,7 @@
 			isa = PBXGroup;
 			children = (
 				D15A10D5DE460A958A5D53E2 /* AppModelContainer.swift */,
+				C2C3EEEF3872B17B3FCA1E14 /* RoutineDataChangedNotification.swift */,
 				FB2C54C3BD0F8E70F3D7B226 /* RoutineRepository.swift */,
 				5273E32D9DF4C1E6D733D961 /* TripsRepository.swift */,
 			);
@@ -2924,6 +2930,7 @@
 				536E701B01A70FCC8DD07438 /* QuietHoursStore.swift in Sources */,
 				F7DC399241454671D7366815 /* RecentConversionsStore.swift in Sources */,
 				6F428B3A79246476FC8F2DD7 /* RefreshTraceLog.swift in Sources */,
+				A35563E465B307870B1BBA48 /* RoutineDataChangedNotification.swift in Sources */,
 				E22943F6FF0797156673D181 /* RoutineRepository.swift in Sources */,
 				E863416DC18BBBA1CFF0A52A /* RoutineTemplate.swift in Sources */,
 				27D653F7743B7AB8BE73B9F4 /* RuntimeWeatherForecastFetcher.swift in Sources */,
@@ -3110,6 +3117,7 @@
 				54C8FE9627CE5F083101A964 /* QuietHoursStore.swift in Sources */,
 				AA65BF82146BB79B58AFA270 /* RecentConversionsStore.swift in Sources */,
 				DEBEF314E7853E9C2185EA3D /* RefreshTraceLog.swift in Sources */,
+				193A1A8D76F679ED1E71C5BA /* RoutineDataChangedNotification.swift in Sources */,
 				13AB5F12A2EBCC0075A09977 /* RoutineRepository.swift in Sources */,
 				F123775D4A84CAAB5BAD4BF7 /* RoutineTemplate.swift in Sources */,
 				1D77F006196EE91AEFDB7782 /* RuntimeWeatherForecastFetcher.swift in Sources */,
@@ -3557,6 +3565,7 @@
 				AAF185F80F53A7919D6EBB15 /* RecentConversionsStore.swift in Sources */,
 				C64394845914F8DA746DE87F /* RecentlyDeliveredNotificationsView.swift in Sources */,
 				1BD7BDC51C2E460655EF1EA0 /* RefreshTraceLog.swift in Sources */,
+				4EE41AF18DBBC8784F3C6201 /* RoutineDataChangedNotification.swift in Sources */,
 				876226091BED9FBB52ACF09B /* RoutineListView.swift in Sources */,
 				9055F831A75308CB44735BE2 /* RoutineListViewModel.swift in Sources */,
 				7D39144F9F0937DEB78AAB07 /* RoutineRepository.swift in Sources */,
@@ -3788,6 +3797,7 @@
 				39299C056907E66453375009 /* QuietHoursStore.swift in Sources */,
 				24D26F260A7E1CDBCFDBE501 /* RecentConversionsStore.swift in Sources */,
 				DA7572A2D95E87BF2FC9E811 /* RefreshTraceLog.swift in Sources */,
+				D598221018895063AF64C8E4 /* RoutineDataChangedNotification.swift in Sources */,
 				5C66C8E9DFE956FFF0DA8F82 /* RoutineRepository.swift in Sources */,
 				C5383F43A15F67A0C659AA72 /* RoutineTemplate.swift in Sources */,
 				22313FDF21A48B7C1F5EA9BB /* RuntimeWeatherForecastFetcher.swift in Sources */,

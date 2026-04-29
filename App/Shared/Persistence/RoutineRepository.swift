@@ -54,12 +54,12 @@ public final class SwiftDataRoutineRepository: RoutineRepository {
         if template.modelContext == nil {
             context.insert(template)
         }
-        try context.save()
+        try saveAndNotify()
     }
 
     public func delete(_ template: RoutineTemplate) throws {
         context.delete(template)
-        try context.save()
+        try saveAndNotify()
     }
 
     public func setActive(_ template: RoutineTemplate, for dayType: DayType) throws {
@@ -67,19 +67,19 @@ public final class SwiftDataRoutineRepository: RoutineRepository {
         for existing in try allTemplates() where existing.dayType == dayType {
             existing.isActive = (existing.id == templateID)
         }
-        try context.save()
+        try saveAndNotify()
     }
 
     public func upsert(_ block: Block, in template: RoutineTemplate) throws {
         if block.modelContext == nil {
             template.blocks.append(block)
         }
-        try context.save()
+        try saveAndNotify()
     }
 
     public func delete(_ block: Block) throws {
         context.delete(block)
-        try context.save()
+        try saveAndNotify()
     }
 
     public func markDone(_ block: Block, on now: Date = Date(), calendar: Calendar = .autoupdatingCurrent) throws {
@@ -91,14 +91,24 @@ public final class SwiftDataRoutineRepository: RoutineRepository {
         }
         let completion = BlockCompletion(blockID: blockID, dayStart: day, completedAt: now)
         context.insert(completion)
-        try context.save()
+        try saveAndNotify()
     }
 
     public func unmarkDone(_ block: Block, on now: Date = Date(), calendar: Calendar = .autoupdatingCurrent) throws {
         let day = calendar.startOfDay(for: now)
         guard let existing = try fetchCompletion(blockID: block.id, dayStart: day) else { return }
         context.delete(existing)
+        try saveAndNotify()
+    }
+
+    /// Round-25 fix: every successful repository write posts
+    /// `.routineDataChanged` so cross-tab observers (TodayView,
+    /// MedicationComplianceView, etc.) refresh without relying on iOS 18
+    /// TabView `.onAppear` re-firing — which is unreliable when tabs stay
+    /// alive in the hierarchy.
+    private func saveAndNotify() throws {
         try context.save()
+        NotificationCenter.default.post(name: .routineDataChanged, object: nil)
     }
 
     public func isDone(

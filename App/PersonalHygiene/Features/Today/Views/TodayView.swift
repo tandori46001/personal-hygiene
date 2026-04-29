@@ -285,6 +285,15 @@ struct TodayView: View {
                 nowMinutes = Self.currentMinutesFromMidnight()
                 staleDayBannerVisible = true
             }
+            // Round-25 fix: refresh whenever any repository mutation fires
+            // `.routineDataChanged`. Without this, switching to Templates,
+            // creating/activating a template, then switching back to Today
+            // left `viewModel.activeTemplate` stuck at nil because iOS 18
+            // TabView's `.onAppear` doesn't reliably re-fire when tabs
+            // stay alive in the hierarchy.
+            .onReceive(NotificationCenter.default.publisher(for: .routineDataChanged)) { _ in
+                viewModel.reload()
+            }
             .sheet(isPresented: $showingProgressDetail) {
                 if let template = viewModel.activeTemplate {
                     ProgressDetailSheet(blocks: template.sortedBlocks, isDone: viewModel.isDone)
