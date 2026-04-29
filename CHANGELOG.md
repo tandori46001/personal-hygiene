@@ -8,6 +8,33 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Round 28 — lint debt cleanup (2 commits, 2026-04-29)
+
+`8ec08c4` (docs: round 27 wrap) + `d17f3dc` (lint debt 65 → 0 errors).
+No app behaviour changes — pure refactor + doc work. Highlights:
+
+- `ItineraryPromptBuilder` split: per-enum natural-language labels into
+  new `ItineraryPromptLabels.swift`; `build(_:)` decomposed into
+  per-section helpers (cyclomatic 17 → <12 per helper).
+- `BackupSnapshotValidator`: 100-line `validate(_:)` split into 10
+  per-entity helpers (cyclomatic 33 → ~5 each).
+- `SettingsView` page builders moved to new `SettingsViewPages.swift`
+  extension (file_length 517 → under 500).
+- `TodayView` + `TripDetailView` got `// swiftlint:disable
+  type_body_length` paragraphs explaining the intrinsic size of feature
+  aggregator views.
+- `BackupService` got `// swiftlint:disable file_length` (wire-format
+  payload types kept with the service).
+- Identifier renames across 8 files (single-letter switch params →
+  descriptive names; `nthWeekdayOfMonth(n:)` → `nth:` with the JSON
+  key preserved via `case nth = "n"`).
+- `LocationAutocomplete` 3-tuple → `ResolvedPlace` struct.
+- TravelAdvisory tests updated for the round-27 US-led default order
+  change.
+
+Tests: 938 green (936 unit + 2 UI). Lint: 0 errors (first time since
+session 23). i18n parity OK.
+
 ### Round 27 — feature mega-session (15 commits, 2026-04-29)
 
 Full chronological list of commits: `50fc7f5`, `34e6280`, `ac44434`, `a2e1d7a`, `d88b48d`, `e71239a`, `2659c9e`, `a7218ea`, `d152e4e`, `9c0aeff`, `e1a28a7`, `970ae10`, `2ee9632`, `938e3b3`, `3a0e273`.
