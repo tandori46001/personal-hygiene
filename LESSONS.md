@@ -154,3 +154,75 @@ Mirror as a one-line entry in:
 **Where it was caught.** 2026-04-28, session 16 post-round-18 deploy — user ran the app on the iPhone and screenshotted Today / Settings / Trips / Birthdays showing 9 separate raw keys: `category.work`, `category.hygiene`, `housekeeping.recurrence.weekly`, `settings.snooze.duration.5`, `settings.medication.followup.30`, `settings.marine.freshness.24`, `trip.packing.category.clothing`, `birthdays.daysUntil 28`, `settings.backup.autoFrequency.off`.
 
 **Interaction with other lessons.** Independent of L001-L005. Reinforces the analysis-first workflow: dynamic keys must be paired with a deliberate xcstrings shape (discrete suffix vs format) and the call-site initializer must match.
+
+---
+
+## L007 — Misclassifying a tab-root as More-overflow silently breaks the entire view chrome
+
+**Class of bug.** L004 told us tab-roots inside iOS 18 TabView's "More" overflow must NOT add their own `NavigationStack`. Round-12 added `scripts/check-tabroots.py` to enforce this. The script's `TAB_ROOTS` list pinned the views that were assumed to be in the More overflow. Any view in that list is rejected if it both has a `NavigationStack` AND uses `NavigationLink`. **But the script only knows what was true on the day it was written.** If the tab order changes (a new tab gets prepended, or a tab moves out of the overflow into the visible 4), a view that was once correctly NavigationStack-less becomes a *direct* tab — and direct tabs do NOT receive a system-provided `NavigationStack`. The view body then renders without any `.navigationTitle` or `.toolbar`, but it still compiles, runs, and passes tests because the failure mode is purely visual.
+
+**Symptom.** A tab opens to a list view with **no title bar at all**, no toolbar buttons (no "+" to add, no overflow menu), no back arrow on push navigation. Visible on real device, easy to miss in simulator if you don't scroll-test. User-reported: "no puedo añadir template y los que importé no funcionan" — the "+" button was missing because the toolbar wasn't rendering, and pushing into the editor broke because there was no navigation chrome.
+
+**Fix.**
+- Keep `NavigationStack` in tab-roots that render as a *direct* tab in iOS 18 TabView (the first 4 by `.tag` order: Today, Templates, Medication, Sleep).
+- Remove `NavigationStack` from tab-roots that land in the More overflow (Hydration, Housekeeping, Birthdays, Trips, Settings).
+- Update `scripts/check-tabroots.py`'s `TAB_ROOTS` list **whenever the TabView reorders or grows**. The script only catches L004 violations in the listed views; it can't detect L007's *opposite* failure mode (a direct tab that's missing a NavigationStack).
+
+**Guard test.** None automated. The script `scripts/check-tabroots.py` only enforces L004 (no inner NavigationStack on More-tab roots). For L007 we'd need either:
+1. A runtime `XCUITest` smoke that asserts each direct tab renders a non-empty `.navigationTitle`, OR
+2. A manual checklist entry in `QA_MANUAL.md` after every TabView reorder: "open each direct tab → confirm title bar + at least one toolbar item visible".
+
+Option 2 added as part of round-26.
+
+**Where it was caught.** 2026-04-29, session 23 — user reported imports working but the "+" button missing on Templates. Screenshot showed `TemplateListView` rendering without title or toolbar. Round-12's L004 fix removed the inner `NavigationStack` from `TemplateListView` because the script's `TAB_ROOTS` listed it as a More-tab. By session 23, the TabView's first 4 tabs were Today/Templates/Medication/Sleep — `TemplateListView` was actually a direct tab, not in More. Fixed in commit `d954bfd` by restoring `NavigationStack` and removing `TemplateListView` from the script's `TAB_ROOTS` list.
+
+**Interaction with other lessons.** Direct inverse of L004. Together they say: a tab-root needs *exactly one* NavigationStack — either the system's (if in More) or its own (if direct). Guard scripts that pin "this view is in category X" need an audit step every time the tab structure changes.
+
+---
+
+## L008 — Prefer SwiftData `@Query` for cross-tab reactive state, not repository-cached VM properties
+
+**Class of bug.** A `@Observable` ViewModel that caches a SwiftData fetch result (e.g. `var activeTemplate: RoutineTemplate?` populated by `repository.activeTemplate(for:)` inside `reload()`) goes stale across tab switches in iOS 18 TabView. Several factors compound:
+
+1. iOS 18 TabView keeps tab views alive in the hierarchy. `.onAppear` doesn't reliably re-fire on subsequent tab switches.
+2. SwiftUI may recreate the VM on every parent body re-evaluation when the VM is passed in via parameter (`viewModel: TodayViewModel(repository: env.routineRepository)`) instead of owned via `@State`.
+3. `AppEnvironment` is rebuilt on every `ContentView.body` evaluation, creating fresh `SwiftDataRoutineRepository` instances.
+4. Even though all repository instances wrap the *same* `ModelContext`, the fetch path can return stale or empty results across instances under unclear conditions.
+
+The combined effect: data clearly visible in one tab (Templates shows green ✓ for an active template) is invisible in another tab (Today shows "No active template") because the fetch returns nil. Adding `NotificationCenter` broadcasts on every save partially helps but doesn't fully close the race.
+
+**Symptom.** A view conditional on `viewModel.someEntity` shows the empty state even when the entity exists in SwiftData and is visible from a sibling tab. User-reported: "I must do back and forward between Today and Templates in order to see the templates created · In Today still no active templates."
+
+**Fix.**
+Bypass the VM/repository cache for cross-tab reactive state. Use SwiftData's `@Query` directly in the View:
+
+```swift
+struct TodayView: View {
+    @Query(sort: \RoutineTemplate.name) private var allTemplates: [RoutineTemplate]
+
+    private var queriedActiveTemplate: RoutineTemplate? {
+        let dayType = TodayViewModel.dayType(for: Date(), in: .autoupdatingCurrent)
+        return allTemplates.first { $0.dayType == dayType && $0.isActive }
+    }
+
+    var body: some View {
+        if let template = queriedActiveTemplate { … }
+        else { … }
+    }
+}
+```
+
+`@Query` is a reactive observer of the `ModelContext`. It auto-refreshes when any matching `@Model` is inserted, deleted, or has a tracked property mutated. No notifications, no cache invalidation, no VM coordination needed. The repository pattern is still fine for one-shot writes (`upsert`, `delete`, `markDone`); just not for view-driving reactive reads.
+
+If the VM has derived state that needs the active template (`currentBlock()`, `nextBlock()`, completion sets), push the `@Query` result into the VM via `.onAppear` + `.onChange(of: queriedActiveTemplate?.id)`.
+
+**Guard test.** None automated yet. Possible runtime `XCUITest` smoke: create template in tab A, switch to tab B, assert tab B's body re-renders with the new state in <1s. Added to round-26 backlog.
+
+**Where it was caught.** 2026-04-29, session 23 — user reported Today's empty state persisted after creating + activating a template in the Templates tab. Diagnostic line `dayType=weekday · active=nil` confirmed the fetch returned nil despite the template being visible elsewhere. 4 fixes attempted before the `@Query` refactor:
+1. Revert round-25 toolbar chip (no effect — wrong cause).
+2. Restore `NavigationStack` (fixed L007 but not the active-template fetch).
+3. `NotificationCenter.default.post(.routineDataChanged)` on every repository save + `TodayView.onReceive` (didn't close the race).
+4. Diagnostic line + manual Refresh button (deployed to surface the bug — confirmed `active=nil`).
+5. **`@Query` refactor in TodayView** (commit `ec105a5`) — bug closed.
+
+**Interaction with other lessons.** Independent of L001-L007. Reinforces the architectural rule: SwiftData is the source of truth for `@Model` data; ViewModels are appropriate for derived/aggregated state but not for caching a fetch result that needs to react to writes from elsewhere.

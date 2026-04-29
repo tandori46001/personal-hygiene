@@ -57,17 +57,3 @@ extension TodayView {
 extension Notification.Name {
     static let todayJumpToBlock = Notification.Name("today.jumpToBlock")
 }
-
-extension TodayView {
-    /// Round-25 diagnostic line shown beneath the empty-state description.
-    /// Surfaces what the repository currently returns so we can tell
-    /// whether `reload()` is finding the active template at all. Format:
-    /// `dayType=weekday · count=2 · active=Weekday routine` (or
-    /// `active=nil` when no match was found despite templates existing).
-    @MainActor
-    static func diagnosticLine(viewModel: TodayViewModel) -> String {
-        let dayType = viewModel.todaysDayType.rawValue
-        let activeName = viewModel.activeTemplate?.name ?? "nil"
-        return "dayType=\(dayType) · active=\(activeName)"
-    }
-}
