@@ -189,8 +189,8 @@ struct AddImportantDaySheet: View {
                 return formatter.string(from: date)
             }
             return "\(month)/\(day)"
-        case .nthWeekdayOfMonth(let n, let weekday, let month):
-            return Self.formattedNth(n: n, weekday: weekday, month: month, calendar: calendar)
+        case .nthWeekdayOfMonth(let nth, let weekday, let month):
+            return Self.formattedNth(nth: nth, weekday: weekday, month: month, calendar: calendar)
         case .lastWeekdayOfMonth(let weekday, let month):
             return Self.formattedLast(weekday: weekday, month: month, calendar: calendar)
         case .anniversary(let year, let month, let day):
@@ -205,10 +205,10 @@ struct AddImportantDaySheet: View {
         }
     }
 
-    private static func formattedNth(n: Int, weekday: Int, month: Int, calendar: Calendar) -> String {
+    private static func formattedNth(nth: Int, weekday: Int, month: Int, calendar: Calendar) -> String {
         let weekdayName = calendar.weekdaySymbols[max(0, min(6, weekday - 1))]
         let monthName = calendar.monthSymbols[max(0, min(11, month - 1))]
-        return "\(n)·\(weekdayName) — \(monthName)"
+        return "\(nth)·\(weekdayName) — \(monthName)"
     }
 
     private static func formattedLast(weekday: Int, month: Int, calendar: Calendar) -> String {

@@ -1,3 +1,11 @@
+// swiftlint:disable file_length
+//
+// Round-28: this file aggregates `BackupSnapshot` wire-format DTOs
+// alongside `BackupService`. Splitting the payload types into a
+// separate file would fragment the format documentation across two
+// files for marginal benefit — keep them together with this
+// annotation. Behaviour-wise, the rest of the file is fully linted.
+
 import Foundation
 import SwiftData
 

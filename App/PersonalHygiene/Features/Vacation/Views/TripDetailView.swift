@@ -1,6 +1,14 @@
 import PhotosUI
 import SwiftUI
 
+// swiftlint:disable type_body_length
+//
+// TripDetailView aggregates ~10 sections (cover photo, milestones,
+// summary edit, packing, notes, expenses, advisory, marine, currency,
+// emergency contacts, documents, archive). Most are already extracted
+// to their own subviews via separate files (TripDetailRows.swift etc.);
+// the body that stitches them together is intrinsically large.
+
 struct TripDetailView: View {
     @Bindable var viewModel: TripDetailViewModel
 
@@ -351,3 +359,5 @@ struct TripDetailView: View {
     }
 
 }
+
+// swiftlint:enable type_body_length

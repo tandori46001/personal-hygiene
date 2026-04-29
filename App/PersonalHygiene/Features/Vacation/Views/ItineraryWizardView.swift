@@ -130,8 +130,8 @@ extension TripItineraryRequest {
         let nightCount = calendar.dateComponents([.day], from: start, to: end).day ?? 0
         if nightCount > 0 {
             req.nights = (0..<nightCount).compactMap { offset in
-                calendar.date(byAdding: .day, value: offset, to: start).map { d in
-                    NightAccommodation(date: d, cityArea: trip.destinationName)
+                calendar.date(byAdding: .day, value: offset, to: start).map { date in
+                    NightAccommodation(date: date, cityArea: trip.destinationName)
                 }
             }
         }
@@ -296,9 +296,9 @@ private struct NightRowEditor: View {
     }
 
     private var nightDateLabel: String {
-        let f = DateFormatter()
-        f.dateStyle = .medium
-        return f.string(from: night.date)
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        return formatter.string(from: night.date)
     }
 }
 
@@ -399,7 +399,8 @@ private struct Stage5View: View {
 
 // MARK: - Reusable selectors
 
-private struct MultiSelectChips<Option: Hashable & CaseIterable, Label: View>: View where Option.AllCases: RandomAccessCollection {
+private struct MultiSelectChips<Option: Hashable & CaseIterable, Label: View>: View
+where Option.AllCases: RandomAccessCollection {
     let title: LocalizedStringKey
     let options: Option.AllCases
     @ViewBuilder let label: (Option) -> Label
@@ -435,7 +436,8 @@ private struct MultiSelectChips<Option: Hashable & CaseIterable, Label: View>: V
     }
 }
 
-private struct SingleSelectPicker<Option: Hashable & CaseIterable, Label: View>: View where Option.AllCases: RandomAccessCollection {
+private struct SingleSelectPicker<Option: Hashable & CaseIterable, Label: View>: View
+where Option.AllCases: RandomAccessCollection {
     let title: LocalizedStringKey
     let options: Option.AllCases
     @ViewBuilder let label: (Option) -> Label
@@ -457,4 +459,3 @@ private struct SingleSelectPicker<Option: Hashable & CaseIterable, Label: View>:
         }
     }
 }
-

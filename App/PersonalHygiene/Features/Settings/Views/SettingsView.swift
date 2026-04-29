@@ -133,135 +133,8 @@ struct SettingsView: View {
         }
     }
 
-    // MARK: - Round 27 IA: 7 top-level pages
-
-    @ViewBuilder
-    private var rootMenu: some View {
-        Section {
-            ForEach(Page.entries, id: \.self) { p in
-                NavigationLink {
-                    SettingsView(
-                        viewModel: viewModel,
-                        focusScheduleStore: focusScheduleStore,
-                        diagnosticsActions: diagnosticsActions,
-                        routineRepository: routineRepository,
-                        page: p
-                    )
-                } label: {
-                    Label {
-                        Text(p.titleKey, bundle: .main)
-                            .font(.body)
-                    } icon: {
-                        Image(systemName: p.iconName)
-                            .foregroundStyle(p.tint)
-                    }
-                }
-            }
-        }
-    }
-
-    @ViewBuilder
-    private var notificationsPage: some View {
-        notificationsSection
-        schedulingSection
-        categoryMuteSection
-        pauseSection
-        quietHoursSection
-    }
-
-    @ViewBuilder
-    private var appearancePage: some View {
-        themeSection
-    }
-
-    @ViewBuilder
-    private var daysPage: some View {
-        Section {
-            NavigationLink {
-                ImportantDaysSettingsView()
-            } label: {
-                Label {
-                    Text("settings.importantDays.entry", bundle: .main)
-                } icon: {
-                    Image(systemName: "calendar.badge.exclamationmark")
-                }
-            }
-        } header: {
-            Text("settings.section.importantDays", bundle: .main)
-        }
-        birthdayLeadDefaultSection
-        giftIdeasCSVRow
-        Section {
-            NavigationLink {
-                AdvisorySourcesSettingsView()
-            } label: {
-                Label {
-                    Text("settings.advisory.sources.entry", bundle: .main)
-                } icon: {
-                    Image(systemName: "globe")
-                }
-            }
-        } header: {
-            Text("settings.advisory.sources.header", bundle: .main)
-        }
-        if let focusScheduleStore {
-            Section {
-                NavigationLink {
-                    FocusScheduleView(
-                        store: focusScheduleStore,
-                        blocksProvider: {
-                            guard let repository = routineRepository else { return [] }
-                            return (try? repository.allTemplates().flatMap(\.blocks)) ?? []
-                        }
-                    )
-                } label: {
-                    Label {
-                        Text("settings.focus.entry", bundle: .main)
-                    } icon: {
-                        Image(systemName: "moon.zzz")
-                    }
-                }
-            } header: {
-                Text("settings.section.focus", bundle: .main)
-            }
-        }
-    }
-
-    @ViewBuilder
-    private var homePage: some View {
-        HomeLocationSection()
-        footprintSummarySection
-    }
-
-    @ViewBuilder
-    private var moodPage: some View {
-        moodLogSection
-        moodTrendSection
-        moodWeeklyGoalSection
-        moodWeekStripSection
-        localizedMoodCSVCopyRow
-        moodSectionedDisclosure
-        moodHistogramSection
-        moodHeatmapSection
-        streakShareSection
-    }
-
-    @ViewBuilder
-    private var dataPage: some View {
-        backupSection
-        backupAutoFrequencySection
-        backupArchiveCountCaption
-        everythingBundleRow
-        resetAllCachesRow
-        resetOnboardingTipsRow
-        round26ResetAllDataRow
-    }
-
-    @ViewBuilder
-    private var aboutPage: some View {
-        aboutSection
-        aboutFooterSection
-    }
+    // Round-28: page builders moved to SettingsViewPages.swift to fit
+    // type_body_length + file_length limits.
 
     @ViewBuilder
     private var onboardingRestartActions: some View {
@@ -276,7 +149,7 @@ struct SettingsView: View {
     }
 
     @ViewBuilder
-    private var notificationsSection: some View {
+    var notificationsSection: some View {
         Section {
             HStack {
                 Text("settings.notifications.status", bundle: .main)
@@ -302,7 +175,7 @@ struct SettingsView: View {
     }
 
     @ViewBuilder
-    private var schedulingSection: some View {
+    var schedulingSection: some View {
         Section {
             Button {
                 Task { await viewModel.refreshNotifications() }

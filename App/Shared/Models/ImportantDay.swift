@@ -55,9 +55,9 @@ public enum DayRule: Sendable, Equatable {
     case fixedMonthDay(month: Int, day: Int)
 
     /// Nth weekday of a given month (e.g. US Mother's Day = 2nd Sunday of May
-    /// → `.nthWeekdayOfMonth(n: 2, weekday: 1, month: 5)`. Weekday uses
+    /// → `.nthWeekdayOfMonth(nth: 2, weekday: 1, month: 5)`. Weekday uses
     /// Apple's 1=Sunday convention.
-    case nthWeekdayOfMonth(n: Int, weekday: Int, month: Int)
+    case nthWeekdayOfMonth(nth: Int, weekday: Int, month: Int)
 
     /// Last weekday of a given month (e.g. FR Mother's Day = last Sunday of
     /// May, except when it falls on Pentecost — handled approximately).
@@ -79,12 +79,12 @@ public enum DayRule: Sendable, Equatable {
             comps.day = day
             return calendar.date(from: comps)
 
-        case .nthWeekdayOfMonth(let n, let weekday, let month):
+        case .nthWeekdayOfMonth(let nth, let weekday, let month):
             var comps = DateComponents()
             comps.year = year
             comps.month = month
             comps.weekday = weekday
-            comps.weekdayOrdinal = n
+            comps.weekdayOrdinal = nth
             return calendar.date(from: comps)
 
         case .lastWeekdayOfMonth(let weekday, let month):
@@ -128,7 +128,8 @@ public enum DayRule: Sendable, Equatable {
 extension DayRule: Codable {
 
     private enum CodingKeys: String, CodingKey {
-        case type, month, day, n, weekday, year
+        case type, month, day, weekday, year
+        case nth = "n"
     }
 
     private enum RuleType: String, Codable {
@@ -139,55 +140,55 @@ extension DayRule: Codable {
     }
 
     public init(from decoder: Decoder) throws {
-        let c = try decoder.container(keyedBy: CodingKeys.self)
-        let type = try c.decode(RuleType.self, forKey: .type)
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let type = try container.decode(RuleType.self, forKey: .type)
         switch type {
         case .fixedMonthDay:
             self = .fixedMonthDay(
-                month: try c.decode(Int.self, forKey: .month),
-                day: try c.decode(Int.self, forKey: .day)
+                month: try container.decode(Int.self, forKey: .month),
+                day: try container.decode(Int.self, forKey: .day)
             )
         case .nthWeekdayOfMonth:
             self = .nthWeekdayOfMonth(
-                n: try c.decode(Int.self, forKey: .n),
-                weekday: try c.decode(Int.self, forKey: .weekday),
-                month: try c.decode(Int.self, forKey: .month)
+                nth: try container.decode(Int.self, forKey: .nth),
+                weekday: try container.decode(Int.self, forKey: .weekday),
+                month: try container.decode(Int.self, forKey: .month)
             )
         case .lastWeekdayOfMonth:
             self = .lastWeekdayOfMonth(
-                weekday: try c.decode(Int.self, forKey: .weekday),
-                month: try c.decode(Int.self, forKey: .month)
+                weekday: try container.decode(Int.self, forKey: .weekday),
+                month: try container.decode(Int.self, forKey: .month)
             )
         case .anniversary:
             self = .anniversary(
-                year: try c.decode(Int.self, forKey: .year),
-                month: try c.decode(Int.self, forKey: .month),
-                day: try c.decode(Int.self, forKey: .day)
+                year: try container.decode(Int.self, forKey: .year),
+                month: try container.decode(Int.self, forKey: .month),
+                day: try container.decode(Int.self, forKey: .day)
             )
         }
     }
 
     public func encode(to encoder: Encoder) throws {
-        var c = encoder.container(keyedBy: CodingKeys.self)
+        var container = encoder.container(keyedBy: CodingKeys.self)
         switch self {
         case .fixedMonthDay(let month, let day):
-            try c.encode(RuleType.fixedMonthDay, forKey: .type)
-            try c.encode(month, forKey: .month)
-            try c.encode(day, forKey: .day)
-        case .nthWeekdayOfMonth(let n, let weekday, let month):
-            try c.encode(RuleType.nthWeekdayOfMonth, forKey: .type)
-            try c.encode(n, forKey: .n)
-            try c.encode(weekday, forKey: .weekday)
-            try c.encode(month, forKey: .month)
+            try container.encode(RuleType.fixedMonthDay, forKey: .type)
+            try container.encode(month, forKey: .month)
+            try container.encode(day, forKey: .day)
+        case .nthWeekdayOfMonth(let nth, let weekday, let month):
+            try container.encode(RuleType.nthWeekdayOfMonth, forKey: .type)
+            try container.encode(nth, forKey: .nth)
+            try container.encode(weekday, forKey: .weekday)
+            try container.encode(month, forKey: .month)
         case .lastWeekdayOfMonth(let weekday, let month):
-            try c.encode(RuleType.lastWeekdayOfMonth, forKey: .type)
-            try c.encode(weekday, forKey: .weekday)
-            try c.encode(month, forKey: .month)
+            try container.encode(RuleType.lastWeekdayOfMonth, forKey: .type)
+            try container.encode(weekday, forKey: .weekday)
+            try container.encode(month, forKey: .month)
         case .anniversary(let year, let month, let day):
-            try c.encode(RuleType.anniversary, forKey: .type)
-            try c.encode(year, forKey: .year)
-            try c.encode(month, forKey: .month)
-            try c.encode(day, forKey: .day)
+            try container.encode(RuleType.anniversary, forKey: .type)
+            try container.encode(year, forKey: .year)
+            try container.encode(month, forKey: .month)
+            try container.encode(day, forKey: .day)
         }
     }
 }

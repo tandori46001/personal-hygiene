@@ -36,13 +36,13 @@ final class DayRuleTests: XCTestCase {
 
     func test_nthWeekdayOfMonth_usMothersDay_2026() {
         // 2nd Sunday of May 2026 = May 10, 2026
-        let usMothers = DayRule.nthWeekdayOfMonth(n: 2, weekday: 1, month: 5)
+        let usMothers = DayRule.nthWeekdayOfMonth(nth: 2, weekday: 1, month: 5)
         XCTAssertEqual(usMothers.resolvedDate(in: 2026, calendar: calendar), date(2026, 5, 10))
     }
 
     func test_nthWeekdayOfMonth_usThanksgiving_2026() {
         // 4th Thursday of November 2026 = Nov 26, 2026
-        let thanksgiving = DayRule.nthWeekdayOfMonth(n: 4, weekday: 5, month: 11)
+        let thanksgiving = DayRule.nthWeekdayOfMonth(nth: 4, weekday: 5, month: 11)
         XCTAssertEqual(thanksgiving.resolvedDate(in: 2026, calendar: calendar), date(2026, 11, 26))
     }
 
@@ -99,7 +99,7 @@ final class DayRuleTests: XCTestCase {
     }
 
     func test_codable_nthWeekday_roundTrip() throws {
-        let original = DayRule.nthWeekdayOfMonth(n: 2, weekday: 1, month: 5)
+        let original = DayRule.nthWeekdayOfMonth(nth: 2, weekday: 1, month: 5)
         let json = try JSONEncoder().encode(original)
         let decoded = try JSONDecoder().decode(DayRule.self, from: json)
         XCTAssertEqual(decoded, original)
@@ -114,10 +114,10 @@ final class DayRuleTests: XCTestCase {
 
     func test_codable_decodesSeedJsonFormat() throws {
         // Same shape as the Resources/ImportantDays/*.json bundles.
-        let json = """
+        let json = Data("""
         { "type": "nthWeekdayOfMonth", "n": 2, "weekday": 1, "month": 5 }
-        """.data(using: .utf8)!
+        """.utf8)
         let decoded = try JSONDecoder().decode(DayRule.self, from: json)
-        XCTAssertEqual(decoded, .nthWeekdayOfMonth(n: 2, weekday: 1, month: 5))
+        XCTAssertEqual(decoded, .nthWeekdayOfMonth(nth: 2, weekday: 1, month: 5))
     }
 }

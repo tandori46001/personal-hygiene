@@ -50,22 +50,27 @@ final class TravelAdvisoryServiceTests: XCTestCase {
     }
 
     func test_multiSource_returnsOneEntryPerUpstream_inOrder() {
+        // Round-27 follow-up: default order changed from ES-led to US-led
+        // per user request. Order is configurable via `AdvisoryOrderStore`;
+        // when no override is present (test environment uses fresh
+        // UserDefaults), the lineup follows `AdvisoryOrderStore.defaultOrder`.
+        AdvisoryOrderStore.reset()
         let svc = MultiSourceAdvisoryService.standard()
         let links = svc.advisories(forDestination: "Spain")
-        // Round-12 slice 5: smartraveller.gov.au added as fifth source.
         XCTAssertEqual(links.map(\.source), [
-            "exteriores.gob.es",
             "travel.state.gov",
             "travel.gc.ca",
             "gov.uk · FCDO",
             "smartraveller.gov.au",
+            "exteriores.gob.es",
         ])
     }
 
     func test_multiSource_singleAdvisoryFallsBackToFirstUpstream() {
+        AdvisoryOrderStore.reset()
         let svc = MultiSourceAdvisoryService.standard()
         let single = svc.advisory(forDestination: "Italy")
-        XCTAssertEqual(single.source, "exteriores.gob.es")
+        XCTAssertEqual(single.source, "travel.state.gov")
     }
 
     func test_canada_blankDestinationFallsBackToIndex() {

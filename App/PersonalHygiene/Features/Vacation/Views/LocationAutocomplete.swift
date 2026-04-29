@@ -27,8 +27,16 @@ final class LocationCompletionsProvider: NSObject {
         completer.delegate = self
     }
 
+    /// Resolved placemark — name + coordinates as a single value type.
+    /// Was previously a 3-tuple; SwiftLint's `large_tuple` rule caps at 2.
+    struct ResolvedPlace: Equatable, Sendable {
+        let name: String
+        let latitude: Double
+        let longitude: Double
+    }
+
     /// Resolve a tapped suggestion to coordinates + canonical name.
-    func resolve(_ completion: MKLocalSearchCompletion) async -> (name: String, latitude: Double, longitude: Double)? {
+    func resolve(_ completion: MKLocalSearchCompletion) async -> ResolvedPlace? {
         let request = MKLocalSearch.Request(completion: completion)
         let search = MKLocalSearch(request: request)
         do {
@@ -42,7 +50,7 @@ final class LocationCompletionsProvider: NSObject {
                 if let title = placemark.title { return title }
                 return item.name ?? completion.title
             }()
-            return (name, coord.latitude, coord.longitude)
+            return ResolvedPlace(name: name, latitude: coord.latitude, longitude: coord.longitude)
         } catch {
             return nil
         }
