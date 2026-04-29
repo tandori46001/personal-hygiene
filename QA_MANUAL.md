@@ -2851,3 +2851,45 @@ Verify by running `./scripts/check-tests.sh`.
 
 ### Why this case exists
 The pre-fix path went through `viewModel.upcomingTrip` ← `tripsRepository.allTrips()` on `reload()`. iOS 18 keeps tab views alive, and `.onAppear` doesn't reliably re-fire on tab switches, so the cached value went stale. Fix uses `@Query<Trip>` directly in TodayView — observed by SwiftData modelContext, auto-refreshes on every Trip mutation.
+
+## [T-275] — AI itinerary wizard (round 27 WS-A)
+
+**Module:** vacation, ai · **Shipped in:** round 27 commit (TBD)
+
+### Manual verification
+1. Trips → existing trip → tap "AI itinerary wizard". Wizard sheet slides up, stage 1/5 visible with progress bar.
+2. Stage 1: tap travellers stepper → goes to 3. Type "Maya 7, Lucas 4" in names. Multi-select 2 relationships. Pick fitness "medium". Tap Next.
+3. Stage 2: pick vibe "family", multi-select transport plane+car-self, pick pace "balanced", multi-select avoid "crowds, early mornings". Tap Next.
+4. Stage 3: 1 night row per trip date appears auto. Each row has city pre-filled with destination, type Picker, booked toggle. Toggle one off, change another's type to airbnb. Tap Next.
+5. Stage 4: multi-select 3 activities, 2 loved cuisines, 1 avoided. Free-text "must-see" → type "Coliseo, Trastevere". Tap Next.
+6. Stage 5: budget mode → "perDay", amount stepper to 200. Priority = "balanced". Food = "mid". Visa = "alreadyHave". Insurance = "haveIt". Tap Generate.
+7. Output sheet appears with prompt preview (monospace, scrollable). Two action buttons visible: "Generate with Apple Intelligence" (only on iOS 26+) and "Copy prompt to clipboard".
+8. Tap "Copy prompt to clipboard" → toast "Copied!" appears top-of-sheet ~1.5s. Paste into Notes.app to verify the full prompt arrived.
+9. Re-open the wizard for the same trip → all answers from steps 2-6 are pre-filled (TripItineraryRequest persisted in Trip.itineraryRequestJSON).
+10. Tap Skip in any stage → advances without forcing answers; the prompt builder uses sensible defaults / omits the unfilled section.
+
+### Failure modes to watch for
+- Wizard fails to dismiss → check ItineraryWizardView.dismiss() in cancellation toolbar.
+- Pre-fill doesn't restore → verify Trip.itineraryRequestJSON was saved on each onChange.
+- "Apple Intelligence" button visible on iOS 18 → availability gate bug; should only appear on iOS 26+.
+- Prompt preview truncates → ScrollView must wrap content; verify on long trips with many milestones.
+
+## [T-276] — Birthdays + Important Days on Today (round 27 WS-B)
+
+**Module:** today, birthdays · **Shipped in:** round 27 commit `a7218ea`
+
+### Manual verification
+1. Fresh-install or reset all data. Launch app. App seeds locale-appropriate ImportantDay rows (~11 for ES, ~11 for EN, ~12 for FR).
+2. Today tab. **Expected:** if any seeded day matches today's month/day, it appears in "🎉 Días especiales" section with "¡Hoy!" caption. If none today, but one falls within lead-default window (default 7), it appears with "en N días". If none within window, section is hidden.
+3. Settings → Días especiales. List shows 2 sections: empty "Personalizados" + populated "Predefinidos". Toggle off a seeded day → list updates, change persists across app relaunch.
+4. Settings → Días especiales → "+" → Add a custom anniversary "Boda" with "Incluir año" on, date 2010-06-15. Save. Returns to list, "Personalizados" section now shows "Boda" with "15 jun. 2010" subtitle.
+5. Today tab. **Expected:** if today is on or near June 15 within the lead window, the custom anniversary appears with star.fill icon.
+6. Settings → toggle off `today.showImportantDays` → Today section disappears immediately (no relaunch).
+7. Birthdays — needs Contacts permission. If Contacts.app has a contact with birthday today or within lead window, "🎂 Cumpleaños" section appears in Today with gift.fill icon, name + "¡Hoy!" or "en N días" + age if year known.
+8. Settings → toggle off `today.showBirthdays` → birthdays section disappears.
+9. Switch tabs Today → Routine → Today. **Expected:** important-days section still rendered (no L008 staleness). Birthdays section refreshes on scenePhase active (next foreground).
+
+### Failure modes to watch for
+- Seeded days don't appear after fresh install → ImportantDaySeeder.seedIfEmpty bundle path; verify seeds are in PersonalHygiene.app root (not subdirectory).
+- Custom anniversary doesn't show on Today → DayRule.anniversary.matches() should ignore stored year, match by month+day only.
+- Settings page doesn't update on toggle → @Query rebroadcast vs @Bindable mismatch.

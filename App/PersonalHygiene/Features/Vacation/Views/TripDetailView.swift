@@ -18,6 +18,7 @@ struct TripDetailView: View {
     @State private var newEmergencyLabel: String = ""
     @State private var newEmergencyPhone: String = ""
     @State var pendingMarkdownShare: TripDetailExportPayload?
+    @State private var showingItineraryWizard = false
 
     private struct PendingDocument: Identifiable {
         let id = UUID()
@@ -137,6 +138,23 @@ struct TripDetailView: View {
                         }
                     }
                 }
+            }
+
+            // Round 27 WS-A: questionnaire-driven AI itinerary wizard.
+            // Always available — does not require Apple Intelligence
+            // (clipboard fallback works on every device).
+            Section {
+                Button {
+                    showingItineraryWizard = true
+                } label: {
+                    Label {
+                        Text("itinerary.wizard.entry", bundle: .main)
+                    } icon: {
+                        Image(systemName: "sparkles.rectangle.stack")
+                    }
+                }
+            } footer: {
+                Text("itinerary.wizard.entry.footer", bundle: .main)
             }
 
             MarineSection(viewModel: viewModel)
@@ -310,6 +328,10 @@ struct TripDetailView: View {
         }
         .sheet(item: $pendingMarkdownShare) { payload in
             ShareSheet(items: [payload.url])
+        }
+        // Round 27 WS-A A9: questionnaire-driven AI itinerary wizard.
+        .sheet(isPresented: $showingItineraryWizard) {
+            ItineraryWizardView(trip: viewModel.trip)
         }
     }
 
