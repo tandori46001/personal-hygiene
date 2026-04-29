@@ -156,7 +156,7 @@ final class NotificationFactoryTests: XCTestCase {
             location: clinic
         )
         let pair = StaticTravelTimeService.RoutePair(origin: home, destination: clinic)
-        let service = StaticTravelTimeService(overrides: [pair: 25 * 60])  // 25 min
+        let service = StaticTravelTimeService(overrides: [pair: 25 * 60.0])  // 25 min
 
         let result = await NotificationFactory.notifications(
             for: [block],
@@ -181,7 +181,7 @@ final class NotificationFactoryTests: XCTestCase {
             location: clinic
         )
         let pair = StaticTravelTimeService.RoutePair(origin: home, destination: clinic)
-        let service = StaticTravelTimeService(overrides: [pair: 61])  // 1 min 1 sec
+        let service = StaticTravelTimeService(overrides: [pair: 61.0])  // 1 min 1 sec
 
         let result = await NotificationFactory.notifications(
             for: [block],
@@ -257,7 +257,7 @@ final class NotificationFactoryTests: XCTestCase {
             location: clinic
         )
         let pair = StaticTravelTimeService.RoutePair(origin: home, destination: clinic)
-        let service = StaticTravelTimeService(overrides: [pair: 60 * 60])  // 60 min — pushes trigger before 00:00
+        let service = StaticTravelTimeService(overrides: [pair: 60 * 60.0])  // 60 min — pushes trigger before 00:00
 
         let result = await NotificationFactory.notifications(
             for: [block],
