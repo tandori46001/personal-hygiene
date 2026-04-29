@@ -226,3 +226,48 @@ If the VM has derived state that needs the active template (`currentBlock()`, `n
 5. **`@Query` refactor in TodayView** (commit `ec105a5`) — bug closed.
 
 **Interaction with other lessons.** Independent of L001-L007. Reinforces the architectural rule: SwiftData is the source of truth for `@Model` data; ViewModels are appropriate for derived/aggregated state but not for caching a fetch result that needs to react to writes from elsewhere.
+
+---
+
+## L009 — Local Xcode and CI runner produce different Swift 6 verdicts; local-pass is not proof CI will pass
+
+**Trigger pattern.** A file uses a pre-Swift-6 Apple SDK that overrides a delegate method whose closure parameter is annotated `@Sendable` (or implies sendability). Examples seen in this repo: `UNUserNotificationCenterDelegate.userNotificationCenter(_:willPresent:withCompletionHandler:)`, `MKLocalSearchCompleterDelegate`, HealthKit query result handlers, `CLLocationManagerDelegate`, `CNContactStore` predicates, `WeatherKit` async APIs. Same pattern can also surface in SwiftUI `ViewBuilder` closures when a `@Bindable` or computed property crosses an isolation boundary inside the builder.
+
+**Symptom.** `./scripts/check-tests.sh` reports `Test Succeeded` locally on Xcode 26.4.1 / Swift 6.3.1. The same toolchain on GitHub Actions `macos-latest` rejects the build with `##[error]` lines pointing at the same file. CI is red while local is green; multiple sessions can pass without anyone noticing because the round-completion ritual treats local-test-pass as proof of correctness.
+
+**Root cause.** The host target's `SWIFT_VERSION="6.0"` enforces Swift 6 LANGUAGE-MODE checks. Local Xcode emits these as warnings (visible in the issue navigator but invisible to `check-tests.sh`'s grep-based pass/fail). The CI runner's static-checker tier escalates the same diagnostic to error severity. Result: a strict-mode skew that makes "local green" a misleading signal.
+
+**Fix.**
+- Defensive: add `@preconcurrency import <Framework>` at the top of any file that overrides delegate methods with closure parameters from a pre-Swift-6 Apple SDK. Purely additive; keeps local green; silences CI. Round 29 applied this to UserNotifications (1 site), MapKit (2), HealthKit (1), Contacts (1), CoreLocation (2), WeatherKit (1). It also applied `@MainActor` to 7 SwiftUI View structs and `MainActor.assumeIsolated` to 3 UIKit dismiss call-sites.
+- Pragmatic short-term: dial host `SWIFT_VERSION` back to `5` (matching watch + tests). Toolchain stays at Swift 6.x; only the language-mode flag dials back. Round 29 settled here as the resolution after 9 incremental defensive fixes failed to clear every CI error.
+- Strategic: full Swift 6 strict-mode migration is its own future round (Batch Q in `ALL OK?` audit). Walk every CI error to ground, document the migration as a follow-up lesson, and add a local guard script (`scripts/check-strict-concurrency.sh`) that runs `xcodebuild build SWIFT_STRICT_CONCURRENCY=complete` so future rounds catch new violations locally before push.
+
+**Guard test.** Process: after every "lint cleanup" or "concurrency adjustment" round, **always run `gh run list --limit 3`** before declaring CI green; do not trust local-pass alone. The `feedback_repo_quirks.md` memory file documents the pattern so future sessions inherit the rule. Future automation: `scripts/check-strict-concurrency.sh` will fail locally on any diagnostic the CI runner would also fail on.
+
+**Where it was caught.** 2026-04-29, session 25 round 29 — round 28 lint cleanup pushed `d17f3dc` claiming a clean CI; the actual CI runs were red on `2c67da7`/`d17f3dc`/`8ec08c4` (4 consecutive failures) for `UNUserNotificationCenterDelegate` sendability mismatches. Local `check-tests.sh` reported green throughout. The whack-a-mole that followed (12 commits of Swift-6-strict fixes) eventually revealed the structural cause; resolved at `f34f17b` with host `SWIFT_VERSION=5` and the 9 defensive fixes preserved as front-loaded prep for the eventual Batch Q migration.
+
+**Interaction with other lessons.** Reinforces L005 — that lesson hardened `check-tests.sh` against silent process crashes; L009 hardens the *post-test* step (you must verify CI directly). Together they say: green-from-script is necessary but not sufficient — both the script's classification AND the upstream CI verdict have to agree before declaring victory.
+
+---
+
+## L010 — Repo on USB drive: `find` overcounts ~2× because of macOS `._*` AppleDouble resource forks
+
+**Trigger pattern.** The repo is mounted from a USB drive (`/Volumes/USB1TBWD/...`). macOS-native filesystems silently shadow every `*.swift` file with a `._*.swift` AppleDouble resource-fork sibling that stores extended attributes the USB filesystem can't represent natively. Naive `find ... -name "*.swift" | wc -l` matches both, doubling the count. Same applies to `*.md`, `*.json`, etc.
+
+**Symptom.** A drift-audit step that compares against memory's recorded counts (e.g. "163 services in `App/Shared/Services/`") reports massive false drift: `find App/Shared/Services -name "*.swift" | wc -l` returns 326. Author panics, files an issue, spends round-trips investigating "phantom services" that don't exist. Memory was correct all along; the audit was wrong.
+
+**Root cause.** The USB filesystem (likely exFAT or FAT32 historically used for cross-platform drives) doesn't natively store macOS extended attributes. macOS works around this by writing a parallel `._<filename>` file containing the metadata. These files are real entries in the directory listing; `find` matches them; `wc -l` counts them; nothing in stock POSIX tooling filters them out.
+
+**Fix.**
+- Always pass `-not -name "._*"` to `find` invocations that count or list files for audit purposes:
+  ```bash
+  find App/Shared/Services -name "*.swift" -not -name "._*" | wc -l
+  ```
+- Centralize the pattern in `scripts/check-counts.sh` and route every audit script + ALL OK? audit through it. Single point of truth; impossible to forget the filter.
+- Long-term: consider migrating the repo off the USB drive, or formatting the drive as APFS / HFS+. Out of scope for the fix itself.
+
+**Guard test.** `scripts/check-counts.sh` exposes `count_swift PATH` and `count_glob PATH PATTERN` shell functions that always exclude `._*`. Run `./scripts/check-counts.sh` standalone to print the canonical counts the next session should see (services, models, test files, i18n keys). CI calls it as a hygiene step so any future audit script that re-introduces the unfiltered pattern fails fast.
+
+**Where it was caught.** 2026-04-29, session 25 round 29 — initial `ALL OK?` audit reported "326 services vs memory's 162" as drift; user pointed out the AppleDouble inflation was inflating the count. Reported a second time during round 30's drift-cleanup audit, this time with the fix in hand (`-not -name "._*"` filter). Real counts at end of round 30: 163 services, 184 service-test files, 14 `@Model` files (memory had said 16-17 — separate, smaller drift addressed in the same round).
+
+**Interaction with other lessons.** Independent of L001-L009. Specific to this filesystem; would not apply on a clean APFS-formatted Mac. Documented for completeness because the bug-class is *audit-correctness*, not *runtime-correctness* — and false-drift audits cost time + erode confidence in the memory system.
