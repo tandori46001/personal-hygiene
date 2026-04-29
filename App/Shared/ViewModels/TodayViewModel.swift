@@ -73,7 +73,16 @@ final class TodayViewModel {
     func reload(now: Date = Date()) {
         todaysDayType = Self.dayType(for: now, in: calendar)
         do {
-            activeTemplate = try repository.activeTemplate(for: todaysDayType)
+            // Round-26 fix: only fetch activeTemplate via the repository
+            // when the caller hasn't pushed one in (TodayView wires
+            // @Query → viewModel.activeTemplate before calling reload).
+            // The repo path stayed for callers that don't have a @Query
+            // on hand (e.g. the watch's TodayWatchView), but it must NOT
+            // clobber a non-nil activeTemplate that the View just
+            // assigned from a SwiftData reactive observer.
+            if activeTemplate == nil {
+                activeTemplate = try repository.activeTemplate(for: todaysDayType)
+            }
             let completions = try repository.completions(on: now, calendar: calendar)
             completedBlockIDs = Set(completions.map(\.blockID))
         } catch {

@@ -1,8 +1,18 @@
+import SwiftData
 import SwiftUI
 
 struct TodayView: View {
     @Bindable var viewModel: TodayViewModel
     var onCreateTemplate: (() -> Void)?
+
+    /// Round-26 fix: SwiftData `@Query` is a reactive observer of the
+    /// modelContext. It auto-refreshes whenever any RoutineTemplate is
+    /// inserted, deleted, or updated — bypassing both the repository
+    /// fetch path (which proved unreliable across tab switches) and the
+    /// `viewModel.activeTemplate` cache. Computed `activeTemplate` reads
+    /// directly from this query and the body's `if let` re-evaluates as
+    /// soon as `isActive` flips on any template.
+    @Query(sort: \RoutineTemplate.name) private var allTemplates: [RoutineTemplate]
 
     @State private var showingProgressDetail = false
     @State private var nowMinutes: Int = Self.currentMinutesFromMidnight()
@@ -20,6 +30,17 @@ struct TodayView: View {
     @AppStorage("today.compactMode") var compactMode = false
     @AppStorage("today.collapseDone") var collapseDoneBlocks = false
     @Environment(\.scenePhase) private var scenePhase
+
+    /// Round-26 fix: compute the active template directly from the
+    /// reactive `@Query`. `viewModel.activeTemplate` stays kept in sync
+    /// via `.onAppear` / `.onChange` so the rest of the VM (currentBlock,
+    /// nextBlock, blocks, etc.) keeps working. Today's day type is
+    /// re-derived each render so a midnight crossover updates without
+    /// needing a manual reload.
+    private var queriedActiveTemplate: RoutineTemplate? {
+        let dayType = TodayViewModel.dayType(for: Date(), in: .autoupdatingCurrent)
+        return allTemplates.first { $0.dayType == dayType && $0.isActive }
+    }
 
     static func currentMinutesFromMidnight(
         now: Date = Date(),
@@ -50,7 +71,7 @@ struct TodayView: View {
     var body: some View {
         NavigationStack {
             Group {
-                if let template = viewModel.activeTemplate {
+                if let template = queriedActiveTemplate {
                     ScrollViewReader { proxy in
                     List {
                         staleDayBannerSection
@@ -284,9 +305,20 @@ struct TodayView: View {
             }
             .overlay(alignment: .bottom) { resetDayUndoOverlay }
             .onAppear {
+                // Round-26 fix: push @Query result into VM so the rest of
+                // the VM logic (currentBlock, nextBlock, completion set)
+                // sees the right activeTemplate.
+                viewModel.activeTemplate = queriedActiveTemplate
                 viewModel.reload()
                 nowMinutes = Self.currentMinutesFromMidnight()
                 startMinuteTicker()
+            }
+            .onChange(of: queriedActiveTemplate?.id) { _, _ in
+                // Round-26 fix: when SwiftData reports a different active
+                // template (user activated one in another tab), push the
+                // new value into the VM and re-derive its caches.
+                viewModel.activeTemplate = queriedActiveTemplate
+                viewModel.reload()
             }
             .onDisappear {
                 minuteTickTimer?.cancel()
