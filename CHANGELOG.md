@@ -8,6 +8,53 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Round 30 — drift cleanup + L009 + L010 (2026-04-29)
+
+Doc/script-only round triggered by `ALL OK ?` audit + `haz todo lo que puedas`.
+No behavior change. No Swift code touched.
+
+**Drift cleanup (Batch A):**
+- MVP % reconciled across CLAUDE.md §8 (was 99.99%) and ROADMAP Phase 1
+  (was 99.5%) → both now report **99.9%**.
+- iPhone live SHA corrected `8ec08c4` → `eae6d9b` (the file
+  `App/PersonalHygiene/Resources/CommitSHA.txt` is build-time-stamped by
+  `scripts/deploy-iphone.sh`; mtime + content show iPhone was redeployed
+  during round 29 and the round-29 wrap missed it). HEAD~1 = the
+  `SWIFT_VERSION=5` revert; the final test-only Int→Double commit is the
+  only behavior delta.
+- `Last synced: round 29` → `round 30` in CLAUDE.md §8.
+
+**L009 promoted to LESSONS.md** (was provisional in `feedback_repo_quirks.md`):
+> Local Xcode and CI's `macos-latest` runner produce different Swift 6
+> verdicts for pre-Swift-6 Apple SDK call sites. Local emits warnings;
+> CI escalates to `##[error]`. Local-test-pass is necessary but **not
+> sufficient** to declare CI green — always `gh run list --limit 3` after
+> lint-cleanup rounds. Caught in round 29 (`2c67da7`/`d17f3dc`/`8ec08c4`
+> ran with green local tests + red CI for 4 consecutive runs).
+
+**L010 promoted to LESSONS.md** (was provisional in `feedback_repo_quirks.md`):
+> Repo on USB drive: macOS writes `._*` AppleDouble resource-fork siblings
+> for every `*.swift` (and `*.md`, `*.json`, etc.). Naive `find ... -name
+> "*.swift" | wc -l` overcounts ~2× (e.g. 326 vs real 163). Always pass
+> `-not -name "._*"` for audit counting.
+
+**`scripts/check-counts.sh` (NEW, +x)** — L010 guard:
+- Sourceable helpers: `count_swift PATH`, `count_glob PATH PATTERN`,
+  `count_models PATH` — all exclude `._*` AppleDouble.
+- Standalone (`./scripts/check-counts.sh`) prints the canonical audit
+  table; pair with `--json` for machine-readable output.
+- Canonical counts at round 30: services **163** · service-tests **184**
+  · all-tests **205** · `@Model` **14** · scripts **9** · xcstrings keys
+  **997** · LESSONS L0NN entries **10**.
+
+**Stats:**
+- Tests **940** (unchanged — no Swift changes).
+- i18n **997 × 3** (unchanged).
+- Lessons **10** (+2).
+- Round-30 commit: `3c36c02` (single commit, doc + script only).
+
+---
+
 ### Round 29 — CI fix + Wizard v2 + App Store prep (2026-04-29)
 
 CI was red on `2c67da7`/`d17f3dc`/`8ec08c4` despite local tests passing — the
