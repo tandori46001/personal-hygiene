@@ -145,41 +145,99 @@ extension TodayView {
     }
 }
 
-/// Round-12 slice 23: horizontal scroll chips for filtering today by category.
+/// Round 27 redesign: previously a horizontal-scroll row that clipped
+/// chips off both ends with up to 12 categories. Now a wrapping flow
+/// layout with colored dots + per-category counts so every chip is
+/// visible at a glance + the dot mirrors the row marker on each block.
 struct CategoryFilterChips: View {
     @Binding var selected: BlockCategory?
     let blocks: [Block]
 
-    private var availableCategories: [BlockCategory] {
-        Array(Set(blocks.map(\.category))).sorted { $0.rawValue < $1.rawValue }
+    private struct CountedCategory: Identifiable {
+        let category: BlockCategory
+        let count: Int
+        var id: BlockCategory { category }
+    }
+
+    /// Categories that actually have blocks today, sorted by frequency
+    /// (most-used first) so the filter is most useful at a glance.
+    private var availableCategories: [CountedCategory] {
+        var counts: [BlockCategory: Int] = [:]
+        for block in blocks {
+            counts[block.category, default: 0] += 1
+        }
+        return counts
+            .map { CountedCategory(category: $0.key, count: $0.value) }
+            .sorted { lhs, rhs in
+                if lhs.count != rhs.count { return lhs.count > rhs.count }
+                return lhs.category.rawValue < rhs.category.rawValue
+            }
     }
 
     var body: some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: 6) {
-                Button {
-                    selected = nil
-                } label: {
-                    Text("today.filter.all", bundle: .main)
-                        .font(.caption.bold())
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 4)
-                }
-                .buttonStyle(.bordered)
-                .tint(selected == nil ? .accentColor : .secondary)
-                ForEach(availableCategories, id: \.self) { cat in
-                    Button {
-                        selected = cat
-                    } label: {
-                        Text(localizedKey: "category.\(cat.rawValue)")
-                            .font(.caption.bold())
-                            .padding(.horizontal, 10)
-                            .padding(.vertical, 4)
-                    }
-                    .buttonStyle(.bordered)
-                    .tint(selected == cat ? .accentColor : .secondary)
+        FlowLayout(spacing: 6) {
+            CategoryChip(
+                label: Text("today.filter.all", bundle: .main),
+                dotColor: nil,
+                count: blocks.count,
+                isSelected: selected == nil
+            ) {
+                selected = nil
+            }
+            ForEach(availableCategories) { entry in
+                CategoryChip(
+                    label: Text(localizedKey: "category.\(entry.category.rawValue)"),
+                    dotColor: BlockCategoryColor.color(for: entry.category),
+                    count: entry.count,
+                    isSelected: selected == entry.category
+                ) {
+                    selected = (selected == entry.category) ? nil : entry.category
                 }
             }
         }
+    }
+}
+
+private struct CategoryChip: View {
+    let label: Text
+    let dotColor: Color?
+    let count: Int
+    let isSelected: Bool
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: 5) {
+                if let dotColor {
+                    Circle()
+                        .fill(dotColor)
+                        .frame(width: 7, height: 7)
+                }
+                label
+                    .font(.caption.bold())
+                Text(verbatim: "\(count)")
+                    .font(.caption2.monospacedDigit())
+                    .foregroundStyle(isSelected ? Color.primary : Color.secondary)
+            }
+            .padding(.horizontal, 10)
+            .padding(.vertical, 6)
+            .background(background, in: Capsule())
+            .overlay(
+                Capsule().strokeBorder(borderColor, lineWidth: 1)
+            )
+            .foregroundStyle(Color.primary)
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel(label)
+        .accessibilityValue(Text(verbatim: "\(count)"))
+        .accessibilityAddTraits(isSelected ? [.isSelected] : [])
+    }
+
+    private var background: Color {
+        isSelected ? Color.accentColor.opacity(0.25) : Color.gray.opacity(0.12)
+    }
+
+    private var borderColor: Color {
+        isSelected ? Color.accentColor : Color.clear
     }
 }
