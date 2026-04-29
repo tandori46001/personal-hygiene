@@ -14,11 +14,20 @@ struct TemplateListView: View {
     @State private var pendingDelete: RoutineTemplate?
 
     var body: some View {
-        // L004: no inner `NavigationStack`. This view is a tab-root inside
-        // iOS 18 TabView's "More" overflow, which already wraps its content
-        // in a stack — adding a second one produced two stacked back chevrons
-        // on every push into TemplateEditorView. Round-12 slice 6 captured
-        // this regression via the new `scripts/check-tabroots.py` audit.
+        // Round-25 fix: restore inner `NavigationStack`. L004 was misapplied
+        // here in round 12 — Templates is the iOS 18 TabView's direct tab #2
+        // (Today / Templates / Medication / Sleep / More), NOT in More
+        // overflow. Direct tabs do NOT get a system-provided NavigationStack,
+        // so removing this one suppressed the toolbar `.navigationTitle` and
+        // the "+" add-template button entirely. L004 still applies to genuine
+        // More-overflow tab-roots (Hydration, Housekeeping, Birthdays,
+        // Trips, Settings) — see `scripts/check-tabroots.py`.
+        NavigationStack {
+            templateListBody
+        }
+    }
+
+    private var templateListBody: some View {
         List {
             if viewModel.templates.isEmpty {
                 ContentUnavailableView {

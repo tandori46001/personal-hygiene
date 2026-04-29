@@ -24,14 +24,18 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 FEATURES = REPO / "App" / "PersonalHygiene" / "Features"
 
-# Files that live as tab-root views inside iOS 18 TabView. Any view that
-# can land in the More overflow must be in this list.
+# Files that live as tab-root views inside the iOS 18 TabView **More**
+# overflow. The first 4 tabs (Today / Templates / Medication / Sleep)
+# are direct tabs — they DO need their own `NavigationStack` because
+# the system does not wrap them, so they are NOT in this list.
+# Tabs 5-9 (Hydration / Housekeeping / Birthdays / Trips / Settings)
+# collapse into More, which provides a NavigationStack — those must
+# NOT add their own (L004).
 TAB_ROOTS = [
     FEATURES / "Hydration" / "Views" / "HydrationDashboardView.swift",
     FEATURES / "Housekeeping" / "Views" / "HousekeepingListView.swift",
     FEATURES / "Birthdays" / "Views" / "BirthdaysView.swift",
     FEATURES / "Vacation" / "Views" / "TripsListView.swift",
-    FEATURES / "Routine" / "Views" / "TemplateListView.swift",
     FEATURES / "Settings" / "Views" / "SettingsView.swift",
 ]
 
