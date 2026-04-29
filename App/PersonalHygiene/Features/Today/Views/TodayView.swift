@@ -4,6 +4,12 @@ import SwiftUI
 struct TodayView: View {
     @Bindable var viewModel: TodayViewModel
     var onCreateTemplate: (() -> Void)?
+    /// Round-27 follow-up: factory the host wires (in ContentView) so
+    /// tapping a Today trip card navigates straight to the trip detail
+    /// without TodayView having to hold the 7 services TripDetailViewModel
+    /// needs. Returns nil-safe; if no factory injected, the row stays
+    /// non-interactive (keeps Today usable in previews + tests).
+    var tripDetailFactory: ((Trip) -> TripDetailViewModel)?
 
     /// Round-26 fix: SwiftData `@Query` is a reactive observer of the
     /// modelContext. It auto-refreshes whenever any RoutineTemplate is
@@ -116,7 +122,15 @@ struct TodayView: View {
         if !upcoming.isEmpty {
             Section {
                 ForEach(upcoming) { trip in
-                    TripCountdownRow(trip: trip, daysUntil: daysUntil(trip))
+                    if let factory = tripDetailFactory {
+                        NavigationLink {
+                            TripDetailView(viewModel: factory(trip))
+                        } label: {
+                            TripCountdownRow(trip: trip, daysUntil: daysUntil(trip))
+                        }
+                    } else {
+                        TripCountdownRow(trip: trip, daysUntil: daysUntil(trip))
+                    }
                 }
             }
         }

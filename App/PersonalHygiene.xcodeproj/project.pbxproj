@@ -404,6 +404,7 @@
 		57DA03F59987441F67039DC4 /* HousekeepingCompletionLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B0A8222A2454C0F7187F1AF /* HousekeepingCompletionLog.swift */; };
 		58392AF8FC65866894BEE8A7 /* Trip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C43B93323DA8D77A17E36E2 /* Trip.swift */; };
 		58DC0FF54272B17385BBA7DB /* TripDetailViewModelRound14Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E7E923C74A0D6277FB51F4 /* TripDetailViewModelRound14Tests.swift */; };
+		58FA98F1763D98E29B621BCB /* HomeLocationDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26C490312A846629036DF131 /* HomeLocationDetector.swift */; };
 		58FBF7FAC9E370CEBAB1725C /* BackupAutoFrequencyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63870917B5733FA96CAABF2 /* BackupAutoFrequencyStore.swift */; };
 		592758EFF5BFFBD7D59931C3 /* ContactsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC8AF1C127CD25DD6CBF1485 /* ContactsService.swift */; };
 		59FBF495D1DB74BD9297F734 /* HydrationCompliance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63821CA8C548D983DE625643 /* HydrationCompliance.swift */; };
@@ -1216,6 +1217,7 @@
 		2531BFA310C51BF5A34E680E /* DiagnosticsErrorLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsErrorLog.swift; sourceTree = "<group>"; };
 		2689A0A7467DBBFF42494FD3 /* TodaySubviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodaySubviews.swift; sourceTree = "<group>"; };
 		26A7EDF948A99F408FB8F7B5 /* TemplateListViewRound21.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateListViewRound21.swift; sourceTree = "<group>"; };
+		26C490312A846629036DF131 /* HomeLocationDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeLocationDetector.swift; sourceTree = "<group>"; };
 		26C9AE7D8CA6C65DF964960F /* LocationAutocomplete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationAutocomplete.swift; sourceTree = "<group>"; };
 		2733137E21F012AA4268EB85 /* HousekeepingCompletionLogTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousekeepingCompletionLogTests.swift; sourceTree = "<group>"; };
 		28EBCF0AF7EAD8F371ACE8DD /* MoodQuickLogWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoodQuickLogWatchView.swift; sourceTree = "<group>"; };
@@ -1816,6 +1818,7 @@
 				6CBEC2A6E80DE3C810484194 /* DiagnosticsViewRound25Sections.swift */,
 				A09B6A3C944E0A99EB5BE781 /* DiagnosticsViewSections.swift */,
 				368835748FB83D6467F23505 /* FocusScheduleView.swift */,
+				26C490312A846629036DF131 /* HomeLocationDetector.swift */,
 				1F785A48F0078152688043B0 /* HomeLocationSection.swift */,
 				121F1FE266BB20F2A30A87A5 /* ImportantDaysSettingsView.swift */,
 				886486C6CAB1D1662653C06F /* MoodHeatmapView.swift */,
@@ -3622,6 +3625,7 @@
 				8F36AB479503CB10334F4428 /* FocusScheduleView.swift in Sources */,
 				2851414B1FE1FEEDF194BA22 /* FoundationModelsItineraryGenerator.swift in Sources */,
 				DF7A285321FBE7AA6BD7293D /* FullDataResetter.swift in Sources */,
+				58FA98F1763D98E29B621BCB /* HomeLocationDetector.swift in Sources */,
 				45ACC5BE925DCC5E2C09EE32 /* HomeLocationSection.swift in Sources */,
 				A0BB5D8B286A960EB2BF8E2F /* HomeLocationStore.swift in Sources */,
 				EAEFB4BACF6F5327C37C6F07 /* HotWeatherStore.swift in Sources */,

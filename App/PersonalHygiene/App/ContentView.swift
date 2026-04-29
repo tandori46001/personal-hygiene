@@ -90,6 +90,18 @@ private struct MainTabs: View {
                 onCreateTemplate: {
                     autoOpenNewTemplate = true
                     selection = .templates
+                },
+                tripDetailFactory: { trip in
+                    TripDetailViewModel(
+                        trip: trip,
+                        repository: env.tripsRepository,
+                        documentStore: env.tripDocumentStore,
+                        itineraryGenerator: env.itineraryGenerator,
+                        itineraryStore: env.itineraryStore,
+                        marineService: env.marineService,
+                        currencyService: env.currencyService,
+                        advisoryService: env.advisoryService
+                    )
                 }
             )
             .tag(AppTab.today)

@@ -80,7 +80,15 @@ struct TripDetailView: View {
                     Text("trips.field.endDate", bundle: .main)
                 }
             } header: {
-                Text("trip.detail.section.summary", bundle: .main)
+                // Round-27 follow-up: explicit pencil icon in the
+                // section header so the user understands the fields are
+                // tappable + editable. Previously the section just said
+                // "Summary" which read as static info.
+                HStack(spacing: 6) {
+                    Image(systemName: "pencil.circle")
+                        .foregroundStyle(.tint)
+                    Text("trip.detail.section.summary", bundle: .main)
+                }
             } footer: {
                 let days = viewModel.daysUntilDeparture()
                 if days > 0 {

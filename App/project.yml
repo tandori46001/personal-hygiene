@@ -66,6 +66,7 @@ targets:
         NSHealthUpdateUsageDescription: "personal-hygiene logs medication doses to Health when you confirm taking them."
         NSCalendarsUsageDescription: "personal-hygiene reads your medical and social appointments from Calendar to integrate them into your routine."
         NSCameraUsageDescription: "personal-hygiene needs the camera to scan trip documents (passport, tickets, reservations). Scans are stored encrypted on this device only."
+        NSLocationWhenInUseUsageDescription: "personal-hygiene reads your current location once to auto-fill your home address for travel-time padding on notifications. You can disable this and set the address manually."
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.tandori46001.personalhygiene

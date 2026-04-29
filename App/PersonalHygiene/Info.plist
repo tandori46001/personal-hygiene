@@ -30,6 +30,8 @@
 	<string>personal-hygiene reads medication doses and sleep data from Health to schedule reminders and validate your routine.</string>
 	<key>NSHealthUpdateUsageDescription</key>
 	<string>personal-hygiene logs medication doses to Health when you confirm taking them.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>personal-hygiene reads your current location once to auto-fill your home address for travel-time padding on notifications. You can disable this and set the address manually.</string>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
 		<key>UIApplicationSupportsMultipleScenes</key>
