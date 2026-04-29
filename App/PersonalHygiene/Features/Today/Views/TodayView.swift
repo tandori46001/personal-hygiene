@@ -20,6 +20,15 @@ struct TodayView: View {
     /// the round-26 fix. Computed `upcomingTrip` reads directly here.
     @Query(sort: \Trip.startDate) private var allTrips: [Trip]
 
+    /// Round 27 WS-B: important days are SwiftData-backed (cross-tab via
+    /// @Query). Birthdays come from the iOS Contacts framework — read-only,
+    /// async, loaded into `viewModel.upcomingBirthdays` on appear /
+    /// scenePhase active. No L008 risk because the data source is the OS,
+    /// not another tab.
+    @Query private var allImportantDays: [ImportantDay]
+    @AppStorage("today.showBirthdays") private var showBirthdays = true
+    @AppStorage("today.showImportantDays") private var showImportantDays = true
+
     @State private var showingProgressDetail = false
     @State private var nowMinutes: Int = Self.currentMinutesFromMidnight()
     @State private var detailBlock: Block?
@@ -90,6 +99,47 @@ struct TodayView: View {
         }
     }
 
+    /// Round 27 WS-B B1: birthdays of contacts that fall today or within
+    /// the user's lead-default window. Section hides itself if empty or
+    /// disabled in Settings. Source: `viewModel.upcomingBirthdays`,
+    /// async-loaded from Contacts on appear / scenePhase active.
+    @ViewBuilder
+    private var birthdaysSection: some View {
+        if showBirthdays, !viewModel.upcomingBirthdays.isEmpty {
+            Section {
+                ForEach(viewModel.upcomingBirthdays, id: \.contact.identifier) { entry in
+                    BirthdayTodayRow(entry: entry)
+                }
+            } header: {
+                Text("today.section.birthdays", bundle: .main)
+            }
+        }
+    }
+
+    /// Round 27 WS-B B6: locale-seeded + custom important days that match
+    /// today or fall within `windowDays`. Hidden if empty or disabled.
+    @ViewBuilder
+    private var importantDaysSection: some View {
+        if showImportantDays {
+            let leadDays = BirthdayLeadDefaultStore.effectiveDefault()
+            let now = Date()
+            let entries = ImportantDayResolver.upcoming(
+                days: allImportantDays.filter(\.enabled),
+                on: now,
+                windowDays: leadDays
+            )
+            if !entries.isEmpty {
+                Section {
+                    ForEach(entries, id: \.id) { entry in
+                        ImportantDayRow(entry: entry)
+                    }
+                } header: {
+                    Text("today.section.importantDays", bundle: .main)
+                }
+            }
+        }
+    }
+
     var body: some View {
         NavigationStack {
             Group {
@@ -103,6 +153,8 @@ struct TodayView: View {
                             }
                         }
                         tripCountdownSection
+                        birthdaysSection
+                        importantDaysSection
                         progressSummarySection(showingDetail: $showingProgressDetail)
                         if let current = viewModel.currentBlock() {
                             Section {
@@ -312,6 +364,8 @@ struct TodayView: View {
                 viewModel.reload()
                 nowMinutes = Self.currentMinutesFromMidnight()
                 startMinuteTicker()
+                // Round 27 WS-B B1: async-load birthdays from Contacts.
+                Task { await viewModel.reloadBirthdays() }
             }
             .onChange(of: queriedActiveTemplate?.id) { _, _ in
                 // Round-26 fix: when SwiftData reports a different active
@@ -329,6 +383,7 @@ struct TodayView: View {
                     nowMinutes = Self.currentMinutesFromMidnight()
                     viewModel.reload()
                     startMinuteTicker()
+                    Task { await viewModel.reloadBirthdays() }
                 } else {
                     minuteTickTimer?.cancel()
                     minuteTickTimer = nil

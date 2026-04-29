@@ -33,6 +33,12 @@ struct PersonalHygieneApp: App {
         }
         UNUserNotificationCenter.current().delegate = notificationDelegate
         NotificationCategoryRegistrar.register()
+        // Round 27 WS-B B5: first-launch seed of locale-appropriate
+        // ImportantDay rows. Idempotent — no-op when table is non-empty.
+        let containerRef = modelContainer
+        Task { @MainActor in
+            ImportantDaySeeder.seedIfEmpty(in: containerRef.mainContext)
+        }
     }
 
     var body: some Scene {

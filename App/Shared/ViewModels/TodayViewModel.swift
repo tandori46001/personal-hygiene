@@ -10,6 +10,7 @@ final class TodayViewModel {
     private let skipStore: (any BlockSkipStore)?
     private let snoozeStore: (any BlockSnoozeStore)?
     private let focusScheduleStore: (any FocusScheduleStore)?
+    private let contactsService: (any ContactsService)?
     private let calendar: Calendar
 
     var activeTemplate: RoutineTemplate?
@@ -20,6 +21,11 @@ final class TodayViewModel {
     private(set) var completedBlockIDs: Set<UUID> = []
     /// Next upcoming trip (sorted by start date) — used for the Today countdown card.
     private(set) var upcomingTrip: Trip?
+    /// Round 27 WS-B B1: birthdays falling today or within the user's
+    /// lead-default window. Read-only from Contacts framework, async-loaded
+    /// in `reloadBirthdays(now:)` triggered on TodayView.onAppear /
+    /// scenePhase active.
+    private(set) var upcomingBirthdays: [UpcomingBirthdays.Upcoming] = []
 
     init(
         repository: any RoutineRepository,
@@ -27,6 +33,7 @@ final class TodayViewModel {
         skipStore: (any BlockSkipStore)? = nil,
         snoozeStore: (any BlockSnoozeStore)? = nil,
         focusScheduleStore: (any FocusScheduleStore)? = nil,
+        contactsService: (any ContactsService)? = nil,
         calendar: Calendar = .autoupdatingCurrent
     ) {
         self.repository = repository
@@ -34,7 +41,31 @@ final class TodayViewModel {
         self.skipStore = skipStore
         self.snoozeStore = snoozeStore
         self.focusScheduleStore = focusScheduleStore
+        self.contactsService = contactsService
         self.calendar = calendar
+    }
+
+    /// Round 27 WS-B B1: async-load birthdays from Contacts. Skipped
+    /// silently if no service injected or auth not granted.
+    func reloadBirthdays(now: Date = Date()) async {
+        guard let service = contactsService else { return }
+        let status = service.authorizationStatus()
+        guard status == .authorized || status == .limited else {
+            upcomingBirthdays = []
+            return
+        }
+        do {
+            let contacts = try await service.birthdayContacts()
+            let leadDays = BirthdayLeadDefaultStore.effectiveDefault()
+            upcomingBirthdays = UpcomingBirthdays.upcoming(
+                from: contacts,
+                on: now,
+                windowDays: leadDays,
+                calendar: calendar
+            )
+        } catch {
+            upcomingBirthdays = []
+        }
     }
 
     /// Whether the user marked `block` as skipped for today.

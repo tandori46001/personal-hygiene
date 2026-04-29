@@ -1,0 +1,13 @@
+[
+  { "name": "Año Nuevo", "rule": { "type": "fixedMonthDay", "month": 1, "day": 1 } },
+  { "name": "Reyes Magos", "rule": { "type": "fixedMonthDay", "month": 1, "day": 6 } },
+  { "name": "San Valentín", "rule": { "type": "fixedMonthDay", "month": 2, "day": 14 } },
+  { "name": "Día del Padre", "rule": { "type": "fixedMonthDay", "month": 3, "day": 19 } },
+  { "name": "Día del Trabajo", "rule": { "type": "fixedMonthDay", "month": 5, "day": 1 } },
+  { "name": "Día de la Madre", "rule": { "type": "nthWeekdayOfMonth", "n": 1, "weekday": 1, "month": 5 } },
+  { "name": "Halloween", "rule": { "type": "fixedMonthDay", "month": 10, "day": 31 } },
+  { "name": "Todos los Santos", "rule": { "type": "fixedMonthDay", "month": 11, "day": 1 } },
+  { "name": "Nochebuena", "rule": { "type": "fixedMonthDay", "month": 12, "day": 24 } },
+  { "name": "Navidad", "rule": { "type": "fixedMonthDay", "month": 12, "day": 25 } },
+  { "name": "Nochevieja", "rule": { "type": "fixedMonthDay", "month": 12, "day": 31 } }
+]

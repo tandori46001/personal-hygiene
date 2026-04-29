@@ -301,6 +301,158 @@
         }
       }
     },
+    "today.section.birthdays": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "🎂 Birthdays" } },
+        "es": { "stringUnit": { "state": "translated", "value": "🎂 Cumpleaños" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "🎂 Anniversaires" } }
+      }
+    },
+    "today.section.importantDays": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "🎉 Special days" } },
+        "es": { "stringUnit": { "state": "translated", "value": "🎉 Días especiales" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "🎉 Jours spéciaux" } }
+      }
+    },
+    "today.birthday.todayBang": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Today!" } },
+        "es": { "stringUnit": { "state": "translated", "value": "¡Hoy!" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Aujourd'hui !" } }
+      }
+    },
+    "today.birthday.inDays %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "in %lld days" } },
+        "es": { "stringUnit": { "state": "translated", "value": "en %lld días" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "dans %lld jours" } }
+      }
+    },
+    "today.birthday.turning %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "turning %lld" } },
+        "es": { "stringUnit": { "state": "translated", "value": "cumple %lld" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "%lld ans" } }
+      }
+    },
+    "today.importantDay.todayBang": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Today!" } },
+        "es": { "stringUnit": { "state": "translated", "value": "¡Hoy!" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Aujourd'hui !" } }
+      }
+    },
+    "today.importantDay.inDays %lld": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "in %lld days" } },
+        "es": { "stringUnit": { "state": "translated", "value": "en %lld días" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "dans %lld jours" } }
+      }
+    },
+    "settings.section.importantDays": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Special days" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Días especiales" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Jours spéciaux" } }
+      }
+    },
+    "settings.importantDays.entry": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Manage special days" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Gestionar días especiales" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Gérer jours spéciaux" } }
+      }
+    },
+    "settings.importantDays.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Special days" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Días especiales" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Jours spéciaux" } }
+      }
+    },
+    "settings.importantDays.section.custom": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Custom" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Personalizados" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Personnalisés" } }
+      }
+    },
+    "settings.importantDays.section.seeded": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Built-in" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Predefinidos" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Prédéfinis" } }
+      }
+    },
+    "settings.importantDays.add": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Add" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Añadir" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Ajouter" } }
+      }
+    },
+    "settings.importantDays.add.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Add a special day" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Añadir día especial" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Ajouter un jour spécial" } }
+      }
+    },
+    "settings.importantDays.add.name": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Name" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Nombre" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Nom" } }
+      }
+    },
+    "settings.importantDays.add.name.placeholder": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "e.g. Wedding anniversary" } },
+        "es": { "stringUnit": { "state": "translated", "value": "ej. Aniversario de boda" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "ex. Anniversaire de mariage" } }
+      }
+    },
+    "settings.importantDays.add.date": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Date" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Fecha" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Date" } }
+      }
+    },
+    "settings.importantDays.add.includeYear": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Include year (anniversary)" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Incluir año (aniversario)" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Inclure l'année (anniversaire)" } }
+      }
+    },
+    "settings.importantDays.add.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "If include-year is on, the row will show the age this year. Otherwise it repeats every year on the same month/day." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Si activas \"Incluir año\", la fila mostrará los años cumplidos. Si no, se repite cada año en el mismo día." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Si « Inclure l'année » est activé, la ligne affichera l'âge cette année. Sinon, elle se répète chaque année." } }
+      }
+    },
     "today.action.markDone": {
       "extractionState": "manual",
       "localizations": {

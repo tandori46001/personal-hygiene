@@ -31,6 +31,7 @@ public enum AppModelContainer {
         // dangling pointers to Keychain items that don't exist on the
         // receiving device.
         TripDocument.self,
+        ImportantDay.self,
     ]
 
     public static let schema = Schema([
@@ -42,6 +43,7 @@ public enum AppModelContainer {
         Trip.self,
         TripMilestone.self,
         TripDocument.self,
+        ImportantDay.self,
     ])
 
     /// On-disk container used by the running app. Local-only today; pass

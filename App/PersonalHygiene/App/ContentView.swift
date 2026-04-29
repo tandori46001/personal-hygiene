@@ -84,7 +84,8 @@ private struct MainTabs: View {
                     tripsRepository: env.tripsRepository,
                     skipStore: env.blockSkipStore,
                     snoozeStore: env.blockSnoozeStore,
-                    focusScheduleStore: env.focusScheduleStore
+                    focusScheduleStore: env.focusScheduleStore,
+                    contactsService: env.contactsService
                 ),
                 onCreateTemplate: {
                     autoOpenNewTemplate = true

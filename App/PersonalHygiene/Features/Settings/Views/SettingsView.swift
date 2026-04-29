@@ -55,6 +55,20 @@ struct SettingsView: View {
             quietHoursSection
             themeSection
             HomeLocationSection()
+            // Round 27 WS-B B7: locale-seeded + custom important-days editor.
+            Section {
+                NavigationLink {
+                    ImportantDaysSettingsView()
+                } label: {
+                    Label {
+                        Text("settings.importantDays.entry", bundle: .main)
+                    } icon: {
+                        Image(systemName: "calendar.badge.exclamationmark")
+                    }
+                }
+            } header: {
+                Text("settings.section.importantDays", bundle: .main)
+            }
             if let focusScheduleStore {
                 Section {
                     NavigationLink {

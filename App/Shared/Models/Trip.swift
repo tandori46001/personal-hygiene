@@ -38,6 +38,11 @@ public final class Trip {
     /// encoded `[TripEmergencyContact]` to avoid another schema migration.
     public var emergencyContactsJSON: String?
 
+    /// Round 27 (WS-A): persisted answers from the AI-itinerary wizard.
+    /// JSON-encoded `TripItineraryRequest` so we don't add a new @Model.
+    /// `nil` = wizard never ran for this trip.
+    public var itineraryRequestJSON: String?
+
     @Relationship(deleteRule: .cascade, inverse: \TripMilestone.trip)
     public var milestones: [TripMilestone]
 
@@ -59,7 +64,8 @@ public final class Trip {
         notes: String = "",
         currencySnapshotJSON: String? = nil,
         expensesJSON: String? = nil,
-        emergencyContactsJSON: String? = nil
+        emergencyContactsJSON: String? = nil,
+        itineraryRequestJSON: String? = nil
     ) {
         self.id = id
         self.name = name
@@ -76,6 +82,7 @@ public final class Trip {
         self.currencySnapshotJSON = currencySnapshotJSON
         self.expensesJSON = expensesJSON
         self.emergencyContactsJSON = emergencyContactsJSON
+        self.itineraryRequestJSON = itineraryRequestJSON
     }
 }
 
