@@ -3,12 +3,31 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 struct SettingsView: View {
+
+    /// Round-27 IA: a single SettingsView powers both the root menu and
+    /// each sub-page. The root case shows 7 NavigationLinks; the others
+    /// re-mount the same view with `page` set so their subset of section
+    /// builders renders. This avoids extracting 29 sections into 7 new
+    /// View structs while still giving the user a flat 7-item starting
+    /// screen.
+    enum Page: Hashable {
+        case root
+        case notifications
+        case appearance
+        case days
+        case home
+        case mood
+        case data
+        case about
+    }
+
     @Bindable var viewModel: SettingsViewModel
     var focusScheduleStore: (any FocusScheduleStore)?
     var diagnosticsActions: DiagnosticsActions?
     /// Round-17 wire: optional routine repository so the Focus schedule
     /// screen can preview which blocks would be silenced right now.
     var routineRepository: (any RoutineRepository)?
+    var page: Page = .root
 
     @Environment(\.modelContext) private var modelContext
 
@@ -47,65 +66,18 @@ struct SettingsView: View {
                     ErrorBanner(message: error, onDismiss: { viewModel.lastError = nil })
                 }
             }
-            notificationsSection
-            schedulingSection
-
-            categoryMuteSection
-            pauseSection
-            quietHoursSection
-            themeSection
-            HomeLocationSection()
-            // Round 27 WS-B B7: locale-seeded + custom important-days editor.
-            Section {
-                NavigationLink {
-                    ImportantDaysSettingsView()
-                } label: {
-                    Label {
-                        Text("settings.importantDays.entry", bundle: .main)
-                    } icon: {
-                        Image(systemName: "calendar.badge.exclamationmark")
-                    }
-                }
-            } header: {
-                Text("settings.section.importantDays", bundle: .main)
+            switch page {
+            case .root: rootMenu
+            case .notifications: notificationsPage
+            case .appearance: appearancePage
+            case .days: daysPage
+            case .home: homePage
+            case .mood: moodPage
+            case .data: dataPage
+            case .about: aboutPage
             }
-            if let focusScheduleStore {
-                Section {
-                    NavigationLink {
-                        FocusScheduleView(
-                            store: focusScheduleStore,
-                            blocksProvider: {
-                                guard let repository = routineRepository else { return [] }
-                                return (try? repository.allTemplates().flatMap(\.blocks)) ?? []
-                            }
-                        )
-                    } label: {
-                        Label {
-                            Text("settings.focus.entry", bundle: .main)
-                        } icon: {
-                            Image(systemName: "moon.zzz")
-                        }
-                    }
-                } header: {
-                    Text("settings.section.focus", bundle: .main)
-                }
-            }
-            aboutSection
-            backupSection
-            backupAutoFrequencySection
-            moodLogSection
-            round22Sections
-            round23Sections
-            round24Sections
-            // Round-26: nuclear "Reset all data" for users whose store
-            // got into a bad state (e.g. malformed-backup import before
-            // pre-flight validation landed).
-            round26ResetAllDataRow
-            everythingBundleRow
-            resetOnboardingTipsRow
-            aboutFooterSection
         }
-        .navigationTitle(Text("settings.title", bundle: .main))
+        .navigationTitle(Text(page.titleKey, bundle: .main))
         .task { await viewModel.reloadStatus() }
         .sheet(item: $backupExport) { exp in
             ShareSheet(items: [exp.url])
@@ -159,6 +131,123 @@ struct SettingsView: View {
         ) { result in
             handleImport(result)
         }
+    }
+
+    // MARK: - Round 27 IA: 7 top-level pages
+
+    @ViewBuilder
+    private var rootMenu: some View {
+        Section {
+            ForEach(Page.entries, id: \.self) { p in
+                NavigationLink {
+                    SettingsView(
+                        viewModel: viewModel,
+                        focusScheduleStore: focusScheduleStore,
+                        diagnosticsActions: diagnosticsActions,
+                        routineRepository: routineRepository,
+                        page: p
+                    )
+                } label: {
+                    Label {
+                        Text(p.titleKey, bundle: .main)
+                            .font(.body)
+                    } icon: {
+                        Image(systemName: p.iconName)
+                            .foregroundStyle(p.tint)
+                    }
+                }
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var notificationsPage: some View {
+        notificationsSection
+        schedulingSection
+        categoryMuteSection
+        pauseSection
+        quietHoursSection
+    }
+
+    @ViewBuilder
+    private var appearancePage: some View {
+        themeSection
+    }
+
+    @ViewBuilder
+    private var daysPage: some View {
+        Section {
+            NavigationLink {
+                ImportantDaysSettingsView()
+            } label: {
+                Label {
+                    Text("settings.importantDays.entry", bundle: .main)
+                } icon: {
+                    Image(systemName: "calendar.badge.exclamationmark")
+                }
+            }
+        } header: {
+            Text("settings.section.importantDays", bundle: .main)
+        }
+        birthdayLeadDefaultSection
+        giftIdeasCSVRow
+        if let focusScheduleStore {
+            Section {
+                NavigationLink {
+                    FocusScheduleView(
+                        store: focusScheduleStore,
+                        blocksProvider: {
+                            guard let repository = routineRepository else { return [] }
+                            return (try? repository.allTemplates().flatMap(\.blocks)) ?? []
+                        }
+                    )
+                } label: {
+                    Label {
+                        Text("settings.focus.entry", bundle: .main)
+                    } icon: {
+                        Image(systemName: "moon.zzz")
+                    }
+                }
+            } header: {
+                Text("settings.section.focus", bundle: .main)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var homePage: some View {
+        HomeLocationSection()
+        footprintSummarySection
+    }
+
+    @ViewBuilder
+    private var moodPage: some View {
+        moodLogSection
+        moodTrendSection
+        moodWeeklyGoalSection
+        moodWeekStripSection
+        localizedMoodCSVCopyRow
+        moodSectionedDisclosure
+        moodHistogramSection
+        moodHeatmapSection
+        streakShareSection
+    }
+
+    @ViewBuilder
+    private var dataPage: some View {
+        backupSection
+        backupAutoFrequencySection
+        backupArchiveCountCaption
+        everythingBundleRow
+        resetAllCachesRow
+        resetOnboardingTipsRow
+        round26ResetAllDataRow
+    }
+
+    @ViewBuilder
+    private var aboutPage: some View {
+        aboutSection
+        aboutFooterSection
     }
 
     @ViewBuilder
@@ -363,6 +452,53 @@ struct SettingsView: View {
         case .denied: return "settings.notifications.status.denied"
         case .ephemeral: return "settings.notifications.status.ephemeral"
         case .notDetermined: return "settings.notifications.status.notDetermined"
+        }
+    }
+}
+
+extension SettingsView.Page {
+
+    /// Display order on the root menu — every case except `.root`.
+    static let entries: [SettingsView.Page] = [
+        .notifications, .appearance, .days, .home, .mood, .data, .about,
+    ]
+
+    var titleKey: LocalizedStringKey {
+        switch self {
+        case .root: "settings.title"
+        case .notifications: "settings.page.notifications"
+        case .appearance: "settings.page.appearance"
+        case .days: "settings.page.days"
+        case .home: "settings.page.home"
+        case .mood: "settings.page.mood"
+        case .data: "settings.page.data"
+        case .about: "settings.page.about"
+        }
+    }
+
+    var iconName: String {
+        switch self {
+        case .root: "gear"
+        case .notifications: "bell.fill"
+        case .appearance: "paintbrush.fill"
+        case .days: "calendar.badge.exclamationmark"
+        case .home: "house.fill"
+        case .mood: "face.smiling.fill"
+        case .data: "externaldrive.fill"
+        case .about: "info.circle.fill"
+        }
+    }
+
+    var tint: Color {
+        switch self {
+        case .root: .secondary
+        case .notifications: .red
+        case .appearance: .purple
+        case .days: .orange
+        case .home: .blue
+        case .mood: .pink
+        case .data: .green
+        case .about: .gray
         }
     }
 }
