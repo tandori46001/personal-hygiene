@@ -1220,6 +1220,7 @@
 		42F1144197709C149EEABAB4 /* WhatsNextDialogBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhatsNextDialogBuilderTests.swift; sourceTree = "<group>"; };
 		435A8726115CC056E05B2B94 /* TodayDayCompletionChip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayDayCompletionChip.swift; sourceTree = "<group>"; };
 		4438D77846A7D4B06A4B7C88 /* BlockDetailWatchView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockDetailWatchView.swift; sourceTree = "<group>"; };
+		446DC9FEA92E17249FD113DC /* PersonalHygieneWatch.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PersonalHygieneWatch.entitlements; sourceTree = "<group>"; };
 		44AE91EA27B28800CC120335 /* HousekeepingLogIdempotencyTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousekeepingLogIdempotencyTests.swift; sourceTree = "<group>"; };
 		45086D54D60CD72D2B9D2538 /* TodayRows.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayRows.swift; sourceTree = "<group>"; };
 		46661797D7754AA0698E5461 /* WatchMoodStrip.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchMoodStrip.swift; sourceTree = "<group>"; };
@@ -1264,6 +1265,7 @@
 		5D9ED449793E3F94C0C2F63D /* HousekeepingServiceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousekeepingServiceTests.swift; sourceTree = "<group>"; };
 		5DCA3FD1DD87DF7E8259817E /* TripDetailViewRound21.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripDetailViewRound21.swift; sourceTree = "<group>"; };
 		5F5E0CE92F5EFC9375FAF899 /* TravelAdvisoryService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelAdvisoryService.swift; sourceTree = "<group>"; };
+		607D09B358B0FCAC2A6A8E0B /* PersonalHygieneWatchWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PersonalHygieneWatchWidgets.entitlements; sourceTree = "<group>"; };
 		60A5209944255EB82E4B207D /* ItineraryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItineraryStoreTests.swift; sourceTree = "<group>"; };
 		610E022E59BAC822B1020491 /* ItineraryDayWeatherFallback.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItineraryDayWeatherFallback.swift; sourceTree = "<group>"; };
 		619E20318DEDEFAE1F014903 /* TripsListViewModelDuplicationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripsListViewModelDuplicationTests.swift; sourceTree = "<group>"; };
@@ -1382,6 +1384,7 @@
 		9F137EC081FEBB1D1E49C8CE /* BackupSnapshotV5ArchiveTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupSnapshotV5ArchiveTests.swift; sourceTree = "<group>"; };
 		9F3D8FF8035C81A6C465F4B1 /* WatchShowCompletedToggleStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchShowCompletedToggleStoreTests.swift; sourceTree = "<group>"; };
 		9FA89F21D84D2AE0867724B7 /* BackupRestorePreviewTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupRestorePreviewTests.swift; sourceTree = "<group>"; };
+		9FB52F88095D1F099144579C /* PersonalHygieneWidgets.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PersonalHygieneWidgets.entitlements; sourceTree = "<group>"; };
 		A03CCE7D9B4E4B0474089F27 /* BlockEditorFollowupOverrideTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockEditorFollowupOverrideTests.swift; sourceTree = "<group>"; };
 		A09B6A3C944E0A99EB5BE781 /* DiagnosticsViewSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsViewSections.swift; sourceTree = "<group>"; };
 		A247E9C34C3D4AC586D52546 /* NetworkActivityCounter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkActivityCounter.swift; sourceTree = "<group>"; };
@@ -1424,6 +1427,7 @@
 		B63870917B5733FA96CAABF2 /* BackupAutoFrequencyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupAutoFrequencyStore.swift; sourceTree = "<group>"; };
 		B650DEC888DF2D199B6B460A /* PendingNotificationsByCategoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingNotificationsByCategoryTests.swift; sourceTree = "<group>"; };
 		B6AF7EB9E54BB71E83C06B2E /* BlockConflictDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockConflictDetector.swift; sourceTree = "<group>"; };
+		B7E60F28D11CA93F74799323 /* PersonalHygiene.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PersonalHygiene.entitlements; sourceTree = "<group>"; };
 		BB2D75D5BB16D734F3D3DED1 /* SnapshotHistoryStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnapshotHistoryStoreTests.swift; sourceTree = "<group>"; };
 		BBD8879096DEE35FB14CCC92 /* WeatherForecastCacheCounters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherForecastCacheCounters.swift; sourceTree = "<group>"; };
 		BBEC60DE989BBD3377AE6FF3 /* OnboardingFlagStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingFlagStoreTests.swift; sourceTree = "<group>"; };
@@ -1813,6 +1817,7 @@
 				C8524E7BB2A1AA718104905E /* Features */,
 				AA09F3F302A8E4C0C0B03D8F /* Resources */,
 				9BA29AAD568119789FF93F7C /* Info.plist */,
+				B7E60F28D11CA93F74799323 /* PersonalHygiene.entitlements */,
 			);
 			path = PersonalHygiene;
 			sourceTree = "<group>";
@@ -1864,6 +1869,7 @@
 				373B4ADFAF73CB446F794716 /* App */,
 				556860A0E8AB3C34CC37A22A /* Resources */,
 				2C8CD9EEBE4FA54D9CAB3487 /* Info.plist */,
+				446DC9FEA92E17249FD113DC /* PersonalHygieneWatch.entitlements */,
 			);
 			path = PersonalHygieneWatch;
 			sourceTree = "<group>";
@@ -2110,6 +2116,7 @@
 			isa = PBXGroup;
 			children = (
 				30A35FD5EC0C90F1EB04FDDA /* Info.plist */,
+				607D09B358B0FCAC2A6A8E0B /* PersonalHygieneWatchWidgets.entitlements */,
 				9A708BA2C28D4442A3FA8006 /* PersonalHygieneWatchWidgets.swift */,
 			);
 			path = PersonalHygieneWatchWidgets;
@@ -2520,6 +2527,7 @@
 			isa = PBXGroup;
 			children = (
 				421C56639C3DDC244E2A6125 /* Info.plist */,
+				9FB52F88095D1F099144579C /* PersonalHygieneWidgets.entitlements */,
 				8138168F4D2AE4FB0D8A32B5 /* PersonalHygieneWidgets.swift */,
 			);
 			path = PersonalHygieneWidgets;

@@ -86,14 +86,11 @@ struct TemplateListView: View {
         }
         .navigationTitle(Text("templateList.title", bundle: .main))
         .toolbar {
-            // Round-25 slice T2.16: mirror the Today completion-percent chip
-            // here so the user reads progress without bouncing tabs. Reads
-            // the snapshot store written by TodayView on each reload.
-            if let snap = TodayCompletionSnapshotStore.readForToday() {
-                ToolbarItem(placement: .topBarLeading) {
-                    TodayDayCompletionChip(done: snap.done, total: snap.total)
-                }
-            }
+            // Round-25 slice T2.16 REVERTED — the conditional `if let snap = ...`
+            // ToolbarItem at `.topBarLeading` collided with the iOS 18 More-tab
+            // navigation chrome and broke the "+" add-template button + import
+            // flow. The chip stays on TodayView (its primary location);
+            // mirroring it on this list isn't worth the regression.
             ToolbarItem(placement: .primaryAction) {
                 Button {
                     showingNewTemplateSheet = true
