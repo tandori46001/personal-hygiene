@@ -1,5 +1,5 @@
 import SwiftUI
-import UserNotifications
+@preconcurrency import UserNotifications
 
 /// Diagnostics view that lists every pending `UNNotificationRequest` so the
 /// developer can confirm scheduling on a real device without waiting hours.

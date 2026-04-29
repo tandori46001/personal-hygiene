@@ -1,5 +1,5 @@
 import Foundation
-import UserNotifications
+@preconcurrency import UserNotifications
 
 /// JSON-serializable snapshot of the in-app diagnostics surfaces. Built at
 /// share time so the user can attach the file to a bug report; intentionally

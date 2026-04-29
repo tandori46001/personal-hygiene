@@ -1,5 +1,5 @@
 import Foundation
-import UserNotifications
+@preconcurrency import UserNotifications
 
 /// Closure-bag passed into `DiagnosticsView` so the dev-only buttons can act
 /// on the live app stores without `DiagnosticsView` knowing about concrete

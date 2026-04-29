@@ -1,5 +1,5 @@
 import SwiftUI
-import UserNotifications
+@preconcurrency import UserNotifications
 
 /// Diagnostics view that lists `UNUserNotificationCenter.deliveredNotifications`
 /// — what actually fired in the last 24h. Companion to `PendingNotificationsView`

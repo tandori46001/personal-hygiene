@@ -1,5 +1,5 @@
 import SwiftUI
-import UserNotifications
+@preconcurrency import UserNotifications
 
 /// Settings → Diagnostics screen. Surfaces things you'd want to know when
 /// reporting a bug or verifying state on a real device: app version, commit,

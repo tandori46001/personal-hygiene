@@ -1,5 +1,5 @@
 import Foundation
-import UserNotifications
+@preconcurrency import UserNotifications
 
 /// Builds the closure-bag that `DiagnosticsView` uses to read process-local
 /// state without knowing about concrete service types. Factored out of
