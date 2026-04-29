@@ -42,7 +42,10 @@
 
 ---
 
-### Phase 1 — MVP daily routine (iOS only) ✅ feature-complete (~99.99%)
+### Phase 1 — MVP daily routine (iOS only) ✅ feature-complete (~99.5%)
+
+> **Round 27 (2026-04-29, 15 commits):** WS-A AI itinerary wizard (5-stage questionnaire + Apple Foundation Models output / clipboard for Claude.ai/ChatGPT/Perplexity), WS-B birthdays + important-days on Today (locale-seeded ES/EN/FR + custom anniversaries via new `@Model ImportantDay`), Settings IA collapse (29-row flat → 7 colored top-level pages), destination autocomplete + map preview (`MKLocalSearchCompleter` + SwiftUI `Map`), home location auto-detect (`HomeLocationDetector` with `CLLocationManager` + reverse geocode + map), travel advisory sources reorderable + new US-led default order, multi-trip Today + per-trip countdown badges, all chip rows migrated to a shared centered `FlowLayout`, smart default block start time (carry-over from session 23 closed), CI static-scans job (L004/L006/L007 fail-fast guards). Tests **~925** (+~32: DayRule, ImportantDayResolver, ImportantDaySeeder, ItineraryPromptBuilder), i18n **992 × 3** (+99). iPhone deployed live to `3a0e273`. Lessons: 8 (no new — clean implementation).
+
 
 > **Session 23 follow-ups (2026-04-29, post-round-25):** real-device testing surfaced 2 bugs both fixed + a defensive layer added. Today's "No active template" persisted across tab switches even when an active Weekday template existed (`@Query` refactor in `TodayView`, commit `ec105a5`, captured as L008). Templates' "+" button + entire toolbar/title were missing because L004 was misapplied to a direct tab (NavigationStack restored, `check-tabroots.py` updated, commit `d954bfd`, captured as L007). Round-26 backup pre-flight validator + atomic restore + Settings → "Reset all data" destructive (commit `265e65c`) protect against malformed-backup imports. Apple Developer Program paid; entitlements scaffolds + activation checklist in `docs/round26-activation-checklist.md`. **Lessons: 8** (L001-L008). Tests **893** (+13 from validator/resetter), i18n **899 × 3** (+6).
 

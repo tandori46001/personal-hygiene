@@ -8,6 +8,41 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Round 27 — feature mega-session (15 commits, 2026-04-29)
+
+Full chronological list of commits: `50fc7f5`, `34e6280`, `ac44434`, `a2e1d7a`, `d88b48d`, `e71239a`, `2659c9e`, `a7218ea`, `d152e4e`, `9c0aeff`, `e1a28a7`, `970ae10`, `2ee9632`, `938e3b3`, `3a0e273`.
+
+**New features**
+
+- **WS-A AI itinerary wizard** (`d152e4e`) — 5-stage questionnaire (travellers · style/transport/pace · accommodation auto-rows-per-night · interests + must-see · budget+logistics+deliverables). Persists to `Trip.itineraryRequestJSON`. Output options: Apple Foundation Models on-device (iOS 26+) or copy prompt to clipboard for Claude.ai/ChatGPT/Perplexity. `ItineraryPromptBuilder` is pure + 16 unit tests.
+- **WS-B birthdays + important days on Today** (`a7218ea`) — locale-seeded ES/EN/FR special days (Mother's Day per region, Christmas, etc.) + custom anniversaries. New `@Model ImportantDay` with `DayRule` enum (fixed-month-day · nth-weekday-of-month · last-weekday-of-month · anniversary). Birthdays read async from Contacts, important days are SwiftData-backed. Settings page to toggle off seeded days + add custom (e.g. wedding anniversary).
+- **Destination autocomplete + map preview** (`970ae10`) — `MKLocalSearchCompleter` for trip destinations in NewTripSheet + TripDetail. SwiftUI `Map` preview pinned to resolved coordinates. Apple-native, no API keys.
+- **Home location auto-detect with map** (`3a0e273`) — `HomeLocationDetector` (CoreLocation + reverse geocode). Toggle off for manual entry with the same autocomplete the trip destination uses. Map preview always when coordinates set. NSLocationWhenInUseUsageDescription added.
+- **Travel advisory sources reorder + new default** (`938e3b3`) — drag-to-reorder editor under Settings → Days & Reminders. New default: 🇺🇸 → 🇨🇦 → 🇬🇧 → 🇦🇺 → 🇪🇸 (was ES-led).
+- **CI static-scans job** (`d88b48d`) — new ubuntu CI job runs check-tabroots.py / check-xcstrings-format-consistency.py / check-i18n.py / check-localized-string-resource.py. L004/L006/L007 fail-fast guards.
+
+**UX redesigns**
+
+- **Settings IA collapse** (`2ee9632`) — 29-row flat list → 7 colored top-level pages (Notifications · Appearance · Days & Reminders · Home & Travel · Mood · Backup & Data · About). Recursive `SettingsView(page:)` reuses every existing section builder.
+- **Today category filter chips** (`9c0aeff`) — wrapping FlowLayout with colored dots + counts, sorted by frequency. Replaces the horizontal-scroll row that clipped Hygiene/Sleep at edges.
+- **Birthdays relationship chips centered** (`e1a28a7`) — same FlowLayout treatment, alignment `.center`. All 5 chips visible without scrolling.
+- **Packing list filter chips centered** (`970ae10`) — same FlowLayout. Fixes "Other" decalado + clipping.
+- **Today birthdays + important days lead windows** (`e1a28a7`) — birthdays appear 30 days before, important days 7 days before (fixed values, decoupled from notification lead).
+
+**Bug fixes**
+
+- **Trips on Today reactive** (`50fc7f5`) — L008 reapplied: `@Query<Trip>` instead of `tripsRepository.allTrips()` on reload. Trip countdown row reactive across tab switches.
+- **Calendar popover too narrow** (`2659c9e`) — `DismissingDatePicker` switched from popover to bottom-sheet with `.presentationDetents([.medium])` so the graphical calendar gets full width.
+- **Smart default block start time** (`e71239a`) — new blocks pre-fill at end-of-last-block + 5 min instead of always 07:00. Carry-over from session 23.
+- **Multi-trip Today + per-row badges** (`938e3b3`) — every upcoming trip shows in Today's section + every trip in TripsList shows its own "in N days" badge.
+- **"Other" picker no wraps** (`938e3b3`) — Packing list picker switched to icon-only with `.fixedSize()` so iOS can't compress it below intrinsic size.
+- **Tap Today trip → push detail** (`3a0e273`) — Today trip rows are NavigationLinks via `tripDetailFactory` closure. Trip detail "Summary" header gained a pencil icon for edit-affordance discovery.
+- **"in N d" → "in N days"** (`938e3b3`) — full-words badge in all 3 locales.
+
+**Counts at end of round 27**: HEAD = `3a0e273`. iPhone live. 992 i18n keys × 3 locales. 162 services. 17 SwiftData @Models. ~925 tests. 8 lessons.
+
+**CI red (pre-existing, NOT from round 27)**: lint job fails on BackupSnapshotValidator (cyclomatic 33), BackupService file_length 510, TodayView/SettingsView type_body_length over 300. Round 28 candidate.
+
 ### Fixed — Session 24: trips no longer appearing on Today (L008 reapplied)
 
 `50fc7f5`. Same `repository.fetch(...)` cache pattern that broke active-template across iOS 18 TabView switches still in place for the trip-countdown row (`viewModel.upcomingTrip` ← `tripsRepository.allTrips()` on `reload()`). Refactored TodayView to read trips directly via `@Query<Trip>` + `queriedUpcomingTrip` + `daysUntilQueriedUpcomingTrip()` — same pattern session 23 used for the active template. Build green, 893 tests pass.
