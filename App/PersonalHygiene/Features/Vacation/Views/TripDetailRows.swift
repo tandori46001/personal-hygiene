@@ -1,6 +1,7 @@
 import PhotosUI
 import SwiftUI
 
+@MainActor
 struct CoverPhotoSection: View {
     @Bindable var viewModel: TripDetailViewModel
     @Binding var pickerItem: PhotosPickerItem?
@@ -68,6 +69,7 @@ struct CoverPhotoSection: View {
     }
 }
 
+@MainActor
 struct NextMilestoneSection: View {
     let viewModel: TripDetailViewModel
 
@@ -103,6 +105,7 @@ struct NextMilestoneSection: View {
     }
 }
 
+@MainActor
 struct PackingListSection: View {
     @Bindable var viewModel: TripDetailViewModel
     @Binding var newItemTitle: String
@@ -243,6 +246,7 @@ struct PackingListSection: View {
 }
 
 /// Round-12 slice 11: prominent overall completion bar (packing + milestones).
+@MainActor
 struct TripCompletionSection: View {
     let viewModel: TripDetailViewModel
 
@@ -275,6 +279,7 @@ struct TripCompletionSection: View {
     }
 }
 
+@MainActor
 struct MarineSection: View {
     let viewModel: TripDetailViewModel
 
@@ -297,6 +302,7 @@ struct MarineSection: View {
     }
 }
 
+@MainActor
 struct MilestoneRow: View {
     let milestone: TripMilestone
     /// `true` when the milestone's notification trigger date is in the past
@@ -337,6 +343,7 @@ struct MilestoneRow: View {
     }
 }
 
+@MainActor
 struct DocumentRow: View {
     let document: TripDocument
 
