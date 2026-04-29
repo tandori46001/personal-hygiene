@@ -98,7 +98,7 @@ Modules: M1 (templates) · M2 (notifications) · M3 (medication) · M4 (sleep).
 
 ---
 
-### Phase 2 — Apple Watch companion ✅ feature-complete (~97%)
+### Phase 2 — Apple Watch companion ✅ feature-complete (~99%)
 
 **Goal:** glanceable schedule on the wrist + ability to mark blocks done from Watch.
 
