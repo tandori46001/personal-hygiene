@@ -58,6 +58,7 @@ extension SettingsView {
     @ViewBuilder
     var homePage: some View {
         HomeLocationSection()
+        TravelPreferencesSection()
         footprintSummarySection
     }
 

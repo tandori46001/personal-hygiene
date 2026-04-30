@@ -69,41 +69,8 @@ struct CoverPhotoSection: View {
     }
 }
 
-@MainActor
-struct NextMilestoneSection: View {
-    let viewModel: TripDetailViewModel
-
-    var body: some View {
-        if let next = viewModel.nextDueMilestone() {
-            Section {
-                HStack(spacing: 10) {
-                    Image(systemName: "flag.checkered")
-                        .foregroundStyle(.tint)
-                        .accessibilityHidden(true)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("trip.detail.nextMilestone.title", bundle: .main)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                        Text(next.title)
-                            .font(.headline)
-                        Text("trip.detail.nextMilestone.daysBefore.\(next.daysBefore)", bundle: .main)
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
-                    }
-                    Spacer()
-                    Button {
-                        viewModel.toggleMilestoneCompletion(next)
-                    } label: {
-                        Image(systemName: "checkmark.circle")
-                    }
-                    .buttonStyle(.borderless)
-                    .accessibilityLabel(Text("today.action.markDone", bundle: .main))
-                }
-                .accessibilityElement(children: .combine)
-            }
-        }
-    }
-}
+// Round 35 IA redesign: `NextMilestoneSection` (round 12 callout) inlined
+// into `progressSection` in TripDetailFormSections.swift. Deleted here.
 
 @MainActor
 struct PackingListSection: View {
@@ -245,62 +212,9 @@ struct PackingListSection: View {
     }
 }
 
-/// Round-12 slice 11: prominent overall completion bar (packing + milestones).
-@MainActor
-struct TripCompletionSection: View {
-    let viewModel: TripDetailViewModel
-
-    var body: some View {
-        if let pct = viewModel.completionFraction() {
-            Section {
-                VStack(alignment: .leading, spacing: 6) {
-                    HStack {
-                        Image(systemName: "chart.bar.fill")
-                            .foregroundStyle(.tint)
-                            .accessibilityHidden(true)
-                        Text("trip.detail.completion.title", bundle: .main)
-                            .font(.body.bold())
-                        Spacer()
-                        Text(verbatim: "\(Int(pct * 100))%")
-                            .font(.body.monospacedDigit())
-                            .foregroundStyle(.secondary)
-                    }
-                    ProgressView(value: pct)
-                        .tint(pct >= 1.0 ? .green : .accentColor)
-                        .accessibilityLabel(
-                            Text(LocalizedStringResource(
-                                "a11y.trip.completion \(Int(pct * 100))"
-                            ))
-                        )
-                }
-                .accessibilityElement(children: .combine)
-            }
-        }
-    }
-}
-
-@MainActor
-struct MarineSection: View {
-    let viewModel: TripDetailViewModel
-
-    var body: some View {
-        if let service = viewModel.marineService,
-           let lat = viewModel.trip.destinationLatitude,
-           let lon = viewModel.trip.destinationLongitude {
-            Section {
-                NavigationLink {
-                    MarineConditionsView(latitude: lat, longitude: lon, service: service)
-                } label: {
-                    Label {
-                        Text("trip.marine.title", bundle: .main)
-                    } icon: {
-                        Image(systemName: "water.waves")
-                    }
-                }
-            }
-        }
-    }
-}
+// Round 35 IA redesign: `TripCompletionSection` and `MarineSection` (both
+// round 12 single-section structs) inlined into `progressSection` and
+// `destinationInfoSection` respectively in TripDetailFormSections.swift.
 
 @MainActor
 struct MilestoneRow: View {

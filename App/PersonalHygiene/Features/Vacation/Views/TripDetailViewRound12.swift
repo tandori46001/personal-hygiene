@@ -207,13 +207,19 @@ struct TripCarbonSection: View {
     let viewModel: TripDetailViewModel
     let homeLocation: BlockLocation?
 
-    /// Round-18 slice 15: persisted user preference for the displayed unit.
-    /// "kg" = kilograms (default), "lb" = pounds. 1 kg ≈ 2.2046 lb.
+    /// Round-18 slice 15 (UI moved to Settings → Home & Travel in round 35):
+    /// persisted user preference for the displayed unit. "kg" = kilograms
+    /// (default), "lb" = pounds. The round-35 IA redesign moved the
+    /// segmented picker to Settings → Home & Travel → Travel preferences
+    /// because the @AppStorage backing was already global — every trip
+    /// shared the same value. The per-trip view now only READS this
+    /// preference; users change it once in Settings.
     @AppStorage("trip.carbon.unit") private var unit: String = "kg"
     /// Round-19 slice T4.16: persisted transport mode preference. Mirrors
     /// `TripCarbonEstimate.TransportMode.rawValue` ("flight" | "ferry" |
     /// "publicTransport" | "car"). Default = flight to keep parity with the
-    /// round-14 / round-16 behavior.
+    /// round-14 / round-16 behavior. Stays per-trip-visible because the
+    /// chosen transport varies trip-to-trip.
     @AppStorage("trip.carbon.mode") private var modeRaw: String = "flight"
 
     private static let kgToLb = 2.2046226218
@@ -229,22 +235,9 @@ struct TripCarbonSection: View {
                     Image(systemName: "leaf.fill")
                         .foregroundStyle(.green)
                         .accessibilityHidden(true)
-                    VStack(alignment: .leading, spacing: 2) {
-                        Text("trip.carbon.title", bundle: .main)
-                            .font(.body.bold())
-                        Text(verbatim: formattedValue(kg: kg))
-                            .font(.caption.monospacedDigit())
-                            .foregroundStyle(.secondary)
-                    }
+                    Text(verbatim: formattedValue(kg: kg))
+                        .font(.body.bold().monospacedDigit())
                     Spacer()
-                    Picker(selection: $unit) {
-                        Text("trip.carbon.unit.kg", bundle: .main).tag("kg")
-                        Text("trip.carbon.unit.lb", bundle: .main).tag("lb")
-                    } label: {
-                        Text("trip.carbon.unit.label", bundle: .main)
-                    }
-                    .pickerStyle(.segmented)
-                    .frame(maxWidth: 110)
                 }
                 .accessibilityElement(children: .combine)
                 Picker(selection: $modeRaw) {
@@ -261,6 +254,8 @@ struct TripCarbonSection: View {
                 Text(verbatim: factorCaption(for: mode))
                     .font(.caption2.monospacedDigit())
                     .foregroundStyle(.tertiary)
+            } header: {
+                Text("trip.carbon.title", bundle: .main)
             } footer: {
                 Text("trip.carbon.footer", bundle: .main)
             }

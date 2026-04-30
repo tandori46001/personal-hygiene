@@ -905,6 +905,7 @@
 		D948DDF5165C880D30F80DBC /* TripFootprintAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0E81244563DEEBB60C227DF /* TripFootprintAggregator.swift */; };
 		D98D01F5B2258F64DBB22437 /* BedtimeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D4325233FA9F02871FCDA344 /* BedtimeCalculator.swift */; };
 		D9B25A28FD9A14CE5FB7422F /* HydrationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AEA6CA266446873BEA7D333 /* HydrationService.swift */; };
+		D9E2638D0C246AC50C1DE736 /* TravelPreferencesSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25542DFFAD70402DF94F3D73 /* TravelPreferencesSection.swift */; };
 		DA3137092AEB0F9479590A44 /* TodayCompletionSnapshotStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 50FF18CD13FED7880FE3162E /* TodayCompletionSnapshotStoreTests.swift */; };
 		DA67323FCDCAC4E19935866A /* HydrationGoalReachedHaptic.swift in Sources */ = {isa = PBXBuildFile; fileRef = C056E4759FE9F5CF83E97C6B /* HydrationGoalReachedHaptic.swift */; };
 		DA7572A2D95E87BF2FC9E811 /* RefreshTraceLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70DA9D9CD931A58862ECB58A /* RefreshTraceLog.swift */; };
@@ -1221,6 +1222,7 @@
 		252B3244C79D4B2796FF2D08 /* ItineraryWizardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItineraryWizardView.swift; sourceTree = "<group>"; };
 		252BBC4DA77CF4BB04E643F8 /* TodayCompletionPercent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayCompletionPercent.swift; sourceTree = "<group>"; };
 		2531BFA310C51BF5A34E680E /* DiagnosticsErrorLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticsErrorLog.swift; sourceTree = "<group>"; };
+		25542DFFAD70402DF94F3D73 /* TravelPreferencesSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TravelPreferencesSection.swift; sourceTree = "<group>"; };
 		2689A0A7467DBBFF42494FD3 /* TodaySubviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodaySubviews.swift; sourceTree = "<group>"; };
 		26A7EDF948A99F408FB8F7B5 /* TemplateListViewRound21.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateListViewRound21.swift; sourceTree = "<group>"; };
 		26C490312A846629036DF131 /* HomeLocationDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeLocationDetector.swift; sourceTree = "<group>"; };
@@ -1850,6 +1852,7 @@
 				83F5492025D1306D8E6F1C4E /* SettingsViewRound23.swift */,
 				051160B683500F78BE0F109C /* SettingsViewRound24.swift */,
 				CB0F6EBF2C7514E7E4E35E8E /* SettingsViewRound26.swift */,
+				25542DFFAD70402DF94F3D73 /* TravelPreferencesSection.swift */,
 				2FDACF50AC4C448A3DC6253E /* WhatsNewSheet.swift */,
 			);
 			path = Views;
@@ -3799,6 +3802,7 @@
 				B6F065D1B53DA5C8BE123D98 /* TodayViewRound25.swift in Sources */,
 				B233FC3F4A8E021D6BA69259 /* TravelAdvisoryOrderStore.swift in Sources */,
 				A47E29A39D82F77E99EA229A /* TravelAdvisoryService.swift in Sources */,
+				D9E2638D0C246AC50C1DE736 /* TravelPreferencesSection.swift in Sources */,
 				84863DFB7937FF683B0FF7F2 /* TravelTimeService.swift in Sources */,
 				CD69C07C74BF83FA402C2D30 /* Trip.swift in Sources */,
 				47EE8E38F0B576FDD6ADBEB4 /* TripBudgetVsActual.swift in Sources */,

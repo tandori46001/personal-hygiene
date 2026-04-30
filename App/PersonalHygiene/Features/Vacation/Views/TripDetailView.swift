@@ -49,103 +49,41 @@ struct TripDetailView: View {
                 }
             }
 
+            // Round 35 IA redesign: phase-aligned ordering (basics → before
+            // you go → during the trip → resources → after-the-fact). 18
+            // sections collapsed to ~12 by combining 4 single-row navigation
+            // sections (auto-itinerary, marine, currency, advisory) + the
+            // wizard button into one "About your destination" section, and
+            // by collapsing NextMilestone + Completion bar into one "My
+            // progress" section. Carbon kg/lb unit picker moved to Settings
+            // → Home & Travel (it was already @AppStorage-global; the UI
+            // just looked per-trip).
+
             CoverPhotoSection(viewModel: viewModel, pickerItem: $coverPickerItem)
-            NextMilestoneSection(viewModel: viewModel)
-            TripCompletionSection(viewModel: viewModel)
-            TripCarbonSection(viewModel: viewModel, homeLocation: HomeLocationStore().location)
-
             summarySection
+            progressSection
             milestonesSection(milestoneSheet: $milestoneSheet)
-
-            if let generator = viewModel.itineraryGenerator {
-                Section {
-                    NavigationLink {
-                        ItineraryView(
-                            trip: viewModel.trip,
-                            generator: generator,
-                            store: viewModel.itineraryStore
-                        )
-                    } label: {
-                        Label {
-                            Text("trip.itinerary.title", bundle: .main)
-                        } icon: {
-                            Image(systemName: "wand.and.stars")
-                        }
-                    }
-                }
-            }
-
-            // Round 27 WS-A: questionnaire-driven AI itinerary wizard.
-            // Always available — does not require Apple Intelligence
-            // (clipboard fallback works on every device).
-            Section {
-                Button {
-                    showingItineraryWizard = true
-                } label: {
-                    Label {
-                        Text("itinerary.wizard.entry", bundle: .main)
-                    } icon: {
-                        Image(systemName: "sparkles.rectangle.stack")
-                    }
-                }
-            } footer: {
-                Text("itinerary.wizard.entry.footer", bundle: .main)
-            }
-
-            MarineSection(viewModel: viewModel)
-
-            if let currency = viewModel.currencyService {
-                Section {
-                    NavigationLink {
-                        CurrencyView(service: currency)
-                    } label: {
-                        Label {
-                            Text("trip.currency.title", bundle: .main)
-                        } icon: {
-                            Image(systemName: "dollarsign.arrow.circlepath")
-                        }
-                    }
-                }
-            }
-
-            if !viewModel.advisoryLinks.isEmpty {
-                Section {
-                    NavigationLink {
-                        AdvisoryView(
-                            links: viewModel.advisoryLinks,
-                            destination: viewModel.trip.destinationName
-                        )
-                    } label: {
-                        Label {
-                            Text("trip.advisory.title", bundle: .main)
-                        } icon: {
-                            Image(systemName: "exclamationmark.shield")
-                        }
-                    }
-                }
-            }
-
             PackingListSection(
                 viewModel: viewModel,
                 newItemTitle: $newPackingItemTitle,
                 newItemCategory: $newPackingItemCategory
             )
-
+            destinationInfoSection(showingWizard: $showingItineraryWizard)
+            documentsSection(showingScanner: $showingScanner)
+            TripEmergencyContactsSection(
+                viewModel: viewModel,
+                newLabel: $newEmergencyLabel,
+                newPhone: $newEmergencyPhone
+            )
             TripNotesSection(viewModel: viewModel)
-            TripCurrencySnapshotSection(viewModel: viewModel)
             TripExpensesSection(
                 viewModel: viewModel,
                 newLabel: $newExpenseLabel,
                 newAmount: $newExpenseAmount,
                 newCurrency: $newExpenseCurrency
             )
-            TripEmergencyContactsSection(
-                viewModel: viewModel,
-                newLabel: $newEmergencyLabel,
-                newPhone: $newEmergencyPhone
-            )
-
-            documentsSection(showingScanner: $showingScanner)
+            TripCurrencySnapshotSection(viewModel: viewModel)
+            TripCarbonSection(viewModel: viewModel, homeLocation: HomeLocationStore().location)
         }
         .navigationTitle(viewModel.trip.name)
         .navigationBarTitleDisplayMode(.inline)

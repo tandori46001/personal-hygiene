@@ -949,19 +949,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cover"
+            "value": "Trip photo"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Portada"
+            "value": "Foto del viaje"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Couverture"
+            "value": "Photo du voyage"
           }
         }
       }
@@ -1064,19 +1064,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Packing list"
+            "value": "What to pack"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Equipaje"
+            "value": "Mi maleta"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Bagages"
+            "value": "Ma valise"
           }
         }
       }
@@ -5963,19 +5963,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Trip"
+            "value": "The basics"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Viaje"
+            "value": "Lo básico"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Voyage"
+            "value": "L'essentiel"
           }
         }
       }
@@ -5986,19 +5986,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Milestones"
+            "value": "Before you go"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hitos"
+            "value": "Antes de salir"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Jalons"
+            "value": "Avant le départ"
           }
         }
       }
@@ -6009,19 +6009,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Documents"
+            "value": "My documents"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Documentos"
+            "value": "Mis documentos"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Documents"
+            "value": "Mes documents"
           }
         }
       }
@@ -13070,19 +13070,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Notes"
+            "value": "My notes"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Notas"
+            "value": "Mis notas"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Notes"
+            "value": "Mes notes"
           }
         }
       }
@@ -13668,19 +13668,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Currency snapshot"
+            "value": "Saved exchange rates"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Snapshot de divisas"
+            "value": "Tipos de cambio guardados"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Instantané des devises"
+            "value": "Taux de change enregistrés"
           }
         }
       }
@@ -13714,19 +13714,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Expenses"
+            "value": "What I spent"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gastos"
+            "value": "Mis gastos"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Dépenses"
+            "value": "Mes dépenses"
           }
         }
       }
@@ -14128,19 +14128,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Emergency contacts"
+            "value": "In case something happens"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Contactos de emergencia"
+            "value": "Por si pasa algo"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Contacts d'urgence"
+            "value": "En cas d'urgence"
           }
         }
       }
@@ -14473,19 +14473,19 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Estimated round-trip CO₂"
+            "value": "My carbon footprint"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "CO₂ estimado ida y vuelta"
+            "value": "Mi huella de carbono"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "CO₂ estimé aller-retour"
+            "value": "Mon empreinte carbone"
           }
         }
       }
@@ -18475,6 +18475,54 @@
         "en": { "stringUnit": { "state": "translated", "value": "This cannot be undone. Export a backup first if you want to keep your current data." } },
         "es": { "stringUnit": { "state": "translated", "value": "No se puede deshacer. Exporta un backup primero si quieres conservar tus datos actuales." } },
         "fr": { "stringUnit": { "state": "translated", "value": "Action irréversible. Exportez une sauvegarde d'abord si vous voulez garder vos données actuelles." } }
+      }
+    },
+    "trip.detail.section.progress": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "My progress" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Mi progreso" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Mon progrès" } }
+      }
+    },
+    "trip.detail.section.destinationInfo": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "About your destination" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Sobre el destino" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "À propos de la destination" } }
+      }
+    },
+    "trip.detail.section.destinationInfo.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Marine weather, currency, and government travel advisories." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Clima del mar, moneda y avisos del gobierno." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Météo marine, monnaie locale et avis du gouvernement." } }
+      }
+    },
+    "settings.travelPrefs.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Travel preferences" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Preferencias de viaje" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Préférences de voyage" } }
+      }
+    },
+    "settings.travelPrefs.unit.label": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Carbon footprint unit" } },
+        "es": { "stringUnit": { "state": "translated", "value": "Unidad de huella de carbono" } },
+        "fr": { "stringUnit": { "state": "translated", "value": "Unité d'empreinte carbone" } }
+      }
+    },
+    "settings.travelPrefs.unit.footer": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": { "stringUnit": { "state": "translated", "value": "Applies to every trip. Switch between kilograms and pounds." } },
+        "es": { "stringUnit": { "state": "translated", "value": "Aplica a todos los viajes. Cambia entre kilogramos y libras." } },
+        "fr": { "stringUnit": { "state": "translated", "value": "S'applique à tous les voyages. Choisissez entre kilogrammes et livres." } }
       }
     }
   }
