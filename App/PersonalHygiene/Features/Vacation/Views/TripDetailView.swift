@@ -1,14 +1,6 @@
 import PhotosUI
 import SwiftUI
 
-// swiftlint:disable type_body_length
-//
-// TripDetailView aggregates ~10 sections (cover photo, milestones,
-// summary edit, packing, notes, expenses, advisory, marine, currency,
-// emergency contacts, documents, archive). Most are already extracted
-// to their own subviews via separate files (TripDetailRows.swift etc.);
-// the body that stitches them together is intrinsically large.
-
 struct TripDetailView: View {
     @Bindable var viewModel: TripDetailViewModel
 
@@ -33,7 +25,11 @@ struct TripDetailView: View {
         let bytes: Data
     }
 
-    private enum MilestoneSheetState: Identifiable {
+    /// Round 32 (K01): dropped `private` so `TripDetailFormSections.swift`
+    /// extension can use this in the `milestonesSection` parameter type.
+    /// Still nested under `TripDetailView` so external code references it
+    /// as `TripDetailView.MilestoneSheetState` — no namespace pollution.
+    enum MilestoneSheetState: Identifiable {
         case create
         case edit(TripMilestone)
 
@@ -58,92 +54,8 @@ struct TripDetailView: View {
             TripCompletionSection(viewModel: viewModel)
             TripCarbonSection(viewModel: viewModel, homeLocation: HomeLocationStore().location)
 
-            Section {
-                TextField(
-                    text: $viewModel.draftName,
-                    prompt: Text("trips.field.name.placeholder", bundle: .main)
-                ) {
-                    Text("trips.field.name", bundle: .main)
-                }
-                LocationAutocompleteField(
-                    name: $viewModel.draftDestination,
-                    latitude: $viewModel.draftDestinationLatitude,
-                    longitude: $viewModel.draftDestinationLongitude
-                )
-                if viewModel.draftDestinationLatitude != nil {
-                    DestinationMapPreview(
-                        name: viewModel.draftDestination,
-                        latitude: viewModel.draftDestinationLatitude,
-                        longitude: viewModel.draftDestinationLongitude
-                    )
-                    .listRowInsets(EdgeInsets(top: 4, leading: 8, bottom: 4, trailing: 8))
-                }
-                DismissingDatePicker(selection: $viewModel.draftStartDate) {
-                    Text("trips.field.startDate", bundle: .main)
-                }
-                DismissingDatePicker(
-                    selection: $viewModel.draftEndDate,
-                    minimumDate: viewModel.draftStartDate
-                ) {
-                    Text("trips.field.endDate", bundle: .main)
-                }
-            } header: {
-                // Round-27 follow-up: explicit pencil icon in the
-                // section header so the user understands the fields are
-                // tappable + editable. Previously the section just said
-                // "Summary" which read as static info.
-                HStack(spacing: 6) {
-                    Image(systemName: "pencil.circle")
-                        .foregroundStyle(.tint)
-                    Text("trip.detail.section.summary", bundle: .main)
-                }
-            } footer: {
-                let days = viewModel.daysUntilDeparture()
-                if days > 0 {
-                    Text("trip.detail.countdown.\(days)", bundle: .main)
-                }
-            }
-
-            Section {
-                if viewModel.sortedMilestones.isEmpty {
-                    Text("trip.detail.milestones.empty", bundle: .main)
-                        .foregroundStyle(.secondary)
-                    Button {
-                        viewModel.addStandardMilestoneBundle()
-                    } label: {
-                        Label {
-                            Text("trip.milestone.action.addBundle", bundle: .main)
-                        } icon: {
-                            Image(systemName: "calendar.badge.plus")
-                        }
-                    }
-                } else {
-                    ForEach(viewModel.sortedMilestones) { milestone in
-                        Button {
-                            milestoneSheet = .edit(milestone)
-                        } label: {
-                            MilestoneRow(
-                                milestone: milestone,
-                                hasFired: hasFired(milestone),
-                                onToggle: { viewModel.toggleMilestoneCompletion(milestone) }
-                            )
-                        }
-                        .buttonStyle(.plain)
-                    }
-                    .onDelete(perform: deleteMilestones)
-                }
-                Button {
-                    milestoneSheet = .create
-                } label: {
-                    Label {
-                        Text("trip.milestone.action.add", bundle: .main)
-                    } icon: {
-                        Image(systemName: "plus.circle.fill")
-                    }
-                }
-            } header: {
-                Text("trip.detail.section.milestones", bundle: .main)
-            }
+            summarySection
+            milestonesSection(milestoneSheet: $milestoneSheet)
 
             if let generator = viewModel.itineraryGenerator {
                 Section {
@@ -233,38 +145,7 @@ struct TripDetailView: View {
                 newPhone: $newEmergencyPhone
             )
 
-            Section {
-                if viewModel.sortedDocuments.isEmpty {
-                    Text("trip.detail.documents.empty", bundle: .main)
-                        .foregroundStyle(.secondary)
-                } else {
-                    ForEach(viewModel.sortedDocuments) { document in
-                        if let store = viewModel.documentStore {
-                            NavigationLink {
-                                DocumentPreviewView(document: document, store: store)
-                            } label: {
-                                DocumentRow(document: document)
-                            }
-                        } else {
-                            DocumentRow(document: document)
-                        }
-                    }
-                    .onDelete(perform: deleteDocuments)
-                }
-                if viewModel.documentStore != nil {
-                    Button {
-                        showingScanner = true
-                    } label: {
-                        Label {
-                            Text("trip.document.action.scan", bundle: .main)
-                        } icon: {
-                            Image(systemName: "doc.viewfinder")
-                        }
-                    }
-                }
-            } header: {
-                Text("trip.detail.section.documents", bundle: .main)
-            }
+            documentsSection(showingScanner: $showingScanner)
         }
         .navigationTitle(viewModel.trip.name)
         .navigationBarTitleDisplayMode(.inline)
@@ -359,5 +240,3 @@ struct TripDetailView: View {
     }
 
 }
-
-// swiftlint:enable type_body_length

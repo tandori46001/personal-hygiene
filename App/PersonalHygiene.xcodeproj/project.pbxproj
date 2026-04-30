@@ -794,6 +794,7 @@
 		BF9553274458CBC93D6BA7E6 /* ProcessLaunchHistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F383399315C419BAEC8D5DC0 /* ProcessLaunchHistoryStore.swift */; };
 		BF9A11FBDB9C5D2B2E0E2631 /* AppGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B60DB8E14AF192A2A12956B /* AppGroup.swift */; };
 		BFE791D8DC3BF06550F07B8D /* SnapshotHistoryStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 346431B6BF0BE02D1098C0AD /* SnapshotHistoryStore.swift */; };
+		C001484A087A8D707D2235E7 /* TripDetailFormSections.swift in Sources */ = {isa = PBXBuildFile; fileRef = B58BFEC235826382954F6529 /* TripDetailFormSections.swift */; };
 		C0970385DA7C68FDA8738A9B /* TodayCompletionPercent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 252BBC4DA77CF4BB04E643F8 /* TodayCompletionPercent.swift */; };
 		C138F9088F75B1817D1B367E /* CachedTravelAdvisoryService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9BE7A2CD4AF4CA663821C20 /* CachedTravelAdvisoryService.swift */; };
 		C1910B00DCCDC3B350817BC5 /* RoutineTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD16FF8317F205F6929F8F70 /* RoutineTemplate.swift */; };
@@ -1505,6 +1506,7 @@
 		B45E12146599CB7B994CFF2A /* PersonalHygieneApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalHygieneApp.swift; sourceTree = "<group>"; };
 		B46CBCCC0052C510A878AD26 /* TripForecastSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripForecastSummary.swift; sourceTree = "<group>"; };
 		B57416A608867A6A25E96429 /* BlockCompletion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockCompletion.swift; sourceTree = "<group>"; };
+		B58BFEC235826382954F6529 /* TripDetailFormSections.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TripDetailFormSections.swift; sourceTree = "<group>"; };
 		B63870917B5733FA96CAABF2 /* BackupAutoFrequencyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BackupAutoFrequencyStore.swift; sourceTree = "<group>"; };
 		B650DEC888DF2D199B6B460A /* PendingNotificationsByCategoryTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PendingNotificationsByCategoryTests.swift; sourceTree = "<group>"; };
 		B6AF7EB9E54BB71E83C06B2E /* BlockConflictDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlockConflictDetector.swift; sourceTree = "<group>"; };
@@ -1800,6 +1802,7 @@
 				51FAF9D9731F55E118D58DDF /* MarineConditionsView.swift */,
 				778E4E083674A6875D375C01 /* MilestoneEditorView.swift */,
 				F35C73220A71429E371C3F70 /* ShareSheet.swift */,
+				B58BFEC235826382954F6529 /* TripDetailFormSections.swift */,
 				2C060F33C5D64BB3E4BB0226 /* TripDetailRows.swift */,
 				CE81B3C2DA797C8029D30EFE /* TripDetailView.swift */,
 				06FF189750C00C2C60169B88 /* TripDetailViewRound12.swift */,
@@ -3801,6 +3804,7 @@
 				47EE8E38F0B576FDD6ADBEB4 /* TripBudgetVsActual.swift in Sources */,
 				9FCBD4A310F611F379187D60 /* TripCarbonEstimate.swift in Sources */,
 				271B4DF40C00742D84228FB2 /* TripCountdown.swift in Sources */,
+				C001484A087A8D707D2235E7 /* TripDetailFormSections.swift in Sources */,
 				4D1BAA5283C66FC44B73EC88 /* TripDetailRows.swift in Sources */,
 				EE6B26F3024A279A38D5A220 /* TripDetailView.swift in Sources */,
 				B841B0D57FBD4DD2AB023773 /* TripDetailViewModel.swift in Sources */,
