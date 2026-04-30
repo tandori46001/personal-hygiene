@@ -8,6 +8,54 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Round 32 — K01 partial: TripDetailView swiftlint:disable removed (2026-04-29)
+
+`continua` from session 25 round 31. K01 from the round-30 backlog =
+remove the 3 `// swiftlint:disable` paragraphs (BackupService file_length,
+TodayView + TripDetailView type_body_length). Round 32 closes only
+**part 1** (TripDetailView); parts 2 + 3 deferred — see Trade-off below.
+
+**TripDetailView extraction** (`refactor(vacation)` `2b043db`):
+- 3 inline `Section { ... }` blocks moved to a new
+  `TripDetailFormSections.swift` extension on `TripDetailView`.
+  - `summarySection` — Form fields (name, destination, map, dates).
+  - `milestonesSection(milestoneSheet:)` — takes parent's
+    `Binding<MilestoneSheetState?>` so the sheet state stays
+    parent-owned.
+  - `documentsSection(showingScanner:)` — same Binding pattern for
+    scanner trigger.
+- `MilestoneSheetState` enum dropped `private` so the extension can
+  reference it. Still nested inside `TripDetailView` — no namespace
+  pollution. Documented in code with the round-32 reason.
+- `TripDetailView.swift` shrank 363 → 242 lines; struct body well below
+  300; `// swiftlint:disable type_body_length` paragraph removed.
+
+**Trade-off observed: file_length vs type_body_length** (parts 2 + 3
+deferred):
+- TodayView (479 lines, type_body 397, disable in place): same
+  extraction pattern would push the file past the 500-line file_length
+  cap (479 + ~30 line overhead from extension declarations + braces +
+  comments = ~509). Going the other way — splitting into a sibling file
+  — requires demoting 4+ `@State private` properties to internal
+  (categoryFilter, nowMinutes, detailBlock, showingProgressDetail). The
+  invasive demotion isn't worth the soft-warning win.
+- BackupService (518 lines, file_length disabled): would need a similar
+  cross-file extraction with access-modifier demotions on internal
+  helpers. Same trade-off.
+- The clean fix is a `.swiftlint.yml` config tuning (raise file_length
+  to 600, or scope the rule to non-View files) — that's its own round.
+- TodayView + BackupService disables stay in place; documented in
+  CHANGELOG so the trade-off is explicit, not silent tech debt.
+
+**Stats:**
+- Tests: **947** unit + 2 UI = 949 (unchanged — pure refactor).
+- i18n: **994 × 3** (unchanged).
+- Lessons: **10** (unchanged).
+- Round-32 commit: `2b043db` (single feat commit, 3 files,
+  +150/-129).
+
+---
+
 ### Round 31 — rate-limit diagnostics + xcstrings de-dup + Batch Q preview (2026-04-29)
 
 5 backlog items from the round-30 ALL OK? menu shipped in a single commit.
