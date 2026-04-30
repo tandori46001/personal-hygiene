@@ -271,3 +271,42 @@ If the VM has derived state that needs the active template (`currentBlock()`, `n
 **Where it was caught.** 2026-04-29, session 25 round 29 — initial `ALL OK?` audit reported "326 services vs memory's 162" as drift; user pointed out the AppleDouble inflation was inflating the count. Reported a second time during round 30's drift-cleanup audit, this time with the fix in hand (`-not -name "._*"` filter). Real counts at end of round 30: 163 services, 184 service-test files, 14 `@Model` files (memory had said 16-17 — separate, smaller drift addressed in the same round).
 
 **Interaction with other lessons.** Independent of L001-L009. Specific to this filesystem; would not apply on a clean APFS-formatted Mac. Documented for completeness because the bug-class is *audit-correctness*, not *runtime-correctness* — and false-drift audits cost time + erode confidence in the memory system.
+
+---
+
+## L011 — Swift 6 strict-mode migration: only 4 distinct fix-classes after the round-29 prep work
+
+**Trigger pattern.** A project has been parked at `SWIFT_VERSION="5"` while round-29-style defensive fixes (`@preconcurrency import …`, `@MainActor` on View structs, `MainActor.assumeIsolated` on UIKit dismiss sites) are landed pre-emptively. The eventual Batch Q migration to `SWIFT_VERSION="6.0"` is treated as scary because the round-29 saga touched ~30 files. **In practice, after the defensive fixes are in place, the actual residual surface is much smaller** — and falls into a small number of well-defined classes.
+
+For this repo (round 36), `./scripts/check-strict-concurrency.sh --files` (running `xcodebuild build SWIFT_STRICT_CONCURRENCY=complete SWIFT_VERSION=6.0`) reported **0 errors and 12 warnings across 3 files**. The 12 warnings collapsed to **4 distinct fix-classes**:
+
+1. **`@preconcurrency` on the conformance line is redundant when the framework is already `@preconcurrency import`-ed at the top of the file.** Compiler diagnoses it as `'@preconcurrency' on conformance to 'CLLocationManagerDelegate' has no effect`. Round 29 added the conformance-level `@preconcurrency` defensively in the same commit that added the import-level one; once both ship, the conformance-level annotation is pure noise. **Fix: remove it from the extension declaration.** Leave the import-level annotation (it's the one doing the work).
+
+2. **A SwiftUI ViewBuilder closure inside an `@MainActor` View struct can still be typed as `@Sendable` by the framework initializer that consumes it** (e.g. `PhotosPicker { Label { Text(viewModel.trip.foo == nil ? "a" : "b") } }`). Reading `viewModel.trip.foo` directly inside the Label closure crosses the actor boundary because the Sendable closure inherits no isolation. **Fix: capture a `Sendable` value type (e.g. `Bool`) into a local `let` BEFORE the closure, and construct the non-Sendable type (`LocalizedStringKey`) INSIDE the closure where it doesn't have to cross.** Capturing `LocalizedStringKey` directly does NOT work — `LocalizedStringKey` is itself non-Sendable.
+
+3. (Already covered by round 29) `@preconcurrency import` on every Apple-SDK framework whose pre-Swift-6 delegate methods declare `@Sendable` closure parameters.
+
+4. (Already covered by round 29) `@MainActor` on SwiftUI View structs that consume `@Bindable` / `@Observable` viewModels, plus `MainActor.assumeIsolated` on synchronous UIKit dismiss call sites.
+
+Once these four classes are addressed for every site the script reports, the host target compiles clean at `SWIFT_VERSION="6.0"` + `SWIFT_STRICT_CONCURRENCY=complete`. The watch + widget extensions follow the same path with no extra work because they only depend on `App/Shared/`.
+
+**Symptom (without the fix).** Local Xcode + CI both red, with diagnostics like:
+- `'@preconcurrency' on conformance to '<Protocol>' has no effect` (warning at SWIFT_VERSION 6.0 / strict=complete; under earlier versions it was silent)
+- `main actor-isolated property '<viewModel>' can not be referenced from a nonisolated context` (in a SwiftUI Label/Text closure)
+- `capture of '<localValue>' with non-Sendable type 'LocalizedStringKey' in a '@Sendable' closure` (after a naive "capture-out-of-closure" attempt)
+
+**Root cause.** SwiftUI's framework initializers use `@Sendable` on their content closures defensively (Apple's choice for cross-thread safety). The closure inherits no `@MainActor` isolation from the enclosing View struct, so any reference to MainActor-isolated state inside the closure is a violation under strict mode. Solving it requires carrying only Sendable values across the closure boundary.
+
+**Fix recipe (in order to apply per file the script flags).**
+1. Remove redundant `@preconcurrency` keywords on conformance declarations whose framework is already preconcurrency-imported.
+2. For SwiftUI ViewBuilder closures that read MainActor-isolated state: extract the read into a `let` of a Sendable value type (`Bool`, `String`, `Int`, etc.) before the closure; rebuild non-Sendable types (`LocalizedStringKey`, `Image`, etc.) inside the closure from the Sendable inputs.
+3. Re-run `./scripts/check-strict-concurrency.sh --files`. Expect 0/0.
+4. Flip `SWIFT_VERSION: "5"` → `"6.0"` in `App/project.yml` (host target plus any widget/watch overrides that the script verified are also clean).
+5. `cd App && xcodegen generate`.
+6. Run `./scripts/check-tests.sh`; expect green at the new SWIFT_VERSION.
+
+**Guard test.** `scripts/check-strict-concurrency.sh --files` is the canonical inventory. Round 31's J05 script + round 34's path-fix made it usable; round 36 ran it three times during the migration to verify each step. Future rounds should add it to CI as a blocking job (currently non-blocking by design — `[I2]` in the ALL OK? backlog).
+
+**Where it was caught.** 2026-04-30, round 36 — first successful Batch Q inventory had run in round 34 after the script's PROJECT-path bug was fixed. Round 36 walked the 12 warnings to 0, flipped SWIFT_VERSION, verified clean. The whole migration was a single round (~3 file edits + 1 project.yml edit) once the inventory was usable.
+
+**Interaction with other lessons.** Direct sequel to L009 — that lesson named the problem; this lesson names the solution. Together: L009 says "local-pass is not sufficient, run the strict-concurrency script + verify CI", and L011 says "when the script flags issues, here are the four shapes they take and how to fix each." L011 also depends on the L009-era prep work (the `@preconcurrency` imports) — without those, the surface would be far larger than 4 classes.

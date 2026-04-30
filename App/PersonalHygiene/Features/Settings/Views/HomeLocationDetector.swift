@@ -54,7 +54,11 @@ final class HomeLocationDetector: NSObject {
     }
 }
 
-extension HomeLocationDetector: @preconcurrency CLLocationManagerDelegate {
+// `@preconcurrency` lives on the `import CoreLocation` line at the top of
+// this file (round 29 / L009 fix). Adding it again on the conformance is
+// redundant and the compiler diagnoses it as "has no effect" under
+// SWIFT_STRICT_CONCURRENCY=complete (round 36 / Batch Q).
+extension HomeLocationDetector: CLLocationManagerDelegate {
 
     nonisolated func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         let auth = manager.authorizationStatus

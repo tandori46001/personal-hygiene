@@ -15,17 +15,25 @@ configs:
 
 settings:
   base:
-    # Round 29: CI was red on >30 consecutive commits at SWIFT_VERSION 6.0
-    # because Swift 6 LANGUAGE MODE surfaces sendability errors in
-    # pre-Swift-6 Apple SDK call sites and SwiftUI ViewBuilder closures
-    # touching @MainActor viewModels — local Xcode 26.4.1 emits warnings
-    # for the same code, masking the gap. SWIFT_STRICT_CONCURRENCY=minimal
-    # alone does NOT relax language-mode checks, so we revert SWIFT_VERSION
-    # to 5 (toolchain stays at Swift 6.x; we just opt out of Swift 6
-    # language-mode enforcement). Full Swift 6 migration is a dedicated
-    # future round (~30+ files to patch — see commit log of round 29 for
-    # the @preconcurrency / @MainActor fixes already landed).
-    SWIFT_VERSION: "5"
+    # Round 36 (Batch Q): re-flipped to 6.0 after `scripts/check-strict-
+    # concurrency.sh --files` reported 0 errors / 0 warnings under
+    # `SWIFT_STRICT_CONCURRENCY=complete SWIFT_VERSION=6.0`. The remaining
+    # 12 warnings the script first detected were patched in 3 files:
+    # HomeLocationDetector.swift + LocationAutocomplete.swift dropped a
+    # redundant `@preconcurrency` from their delegate-conformance lines
+    # (the preconcurrency lives on the import line per L009); TripDetailRows
+    # CoverPhotoSection now captures a Bool (Sendable) before the
+    # PhotosPicker label closure instead of `viewModel.trip.coverPhotoData`,
+    # which was crossing actor boundaries into the closure under strict
+    # mode. See L011 in LESSONS.md for the full migration narrative.
+    #
+    # Round 29 history (preserved): the original flip from 6.0 → 5 happened
+    # because CI was red on >30 commits at SWIFT_VERSION 6.0 due to L009
+    # (local Xcode emits warnings for diagnostics CI escalates to errors).
+    # Round 29's ~9 defensive `@preconcurrency import` + `@MainActor` +
+    # `MainActor.assumeIsolated` fixes were preserved through the rollback;
+    # round 36 builds on those.
+    SWIFT_VERSION: "6.0"
     SWIFT_STRICT_CONCURRENCY: minimal
     CURRENT_PROJECT_VERSION: 1
     MARKETING_VERSION: 0.1.0
@@ -109,11 +117,17 @@ targets:
         TARGETED_DEVICE_FAMILY: "1,2"
         DEVELOPMENT_TEAM: "XC79TD476V"
         CODE_SIGN_STYLE: Automatic
-        # Widget extension uses synchronous WidgetKit callbacks that need to
-        # touch @MainActor SwiftData APIs. Swift 6 strict mode rejects this
-        # without async boundaries; downgrading to Swift 5 language mode lets
-        # the extension match the watch-widget target's pragmatics.
-        SWIFT_VERSION: "5"
+        # Round 36 (Batch Q): re-flipped to 6.0 after Batch Q migration
+        # cleared the strict-concurrency inventory. Original round-28
+        # downgrade comment kept for archaeology: widget extension uses
+        # synchronous WidgetKit callbacks that need to touch @MainActor
+        # SwiftData APIs; the round-29-era concern was that Swift 6 strict
+        # mode would reject this without async boundaries. The
+        # `check-strict-concurrency.sh --files` 0-warning verdict at
+        # SWIFT_VERSION=6.0 + SWIFT_STRICT_CONCURRENCY=complete proves
+        # those callbacks now satisfy strict mode (the round-29
+        # `@preconcurrency import` defensive fixes covered them).
+        SWIFT_VERSION: "6.0"
 
   PersonalHygieneWatch:
     type: application
@@ -166,11 +180,10 @@ targets:
         TARGETED_DEVICE_FAMILY: "4"
         DEVELOPMENT_TEAM: "XC79TD476V"
         CODE_SIGN_STYLE: Automatic
-        # Watch widget extension uses synchronous WidgetKit callbacks that need
-        # to touch @MainActor SwiftData APIs (mirrors the iOS PersonalHygieneWidgets
-        # downgrade). Swift 6 strict mode rejects passing the non-Sendable
-        # completion handler across actor boundaries without it.
-        SWIFT_VERSION: "5"
+        # Round 36 (Batch Q): re-flipped to 6.0 — same reasoning as
+        # PersonalHygieneWidgets above. Round-29 defensive fixes plus the
+        # round-36 conformance + closure-capture patches are sufficient.
+        SWIFT_VERSION: "6.0"
 
   PersonalHygieneTests:
     type: bundle.unit-test

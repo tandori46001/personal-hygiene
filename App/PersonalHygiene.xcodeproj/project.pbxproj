@@ -4103,7 +4103,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tandori46001.personalhygiene.widgets;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -4143,7 +4143,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tandori46001.personalhygiene.watchkitapp.widgets;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 11.0;
 			};
@@ -4263,7 +4263,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				SWIFT_STRICT_CONCURRENCY = minimal;
-				SWIFT_VERSION = 5;
+				SWIFT_VERSION = 6.0;
 				WATCHOS_DEPLOYMENT_TARGET = 11.0;
 			};
 			name = Release;
@@ -4282,7 +4282,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.tandori46001.personalhygiene.watchkitapp.widgets;
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				WATCHOS_DEPLOYMENT_TARGET = 11.0;
 			};
@@ -4352,7 +4352,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_STRICT_CONCURRENCY = minimal;
-				SWIFT_VERSION = 5;
+				SWIFT_VERSION = 6.0;
 				WATCHOS_DEPLOYMENT_TARGET = 11.0;
 			};
 			name = Debug;
@@ -4401,7 +4401,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tandori46001.personalhygiene.widgets;
 				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5;
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

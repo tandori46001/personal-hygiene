@@ -17,6 +17,14 @@ struct CoverPhotoSection: View {
                     .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
                     .accessibilityLabel(Text("trip.cover.label", bundle: .main))
             }
+            // Round 36 / Batch Q: capture a Bool (Sendable) instead of
+            // `viewModel.trip.coverPhotoData` — the latter would cross from
+            // MainActor-isolated `body` into PhotosPicker's `@Sendable`
+            // label closure under SWIFT_STRICT_CONCURRENCY=complete.
+            // `LocalizedStringKey` is NOT Sendable, so the actual key is
+            // constructed inside the closure where it doesn't need to
+            // cross actor boundaries.
+            let coverIsAbsent = viewModel.trip.coverPhotoData == nil
             HStack {
                 PhotosPicker(
                     selection: $pickerItem,
@@ -25,9 +33,9 @@ struct CoverPhotoSection: View {
                 ) {
                     Label {
                         Text(
-                            viewModel.trip.coverPhotoData == nil
-                                ? "trip.cover.action.choose"
-                                : "trip.cover.action.replace",
+                            coverIsAbsent
+                                ? LocalizedStringKey("trip.cover.action.choose")
+                                : LocalizedStringKey("trip.cover.action.replace"),
                             bundle: .main
                         )
                     } icon: {

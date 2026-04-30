@@ -57,7 +57,11 @@ final class LocationCompletionsProvider: NSObject {
     }
 }
 
-extension LocationCompletionsProvider: @preconcurrency MKLocalSearchCompleterDelegate {
+// `@preconcurrency` lives on the `import MapKit` line at the top of this
+// file (round 29 / L009 fix). Adding it again on the conformance is
+// redundant and the compiler diagnoses it as "has no effect" under
+// SWIFT_STRICT_CONCURRENCY=complete (round 36 / Batch Q).
+extension LocationCompletionsProvider: MKLocalSearchCompleterDelegate {
 
     nonisolated func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
         // MKLocalSearchCompletion is non-Sendable, so we can't capture the
