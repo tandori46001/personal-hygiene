@@ -30,7 +30,7 @@ set -euo pipefail
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$REPO_ROOT"
 
-PROJECT="PersonalHygiene.xcodeproj"
+PROJECT="App/PersonalHygiene.xcodeproj"
 SCHEME="PersonalHygiene"
 SDK="iphonesimulator"
 DESTINATION="generic/platform=iOS Simulator"

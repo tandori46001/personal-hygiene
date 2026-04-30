@@ -118,3 +118,7 @@ echo "==> tests complete"
 echo
 echo "==> i18n parity check"
 python3 "$REPO_ROOT/scripts/check-i18n.py"
+
+echo
+echo "==> reminder (L009): local pass is necessary but not sufficient."
+echo "    After push, verify CI: ./scripts/check-ci.sh --watch"

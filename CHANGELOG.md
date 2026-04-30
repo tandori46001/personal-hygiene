@@ -8,6 +8,55 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Round 34 — L009 formalized + Batch Q inventory + script fix (2026-04-30)
+
+Post-`ALL OK ?` autonomous round. No behavior change. Three small additions
+that turn process discipline into tooling:
+
+**`scripts/check-ci.sh` (NEW, +x) — L009 post-push verification.**
+Lesson L009 says "local Xcode and CI's macos-latest produce different Swift 6
+verdicts; local-pass is not proof CI will pass — always `gh run list` after
+push." Round 29 captured the rule but left the verification step manual.
+This script formalizes it: queries GitHub Actions for the latest run on the
+current branch, prints status/conclusion/SHA/title, and exits non-zero on
+any non-success terminal state. `--watch` polls until terminal. Ergonomics
+live in scripts; the rule lives in the lesson.
+
+**`scripts/check-tests.sh` — reminder echo.**
+Final block now prints `==> reminder (L009): local pass is necessary but
+not sufficient. After push, verify CI: ./scripts/check-ci.sh --watch`. Two
+lines; surfaces the L009 rule at exactly the moment the developer is about
+to declare local-green and walk away.
+
+**`scripts/check-strict-concurrency.sh` — PROJECT path bug fix.**
+Round 31's J05 preview script hard-coded `PROJECT="PersonalHygiene.xcodeproj"`
+but the actual project path is `App/PersonalHygiene.xcodeproj`. Script
+exited with code 2 on every invocation since round 31. Fixed; first
+successful Batch Q inventory follows.
+
+**Batch Q inventory (first successful run):**
+- `xcodebuild build SWIFT_STRICT_CONCURRENCY=complete SWIFT_VERSION=6.0`
+- **0 errors, 12 warnings across 3 files** (much smaller than round 29's
+  "~30+ files to patch" estimate):
+  - `App/PersonalHygiene/Features/Settings/Views/HomeLocationDetector.swift`
+  - `App/PersonalHygiene/Features/Vacation/Views/LocationAutocomplete.swift`
+  - `App/PersonalHygiene/Features/Vacation/Views/TripDetailRows.swift`
+- Migration is now well-scoped — single-round structural work at most.
+
+**Verification:**
+- Tests: **947 unit + 2 UI = 949** (unchanged — script-only changes).
+- i18n: **994 × 3** (unchanged).
+- Lessons: **10** (unchanged).
+- Lint: clean.
+
+**ALL OK? backlog deltas:**
+- ✅ I1 (L009 formalized in scripts) — closed.
+- ✅ J05 (strict-concurrency preview script) — script bug fixed; inventory
+  produced for the first time.
+- 🔬 Batch Q backlog measured: 12 warnings / 3 files (was "~30+" estimate).
+
+---
+
 ### Round 33 — close K01: last 2 swiftlint:disable blocks removed (2026-04-29)
 
 Continuation of round 32. K01 was the round-30 ALL OK? item "remove the
