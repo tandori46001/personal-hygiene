@@ -8,6 +8,53 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Round 31 — rate-limit diagnostics + xcstrings de-dup + Batch Q preview (2026-04-29)
+
+5 backlog items from the round-30 ALL OK? menu shipped in a single commit.
+No behavior change for the user except the new Diagnostics breakdown.
+
+**O02 + O03 — Network outcome partition** (vacation + diagnostics):
+- `NetworkActivityCounter`: new `Outcome` enum (success / rateLimited /
+  serverError / networkError / decodingError) + `recordOutcome`,
+  `outcomes(for:)`, `hasFailureOutcome(for:)`, `lastOutcome(for:outcome:)`.
+- `OpenMeteoMarineService.current` + `FrankfurterCurrencyService.convert`
+  + `convertAll`: HTTP status switch records the matching outcome on
+  every response. URLError → `.networkError`; JSON decode failure →
+  `.decodingError`; 429 → `.rateLimited`; 5xx → `.serverError`.
+- Diagnostics → "Network activity" section now shows a caption-line
+  breakdown `429:N · 5xx:N · net:N · dec:N` whenever any non-success
+  outcome has been recorded. Healthy state: invisible (silence is the
+  healthy signal). Closes round-30 §D flag.
+- 9 new tests, `[T-278]` in QA_MANUAL.md.
+
+**H01 — xcstrings de-duplication** (i18n hardening):
+- Removed 3 duplicate keys (`settings.theme.system/.light/.dark`) that
+  JSON-collapsed to the last instance in the xcstrings file. The
+  earlier multi-line copies stay; the later compact duplicates removed.
+- `LocalizationKeyCount.total` 997 → 994 (matches both JSON parse and
+  `scripts/check-i18n.py`).
+
+**J03 — `check-counts.sh` wired into CI hygiene**:
+- New "Print canonical counts (L010 guard)" step in the ubuntu hygiene
+  job. Linux is immune to `._*` AppleDouble inflation, so the script is
+  informational on CI — but the workflow log now carries the canonical
+  counts for any future audit to reference.
+
+**J05 — `scripts/check-strict-concurrency.sh` (NEW, +x)** — Batch Q preview:
+- Local-dev script wraps `xcodebuild build SWIFT_STRICT_CONCURRENCY=
+  complete SWIFT_VERSION=6.0` and prints concurrency-diagnostic counts.
+  Non-blocking. Modes: summary, `--files`, `--raw`. Surfaces the
+  Batch Q migration backlog without gating CI.
+
+**Stats:**
+- Tests: 940 → **947** (+7 unit; the new outcome-API tests cover the
+  add).
+- i18n: 997 → **994** (corrected unique count after de-dup).
+- Lessons: **10** (unchanged).
+- Round-31 commit: `c1862cf` (single commit, 10 files, +422/-41).
+
+---
+
 ### Round 30 — drift cleanup + L009 + L010 (2026-04-29)
 
 Doc/script-only round triggered by `ALL OK ?` audit + `haz todo lo que puedas`.
