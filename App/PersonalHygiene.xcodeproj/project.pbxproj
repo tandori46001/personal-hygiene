@@ -4084,6 +4084,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tandori46001.personalhygiene.uitests;
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = PersonalHygiene;
 			};
@@ -4180,6 +4181,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tandori46001.personalhygiene.uitests;
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_TARGET_NAME = PersonalHygiene;
 			};

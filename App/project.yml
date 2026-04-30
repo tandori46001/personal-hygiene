@@ -211,6 +211,19 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: com.tandori46001.personalhygiene.uitests
         TEST_TARGET_NAME: PersonalHygiene
+        # Round 36 (Batch Q follow-up): XCUITest APIs (XCUIApplication.init,
+        # launch(), launchArguments, element(matching:), tap(), tabBars,
+        # buttons, navigationBars, waitForExistence(timeout:), firstMatch,
+        # isSelected, exists) are all @MainActor-isolated, but XCUITest's
+        # default `func test*()` instance methods are nonisolated. Under
+        # SWIFT_VERSION="6.0" CI escalates ~26 nonisolated-context warnings
+        # to errors; local Xcode emits warnings only (L009). Two ways to
+        # fix: (a) annotate every UI test class/method with @MainActor
+        # (invasive — 2 classes, ~6 methods today, more later), or (b)
+        # downgrade just this target to SWIFT_VERSION="5". (b) is the
+        # round-36 choice — UI tests don't ship; production code is
+        # already on 6.0; (a) is a tracked round-37+ candidate.
+        SWIFT_VERSION: "5"
 
 schemes:
   PersonalHygiene:
