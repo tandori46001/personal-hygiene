@@ -71,11 +71,39 @@ public struct FrankfurterCurrencyService: CurrencyService {
         ]
         guard let url = components.url else { throw CurrencyError.invalidResponse }
         NetworkActivityCounter.shared.record(.frankfurter)
-        let (data, response) = try await session.data(from: url)
-        guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
+        let counter = NetworkActivityCounter.shared
+        let data: Data
+        let response: URLResponse
+        do {
+            (data, response) = try await session.data(from: url)
+        } catch {
+            counter.recordOutcome(.frankfurter, outcome: .networkError)
+            throw error
+        }
+        guard let http = response as? HTTPURLResponse else {
+            counter.recordOutcome(.frankfurter, outcome: .networkError)
             throw CurrencyError.invalidResponse
         }
-        return try Self.parse(data, amount: amount, from: from, to: to)
+        switch http.statusCode {
+        case 200..<300:
+            do {
+                let conversion = try Self.parse(data, amount: amount, from: from, to: to)
+                counter.recordOutcome(.frankfurter, outcome: .success)
+                return conversion
+            } catch {
+                counter.recordOutcome(.frankfurter, outcome: .decodingError)
+                throw error
+            }
+        case 429:
+            counter.recordOutcome(.frankfurter, outcome: .rateLimited)
+            throw CurrencyError.invalidResponse
+        case 500..<600:
+            counter.recordOutcome(.frankfurter, outcome: .serverError)
+            throw CurrencyError.invalidResponse
+        default:
+            counter.recordOutcome(.frankfurter, outcome: .networkError)
+            throw CurrencyError.invalidResponse
+        }
     }
 
     /// Frankfurter accepts a comma-separated `to=USD,GBP,…` list and returns
@@ -97,11 +125,39 @@ public struct FrankfurterCurrencyService: CurrencyService {
         ]
         guard let url = components.url else { throw CurrencyError.invalidResponse }
         NetworkActivityCounter.shared.record(.frankfurter)
-        let (data, response) = try await session.data(from: url)
-        guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
+        let counter = NetworkActivityCounter.shared
+        let data: Data
+        let response: URLResponse
+        do {
+            (data, response) = try await session.data(from: url)
+        } catch {
+            counter.recordOutcome(.frankfurter, outcome: .networkError)
+            throw error
+        }
+        guard let http = response as? HTTPURLResponse else {
+            counter.recordOutcome(.frankfurter, outcome: .networkError)
             throw CurrencyError.invalidResponse
         }
-        return try Self.parseAll(data, amount: amount, from: from)
+        switch http.statusCode {
+        case 200..<300:
+            do {
+                let conversions = try Self.parseAll(data, amount: amount, from: from)
+                counter.recordOutcome(.frankfurter, outcome: .success)
+                return conversions
+            } catch {
+                counter.recordOutcome(.frankfurter, outcome: .decodingError)
+                throw error
+            }
+        case 429:
+            counter.recordOutcome(.frankfurter, outcome: .rateLimited)
+            throw CurrencyError.invalidResponse
+        case 500..<600:
+            counter.recordOutcome(.frankfurter, outcome: .serverError)
+            throw CurrencyError.invalidResponse
+        default:
+            counter.recordOutcome(.frankfurter, outcome: .networkError)
+            throw CurrencyError.invalidResponse
+        }
     }
 
     static func parseAll(_ data: Data, amount: Double, from: String) throws -> [CurrencyConversion] {

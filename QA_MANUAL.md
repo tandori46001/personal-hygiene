@@ -2914,3 +2914,29 @@ The pre-fix path went through `viewModel.upcomingTrip` ← `tripsRepository.allT
 - Deep-link opens Safari but pasteboard is empty → `UIPasteboard.general.string = prompt` ordered after `UIApplication.shared.open()` (race) — must be assigned first.
 - "Open in ChatGPT" navigates to a logged-out wall and the prompt is lost when user signs in → known external limitation; the toast is the recovery path. Document this in the in-app help if reported.
 - Foundation Models button visible on iOS 18 simulator → `isAppleFMAvailable` gate wrong; should `#available(iOS 26, *)` *and* `SystemLanguageModel.default.availability == .available`.
+
+---
+
+## [T-278] — Network rate-limit diagnostics (round 31 O02/O03)
+
+**Module:** vacation, diagnostics · **Shipped in:** round 31
+
+### Manual verification
+
+The new diagnostic counter only shows up when at least one non-success outcome has been recorded for an upstream service. Default state: **invisible** — silence is the healthy signal.
+
+1. Trips → any trip → Itinerary forecast or currency conversion. Pull-to-refresh.
+2. Settings → Diagnostics → "Network activity" section. **Expected:** rows for `frankfurter` and/or `openMeteo` with raw call counts (e.g. `frankfurter: 3`, `openMeteo: 1`). No second-line breakdown yet.
+3. Force a rate-limit hit (Frankfurter is unlikely in real traffic but you can simulate via Charles/Proxyman: rewrite `api.frankfurter.app` responses to 429 for one request). Re-run a currency conversion.
+4. Settings → Diagnostics → "Network activity". **Expected:** the `frankfurter` row now shows a second caption-line `429:1` (or `429:N` if multiple hits). The same shape applies to `openMeteo` if the upstream is rate-limited (Open-Meteo Marine has a 10k req/day free quota).
+5. Force a 5xx response (rewrite to 503). The breakdown line shows `5xx:1`. With multiple types: `429:2 · 5xx:1 · net:0 · dec:0` — outcomes with zero counts are omitted.
+6. Kill network (airplane mode → currency call). The breakdown line shows `net:1`.
+7. Reset diagnostics ("Reset cache counters" button). **Expected:** breakdown row disappears (zero failures); raw call count also zeroed.
+
+### Failure modes to watch for
+- Breakdown row shows when there are no failures → `hasFailureOutcome(for:)` logic broken; should return false if all outcomes are `.success` or empty.
+- 429 response counts as `5xx` or `net` → `MarineWeatherService` / `CurrencyService` switch on `http.statusCode` is wrong; verify the case ordering (200..<300 first, then 429, then 500..<600, then default).
+- `convertAll` (multi-target Frankfurter) doesn't emit outcome → check `convertAll` path mirrors `convert` (round 31 added both).
+- Counter resets across app launches but breakdown line lingers → state reads from `NetworkActivityCounter.shared`; verify the section re-evaluates `hasFailureOutcome` on every view body.
+- VoiceOver reads outcome breakdown twice → `accessibilityElement(children: .combine)` should already group; verify the row reads as a single element.
+

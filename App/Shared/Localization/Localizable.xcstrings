@@ -18397,30 +18397,6 @@
         "fr": { "stringUnit": { "state": "translated", "value": "Dupliquer le bloc" } }
       }
     },
-    "settings.theme.system": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "System" } },
-        "es": { "stringUnit": { "state": "translated", "value": "Sistema" } },
-        "fr": { "stringUnit": { "state": "translated", "value": "Système" } }
-      }
-    },
-    "settings.theme.light": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "Light" } },
-        "es": { "stringUnit": { "state": "translated", "value": "Claro" } },
-        "fr": { "stringUnit": { "state": "translated", "value": "Clair" } }
-      }
-    },
-    "settings.theme.dark": {
-      "extractionState": "manual",
-      "localizations": {
-        "en": { "stringUnit": { "state": "translated", "value": "Dark" } },
-        "es": { "stringUnit": { "state": "translated", "value": "Oscuro" } },
-        "fr": { "stringUnit": { "state": "translated", "value": "Sombre" } }
-      }
-    },
     "watch.settings.theme.title": {
       "extractionState": "manual",
       "localizations": {

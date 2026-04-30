@@ -82,13 +82,25 @@ extension DiagnosticsView {
                 ForEach(NetworkActivityCounter.Source.allCases, id: \.self) { src in
                     let count = networkCounts[src] ?? 0
                     if count > 0 {
-                        HStack {
-                            Text(verbatim: src.rawValue)
-                                .font(.caption)
-                            Spacer()
-                            Text(verbatim: "\(count)")
-                                .font(.caption.monospacedDigit())
-                                .foregroundStyle(.secondary)
+                        VStack(alignment: .leading, spacing: 2) {
+                            HStack {
+                                Text(verbatim: src.rawValue)
+                                    .font(.caption)
+                                Spacer()
+                                Text(verbatim: "\(count)")
+                                    .font(.caption.monospacedDigit())
+                                    .foregroundStyle(.secondary)
+                            }
+                            // Round 31 (O02/O03): when any non-success
+                            // outcome has been recorded for this source,
+                            // show a one-line breakdown so the user can
+                            // tell rate-limit hits from server errors from
+                            // network failures.
+                            if NetworkActivityCounter.shared.hasFailureOutcome(for: src) {
+                                Text(verbatim: outcomeSummary(for: src))
+                                    .font(.caption2.monospacedDigit())
+                                    .foregroundStyle(.secondary)
+                            }
                         }
                         .accessibilityElement(children: .combine)
                     }
@@ -99,6 +111,23 @@ extension DiagnosticsView {
                 Text("settings.diagnostics.section.networkActivity.footer", bundle: .main)
             }
         }
+    }
+
+    /// Builds a `429:N · 5xx:N · net:N · dec:N` summary, omitting outcomes
+    /// with zero count. Used by `networkActivitySection` to surface the
+    /// rate-limit signal called out in the round-30 ALL OK? §D flag.
+    private func outcomeSummary(for src: NetworkActivityCounter.Source) -> String {
+        let outcomes = NetworkActivityCounter.shared.outcomes(for: src)
+        var parts: [String] = []
+        let rl = outcomes[.rateLimited, default: 0]
+        if rl > 0 { parts.append("429:\(rl)") }
+        let se = outcomes[.serverError, default: 0]
+        if se > 0 { parts.append("5xx:\(se)") }
+        let ne = outcomes[.networkError, default: 0]
+        if ne > 0 { parts.append("net:\(ne)") }
+        let de = outcomes[.decodingError, default: 0]
+        if de > 0 { parts.append("dec:\(de)") }
+        return parts.joined(separator: " · ")
     }
 
     @ViewBuilder

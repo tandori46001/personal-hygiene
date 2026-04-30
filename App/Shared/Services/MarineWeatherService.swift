@@ -61,11 +61,39 @@ public struct OpenMeteoMarineService: MarineWeatherService {
         guard let url = components.url else { throw MarineWeatherError.invalidResponse }
 
         NetworkActivityCounter.shared.record(.openMeteo)
-        let (data, response) = try await session.data(from: url)
-        guard let http = response as? HTTPURLResponse, (200..<300).contains(http.statusCode) else {
+        let counter = NetworkActivityCounter.shared
+        let data: Data
+        let response: URLResponse
+        do {
+            (data, response) = try await session.data(from: url)
+        } catch {
+            counter.recordOutcome(.openMeteo, outcome: .networkError)
+            throw error
+        }
+        guard let http = response as? HTTPURLResponse else {
+            counter.recordOutcome(.openMeteo, outcome: .networkError)
             throw MarineWeatherError.invalidResponse
         }
-        return try Self.parse(data)
+        switch http.statusCode {
+        case 200..<300:
+            do {
+                let conditions = try Self.parse(data)
+                counter.recordOutcome(.openMeteo, outcome: .success)
+                return conditions
+            } catch {
+                counter.recordOutcome(.openMeteo, outcome: .decodingError)
+                throw error
+            }
+        case 429:
+            counter.recordOutcome(.openMeteo, outcome: .rateLimited)
+            throw MarineWeatherError.invalidResponse
+        case 500..<600:
+            counter.recordOutcome(.openMeteo, outcome: .serverError)
+            throw MarineWeatherError.invalidResponse
+        default:
+            counter.recordOutcome(.openMeteo, outcome: .networkError)
+            throw MarineWeatherError.invalidResponse
+        }
     }
 
     static func parse(_ data: Data) throws -> MarineConditions {

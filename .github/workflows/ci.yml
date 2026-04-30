@@ -54,6 +54,14 @@ jobs:
             fi
           done
 
+      # L010 guard: print canonical counts (Linux runners are unaffected by
+      # USB-mounted ._* AppleDouble forks, so this is informational on CI.
+      # Local devs see the inflation problem and need the script, but
+      # printing here documents the expected counts so future audits have
+      # a clear reference point in the workflow log.
+      - name: Print canonical counts (L010 guard)
+        run: ./scripts/check-counts.sh
+
   # ───────────────────────────────────────────────────────────────────
   # 2. Static scans — Python guard scripts for L004 / L006 / L007.
   #    Cheap, no Xcode, runs in parallel with hygiene/lint. Fails fast
