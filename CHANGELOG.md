@@ -8,6 +8,87 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Round 36 — Batch Q: SWIFT_VERSION 5 → 6.0 migration + L011 (2026-04-30)
+
+Closes the long-running Batch Q backlog item. Round 29's CI saga ended
+with `SWIFT_VERSION="5"` as a tactical retreat plus 9 defensive fixes;
+round 31 added `scripts/check-strict-concurrency.sh` as a non-blocking
+preview; round 34 fixed its PROJECT path bug + produced the first clean
+inventory (0 errors / 12 warnings across 3 files). Round 36 walks the 12
+warnings to 0 and re-flips SWIFT_VERSION 5 → 6.0 across all 3
+declarations in `App/project.yml`.
+
+**Code patches (4 fix-classes, 3 files):**
+
+1. `HomeLocationDetector.swift` line 57 — dropped redundant
+   `@preconcurrency` from `CLLocationManagerDelegate` conformance line.
+   The `@preconcurrency` lives on `import CoreLocation`; conformance-level
+   annotation was redundant per the strict-mode diagnostic.
+2. `LocationAutocomplete.swift` line 60 — same fix for
+   `MKLocalSearchCompleterDelegate`.
+3. `TripDetailRows.swift` line 28 (CoverPhotoSection) — PhotosPicker
+   label closure was reading `viewModel.trip.coverPhotoData` directly
+   even though it lives inside an `@MainActor` View struct, because
+   SwiftUI's PhotosPicker label closure is `@Sendable`. Captured a Bool
+   into a local `let` BEFORE the closure (`let coverIsAbsent = ...`),
+   then construct the non-Sendable `LocalizedStringKey` INSIDE the
+   closure. First-attempt fix captured `LocalizedStringKey` directly and
+   tripped a NEW warning (the type is itself non-Sendable); the
+   Bool-capture pattern is the correct shape — documented as L011 #2.
+
+**Project flip:**
+
+`App/project.yml` flipped 5 → 6.0 in:
+- `settings.base.SWIFT_VERSION` (host iOS app)
+- `targets.PersonalHygieneWidgets.settings.base.SWIFT_VERSION`
+- `targets.PersonalHygieneWatchWidgets.settings.base.SWIFT_VERSION`
+
+xcodegen regenerated `project.pbxproj`; all `SWIFT_VERSION = 6.0;`
+after. Comments preserved for archaeology.
+
+**L011 lesson** (LESSONS.md + CLAUDE.md §5 table):
+
+Swift 6 strict-mode migration after the round-29 prep work collapses to
+**4 distinct fix-classes**:
+1. Drop redundant `@preconcurrency` from conformance lines whose
+   framework is already preconcurrency-imported.
+2. Capture a Sendable value type (Bool/String/Int) into a `let` BEFORE
+   a SwiftUI ViewBuilder closure that reads MainActor state. Non-Sendable
+   types (LocalizedStringKey, Image, etc.) get rebuilt INSIDE the
+   closure from the Sendable inputs.
+3. (Round 29) `@preconcurrency import` on every Apple-SDK with
+   pre-Swift-6 delegate methods.
+4. (Round 29) `@MainActor` on View structs + `MainActor.assumeIsolated`
+   on synchronous UIKit dismiss sites.
+
+Key insight: after the round-29 prep work, the actual residual
+strict-mode surface is much smaller than the round-29 saga suggested.
+Once the inventory is accurate (round 34 fixed the script's PROJECT
+path), the migration is a single round.
+
+**Verification:**
+- `./scripts/check-strict-concurrency.sh --files`: **0 errors / 0
+  warnings** at `SWIFT_STRICT_CONCURRENCY=complete SWIFT_VERSION=6.0`
+  (was 12/3 at start of round).
+- `./scripts/check-tests.sh`: **947 unit + 2 UI = 949 PASS** at
+  SWIFT_VERSION 6.0.
+- `./scripts/check-counts.sh`: counts unchanged.
+- `./scripts/lint.sh`: clean.
+- `./scripts/check-i18n.py`: parity OK 1000 × {en,es,fr}.
+
+**Stats:**
+- Round-36 commit `21c371b`: 7 files, +101 / -32.
+- L011 added (LESSONS.md count: 10 → 11).
+- Memory: NEW `feedback_swiftui_extraction.md` capturing round-32
+  trade-off (file_length ↔ function_body_length collision when
+  extracting feature views).
+
+**Round 36 deferred:**
+- CI integration of `scripts/check-strict-concurrency.sh` as a blocking
+  job (was `[I2]`; now actually justified since the migration landed).
+
+---
+
 ### Round 35 — Trip detail IA redesign (kid-friendly) + global travel prefs (2026-04-30)
 
 User feedback: the per-trip detail view inside Trips was "caótica y
