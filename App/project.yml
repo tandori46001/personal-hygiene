@@ -197,13 +197,20 @@ targets:
       base:
         GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: com.tandori46001.personalhygiene.tests
-        # Round 37 [37-1]: re-flipped to 6.0 after migrating all 205 unit
-        # test files to `@preconcurrency import XCTest`. The preconcurrency
-        # import silences the round-36 "sending value of non-Sendable type
-        # 'XCTestCase' risks causing data races" diagnostics by treating
-        # XCTest as a pre-Swift-6 framework that can ignore strict-mode
-        # sendability requirements. Round-36 history kept in archived
-        # commits (`5068911` UI fix, `5453187` unit fix).
+        # Round 37c (re-retreat): unit test target back on SWIFT_VERSION=5
+        # after round 37b's "@preconcurrency import XCTest" blanket fix
+        # silenced the XCTestCase Sendable warnings but did NOT silence
+        # actor-isolation warnings on tests that mutate @MainActor properties
+        # (`container`, `repository`, `RefreshTraceLog.shared`, etc.) from
+        # the synchronous nonisolated `setUp`/`func test*` context. Local
+        # `xcodebuild build-for-testing SWIFT_STRICT_CONCURRENCY=complete`
+        # surfaced ~8+ such files as warnings; CI would escalate them to
+        # errors. Proper fix: add @MainActor to each affected unit test
+        # class (round-38 candidate). For now, target stays on 5 — this
+        # also exposes a strict-concurrency script blind spot (it runs
+        # `xcodebuild build` not `build-for-testing`, so test targets
+        # aren't covered by the inventory; another round-38 candidate).
+        SWIFT_VERSION: "5"
 
   PersonalHygieneUITests:
     type: bundle.ui-testing

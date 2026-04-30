@@ -1,5 +1,15 @@
 @preconcurrency import XCTest
 
+// Round 37 [37-1] follow-up: XCUIApplication.init / .launch / .tap /
+// .launchArguments / .buttons / .tabBars / .firstMatch / .waitForExistence
+// / .navigationBars / .isSelected / .exists are all @MainActor-isolated.
+// XCUITest's default `func test*()` instance methods are nonisolated, so
+// every call into the framework crosses the isolation boundary. Class-level
+// @MainActor inherits to every method. `@preconcurrency import XCTest`
+// alone (round 37b) silenced the XCTestCase Sendable warnings on unit
+// tests but doesn't relax actor-isolation enforcement on the UI test
+// surface — that's what this annotation fixes.
+@MainActor
 final class OnboardingUITests: XCTestCase {
 
     override func setUp() {

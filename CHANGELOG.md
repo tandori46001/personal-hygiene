@@ -8,6 +8,130 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Round 37 — Test-target migration + L012 + strict-concurrency CI gate (2026-04-30)
+
+Closes the "Batch Q follow-up" loop opened by round 36's CI saga. Round
+36 had downgraded both test targets to SWIFT_VERSION="5" because XCTest
+APIs aren't fully Sendable-safe at "6.0"; round 37 lifts that retreat
+and brings the entire project to Swift 6 strict mode.
+
+**Round 37a (`d053828`): L012 + strict-concurrency regex extension.**
+
+- NEW lesson **L012** (LESSONS.md + CLAUDE.md §5): "Strict-concurrency
+  inventory regex must cover EVERY Swift 6 diagnostic shape, not just
+  the keyword bag." Round 36 reported 0/0 then CI failed on phrasings
+  the regex didn't include (`sending value of non-Sendable type`,
+  `risks causing data races`, `actor-isolated initializer/instance
+  method/property... in a synchronous nonisolated context`). The regex
+  is itself code that needs extension every time CI surfaces a new
+  shape.
+- Extended `CONCURRENCY_RE` in `scripts/check-strict-concurrency.sh`:
+  added `sending value of`, `risks causing data races`,
+  `in a synchronous nonisolated context`,
+  `cannot be (referenced|mutated|sent) from`, `across actor boundary`,
+  `implicitly nonisolated`, `requires explicit isolation`,
+  `sending main actor-isolated`.
+- Added cross-check: TOTAL diagnostic counts alongside concurrency-
+  classified subset; alert when uncovered gap exceeds 5 (build-noise
+  floor).
+
+**Round 37b (`bf7ee62`): test-target migration partial + CI integration.**
+
+- **[37-1] partial:** `@preconcurrency import XCTest` added to all 207
+  test files (205 unit + 2 UI) via Python regex pass. Purely additive,
+  zero behavior change. Treats XCTest as a pre-Swift-6 framework that
+  can ignore strict-mode sendability checks. **Silenced the round-36
+  unit-test "sending value of non-Sendable type 'XCTestCase'" Sendable
+  warnings, but did NOT silence actor-isolation warnings on tests that
+  mutate `@MainActor` properties (container/repository/.shared) from
+  nonisolated `setUp`/`func test*` context.**
+- `App/project.yml` flipped both test targets SWIFT_VERSION="5" → "6.0".
+  xcodegen regenerated.
+- **[37-3]** New CI job `strict-concurrency` runs
+  `scripts/check-strict-concurrency.sh --files` on macos-latest as a
+  blocking job. Script's exit logic updated: errors fail, warnings stay
+  informational, uncovered-diagnostic gap > 5 fails (L012 cross-check
+  enforced in CI).
+
+**Round 37c (this commit): UI tests get `@MainActor`, unit tests retreat to 5.**
+
+CI on `bf7ee62` failed `Build + test (iOS)` — not because round 37b's
+work was wrong, but because:
+
+1. `XCUIApplication`/`XCUIElement` API are `@MainActor`-isolated, and
+   `OnboardingUITests`'s default `func test*()` methods are nonisolated.
+   `@preconcurrency import XCTest` silences Sendable, NOT actor-isolation.
+   Fix: added `@MainActor` to the `OnboardingUITests` class itself so
+   isolation inherits to every method.
+2. `xcodebuild build-for-testing SWIFT_STRICT_CONCURRENCY=complete`
+   (run locally) revealed ~8+ unit test files with the same shape on
+   `@MainActor`-isolated repository/container/.shared properties. Fixing
+   those is mass surgery (round-38 `@MainActor` migration). For 37c,
+   unit tests retreat to SWIFT_VERSION="5". UI tests stay on 6.0 with
+   the new `@MainActor` annotation.
+
+This re-introduces the round-36 "test target downgrade" pattern in
+`feedback_repo_quirks.md` § 4 (which had been marked obsolete).
+Documented as such; round 38's job is the unit-test mass migration.
+
+**The strict-concurrency script's BIG blind spot.**
+
+Round 37c also exposed L012 #2 in concrete form: `scripts/check-strict-
+concurrency.sh` runs `xcodebuild build`, NOT `build-for-testing`. The
+PersonalHygiene scheme builds test targets only for the "test" action,
+so `build` skips them — and the inventory was 0/0/0 even though test
+target compilation under strict mode would have ~8+ warnings. This is
+a structural script gap, separate from L012's regex-keyword issue.
+Round-38 candidate: extend the script to `build-for-testing` so test
+target diagnostics enter the inventory.
+
+**Memory `feedback_repo_quirks.md`:**
+
+- § 4 (test-target downgrade pattern) restored as live guidance — round
+  37c re-established it for unit tests after round 37b's failed attempt
+  to retire it.
+- New finding to add: strict-concurrency script's `build` vs
+  `build-for-testing` gap (L012 follow-up).
+
+**Verification (after round 37c retreat):**
+- `./scripts/check-strict-concurrency.sh --files` (host + widgets, NOT
+  test targets): **0 errors, 0 warnings, 0 uncovered**.
+- `./scripts/check-tests.sh`: **947 unit + 2 UI = 949 PASS** with mixed
+  SWIFT_VERSION (host + UI tests on 6.0; unit tests on 5).
+- `./scripts/check-counts.sh`: counts unchanged.
+- `./scripts/check-i18n.py`: parity OK 1000 × {en,es,fr}.
+
+**Stats:**
+- Round-37a commit `d053828`: 3 files, +74 / -5.
+- Round-37b commit `bf7ee62`: 209 files, +290 / -230 (mostly the
+  207-file `@preconcurrency` blanket).
+- Round-37c commit (this): 1 UI test file `@MainActor` annotation +
+  project.yml unit-test re-retreat to 5.
+- Lessons: 11 → 12 (L012 added).
+- SWIFT_VERSION distribution: production = 6.0; UI tests = 6.0;
+  unit tests = 5 (round-38 migration target).
+
+**The Swift 6 strict-mode toolkit (current):**
+- L009 (round 29-promoted): "local-pass is not sufficient; verify CI"
+- L011 (round 36): 4 distinct fix-classes after round-29 prep work
+- L012 (round 37): regex blind spots in the inventory script
+- `scripts/check-strict-concurrency.sh` with extended regex + CI gate
+- `scripts/check-ci.sh` for L009 post-push verification
+
+**Round-38 candidates (from this round's work):**
+- **Unit-test `@MainActor` mass migration** (~8+ files): annotate test
+  classes that mutate `@MainActor`-isolated properties; flip unit test
+  target SWIFT_VERSION 5 → 6.0. This unblocks "full Swift 6 reach."
+- **Strict-concurrency script: `build-for-testing` mode**: extend the
+  script to compile test targets too, so they enter the inventory.
+  Currently `xcodebuild build` skips test targets per scheme config.
+  Without this, L012's CI gate has a blind spot on test target
+  diagnostics.
+- Re-test `OnboardingUITests` flake from round 35 (1/4 sessions
+  observed) — should be tracked separately from this Swift 6 work.
+
+---
+
 ### Round 36 — Batch Q: SWIFT_VERSION 5 → 6.0 migration + L011 (2026-04-30)
 
 Closes the long-running Batch Q backlog item. Round 29's CI saga ended
