@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-20 slice T1.4 — property-style round-trip test for the four known
 /// notification identifier shapes. Generates 1000 random inputs across the

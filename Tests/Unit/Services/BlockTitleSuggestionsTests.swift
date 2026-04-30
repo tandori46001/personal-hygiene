@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-21 slice T1.4 — guards `BlockTitleSuggestions.recent` invariants:
 /// distinct titles, most-recent-first ordering, configurable cap, category

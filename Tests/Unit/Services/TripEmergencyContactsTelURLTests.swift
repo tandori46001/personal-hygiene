@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 @MainActor
 final class TripEmergencyContactsTelURLTests: XCTestCase {

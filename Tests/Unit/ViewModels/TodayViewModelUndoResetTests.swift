@@ -1,6 +1,6 @@
 @testable import PersonalHygiene
 import SwiftData
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-21 slice T1.6 — guards `TodayViewModel.undoResetDay(_:)` replay:
 /// completions re-marked, skips re-applied, snapshot id preserved. Round 20

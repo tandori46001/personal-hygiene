@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-24 slice T1.3 — guards `MoodLogGrouping.sections(...)` at calendar
 /// boundaries. An entry recorded at 23:59 vs 00:01 on adjacent days must

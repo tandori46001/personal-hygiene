@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-22 slice T1.5 — guards that `BlockConflictDetector.conflictingIDs`
 /// (round-18 boolean API) and `BlockConflictOverlap.overlaps` (round-21

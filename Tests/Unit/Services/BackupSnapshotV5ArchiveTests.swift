@@ -1,6 +1,6 @@
 @testable import PersonalHygiene
 import SwiftData
-import XCTest
+@preconcurrency import XCTest
 
 @MainActor
 final class BackupSnapshotV5ArchiveTests: XCTestCase {

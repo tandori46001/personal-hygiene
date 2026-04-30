@@ -132,6 +132,26 @@ if (( XCODE_EXIT != 0 )) && (( ERR_COUNT == 0 )); then
     exit 3
 fi
 
-echo "==> Non-blocking preview complete. See LESSONS.md § L009 for migration plan."
-echo "    To inspect a specific file: ./scripts/check-strict-concurrency.sh --raw | grep <file>"
+# Round 37 [37-3]: gate CI on concurrency errors. Production code is on
+# Swift 6 strict mode after Batch Q; this script is a regression guard.
+# Errors fail the job; warnings stay informational (local devs may have
+# in-progress code that emits warnings during a refactor).
+if (( ERR_COUNT > 0 )); then
+    echo "::error::$ERR_COUNT concurrency error(s) found at SWIFT_STRICT_CONCURRENCY=complete + SWIFT_VERSION=6.0." >&2
+    echo "See LESSONS.md § L011 for the four common fix-classes." >&2
+    exit 1
+fi
+
+# Round 37 [37-3] cross-check: if uncovered-diagnostic gap exceeds the
+# build-noise floor, the regex needs extension (L012). Fail the job so
+# the gap can't silently widen between rounds.
+UNCOVERED_TOTAL=$((UNCOVERED_ERR + UNCOVERED_WARN))
+if (( UNCOVERED_TOTAL > 5 )); then
+    echo "::error::$UNCOVERED_TOTAL diagnostics not matched by CONCURRENCY_RE." >&2
+    echo "Extend the regex per L012 — see the uncovered preview above." >&2
+    exit 1
+fi
+
+echo "==> Strict-concurrency guard passed (errors=$ERR_COUNT, uncovered=$UNCOVERED_TOTAL)."
+echo "    See LESSONS.md § L011 (fix-classes) + L012 (regex coverage)."
 exit 0

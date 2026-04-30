@@ -1,6 +1,6 @@
 @testable import PersonalHygiene
 import SwiftUI
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-19 / L006 guard tests. SwiftUI's `Text(LocalizedStringKey("foo.\(x)"))`
 /// converts the interpolation into a `%@` placeholder and looks up

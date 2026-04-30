@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-25 slice T1.7: explicit sign verification (positive/negative/zero)
 /// for `SleepWeeklyDelta.summarize`. Tests the property `delta = thisWeek

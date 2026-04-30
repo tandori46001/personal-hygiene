@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-25 slice T2.15: smoke test that the chip's tint tier is consistent
 /// with the percent it renders. Tests the underlying helper boundaries

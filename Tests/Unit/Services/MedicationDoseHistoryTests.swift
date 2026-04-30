@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 final class MedicationDoseHistoryTests: XCTestCase {
 

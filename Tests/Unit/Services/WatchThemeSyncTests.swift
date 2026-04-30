@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-21 slice T5.28 — guards that the iPhone-side `settings.theme`
 /// AppStorage and the watch-side `@AppStorage("settings.theme", store: …)`

@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-23 slice T1.4 — extends round-22's reconciler coverage with edge
 /// cases: a fail-on-first scenario must NOT clear the queue (otherwise the

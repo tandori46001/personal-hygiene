@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-20 slice T1.6 — guards `MoodLogStore.record` cap behavior + the
 /// `todayEntry(now:calendar:)` filter so the Today UI's highlight stays

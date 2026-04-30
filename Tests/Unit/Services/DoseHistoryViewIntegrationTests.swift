@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-16: ensure DoseHistoryView accepts the entries shape we produce
 /// elsewhere. View itself is not snapshot-tested (deferred), but the entry

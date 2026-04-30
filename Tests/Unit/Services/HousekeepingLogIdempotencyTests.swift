@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-23 slice T1.3 — extra coverage on `HousekeepingCompletionLog`
 /// beyond the round-22 happy-path tests. Specifically pins down behaviour

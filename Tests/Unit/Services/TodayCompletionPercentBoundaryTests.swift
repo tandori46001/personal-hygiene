@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-25 slice T1.5: boundary cases beyond `TodayCompletionPercentTests`
 /// — half-rounding behavior, larger denominators, never exceeds 100, never

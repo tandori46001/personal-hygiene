@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-24 slice T1.5 — coverage that `RuntimeWeatherForecastFetcher.make()`
 /// returns a non-nil fetcher and that the type is something the rest of the

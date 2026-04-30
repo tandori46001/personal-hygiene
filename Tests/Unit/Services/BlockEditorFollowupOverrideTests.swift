@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-25 slice T1.4: per-block override beats template default — when
 /// `PerBlockFollowUpOverrideStore.minutes(...)` is set, the resolved

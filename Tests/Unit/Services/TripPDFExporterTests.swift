@@ -1,5 +1,5 @@
 import PDFKit
-import XCTest
+@preconcurrency import XCTest
 
 @testable import PersonalHygiene
 

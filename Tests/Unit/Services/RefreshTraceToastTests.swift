@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-22 slice T1.4 — guards the round-21 refresh-trace toast helper.
 /// Verifies the empty-log path returns `nil`, that a recorded entry is

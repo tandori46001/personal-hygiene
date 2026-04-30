@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-21 slice T1.5 — guards `MoodLogStore.exportCSV` shape: header line
 /// present, ISO-8601 timestamps, newest-first ordering, no trailing newline.

@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 final class ComplicationLine3ChoiceTests: XCTestCase {
 

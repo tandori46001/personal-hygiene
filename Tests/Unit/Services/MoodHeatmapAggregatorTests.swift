@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-24 slice T1.4 — guards `MoodHeatmapAggregator.rows(...)` row-count
 /// + future-day clamp behaviour.

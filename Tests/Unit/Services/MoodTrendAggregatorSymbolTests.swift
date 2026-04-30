@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-22 slice T1.3 — guards `MoodTrendAggregator.symbol(for:)` rounding
 /// thresholds. Round 21 added the helper for the Today week strip without

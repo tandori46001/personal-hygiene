@@ -1,5 +1,5 @@
 import UserNotifications
-import XCTest
+@preconcurrency import XCTest
 
 @testable import PersonalHygiene
 

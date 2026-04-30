@@ -197,12 +197,13 @@ targets:
       base:
         GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: com.tandori46001.personalhygiene.tests
-        # Round 36 (Batch Q follow-up): same shape as the UI test target
-        # below — `XCTestCase` itself triggers "sending value of non-Sendable
-        # type 'XCTestCase' risks causing data races" errors on CI under
-        # SWIFT_VERSION="6.0". Local Xcode emits warnings only (L009).
-        # Test targets stay on 5; production code is on 6.0.
-        SWIFT_VERSION: "5"
+        # Round 37 [37-1]: re-flipped to 6.0 after migrating all 205 unit
+        # test files to `@preconcurrency import XCTest`. The preconcurrency
+        # import silences the round-36 "sending value of non-Sendable type
+        # 'XCTestCase' risks causing data races" diagnostics by treating
+        # XCTest as a pre-Swift-6 framework that can ignore strict-mode
+        # sendability requirements. Round-36 history kept in archived
+        # commits (`5068911` UI fix, `5453187` unit fix).
 
   PersonalHygieneUITests:
     type: bundle.ui-testing
@@ -217,19 +218,14 @@ targets:
         GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: com.tandori46001.personalhygiene.uitests
         TEST_TARGET_NAME: PersonalHygiene
-        # Round 36 (Batch Q follow-up): XCUITest APIs (XCUIApplication.init,
-        # launch(), launchArguments, element(matching:), tap(), tabBars,
-        # buttons, navigationBars, waitForExistence(timeout:), firstMatch,
-        # isSelected, exists) are all @MainActor-isolated, but XCUITest's
-        # default `func test*()` instance methods are nonisolated. Under
-        # SWIFT_VERSION="6.0" CI escalates ~26 nonisolated-context warnings
-        # to errors; local Xcode emits warnings only (L009). Two ways to
-        # fix: (a) annotate every UI test class/method with @MainActor
-        # (invasive — 2 classes, ~6 methods today, more later), or (b)
-        # downgrade just this target to SWIFT_VERSION="5". (b) is the
-        # round-36 choice — UI tests don't ship; production code is
-        # already on 6.0; (a) is a tracked round-37+ candidate.
-        SWIFT_VERSION: "5"
+        # Round 37 [37-1]: re-flipped to 6.0 after migrating both UI test
+        # files to `@preconcurrency import XCTest`. Round-36 had downgraded
+        # this target back to 5 because XCUITest APIs (XCUIApplication.init,
+        # launch(), tap(), launchArguments, etc.) are all @MainActor-isolated
+        # but XCUITest's default `func test*()` methods are nonisolated —
+        # under SWIFT_VERSION=6.0 + Swift 6 strict mode, CI escalated
+        # ~26 nonisolated-context warnings to errors. The `@preconcurrency
+        # import XCTest` blanket fix silences them all.
 
 schemes:
   PersonalHygiene:

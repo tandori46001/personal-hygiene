@@ -1,6 +1,6 @@
 @testable import PersonalHygiene
 import SwiftData
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-23 slice T1.6 — guards that a v4 backup can be down-shifted by
 /// stripping `moodWeeklyGoal` (simulating an older v3-era importer)

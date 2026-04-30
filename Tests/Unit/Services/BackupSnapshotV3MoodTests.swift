@@ -1,6 +1,6 @@
 @testable import PersonalHygiene
 import SwiftData
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-21 slice T1.3 — guards `BackupSnapshot` v3 mood payload through
 /// export → encode → decode → restore. Round 20 added the `mood` field; this

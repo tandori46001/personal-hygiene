@@ -1,7 +1,7 @@
 @testable import PersonalHygiene
 import SwiftData
 import SwiftUI
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-20 slices T1.2 + T1.3 — extracted from `RenderSmokeTests` to keep
 /// that class body under SwiftLint's `type_body_length` cap.

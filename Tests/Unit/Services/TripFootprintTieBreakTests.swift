@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-22 slice T1.6 — guards a deterministic tie-break in
 /// `TripFootprintAggregator.summary(...)`. Round 21 used `Dictionary.max`

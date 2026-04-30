@@ -245,3 +245,51 @@ jobs:
       - name: Skip (no project yet)
         if: steps.detect.outputs.exists == 'false'
         run: echo "::notice::No Xcode project yet — watch build skipped"
+
+  # ───────────────────────────────────────────────────────────────────
+  # 5. Strict-concurrency guard — runs check-strict-concurrency.sh as a
+  #    blocking job. Round 36 closed Batch Q (production code on Swift
+  #    6 strict mode); round 37 [37-3] makes the inventory script gate
+  #    CI to prevent regression. Diagnostics that round-36's CI saga
+  #    surfaced (L009 / L011 / L012) would now fail-fast at this job
+  #    rather than at build-test.
+  # ───────────────────────────────────────────────────────────────────
+  strict-concurrency:
+    name: Strict concurrency (Swift 6)
+    runs-on: macos-latest
+    needs: hygiene
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Detect Xcode project
+        id: detect
+        run: |
+          if [ -d "App/PersonalHygiene.xcodeproj" ]; then
+            echo "exists=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "exists=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Show Xcode version
+        if: steps.detect.outputs.exists == 'true'
+        run: xcodebuild -version
+
+      - name: Cache derived data (strict)
+        if: steps.detect.outputs.exists == 'true'
+        uses: actions/cache@v5
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData
+          key: ${{ runner.os }}-derived-strict-${{ hashFiles('App/**/*.swift', 'App/**/project.pbxproj') }}
+          restore-keys: |
+            ${{ runner.os }}-derived-strict-
+
+      - name: Run strict-concurrency inventory
+        if: steps.detect.outputs.exists == 'true'
+        run: |
+          chmod +x scripts/check-strict-concurrency.sh
+          ./scripts/check-strict-concurrency.sh --files
+
+      - name: Skip (no project yet)
+        if: steps.detect.outputs.exists == 'false'
+        run: echo "::notice::No Xcode project yet — strict-concurrency skipped"

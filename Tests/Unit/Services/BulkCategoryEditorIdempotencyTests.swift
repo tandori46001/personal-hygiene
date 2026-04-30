@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-25 slice T1.3: applying the same target category twice yields the
 /// same observable state — proves the helper is idempotent and safe to

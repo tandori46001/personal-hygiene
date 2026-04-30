@@ -1,6 +1,6 @@
 @testable import PersonalHygiene
 import SwiftData
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-25 slice T1.1: deeper round-trip than `BackupSnapshotV5ArchiveTests`
 /// — encodes, decodes, restores into a fresh container, and re-exports to

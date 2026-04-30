@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-25 slice T1.2: the "most recent" promise — a second `record(...)`
 /// call must overwrite the first, and `recordedAt` must reflect the

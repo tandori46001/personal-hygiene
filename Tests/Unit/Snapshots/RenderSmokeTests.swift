@@ -1,6 +1,6 @@
 import SwiftData
 import SwiftUI
-import XCTest
+@preconcurrency import XCTest
 
 @testable import PersonalHygiene
 

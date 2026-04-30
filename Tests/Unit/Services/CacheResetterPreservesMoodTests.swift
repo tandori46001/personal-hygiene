@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-24 slice T1.7 — guards that `CacheResetter.resetAll()` does NOT
 /// touch the user's mood log. Mood lives in `.standard` defaults (not the

@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-25 slice T1.8: the archive set survives a "fresh read" — set,
 /// throw away the in-memory store reference, re-read, and confirm the

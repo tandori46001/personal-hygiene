@@ -1,5 +1,5 @@
 @testable import PersonalHygiene
-import XCTest
+@preconcurrency import XCTest
 
 /// Round-25 slice T1.6: `currentStreak` must reset to zero the moment the
 /// user-current day is missing from the completion set, and a single-day
