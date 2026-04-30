@@ -67,7 +67,14 @@ if (( WATCH )); then
             echo "    no runs found." >&2
             exit 2
         fi
-        IFS=$'\t' read -r RID STATUS CONCL SHA TITLE <<< "$line"
+        # bash 3.2 collapses adjacent tabs when IFS contains whitespace, which
+    # mangles fields when CONCL is empty (in-flight runs). awk -F'\t' is
+    # collapse-safe and handles the empty-field case correctly.
+    RID="$(awk -F'\t' '{print $1}' <<< "$line")"
+    STATUS="$(awk -F'\t' '{print $2}' <<< "$line")"
+    CONCL="$(awk -F'\t' '{print $3}' <<< "$line")"
+    SHA="$(awk -F'\t' '{print $4}' <<< "$line")"
+    TITLE="$(awk -F'\t' '{print $5}' <<< "$line")"
         echo "    #$RID  status=$STATUS  conclusion=${CONCL:-—}  sha=$SHA  $TITLE"
         case "$STATUS" in
             completed) break ;;
@@ -80,7 +87,14 @@ else
         echo "    no runs found." >&2
         exit 2
     fi
-    IFS=$'\t' read -r RID STATUS CONCL SHA TITLE <<< "$line"
+    # bash 3.2 collapses adjacent tabs when IFS contains whitespace, which
+    # mangles fields when CONCL is empty (in-flight runs). awk -F'\t' is
+    # collapse-safe and handles the empty-field case correctly.
+    RID="$(awk -F'\t' '{print $1}' <<< "$line")"
+    STATUS="$(awk -F'\t' '{print $2}' <<< "$line")"
+    CONCL="$(awk -F'\t' '{print $3}' <<< "$line")"
+    SHA="$(awk -F'\t' '{print $4}' <<< "$line")"
+    TITLE="$(awk -F'\t' '{print $5}' <<< "$line")"
     echo "    #$RID  status=$STATUS  conclusion=${CONCL:-—}  sha=$SHA  $TITLE"
 fi
 
