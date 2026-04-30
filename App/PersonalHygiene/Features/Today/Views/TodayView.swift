@@ -1,13 +1,6 @@
 import SwiftData
 import SwiftUI
 
-// swiftlint:disable type_body_length
-//
-// TodayView is the main feature view of the app — the body is
-// intrinsically big (8+ sections). Sections that compose cleanly are
-// already extracted into the bottom-of-file extension; what's left is
-// the body that stitches them together.
-
 struct TodayView: View {
     @Bindable var viewModel: TodayViewModel
     var onCreateTemplate: (() -> Void)?
@@ -132,175 +125,10 @@ struct TodayView: View {
             Group {
                 if let template = queriedActiveTemplate {
                     ScrollViewReader { proxy in
-                    List {
-                        staleDayBannerSection
-                        if let focus = viewModel.activeFocusWindow() {
-                            Section {
-                                FocusActiveBanner(window: focus)
-                            }
-                        }
-                        tripCountdownSection
-                        birthdaysSection
-                        importantDaysSection
-                        progressSummarySection(showingDetail: $showingProgressDetail)
-                        if let current = viewModel.currentBlock() {
-                            Section {
-                                BlockNowRow(
-                                    block: current,
-                                    label: Text("today.now", bundle: .main),
-                                    minutesUntilStart: nil
-                                )
-                            }
-                        } else if let next = viewModel.nextBlock() {
-                            let until = max(0, next.startMinutesFromMidnight - nowMinutes)
-                            Section {
-                                BlockNowRow(
-                                    block: next,
-                                    label: Text("today.next", bundle: .main),
-                                    minutesUntilStart: until
-                                )
-                            }
-                        }
-
-                        if !template.sortedBlocks.isEmpty {
-                            Section {
-                                CategoryFilterChips(selected: $categoryFilter, blocks: template.sortedBlocks)
-                            }
-                        }
-
-                        Section {
-                            let visible = visibleBlocks(
-                                template.sortedBlocks,
-                                filter: categoryFilter,
-                                collapseDone: collapseDoneBlocks
-                            )
-                            ForEach(visible) { block in
-                                if shouldInsertNowMarker(
-                                    before: block,
-                                    in: template.sortedBlocks,
-                                    nowMinutes: nowMinutes
-                                ) {
-                                    NowMarkerRow(nowMinutes: nowMinutes) {
-                                        // Round-20 slice T4.17: tap → snap back
-                                        // to the current/next block.
-                                        if let target = viewModel.currentBlock() ?? viewModel.nextBlock() {
-                                            withAnimation { proxy.scrollTo(target.id, anchor: .center) }
-                                        }
-                                    }
-                                }
-                                BlockTimelineRow(
-                                    block: block,
-                                    isDone: viewModel.isDone(block),
-                                    isSkipped: viewModel.isSkipped(block),
-                                    isSnoozedToday: viewModel.isSnoozedToday(block),
-                                    compact: compactMode,
-                                    onToggle: { viewModel.toggleDone(block) }
-                                )
-                                .id(block.id) // Round-20 slice T4.17: ScrollViewReader anchor.
-                                .contentShape(Rectangle())
-                                .onTapGesture {
-                                    detailBlock = block
-                                }
-                                .contextMenu {
-                                    Button {
-                                        viewModel.toggleDone(block)
-                                    } label: {
-                                        Label {
-                                            Text(
-                                                viewModel.isDone(block)
-                                                    ? "today.action.markUndone"
-                                                    : "today.action.markDone",
-                                                bundle: .main
-                                            )
-                                        } icon: {
-                                            Image(systemName: "checkmark.circle")
-                                        }
-                                    }
-                                    Button {
-                                        viewModel.toggleSkippedToday(block)
-                                    } label: {
-                                        Label {
-                                            Text(
-                                                viewModel.isSkipped(block)
-                                                    ? "today.action.unskipToday"
-                                                    : "today.action.skipToday",
-                                                bundle: .main
-                                            )
-                                        } icon: {
-                                            Image(systemName: "moon.zzz")
-                                        }
-                                    }
-                                    Button {
-                                        detailBlock = block
-                                    } label: {
-                                        Label {
-                                            Text("today.action.details", bundle: .main)
-                                        } icon: {
-                                            Image(systemName: "info.circle")
-                                        }
-                                    }
-                                }
-                                .swipeActions(edge: .trailing) {
-                                    Button {
-                                        viewModel.toggleSkippedToday(block)
-                                    } label: {
-                                        if viewModel.isSkipped(block) {
-                                            Label {
-                                                Text("today.action.unskipToday", bundle: .main)
-                                            } icon: {
-                                                Image(systemName: "arrow.uturn.backward.circle")
-                                            }
-                                        } else {
-                                            Label {
-                                                Text("today.action.skipToday", bundle: .main)
-                                            } icon: {
-                                                Image(systemName: "moon.zzz")
-                                            }
-                                        }
-                                    }
-                                    .tint(.orange)
-                                    if !viewModel.isSkipped(block) {
-                                        Button {
-                                            viewModel.skipRestOfToday(from: block)
-                                        } label: {
-                                            Label {
-                                                Text("today.action.skipRest", bundle: .main)
-                                            } icon: {
-                                                Image(systemName: "forward.end")
-                                            }
-                                        }
-                                        .tint(.red)
-                                    }
-                                }
-                            }
-                        } header: {
-                            Text("today.section.schedule", bundle: .main)
-                        }
-                        moodQuickLogSection
-                        tomorrowSection
-                    }
+                        templateContent(template: template, proxy: proxy)
                     } // ScrollViewReader (round-20 slice T4.17)
                 } else {
-                    ContentUnavailableView {
-                        Label {
-                            Text("today.empty.title", bundle: .main)
-                        } icon: {
-                            Image(systemName: "calendar")
-                        }
-                    } description: {
-                        Text("today.empty.description", bundle: .main)
-                    } actions: {
-                        if let onCreateTemplate {
-                            Button(action: onCreateTemplate) {
-                                Label {
-                                    Text("today.empty.action.createTemplate", bundle: .main)
-                                } icon: {
-                                    Image(systemName: "plus")
-                                }
-                            }
-                            .buttonStyle(.borderedProminent)
-                        }
-                    }
+                    emptyTemplateContent
                 }
             }
             .navigationTitle(Text("today.title", bundle: .main))
@@ -476,4 +304,207 @@ extension TodayView {
     }
 }
 
-// swiftlint:enable type_body_length
+// MARK: - Round 33 (K01 part 2): body-content extraction
+
+extension TodayView {
+
+    /// Round 33 K01: the active-template branch of the body — moved out
+    /// to drop the round-28 `// swiftlint:disable type_body_length`. Same-file
+    /// extension so all `private @State` properties remain accessible.
+    @ViewBuilder
+    func templateContent(template: RoutineTemplate, proxy: ScrollViewProxy) -> some View {
+        List {
+            staleDayBannerSection
+            if let focus = viewModel.activeFocusWindow() {
+                Section {
+                    FocusActiveBanner(window: focus)
+                }
+            }
+            tripCountdownSection
+            birthdaysSection
+            importantDaysSection
+            progressSummarySection(showingDetail: $showingProgressDetail)
+            currentOrNextBlockSection
+            if !template.sortedBlocks.isEmpty {
+                Section {
+                    CategoryFilterChips(selected: $categoryFilter, blocks: template.sortedBlocks)
+                }
+            }
+            scheduleSection(template: template, proxy: proxy)
+            moodQuickLogSection
+            tomorrowSection
+        }
+    }
+
+    @ViewBuilder
+    var currentOrNextBlockSection: some View {
+        if let current = viewModel.currentBlock() {
+            Section {
+                BlockNowRow(
+                    block: current,
+                    label: Text("today.now", bundle: .main),
+                    minutesUntilStart: nil
+                )
+            }
+        } else if let next = viewModel.nextBlock() {
+            let until = max(0, next.startMinutesFromMidnight - nowMinutes)
+            Section {
+                BlockNowRow(
+                    block: next,
+                    label: Text("today.next", bundle: .main),
+                    minutesUntilStart: until
+                )
+            }
+        }
+    }
+
+    /// The schedule list. `proxy` is forwarded so the now-marker tap-handler
+    /// can scroll back to the current/next block (round-20 slice T4.17).
+    @ViewBuilder
+    func scheduleSection(template: RoutineTemplate, proxy: ScrollViewProxy) -> some View {
+        Section {
+            let visible = visibleBlocks(
+                template.sortedBlocks,
+                filter: categoryFilter,
+                collapseDone: collapseDoneBlocks
+            )
+            ForEach(visible) { block in
+                if shouldInsertNowMarker(
+                    before: block,
+                    in: template.sortedBlocks,
+                    nowMinutes: nowMinutes
+                ) {
+                    NowMarkerRow(nowMinutes: nowMinutes) {
+                        if let target = viewModel.currentBlock() ?? viewModel.nextBlock() {
+                            withAnimation { proxy.scrollTo(target.id, anchor: .center) }
+                        }
+                    }
+                }
+                blockRow(for: block)
+            }
+        } header: {
+            Text("today.section.schedule", bundle: .main)
+        }
+    }
+
+    /// Single row in the schedule list. The contextMenu and swipeActions are
+    /// further extracted into dedicated `@ViewBuilder` helpers so this
+    /// function body stays under SwiftLint's 80-line warning cap.
+    @ViewBuilder
+    func blockRow(for block: Block) -> some View {
+        BlockTimelineRow(
+            block: block,
+            isDone: viewModel.isDone(block),
+            isSkipped: viewModel.isSkipped(block),
+            isSnoozedToday: viewModel.isSnoozedToday(block),
+            compact: compactMode,
+            onToggle: { viewModel.toggleDone(block) }
+        )
+        .id(block.id) // Round-20 slice T4.17: ScrollViewReader anchor.
+        .contentShape(Rectangle())
+        .onTapGesture {
+            detailBlock = block
+        }
+        .contextMenu { blockRowContextMenu(for: block) }
+        .swipeActions(edge: .trailing) { blockRowSwipeActions(for: block) }
+    }
+
+    @ViewBuilder
+    func blockRowContextMenu(for block: Block) -> some View {
+        Button {
+            viewModel.toggleDone(block)
+        } label: {
+            Label {
+                Text(
+                    viewModel.isDone(block)
+                        ? "today.action.markUndone"
+                        : "today.action.markDone",
+                    bundle: .main
+                )
+            } icon: {
+                Image(systemName: "checkmark.circle")
+            }
+        }
+        Button {
+            viewModel.toggleSkippedToday(block)
+        } label: {
+            Label {
+                Text(
+                    viewModel.isSkipped(block)
+                        ? "today.action.unskipToday"
+                        : "today.action.skipToday",
+                    bundle: .main
+                )
+            } icon: {
+                Image(systemName: "moon.zzz")
+            }
+        }
+        Button {
+            detailBlock = block
+        } label: {
+            Label {
+                Text("today.action.details", bundle: .main)
+            } icon: {
+                Image(systemName: "info.circle")
+            }
+        }
+    }
+
+    @ViewBuilder
+    func blockRowSwipeActions(for block: Block) -> some View {
+        Button {
+            viewModel.toggleSkippedToday(block)
+        } label: {
+            if viewModel.isSkipped(block) {
+                Label {
+                    Text("today.action.unskipToday", bundle: .main)
+                } icon: {
+                    Image(systemName: "arrow.uturn.backward.circle")
+                }
+            } else {
+                Label {
+                    Text("today.action.skipToday", bundle: .main)
+                } icon: {
+                    Image(systemName: "moon.zzz")
+                }
+            }
+        }
+        .tint(.orange)
+        if !viewModel.isSkipped(block) {
+            Button {
+                viewModel.skipRestOfToday(from: block)
+            } label: {
+                Label {
+                    Text("today.action.skipRest", bundle: .main)
+                } icon: {
+                    Image(systemName: "forward.end")
+                }
+            }
+            .tint(.red)
+        }
+    }
+
+    @ViewBuilder
+    var emptyTemplateContent: some View {
+        ContentUnavailableView {
+            Label {
+                Text("today.empty.title", bundle: .main)
+            } icon: {
+                Image(systemName: "calendar")
+            }
+        } description: {
+            Text("today.empty.description", bundle: .main)
+        } actions: {
+            if let onCreateTemplate {
+                Button(action: onCreateTemplate) {
+                    Label {
+                        Text("today.empty.action.createTemplate", bundle: .main)
+                    } icon: {
+                        Image(systemName: "plus")
+                    }
+                }
+                .buttonStyle(.borderedProminent)
+            }
+        }
+    }
+}

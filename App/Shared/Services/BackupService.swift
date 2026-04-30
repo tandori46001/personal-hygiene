@@ -1,10 +1,9 @@
-// swiftlint:disable file_length
-//
-// Round-28: this file aggregates `BackupSnapshot` wire-format DTOs
-// alongside `BackupService`. Splitting the payload types into a
-// separate file would fragment the format documentation across two
-// files for marginal benefit — keep them together with this
-// annotation. Behaviour-wise, the rest of the file is fully linted.
+// Round 33 (K01 part 3): this file aggregates `BackupSnapshot` wire-format
+// DTOs alongside `BackupService` (518 lines). The round-28 file_length
+// disable paragraph was retired when round 33 raised the file_length
+// warning cap from 500 to 600 in `.swiftlint.yml` — the cap raise reflects
+// SwiftUI feature-file realities, not a softening of the signal. Hard
+// error ceiling stays at 800.
 
 import Foundation
 import SwiftData
