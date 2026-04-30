@@ -4163,6 +4163,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tandori46001.personalhygiene.tests;
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PersonalHygiene.app/PersonalHygiene";
 			};
@@ -4421,6 +4422,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.tandori46001.personalhygiene.tests;
 				SDKROOT = iphoneos;
+				SWIFT_VERSION = 5;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/PersonalHygiene.app/PersonalHygiene";
 			};

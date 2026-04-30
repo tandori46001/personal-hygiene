@@ -197,6 +197,12 @@ targets:
       base:
         GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: com.tandori46001.personalhygiene.tests
+        # Round 36 (Batch Q follow-up): same shape as the UI test target
+        # below — `XCTestCase` itself triggers "sending value of non-Sendable
+        # type 'XCTestCase' risks causing data races" errors on CI under
+        # SWIFT_VERSION="6.0". Local Xcode emits warnings only (L009).
+        # Test targets stay on 5; production code is on 6.0.
+        SWIFT_VERSION: "5"
 
   PersonalHygieneUITests:
     type: bundle.ui-testing
