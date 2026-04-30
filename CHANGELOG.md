@@ -8,6 +8,101 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Round 35 — Trip detail IA redesign (kid-friendly) + global travel prefs (2026-04-30)
+
+User feedback: the per-trip detail view inside Trips was "caótica y
+difícil de encontrar" (chaotic and hard to find) — 18 sections, 80–100+
+rows possible, basics buried under 4 conditional sections, 4 single-row
+navigation links scattered, "money-shaped" data split 3 ways. Asked for
+a regroup that "even a 10-year-old can find" + extraction of anything
+trip-global into Settings.
+
+**Per-trip restructure (TripDetailView IA: 18 → ~12 sections).** New
+phase-aligned ordering: basics → before-you-go → during-the-trip →
+resources → after-the-fact. Two NEW combined sections collapse the
+biggest fragmentation:
+
+- **`progressSection` "My progress"** rolls up the round-12
+  `TripCompletionSection` (% bar) + round-12 `NextMilestoneSection`
+  (next-due milestone callout). Conditional on either being non-empty.
+- **`destinationInfoSection` "About your destination"** collapses 4
+  separate single-row navigation sections (auto-itinerary, marine,
+  currency, advisory) plus the wizard button into one section with 5
+  conditional rows + footer caption. Rows independently gated; section
+  always rendered (wizard is unconditional).
+
+The 3 round-12 single-section structs (`NextMilestoneSection`,
+`TripCompletionSection`, `MarineSection`) are deleted from
+`TripDetailRows.swift` since their bodies are now inlined in the new
+combined sections. Replaced with breadcrumb comments.
+
+`TripCarbonSection` moved from #4 (after Completion bar) to #12 (last);
+pure informational, no longer competes for attention with action-oriented
+sections.
+
+**Trip-global extraction (Settings → Home & Travel).** The CO₂ display
+unit (kg vs. lb) was already `@AppStorage("trip.carbon.unit")`-backed —
+changing it on trip A also flipped trip B — but its segmented picker
+lived inside `TripCarbonSection`, making the UI look per-trip. Storage
+key unchanged; existing values preserved on first launch.
+
+NEW [App/PersonalHygiene/Features/Settings/Views/TravelPreferencesSection.swift](App/PersonalHygiene/Features/Settings/Views/TravelPreferencesSection.swift)
+hosts the kg/lb segmented picker, wired into Settings → Home & Travel
+between `HomeLocationSection()` and `footprintSummarySection`.
+Transport-mode picker stays per-trip (varies trip-to-trip).
+
+**Localizations.** 10 existing trip-detail-section keys: localized
+values updated to kid-friendly phrasing in EN + ES + FR (no key
+renames). Examples:
+
+| Key | Before (en/es/fr) | After (en/es/fr) |
+|---|---|---|
+| summary | Trip / Viaje / Voyage | The basics / Lo básico / L'essentiel |
+| milestones | Milestones / Hitos / Jalons | Before you go / Antes de salir / Avant le départ |
+| packing | Packing list / Equipaje / Bagages | What to pack / Mi maleta / Ma valise |
+| documents | Documents / Documentos / Documents | My documents / Mis documentos / Mes documents |
+| emergency | Emergency contacts / Contactos de emergencia / Contacts d'urgence | In case something happens / Por si pasa algo / En cas d'urgence |
+| notes | Notes / Notas / Notes | My notes / Mis notas / Mes notes |
+| expenses | Expenses / Gastos / Dépenses | What I spent / Mis gastos / Mes dépenses |
+| currencySnapshot | Currency snapshot / Snapshot de divisas / Instantané des devises | Saved exchange rates / Tipos de cambio guardados / Taux de change enregistrés |
+| cover | Cover / Portada / Couverture | Trip photo / Foto del viaje / Photo du voyage |
+| carbon.title | Estimated round-trip CO₂ / CO₂ estimado ida y vuelta / CO₂ estimé aller-retour | My carbon footprint / Mi huella de carbono / Mon empreinte carbone |
+
+6 new keys (994 → 1000):
+- `trip.detail.section.progress`
+- `trip.detail.section.destinationInfo` + `.footer`
+- `settings.travelPrefs.title`
+- `settings.travelPrefs.unit.label` + `.footer`
+
+**Verification:**
+- `./scripts/check-tests.sh`: 947 unit + 2 UI = 949 PASS locally.
+- `./scripts/check-counts.sh`: 1000 i18n × 3 (was 994, +6).
+- `./scripts/check-i18n.py`: parity OK.
+- `./scripts/check-localized-key-usage.py`: L006 clean.
+- `./scripts/lint.sh`: clean.
+- watchOS Simulator build: clean (L003 — `Shared/LocalizationKeyCount.swift`
+  touched; no impact on watch).
+- xcodegen regenerated `project.pbxproj` (4-line diff registers
+  `TravelPreferencesSection.swift`).
+
+**Stats:**
+- Round-35 commit `e4d4a97`: 9 files, +303 / -222.
+- Sections in TripDetailView: 18 → ~12 (depending on which conditionals
+  are populated for a given trip).
+- Single-row navigation sections: 4 → 0 (collapsed into 1 combined
+  multi-row section).
+- Round-12 section structs deleted: 3 (`NextMilestoneSection`,
+  `TripCompletionSection`, `MarineSection`).
+
+**Round 35 deferred (round 36+ candidates, each needs UX decision):**
+- Default emergency contacts auto-populating new trips
+- User-editable milestone bundle (currently hardcoded "passport,
+  insurance, cash, medications")
+- User-editable note templates (currently hardcoded prep/dayD/return)
+- O01 PII-strip toggle for Wizard v2 (already on backlog)
+
+---
+
 ### Round 34 — L009 formalized + Batch Q inventory + script fix (2026-04-30)
 
 Post-`ALL OK ?` autonomous round. No behavior change. Three small additions
