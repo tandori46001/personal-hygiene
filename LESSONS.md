@@ -310,3 +310,41 @@ Once these four classes are addressed for every site the script reports, the hos
 **Where it was caught.** 2026-04-30, round 36 — first successful Batch Q inventory had run in round 34 after the script's PROJECT-path bug was fixed. Round 36 walked the 12 warnings to 0, flipped SWIFT_VERSION, verified clean. The whole migration was a single round (~3 file edits + 1 project.yml edit) once the inventory was usable.
 
 **Interaction with other lessons.** Direct sequel to L009 — that lesson named the problem; this lesson names the solution. Together: L009 says "local-pass is not sufficient, run the strict-concurrency script + verify CI", and L011 says "when the script flags issues, here are the four shapes they take and how to fix each." L011 also depends on the L009-era prep work (the `@preconcurrency` imports) — without those, the surface would be far larger than 4 classes.
+
+---
+
+## L012 — Strict-concurrency inventory regex must cover EVERY Swift 6 diagnostic shape, not just the obvious ones
+
+**Trigger pattern.** A local script wraps `xcodebuild build SWIFT_STRICT_CONCURRENCY=complete SWIFT_VERSION=6.0` and post-processes the log with a curated regex like `(Sendable|actor-isolated|non-isolated|@MainActor|data race|Sending|preconcurrency|isolated context|concurrency)` to count concurrency-related diagnostics. The script then reports "0 errors / 0 warnings" and the migrator concludes the project is ready for `SWIFT_VERSION="6.0"`. **Then CI fails on diagnostic shapes the regex didn't include.**
+
+**Symptom.** `./scripts/check-strict-concurrency.sh --files` reports clean. `./scripts/check-tests.sh` reports green locally. CI on `macos-latest` is red with errors like:
+- `'sending value of non-Sendable type 'XCTestCase' risks causing data races` (unit test target)
+- `call to main actor-isolated initializer 'init()' in a synchronous nonisolated context` (UI test target — `XCUIApplication.init()`)
+- `call to main actor-isolated instance method 'tap()' in a synchronous nonisolated context` (UI test target)
+- `main actor-isolated property 'launchArguments' can not be mutated from a nonisolated context` (UI test target)
+
+The phrases `sending value of non-Sendable type` and `actor-isolated initializer/instance method/property... mutated/referenced from a nonisolated context` are NEW shapes — none of the words in the existing regex (`Sendable`, `actor-isolated`, `@MainActor`, etc.) match the substring `sending value of non-Sendable type` because none of those words are at the diagnostic's prefix and the partial-word `Sendable` only matches `non-Sendable` (which the regex DOES catch on individual lines but can miss when the diagnostic is split across multiple xcodebuild output lines).
+
+**Root cause.** Swift 6 strict-mode diagnostics span **dozens of distinct phrasings**, and Apple's compiler team adds new ones across point releases. A "concurrency keyword bag" regex is fundamentally incomplete: every release widens the set of phrasings without changing the underlying rule. The script's promise (eliminate the L009 "local-pass ≠ CI-pass" gap by mirroring CI locally) breaks the moment a new phrasing slips through.
+
+In round 36 specifically, the gap was on **test target** diagnostics. The script's host-app `xcodebuild build` invocation DOES compile test targets as a side-effect, but the test-target diagnostics use phrasings the curated regex didn't recognize — so they were emitted to the log and then filtered out before the count.
+
+**Fix.**
+
+1. **Extend `CONCURRENCY_RE` to match diagnostic shapes by ANCHOR phrases**, not by keyword bag:
+   ```bash
+   CONCURRENCY_RE='(Sendable|actor-isolated|nonisolated|non-isolated|@MainActor|data race|Sending|preconcurrency|isolated context|concurrency|sending value of|sending main actor-isolated|sending parameter|sending closure|risks causing data races|cannot be sent across|risks causing|in a synchronous nonisolated context|across actor boundary|cannot be (referenced|mutated|sent) from|implicitly nonisolated|requires explicit isolation)'
+   ```
+   The phrases `risks causing data races`, `in a synchronous nonisolated context`, `cannot be (referenced|mutated|sent) from a nonisolated context` are CI's most common error shapes that the original regex missed.
+
+2. **Cross-check with `grep -cE "(error:|warning:)" "$RAW_LOG"` — if the total exceeds the concurrency-classified subset by more than ~5 (build-system-noise floor), the regex is incomplete.** Print a "uncovered-diagnostic preview" if so, listing the first 5 unmatched diagnostics. This converts a silent classification gap into a noisy alert.
+
+3. **Run with `-quiet` removed** when investigating — `-quiet` suppresses non-error diagnostics on some xcodebuild versions, hiding the warnings the regex is supposed to count.
+
+4. **Mirror the regex in the eventual CI integration** — once the script gates CI (round-37 candidate), the same regex powers both local and CI verdicts, so any blind spot affects both equally and at least surfaces consistently.
+
+**Guard test.** No automated regression test possible (the regex IS the test). Process: when CI surfaces a Swift 6 diagnostic the local script missed, **always** extend the regex in the same commit that fixes the diagnostic. Otherwise the next round will hit the same blind spot. Capture the new shape in this lesson too so a future migrator inherits the working set.
+
+**Where it was caught.** 2026-04-30, round 36 — Batch Q migration. The strict-concurrency script reported 0 errors / 0 warnings at SWIFT_STRICT_CONCURRENCY=complete + SWIFT_VERSION=6.0; round 36's commit `21c371b` flipped SWIFT_VERSION 5 → 6.0 expecting CI green. CI red on UI test target (`5068911` fix-forward) → CI red on unit test target (`5453187` fix-forward). Both fix-forwards downgraded the respective test target back to SWIFT_VERSION="5". The full migration cost 4 commits where it should have been 1 + 1 doc-sync. Net cost of the regex blind spot: ~30 minutes of CI cycles + cognitive overhead of two surprise fix-forward iterations.
+
+**Interaction with other lessons.** Direct sequel to L009 + L011. L009 said "local-pass is not sufficient." L011 said "after the round-29 prep, the residual surface is small and well-defined." L012 says "the local script's REGEX is itself a code surface that can have bugs the same way any inventory tool can have bugs — extend it whenever CI catches a shape it missed, and treat the extension itself as part of the migration commit." Together, L009 + L011 + L012 form the full Swift 6 strict-mode toolkit for this repo.

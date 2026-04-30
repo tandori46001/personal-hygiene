@@ -65,13 +65,30 @@ XCODE_EXIT=$?
 set -e
 
 # Check whether the failure (if any) is concurrency-related or a true error.
-# Concurrency diagnostics include keywords like "Sendable", "actor-isolated",
-# "non-isolated", "@MainActor", "data race", "Sending", "preconcurrency".
-CONCURRENCY_RE='(Sendable|actor-isolated|non-isolated|@MainActor|data race|Sending|preconcurrency|isolated context|concurrency)'
+# Round 37 / L012: regex extended after round 36's CI saga revealed blind
+# spots on test-target diagnostic phrasings the original keyword bag missed
+# ("sending value of non-Sendable type 'XCTestCase' risks causing data
+# races", "call to main actor-isolated initializer/instance method 'X' in a
+# synchronous nonisolated context", "main actor-isolated property 'X' can
+# not be (referenced|mutated) from a nonisolated context"). The strict-mode
+# diagnostic surface is wider than the keywords in any single commit's
+# regex; treat the regex as code that needs extension every time a new
+# shape surfaces in CI. See LESSONS.md § L012.
+CONCURRENCY_RE='(Sendable|actor-isolated|nonisolated|non-isolated|@MainActor|data race|Sending|preconcurrency|isolated context|concurrency|sending value of|risks causing data races|in a synchronous nonisolated context|cannot be (referenced|mutated|sent) from|across actor boundary|implicitly nonisolated|requires explicit isolation|sending main actor-isolated)'
 
 # Count error and warning diagnostics related to concurrency.
 ERR_COUNT=$(grep -cE "error:.*$CONCURRENCY_RE" "$RAW_LOG" 2>/dev/null || true)
 WARN_COUNT=$(grep -cE "warning:.*$CONCURRENCY_RE" "$RAW_LOG" 2>/dev/null || true)
+
+# Round 37 / L012 cross-check: total diagnostics minus concurrency-classified
+# subset. If the gap exceeds the build-system noise floor (~5), the regex is
+# missing diagnostic shapes and we surface the first uncovered ones so the
+# regex can be extended. This converts a silent classification gap into a
+# noisy alert (the very gap that cost round 36 two surprise fix-forwards).
+TOTAL_ERR=$(grep -cE "^[^:]+\.swift:[0-9]+:[0-9]+: error:" "$RAW_LOG" 2>/dev/null || true)
+TOTAL_WARN=$(grep -cE "^[^:]+\.swift:[0-9]+:[0-9]+: warning:" "$RAW_LOG" 2>/dev/null || true)
+UNCOVERED_ERR=$((TOTAL_ERR - ERR_COUNT))
+UNCOVERED_WARN=$((TOTAL_WARN - WARN_COUNT))
 
 if [[ "$MODE" == "--raw" ]]; then
     cat "$RAW_LOG"
@@ -80,9 +97,22 @@ fi
 
 echo ""
 echo "==> Strict-concurrency diagnostic summary (Batch Q preview)"
-echo "    errors:   $ERR_COUNT"
-echo "    warnings: $WARN_COUNT"
+echo "    errors:   $ERR_COUNT (concurrency-classified) / $TOTAL_ERR (total)"
+echo "    warnings: $WARN_COUNT (concurrency-classified) / $TOTAL_WARN (total)"
 echo ""
+
+# Build-noise floor: 5 unclassified diagnostics is acceptable (xcodebuild
+# emits some non-concurrency warnings about deprecated APIs, etc.). Above
+# that, the regex is probably missing a Swift-6 shape — preview them.
+if (( UNCOVERED_ERR + UNCOVERED_WARN > 5 )); then
+    echo "==> ⚠️  $((UNCOVERED_ERR + UNCOVERED_WARN)) diagnostics not matched by CONCURRENCY_RE."
+    echo "    First 5 uncovered (extend regex if these look concurrency-shaped):"
+    grep -E "^[^:]+\.swift:[0-9]+:[0-9]+: (error|warning):" "$RAW_LOG" \
+        | grep -vE "(error|warning):.*$CONCURRENCY_RE" \
+        | head -5 \
+        | sed 's/^/      /'
+    echo ""
+fi
 
 if [[ "$MODE" == "--files" ]] && (( ERR_COUNT + WARN_COUNT > 0 )); then
     echo "==> Files with concurrency diagnostics (deduped, sorted):"
