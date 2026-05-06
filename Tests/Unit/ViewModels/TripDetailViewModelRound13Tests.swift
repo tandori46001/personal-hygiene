@@ -17,11 +17,6 @@ final class TripDetailViewModelRound13Tests: XCTestCase {
         repository = SwiftDataTripsRepository(context: container.mainContext)
     }
 
-    override func tearDown() {
-        repository = nil
-        container = nil
-    }
-
     private func makeViewModel(_ trip: Trip) -> TripDetailViewModel {
         try? repository.upsert(trip)
         return TripDetailViewModel(trip: trip, repository: repository)

@@ -4,14 +4,14 @@
 @MainActor
 final class RefreshTraceLogRecentSummaryTests: XCTestCase {
 
-    override func setUp() {
-        super.setUp()
+    override func setUp() async throws {
+        try await super.setUp()
         RefreshTraceLog.shared.reset()
     }
 
-    override func tearDown() {
+    override func tearDown() async throws {
         RefreshTraceLog.shared.reset()
-        super.tearDown()
+        try await super.tearDown()
     }
 
     func test_recentSummary_emptyWhenLogIsEmpty() {

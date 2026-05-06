@@ -8,6 +8,44 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Round 38b — Unit tests SWIFT_VERSION=6.0 (closes L011/L012 migration) + strict-concurrency script `--with-tests` flag (2026-05-06)
+
+Round 38b walks the round-37c retreat to ground. The `PersonalHygieneTests`
+target was the last target stuck on `SWIFT_VERSION="5"`; round 38b flips
+it to `"6.0"`, completing the Swift 6 strict-mode migration end-to-end.
+**Entire repo is now on Swift 6.0** (host iOS app + iOS widgets + watch
+host + watch widgets + unit tests + UI tests).
+
+The migration walked **18 warnings → 0** across 8 test files. The fix-class
+distribution was simpler than the round-36 production-code migration's
+4-class taxonomy: just **2 classes** for tests:
+
+1. **Defensive `tearDown { container = nil }` cleanup deleted** where the
+   test instance dealloc handles the same release. Affected:
+   `TripDetailViewModelRound{12,13,14}Tests`, `TripDetailViewModelTests`,
+   `TripsListViewModel{Duplication,Search,NextMilestone}Tests`. Net: -7
+   `tearDown` blocks across 6 files (TripsListViewModelSearchTests carries
+   2 classes, both lost their tearDown).
+
+2. **`async throws` conversion of sync `setUp` / `tearDown` overrides** for
+   tests with real side effects (`RefreshTraceLog.shared.reset()`):
+   `RefreshTraceLogRecentSummaryTests` + `RefreshTraceToastTests`. Calls
+   to `super` became `try await super.{set,tear}Up()`.
+
+Bonus: opportunistic `#file` → `#filePath` fix in
+`BlockNotificationIdentifierRoundTripTests.swift:94` (warning surfaced
+in the round-38b inventory but unrelated to concurrency).
+
+`scripts/check-strict-concurrency.sh` extended with **`--with-tests`** flag
+that switches `xcodebuild build` → `build-for-testing`, covering the test
+targets that the original script skipped (round-37 noted this blind spot
+in `feedback_repo_quirks.md` § 4 and L012; now closed). The flag stacks
+with `--files` and `--raw`.
+
+Tests: 947 unit + 2 UI = 949 GREEN at `SWIFT_VERSION=6.0` on every target.
+Lessons: 13 unchanged (L011/L012/L013 narratives extended to mark the
+blind-spot closure and the migration completion).
+
 ### Round 38a — Apple Developer Program activated + L013 (entitlements ↔ portal sequence) + Dependabot Swift block disabled (2026-05-06)
 
 User confirmed the Apple Developer Program is **ACTIVE** under Team ID

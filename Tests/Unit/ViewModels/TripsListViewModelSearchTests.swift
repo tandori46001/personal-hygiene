@@ -9,11 +9,6 @@ final class TripsListViewModelSearchTests: XCTestCase {
     // L001 guard.
     private var container: ModelContainer?
 
-    override func tearDown() {
-        container = nil
-        super.tearDown()
-    }
-
     private func makeFixture() throws -> (TripsListViewModel, SwiftDataTripsRepository) {
         let container = try AppModelContainer.makeInMemory()
         self.container = container
@@ -69,11 +64,6 @@ final class TripsListViewModelSearchTests: XCTestCase {
 final class TripDetailViewModelNextMilestoneTests: XCTestCase {
 
     private var container: ModelContainer?
-
-    override func tearDown() {
-        container = nil
-        super.tearDown()
-    }
 
     private struct MilestoneSpec {
         let title: String

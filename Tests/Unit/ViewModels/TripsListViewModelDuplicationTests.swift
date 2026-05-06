@@ -9,11 +9,6 @@ final class TripsListViewModelDuplicationTests: XCTestCase {
     // L001 guard.
     private var container: ModelContainer?
 
-    override func tearDown() {
-        container = nil
-        super.tearDown()
-    }
-
     private struct Fixture {
         let viewModel: TripsListViewModel
         let repo: SwiftDataTripsRepository

@@ -16,9 +16,14 @@
 # inspectable, not to gate CI.
 #
 # Usage:
-#   ./scripts/check-strict-concurrency.sh           # build + show counts
-#   ./scripts/check-strict-concurrency.sh --files   # also list affected files
-#   ./scripts/check-strict-concurrency.sh --raw     # full xcodebuild output
+#   ./scripts/check-strict-concurrency.sh                    # build + show counts
+#   ./scripts/check-strict-concurrency.sh --files            # also list affected files
+#   ./scripts/check-strict-concurrency.sh --raw              # full xcodebuild output
+#   ./scripts/check-strict-concurrency.sh --with-tests       # use build-for-testing
+#                                                              (covers PersonalHygieneTests +
+#                                                              PersonalHygieneUITests targets;
+#                                                              closes round-38b L012 blind spot)
+#   Flags can be combined: --with-tests --files
 #
 # Exit codes:
 #   0  — script completed (regardless of how many diagnostics were found).
@@ -44,11 +49,34 @@ if ! command -v xcodebuild >/dev/null 2>&1; then
     exit 2
 fi
 
-MODE="${1:-summary}"
+MODE="summary"
+WITH_TESTS=0
+for arg in "$@"; do
+    case "$arg" in
+        --with-tests) WITH_TESTS=1 ;;
+        --files|--raw|--summary) MODE="$arg" ;;
+        *) ;;
+    esac
+done
+
+# Round 38b / L012 follow-up: --with-tests switches to `build-for-testing`,
+# which compiles the test targets too. Without this flag, the strict-mode
+# inventory misses any diagnostic in `Tests/Unit/**` or `Tests/UI/**`
+# because plain `xcodebuild build` skips test bundles per scheme config.
+# Round 36 hit this blind spot and reported 0/0 just before CI failed on
+# `sending value of non-Sendable type 'XCTestCase'` in unit tests.
+if (( WITH_TESTS )); then
+    BUILD_CMD="build-for-testing"
+    BUILD_LABEL="build-for-testing (covers Tests/**)"
+else
+    BUILD_CMD="build"
+    BUILD_LABEL="build (host + widgets only)"
+fi
+
 RAW_LOG="$(mktemp -t strict-concurrency.XXXXXX.log)"
 trap 'rm -f "$RAW_LOG"' EXIT
 
-echo "==> Running xcodebuild build SWIFT_STRICT_CONCURRENCY=complete (this can take 5+ min)..."
+echo "==> Running xcodebuild $BUILD_LABEL SWIFT_STRICT_CONCURRENCY=complete (this can take 5+ min)..."
 set +e
 xcodebuild \
     -project "$PROJECT" \
@@ -59,7 +87,7 @@ xcodebuild \
     SWIFT_STRICT_CONCURRENCY=complete \
     SWIFT_VERSION=6.0 \
     -quiet \
-    build 2>&1 \
+    "$BUILD_CMD" 2>&1 \
     | tee "$RAW_LOG" >/dev/null
 XCODE_EXIT=$?
 set -e

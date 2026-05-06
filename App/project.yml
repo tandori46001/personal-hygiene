@@ -211,20 +211,22 @@ targets:
       base:
         GENERATE_INFOPLIST_FILE: YES
         PRODUCT_BUNDLE_IDENTIFIER: com.tandori46001.personalhygiene.tests
-        # Round 37c (re-retreat): unit test target back on SWIFT_VERSION=5
-        # after round 37b's "@preconcurrency import XCTest" blanket fix
-        # silenced the XCTestCase Sendable warnings but did NOT silence
-        # actor-isolation warnings on tests that mutate @MainActor properties
-        # (`container`, `repository`, `RefreshTraceLog.shared`, etc.) from
-        # the synchronous nonisolated `setUp`/`func test*` context. Local
-        # `xcodebuild build-for-testing SWIFT_STRICT_CONCURRENCY=complete`
-        # surfaced ~8+ such files as warnings; CI would escalate them to
-        # errors. Proper fix: add @MainActor to each affected unit test
-        # class (round-38 candidate). For now, target stays on 5 — this
-        # also exposes a strict-concurrency script blind spot (it runs
-        # `xcodebuild build` not `build-for-testing`, so test targets
-        # aren't covered by the inventory; another round-38 candidate).
-        SWIFT_VERSION: "5"
+        # Round 38b: unit test target migrated to SWIFT_VERSION=6.0. The
+        # round-37c retreat to "5" was caused by sync `setUp()` / `tearDown()`
+        # overrides mutating @MainActor-isolated properties (`container`,
+        # `repository`, `RefreshTraceLog.shared`) from a nonisolated context.
+        # Round 38b fix recipe (8 files, 18 warnings → 0):
+        #   - Defensive `tearDown { container = nil }` cleanup deleted
+        #     where the test instance dealloc handles the same release
+        #     (TripDetailViewModelRound{12,13,14}Tests, TripDetailViewModelTests,
+        #     TripsListViewModel{Duplication,Search,NextMilestone}Tests).
+        #   - `RefreshTrace*Tests` setUp/tearDown converted from sync to
+        #     `async throws` (with `try await super.{set,tear}Up()`) because
+        #     the body has a real side-effect (`RefreshTraceLog.shared.reset()`).
+        # Strict-concurrency script blind spot (round-37 L012 reference)
+        # closed by `--with-tests` flag in `scripts/check-strict-concurrency.sh`
+        # — runs `build-for-testing` to cover this target.
+        SWIFT_VERSION: "6.0"
 
   PersonalHygieneUITests:
     type: bundle.ui-testing

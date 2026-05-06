@@ -91,7 +91,7 @@ final class BlockNotifIDRoundTripTests: XCTestCase {
 
     private func assertSnoozeStripStillRoundTrips(
         _ identifier: String,
-        file: StaticString = #file,
+        file: StaticString = #filePath,
         line: UInt = #line
     ) {
         let timestamp = Int.random(in: 1...10_000_000)
