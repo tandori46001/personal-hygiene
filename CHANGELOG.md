@@ -8,6 +8,34 @@ and the project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Round 38a — Apple Developer Program activated + L013 (entitlements ↔ portal sequence) + Dependabot Swift block disabled (2026-05-06)
+
+User confirmed the Apple Developer Program is **ACTIVE** under Team ID
+`XC79TD476V`. This unblocks Phase 4 (TestFlight) end-to-end, plus all
+entitlement-gated work: CloudKit sync, HealthKit live wiring, App Group
+data sharing, and Critical Alerts. Memory + roadmap synced (project_status.md
+updated, ROADMAP.md Phase 4 → 🟢 Unblocked, MEMORY.md index refreshed).
+
+**New lesson L013** (LESSONS.md + CLAUDE.md §5): wiring
+`CODE_SIGN_ENTITLEMENTS` for the 4 targets BEFORE the iCloud Container +
+App Group exist on developer.apple.com produces `SwiftDataError._Error
+.loadIssueModelContainer` for every test that builds a `ModelContainer`,
+even in-memory. SwiftData reads bundle entitlements at container-init
+time and rejects setup when declared identifiers can't be validated.
+Round-38a tried the wiring (combo step A07-A08) and hit 13 unit-test
+failures all in `TripDetailViewModelRound{12,13,14}Tests`; rolled back
+in the working tree (no commit to main with the regression). The 4
+`CODE_SIGN_ENTITLEMENTS:` lines now sit commented-out in `App/project.yml`
+with inline `see L013` comments — load-bearing process guard until the
+user completes Step 1 of `docs/round26-activation-checklist.md`
+(portal-side App IDs + App Group + iCloud Container).
+
+CI hygiene: `.github/dependabot.yml`'s Swift package-ecosystem block was
+failing weekly with `dependency_file_not_found` because the project is
+generated via xcodegen and has no `Package.swift` / `Package.resolved`.
+Block commented out until SPM is introduced — re-enable instructions
+left inline. Lessons total: **12 → 13**.
+
 ### Round 37 — Test-target migration + L012 + strict-concurrency CI gate (2026-04-30)
 
 Closes the "Batch Q follow-up" loop opened by round 36's CI saga. Round

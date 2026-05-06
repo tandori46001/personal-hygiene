@@ -15,20 +15,24 @@ updates:
       - "ci"
     open-pull-requests-limit: 5
 
-  # Swift Package Manager — activates once Package.swift / Package.resolved exists
-  - package-ecosystem: "swift"
-    directory: "/App"
-    schedule:
-      interval: "weekly"
-      day: "monday"
-    commit-message:
-      prefix: "deps"
-      include: "scope"
-    labels:
-      - "dependencies"
-      - "swift"
-    open-pull-requests-limit: 5
-    ignore:
-      # Major version bumps require manual review
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
+  # Swift Package Manager — disabled until repo gains a Package.swift / Package.resolved.
+  # The project is generated via xcodegen and has no SPM dependencies, so Dependabot's
+  # Swift updater fails weekly with `dependency_file_not_found`. Re-enable the block
+  # below once SPM is introduced (candidate for L013).
+  #
+  # - package-ecosystem: "swift"
+  #   directory: "/App"
+  #   schedule:
+  #     interval: "weekly"
+  #     day: "monday"
+  #   commit-message:
+  #     prefix: "deps"
+  #     include: "scope"
+  #   labels:
+  #     - "dependencies"
+  #     - "swift"
+  #   open-pull-requests-limit: 5
+  #   ignore:
+  #     # Major version bumps require manual review
+  #     - dependency-name: "*"
+  #       update-types: ["version-update:semver-major"]

@@ -149,12 +149,16 @@ Modules: M5 (hydration) · M6 (housekeeping) · M7 (contacts birthdays) · M8 (d
 
 ---
 
-### Phase 4 — TestFlight beta ⬜
+### Phase 4 — TestFlight beta 🟢 (unblocked 2026-05-06)
 
 **Goal:** stable build for personal real-world use during 30 days.
 
+**Apple Developer Program: ACTIVE** (Team `XC79TD476V`, confirmed 2026-05-06). Next: portal resources (App IDs + App Group + iCloud Container) → wire entitlements in `App/project.yml` → first archive upload. See [docs/round26-activation-checklist.md](docs/round26-activation-checklist.md).
+
 | Acceptance | Status |
 |---|---|
+| Apple Developer Program active | ✅ 2026-05-06 |
+| Entitlements wired in project.yml | ⬜ |
 | TestFlight build accepted | ⬜ |
 | 30 days bug-bashing on real device | ⬜ |
 | ≥ 99% medication adherence over 30 days | ⬜ |

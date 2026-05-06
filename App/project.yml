@@ -93,6 +93,14 @@ targets:
         SUPPORTS_MACCATALYST: NO
         DEVELOPMENT_TEAM: "XC79TD476V"
         CODE_SIGN_STYLE: Automatic
+        # CODE_SIGN_ENTITLEMENTS deferred — see L013. Wiring requires the
+        # iCloud Container `iCloud.com.tandori46001.personalhygiene` and
+        # App Group `group.com.tandori46001.personalhygiene` to exist on
+        # developer.apple.com first; otherwise SwiftData ModelContainer
+        # init fails in simulator with `loadIssueModelContainer`. Sequence:
+        # docs/round26-activation-checklist.md Step 1 (portal) → re-add
+        # the line below across all 4 targets → xcodegen → check-tests.sh.
+        # CODE_SIGN_ENTITLEMENTS: PersonalHygiene/PersonalHygiene.entitlements
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
 
@@ -117,6 +125,8 @@ targets:
         TARGETED_DEVICE_FAMILY: "1,2"
         DEVELOPMENT_TEAM: "XC79TD476V"
         CODE_SIGN_STYLE: Automatic
+        # CODE_SIGN_ENTITLEMENTS deferred — see L013 + iOS host-app comment.
+        # CODE_SIGN_ENTITLEMENTS: PersonalHygieneWidgets/PersonalHygieneWidgets.entitlements
         # Round 36 (Batch Q): re-flipped to 6.0 after Batch Q migration
         # cleared the strict-concurrency inventory. Original round-28
         # downgrade comment kept for archaeology: widget extension uses
@@ -157,6 +167,8 @@ targets:
         TARGETED_DEVICE_FAMILY: "4"
         DEVELOPMENT_TEAM: "XC79TD476V"
         CODE_SIGN_STYLE: Automatic
+        # CODE_SIGN_ENTITLEMENTS deferred — see L013 + iOS host-app comment.
+        # CODE_SIGN_ENTITLEMENTS: PersonalHygieneWatch/PersonalHygieneWatch.entitlements
         ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
 
   PersonalHygieneWatchWidgets:
@@ -180,6 +192,8 @@ targets:
         TARGETED_DEVICE_FAMILY: "4"
         DEVELOPMENT_TEAM: "XC79TD476V"
         CODE_SIGN_STYLE: Automatic
+        # CODE_SIGN_ENTITLEMENTS deferred — see L013 + iOS host-app comment.
+        # CODE_SIGN_ENTITLEMENTS: PersonalHygieneWatchWidgets/PersonalHygieneWatchWidgets.entitlements
         # Round 36 (Batch Q): re-flipped to 6.0 — same reasoning as
         # PersonalHygieneWidgets above. Round-29 defensive fixes plus the
         # round-36 conformance + closure-capture patches are sufficient.
