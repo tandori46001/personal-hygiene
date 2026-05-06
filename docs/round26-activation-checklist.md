@@ -59,11 +59,13 @@ In `App/PersonalHygiene.xcodeproj` → for each of the 4 targets:
 > DEVELOPMENT_TEAM: <new team id>
 > ```
 >
-> The current `XC79TD476V` value in project.yml may be the Personal Team — confirm and replace.
+> The current `XC79TD476V` value in project.yml is the **paid Developer Program team** (confirmed 2026-05-06 in round 38a) — no replacement needed.
 
 ---
 
 ## Step 3 — Wire entitlements files into project.yml (~3 min)
+
+> **⚠️ Read LESSONS.md L013 first.** Round 38a tried this step before completing Step 1 above and got 13 unit-test failures with `SwiftDataError._Error.loadIssueModelContainer`. Cause: SwiftData reads bundle entitlements at `ModelContainer.init` and rejects setup when declared identifiers can't be validated against the developer portal. **Order matters: Step 1 must be done first.** The 4 `CODE_SIGN_ENTITLEMENTS:` lines currently sit commented-out in `App/project.yml` with inline `see L013` markers — uncomment them ONLY after Step 1.
 
 Round 25 already created the four `.entitlements` files. Add a `entitlements:` line per target in `App/project.yml`:
 
