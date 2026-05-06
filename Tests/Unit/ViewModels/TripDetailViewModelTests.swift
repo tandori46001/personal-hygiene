@@ -162,7 +162,6 @@ final class TripsListViewModelArchiveTests: XCTestCase {
     // the orphaned context crashed the test process with a signal-trap.
     private var container: ModelContainer?
 
-
     private func makeListViewModel() throws -> (TripsListViewModel, SwiftDataTripsRepository) {
         let container = try AppModelContainer.makeInMemory()
         self.container = container

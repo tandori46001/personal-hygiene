@@ -113,13 +113,24 @@ echo "==> stamped CommitSHA.txt with $GIT_SHA (shared with watch via Shared/)"
 
 # --- 6. Build ---------------------------------------------------------------
 echo "==> building for watch name:${WATCH_NAME}"
+set +e
 xcodebuild build \
   -project "$PROJECT" \
   -scheme "$SCHEME" \
   -destination "platform=watchOS,name=${WATCH_NAME}" \
   -derivedDataPath "$BUILD_DIR" \
-  -allowProvisioningUpdates \
+  -allowProvisioningUpdates 2>&1 \
+  | tee /tmp/deploy-watch-build.log \
   | grep -E "^\*\*|error:|warning: All|Build description signature|BUILD SUCCEEDED|BUILD FAILED" || true
+BUILD_EXIT=${PIPESTATUS[0]}
+set -e
+if [ "$BUILD_EXIT" -ne 0 ]; then
+  echo "ERROR: watch build failed (xcodebuild exit=$BUILD_EXIT). Common causes:" >&2
+  echo "  - Watch not unlocked / not on wrist / out of Bluetooth range." >&2
+  echo "  - Xcode developer credentials stale (Settings → Accounts re-sign-in)." >&2
+  echo "  Full log: /tmp/deploy-watch-build.log" >&2
+  exit 1
+fi
 
 if [ ! -d "$APP_PATH" ]; then
   echo "ERROR: build did not produce $APP_PATH" >&2
@@ -137,10 +148,23 @@ fi
 
 # --- 8. Install -------------------------------------------------------------
 echo "==> installing on watch"
+INSTALL_LOG=/tmp/deploy-watch-install.log
+set +e
 xcrun devicectl device install app \
   --device "$WATCH_UDID" \
-  "$APP_PATH" \
+  "$APP_PATH" 2>&1 \
+  | tee "$INSTALL_LOG" \
   | grep -E "App installed|bundleID:|installationURL:|ERROR" || true
+INSTALL_EXIT=${PIPESTATUS[0]}
+set -e
+# devicectl sometimes exits 0 even when it prints `ERROR:`. Check both.
+if [ "$INSTALL_EXIT" -ne 0 ] || grep -q "^ERROR:" "$INSTALL_LOG"; then
+  echo "ERROR: watch install failed (devicectl exit=$INSTALL_EXIT)." >&2
+  echo "  - Wake the watch (tap screen + raise wrist)." >&2
+  echo "  - Ensure paired iPhone is unlocked + Bluetooth-reachable." >&2
+  echo "  - Re-run \`xcrun devicectl list devices\` to confirm 'available (paired)'." >&2
+  exit 1
+fi
 
 if [ "$NO_LAUNCH" = "1" ]; then
   echo "==> done (skipped launch)"
@@ -149,10 +173,20 @@ fi
 
 # --- 9. Launch --------------------------------------------------------------
 echo "==> launching $BUNDLE_ID"
+LAUNCH_LOG=/tmp/deploy-watch-launch.log
+set +e
 xcrun devicectl device process launch \
   --device "$WATCH_UDID" \
-  "$BUNDLE_ID" \
+  "$BUNDLE_ID" 2>&1 \
+  | tee "$LAUNCH_LOG" \
   | grep -E "Launched|process identifier|ERROR" || true
+LAUNCH_EXIT=${PIPESTATUS[0]}
+set -e
+if [ "$LAUNCH_EXIT" -ne 0 ] || grep -q "^ERROR:" "$LAUNCH_LOG"; then
+  echo "ERROR: watch launch failed (devicectl exit=$LAUNCH_EXIT)." >&2
+  echo "  Install may have succeeded — try launching the app manually on the watch." >&2
+  exit 1
+fi
 
 echo
-echo "==> deploy complete — personal team free expires after ~7 days"
+echo "==> deploy complete — paid Apple Developer Program (Team $TEAM_ID)"
